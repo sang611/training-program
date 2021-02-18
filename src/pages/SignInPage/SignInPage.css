@@ -1,0 +1,44 @@
+.login-container img#signin-image{
+   height: 100vh !important;
+   width: 100%;
+   background-size: cover;
+   background-position: center;
+   background-repeat: no-repeat;
+}
+
+#siginin-form-wrapper {
+   width: 100%;
+   height: 100%;
+   background-color: #F7F7F7;
+}
+
+#signin-form {
+   position: relative;
+   left: 50%;
+   top: 50%;
+   transform: translate(-50%, -50%);
+   width: 80%;
+}
+
+
+.login-form-forgot {
+   float: right;
+}
+.ant-col-rtl .login-form-forgot {
+   float: left;
+}
+.login-form-button {
+   width: 100%;
+   height: fit-content !important;
+}
+
+.login-form-input,.login-form-button {
+   border-radius: 10px !important;
+   padding: 10px !important;
+}
+
+.site-form-item-icon {
+   color: gray !important;
+}
+
+
