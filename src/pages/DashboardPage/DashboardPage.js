@@ -22,6 +22,10 @@ import ListAccountPage from "../ListAccountPage";
 import CreateTrainingProgramPage from "../CreateTrainingProgramPage";
 import ListTrainingProgramPage from "../ListTrainingProgramPage";
 import CreateCoursePage from "../CreateCoursePage";
+import ListCoursePage from "../ListCoursePage";
+import DetailTrainingProgramPage from "../DetailTrainingProgramPage";
+import UpdateTrainingProgramPage from "../UpdateTrainingProgramPage";
+import LearningOutcomePage from "../LearningOutcomePage/LearningOutcomePage";
 
 const cookies = new Cookies();
 const DashboardPage = () => {
@@ -88,21 +92,24 @@ const DashboardPage = () => {
                         <Menu.Item key="2">
                             <Link to="/uet/training-programs">Danh sách</Link>
                         </Menu.Item>
-                        <Menu.Item key="3">
+                        {/*<Menu.Item key="3">
                             <Link to="/uet/training-programs/creation">Tạo mới</Link>
-                        </Menu.Item>
+                        </Menu.Item>*/}
                         <Menu.Item key="4">Tài liệu</Menu.Item>
                     </SubMenu>
                     <SubMenu key="sub1" icon={<ReadOutlined/>} title="Học phần">
-                        <Menu.Item key="5">Danh sách</Menu.Item>
+                        <Menu.Item key="5">
+                            <Link to="/uet/courses">Danh sách</Link>
+                        </Menu.Item>
                         <Menu.Item key="6">
                             <Link to="/uet/courses/creation">Tạo mới</Link>
                         </Menu.Item>
                         <Menu.Item key="7">Tài liệu</Menu.Item>
                     </SubMenu>
                     <SubMenu key="sub2" icon={<TableOutlined/>} title="Chuẩn đầu ra">
-                        <Menu.Item key="8">Danh sách</Menu.Item>
-                        <Menu.Item key="9">Tạo mới</Menu.Item>
+                        <Menu.Item key="8">
+                            <Link to="/uet/learning-outcomes">Danh sách</Link>
+                        </Menu.Item>
                         <Menu.Item key="10">Tài liệu</Menu.Item>
                     </SubMenu>
                     <SubMenu key="sub3" icon={<BankOutlined/>} title="Đơn vị chuyên môn">
@@ -140,8 +147,12 @@ const DashboardPage = () => {
                             <Route path="/uet/accounts/creation" component={CreateAccountPage}/>
                             <Route path="/uet/accounts" component={ListAccountPage}/>
                             <Route path="/uet/training-programs/creation" component={CreateTrainingProgramPage}/>
-                            <Route path="/uet/training-programs" component={ListTrainingProgramPage}/>
+                            <Route exact path="/uet/training-programs" component={ListTrainingProgramPage}/>
+                            <Route exact path="/uet/training-programs/:uuid" component={DetailTrainingProgramPage}/>
+                            <Route exact path="/uet/training-programs/updating/:uuid" component={UpdateTrainingProgramPage}/>
                             <Route path="/uet/courses/creation" component={CreateCoursePage}/>
+                            <Route path="/uet/courses" component={ListCoursePage}/>
+                            <Route path="/uet/learning-outcomes" component={LearningOutcomePage}/>
                         </Switch>
                     </div>
                 </Content>

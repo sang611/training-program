@@ -1,0 +1,18 @@
+import * as actions from "../actions/index";
+import {put} from "redux-saga/effects";
+import axios from "../../my.axios";
+import {logoutSaga} from "./auth";
+import {message} from "antd";
+import * as actionTypes from "../actions/actionTypes";
+
+
+export function* getAllCourse(action) {
+    yield put(actions.getAllCourseStart());
+
+    try {
+        const response = yield axios.get("/courses");
+        yield put(actions.getAllCourseSuccess(response));
+    } catch (error) {
+        yield put(actions.getAllCourseFail(error.response));
+    }
+}

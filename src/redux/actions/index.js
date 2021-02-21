@@ -37,3 +37,17 @@ export {
     getAllInstitutionStart,
     getAllInstitutionSuccess
 } from './institutions'
+
+export {
+    getAllCourse,
+    getAllCourseStart,
+    getAllCourseSuccess,
+    getAllCourseFail
+} from './courses'
+
+export {
+    getAllLearningOutcomes,
+    getAllLearningOutcomesStart,
+    getAllLearningOutcomesSuccess,
+    getAllLearningOutcomesFail
+} from './learningOutcomes'

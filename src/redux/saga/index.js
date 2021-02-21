@@ -3,6 +3,8 @@ import * as actionTypes from '../actions/actionTypes';
 import {authUserSaga, logoutSaga, authCheckTimeOutSaga, authCheckStateSaga} from './auth';
 import {fetchAccountsSaga, searchAccountsSaga, filterAccountsSaga, addAccountSaga} from './accounts';
 import * as institutionSaga from "./institutions";
+import * as courseSaga from './courses'
+import * as learningOutcomeSaga from "./learningOutcomes"
 
 
 export function* watchAuth() {
@@ -17,6 +19,10 @@ export function* watchAuth() {
 
     yield takeEvery(actionTypes.INSTITUTION_CREATE, institutionSaga.createInstitution);
     yield takeEvery(actionTypes.INSTITUTION_GET_ALl, institutionSaga.getAllInstitution);
+
+    yield takeEvery(actionTypes.GET_ALL_COURSE, courseSaga.getAllCourse);
+
+    yield takeEvery(actionTypes.GET_ALL_LEARNING_OUTCOME, learningOutcomeSaga.getAllLearningOutcomes);
 }
 
 

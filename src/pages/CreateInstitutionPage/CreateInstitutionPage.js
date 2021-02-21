@@ -1,23 +1,26 @@
-import {Button, Form, Input, InputNumber, message} from "antd";
+import {Button, Form, Input, InputNumber, message, Space} from "antd";
 import Dragger from "antd/lib/upload/Dragger";
 import {InboxOutlined} from "@ant-design/icons";
 import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from '../../redux/actions/actionTypes'
 import * as actions from '../../redux/actions'
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import {Redirect} from "react-router-dom";
+import axios from "axios";
+import {useForm} from "antd/lib/form/Form";
 
 const CreateInstitutionPage = (props) => {
+    const {isEdited, institution} = props;
     const dispatch = useDispatch();
     const [formData, setFormData] = useState(new FormData());
     const state = useSelector((state) => state.institutions)
     const {isValidToken} = useSelector(state => state.auth)
 
     useEffect(() => {
-        if(state.response.status === 401) {
+        if (state.response.status === 401) {
             dispatch(actions.authLogout())
         }
-        if(state.response.status === 201) {
+        if (state.response.status === 201) {
             message.success("Đã thêm một đơn vị mới");
         }
     }, [state])
@@ -43,13 +46,27 @@ const CreateInstitutionPage = (props) => {
     };
 
     const onFinish = (values) => {
-        console.log(values.institution);
-        formData.set('vn_name', values.institution.vn_name);
-        formData.set('en_name', values.institution.en_name);
-        formData.set('abbreviation', values.institution.abbreviation);
-        formData.set('address', values.institution.address);
-        formData.set('description', values.institution.description);
-        dispatch(actions.createInstitution(formData))
+
+        console.log(values)
+
+        formData.set('vn_name', values.vn_name);
+        formData.set('en_name', values.en_name);
+        formData.set('abbreviation', values.abbreviation);
+        formData.set('address', values.address);
+        formData.set('description', values.description);
+
+        if(isEdited) {
+            let {uuid} = props.institution;
+            axios.put(`/institutions/${uuid}`, formData)
+                .then(() => {
+                    message.success("Cập nhật đơn vị thành công");
+                    props.editSuccess(true);
+                })
+                .catch((e) => message.error("Đã có lỗi xảy ra"));
+        } else {
+            dispatch(actions.createInstitution(formData))
+        }
+
     };
 
     const propsDragger = {
@@ -67,10 +84,24 @@ const CreateInstitutionPage = (props) => {
         },
     };
 
-    return !isValidToken ? <Redirect to="/uet/signin" /> : (
-        <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
+    const [form] = Form.useForm();
+    useEffect(() => {
+        if(isEdited) {
+            form.setFieldsValue(institution)
+        }
+    }, [])
+
+    return !isValidToken ? <Redirect to="/uet/signin"/> : (
+        <Form
+            {...layout}
+            form={form}
+            name="nest-messages"
+            onFinish={onFinish}
+            validateMessages={validateMessages}
+
+        >
             <Form.Item
-                name={['institution', 'vn_name']}
+                name={'vn_name'}
                 label="Tên đơn vị (VN)"
                 rules={[
                     {
@@ -78,10 +109,15 @@ const CreateInstitutionPage = (props) => {
                     },
                 ]}
             >
-                <Input/>
+                {
+                    props.institution ? <Input
+
+                    /> : <Input />
+                }
+
             </Form.Item>
             <Form.Item
-                name={['institution', 'en_name']}
+                name={'en_name'}
                 label="Tên đơn vị (EN)"
                 rules={[
                     {
@@ -89,27 +125,29 @@ const CreateInstitutionPage = (props) => {
                     },
                 ]}
             >
-                <Input/>
+
+                   <Input />
+
             </Form.Item>
             <Form.Item
-                name={['institution', 'abbreviation']}
+                name={'abbreviation'}
                 label="Tên đơn vị (ABV)"
             >
-                <Input/>
+                <Input />
             </Form.Item>
             <Form.Item
-                name={['institution', 'address']}
+                name={'address'}
                 label="Địa chỉ"
             >
-                <Input/>
+                <Input />
             </Form.Item>
             <Form.Item
-                name={['institution', 'description']}
+                name={'description'}
                 label="Mô tả sơ lược">
-                <Input.TextArea/>
+                <Input.TextArea />
             </Form.Item>
 
-            <Form.Item name={['institution', 'logo']} label="Logo">
+            <Form.Item name={'logo'} label="Logo">
                 <Dragger {...propsDragger} beforeUpload={(file) => {
                     const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
                     if (!isJPG) {
@@ -131,9 +169,19 @@ const CreateInstitutionPage = (props) => {
             </Form.Item>
 
             <Form.Item wrapperCol={{...layout.wrapperCol, offset: 4}}>
-                <Button type="primary" htmlType="submit">
-                    Submit
-                </Button>
+                <Space>
+                    {
+                        props.isEdited ?
+                            <Button onClick={props.onCloseDrawer}>
+                                Cancel
+                            </Button> : ""
+                    }
+
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </Space>
+
             </Form.Item>
         </Form>
     )

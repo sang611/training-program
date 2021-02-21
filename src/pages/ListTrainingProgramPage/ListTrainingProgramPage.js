@@ -1,32 +1,40 @@
-import {Card, List} from "antd";
-import {useState, useEffect} from 'react'
+import {Button, Card, List} from "antd";
+import {useEffect, useState} from 'react'
 import axios from "axios";
-import {EditOutlined, EllipsisOutlined, SettingOutlined} from "@ant-design/icons";
+import {EditOutlined, EllipsisOutlined, PlusOutlined, SettingOutlined} from "@ant-design/icons";
+import {Link, useHistory} from "react-router-dom";
+
 
 const ListTrainingProgramPage = () => {
-    const data = [
-        {
-            title: 'Title 1',
-        },
-        {
-            title: 'Title 2',
-        },
-        {
-            title: 'Title 3',
-        },
-        {
-            title: 'Title 4',
-        },
-    ];
+    const history = useHistory();
 
     const [trainingPrograms, setTrainingPrograms] = useState([]);
     useEffect(() => {
          axios.get("/training-programs")
              .then((res) => {
-                 console.log(res.data)
                  setTrainingPrograms(res.data)
              })
     }, [])
+
+    const TrainingItem = ({item}) => {
+        return (
+            <Card
+                extra={<Link to={`/uet/training-programs/${item.uuid}`}>More</Link>}
+                actions={[
+                    <SettingOutlined key="setting" onClick={() => console.log("setting")} />,
+                    <Link to={`/uet/training-programs/updating/${item.uuid}`}>
+                        <EditOutlined key="edit" />
+                    </Link>,
+                    <EllipsisOutlined key="ellipsis" />,
+                ]}
+                title={item.vn_name}
+            >
+                Card content
+            </Card>
+        )
+    }
+
+
 
     return (
         <>
@@ -35,19 +43,22 @@ const ListTrainingProgramPage = () => {
                 dataSource={trainingPrograms.training_programs}
                 renderItem={item => (
                     <List.Item>
-                        <Card
-                            hoverable
-                            actions={[
-                                <SettingOutlined key="setting" />,
-                                <EditOutlined key="edit" />,
-                                <EllipsisOutlined key="ellipsis" />,
-                            ]}
-                            title={item.vn_name}
-                        >
-                            Card content
-                        </Card>
+                        <TrainingItem item={item} />
                     </List.Item>
                 )}
+            />
+            <Button
+                type="primary"
+                shape="circle"
+                danger
+                icon={<PlusOutlined />}
+                size={"large"}
+                style={{
+                    position: 'fixed',
+                    right: 52,
+                    bottom: 32
+                }}
+                onClick={() => {history.push("/uet/training-programs/creation")}}
             />
         </>
     )

@@ -112,7 +112,7 @@ const ListAccountPage = () => {
                 <Col >
                     <Pagination
                         current={currentPage}
-                        pageSize={1}
+                        pageSize={10}
                         total={state.accounts.totalResults}
                         onChange={(e) => {
                             setCurrentPage(e)

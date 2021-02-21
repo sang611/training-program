@@ -1,30 +1,68 @@
-import {useEffect, useState, useRef} from 'react';
-import Title from "antd/lib/typography/Title";
-import {Button, Col, DatePicker, Form, Input, InputNumber, message, Radio, Row, Select, Space} from "antd";
-import moment from "moment";
-import {MailTwoTone, PhoneTwoTone} from "@ant-design/icons";
-import {useSelector, useDispatch} from "react-redux";
-import * as actions from "../../redux/actions";
-import {Option} from "antd/lib/mentions";
-import TextArea from "antd/lib/input/TextArea";
 import axios from "axios";
+import {useHistory, useParams} from "react-router";
+import {useState, useEffect} from 'react';
+import Title from "antd/lib/typography/Title";
+import {Button, Col, Divider, Form, Input, InputNumber, message, Row, Select, Space} from "antd";
 import JoditEditor from "jodit-react";
+import * as actions from "../../redux/actions/institutions";
+import {useDispatch, useSelector} from "react-redux";
+import TrainingProgramCourses from "./TrainingProgramCourses";
 
-const CreateTrainingProgramPage = () => {
+const UpdateTrainingProgramPage = () => {
+    let {uuid} = useParams();
+    let history = useHistory();
     const [form] = Form.useForm();
+    const [trainingProgram, setTrainingProgram] = useState({})
     const dispatch = useDispatch();
     const insState = useSelector(state => state.institutions)
+
     useEffect(() => {
+        axios.get(`/training-programs/${uuid}`)
+            .then((res) => {
+                setTrainingProgram(res.data.trainingProgram)
+                const {
+                    vn_name, en_name,
+                    training_program_code,
+                    graduation_title,
+                    duration,
+                    graduation_diploma_vi,
+                    graduation_diploma_en,
+                    institution,
+                    common_destination,
+                    specific_destination,
+                    admission_method,
+                    admission_scale
+                } = res.data.trainingProgram;
+
+                form.setFieldsValue({
+                    vn_name, en_name,
+                    training_program_code,
+                    graduation_title,
+                    training_duration: duration,
+                    institution: institution.uuid,
+                    graduation_diploma_vi,
+                    graduation_diploma_en,
+                    common_destination,
+                    specific_destination,
+                    admission_method,
+                    admission_scale
+                })
+            })
+            .catch((e) => {
+            })
         dispatch(actions.getAllInstitution());
     }, [])
 
-    async function onCreateTrainingProgram(values) {
+    async function onUpdateTrainingProgram(values) {
         try {
-            const response = await axios.post("/training-programs", values)
+            const response = await axios.put(`/training-programs/${uuid}`, values)
             console.log(response.status)
-            if (response.status === 201) {
-                message.success("Tạo mới Chương trình đào tạo thành công")
-            }
+            message.success("Cập nhật Chương trình đào tạo thành công");
+
+            setTimeout(() => {
+                history.push(`/uet/training-programs/${uuid}`);
+            }, 3000)
+
         } catch (e) {
             message.error("Đã có lỗi xảy ra")
         }
@@ -36,7 +74,7 @@ const CreateTrainingProgramPage = () => {
             <Form
                 layout="vertical"
                 form={form}
-                onFinish={onCreateTrainingProgram}
+                onFinish={onUpdateTrainingProgram}
             >
                 <Title level={3}>1. Thông tin chương trình đào tạo</Title>
                 <Row>
@@ -69,7 +107,9 @@ const CreateTrainingProgramPage = () => {
                                 </Form.Item>
 
                                 <Form.Item label="Thời gian đào tạo:" name="training_duration">
-                                    <InputNumber min={1} max={10} defaultValue={1}/>
+                                    {
+                                        <InputNumber min={1} max={10} />
+                                    }
                                 </Form.Item>
                             </Col>
                         </Row>
@@ -107,6 +147,7 @@ const CreateTrainingProgramPage = () => {
                                 }
 
                             </Select>
+
                         </Form.Item>
 
                         <br/>
@@ -149,11 +190,13 @@ const CreateTrainingProgramPage = () => {
                     </Col>
                 </Row>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">Submit</Button>
+                    <Button type="primary" htmlType="submit">Update</Button>
                 </Form.Item>
             </Form>
+            <Divider />
+            <TrainingProgramCourses />
         </>
     )
 }
 
-export default CreateTrainingProgramPage;
+export default UpdateTrainingProgramPage;
