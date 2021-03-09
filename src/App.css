@@ -5,6 +5,9 @@
   background: #141414;
 }
 
-tr, th, td {
+
+th {
   text-align: center !important;
+  background-color: #303641 !important;
+  color: #ffffffa6 !important;
 }

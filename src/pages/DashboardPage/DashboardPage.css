@@ -3,3 +3,32 @@
     display: flex;
     background-color: #fff;
 }
+
+.ant-menu-dark.ant-menu-inline .ant-menu-item, .ant-menu-dark.ant-menu-inline .ant-menu-submenu-title {
+    background: #303641;
+    border-bottom: solid 0.5px gray;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.ant-menu-item.ant-menu-item-only-child.ant-menu-item-selected,
+.ant-menu-item.ant-menu-item-only-child{
+    background-color: #24282f !important;
+}
+
+.ant-menu-item.ant-menu-item-selected {
+    color: #ffffff !important;
+    background-color: #303641 !important;
+}
+
+.ant-menu.ant-menu-dark, .ant-menu-dark .ant-menu-sub, .ant-menu.ant-menu-dark .ant-menu-sub {
+    background: #303641;
+}
+
+.ant-layout-sider-children {
+    background: #303641;
+}
+
+.ant-layout-sider-trigger {
+    background: #303641;
+}

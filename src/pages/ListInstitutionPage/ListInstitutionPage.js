@@ -51,7 +51,7 @@ const ListInstitutionPage = () => {
             title: 'STT',
             dataIndex: 'stt',
             key: 'stt',
-            render: text => <a>{text}</a>,
+            render: text => text,
         },
         {
             title: 'Tên (VN)',

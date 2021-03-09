@@ -8,15 +8,16 @@ import {useParams} from "react-router";
 import Title from "antd/lib/typography/Title";
 import Dragger from "antd/lib/upload/Dragger";
 
-const TrainingProgramCourses = () => {
+const AddTrainingProgramCourses = () => {
     const dispatch = useDispatch();
     const courseState = useSelector(state => state.courses)
-    const [uploadFile, setUploadFile] = useState(true);
+    const [uploadFile, setUploadFile] = useState(false);
     const [form] = Form.useForm();
 
     let {uuid} = useParams();
 
     useEffect(() => {
+
         dispatch(actions.getAllCourse())
     }, [])
 
@@ -125,47 +126,46 @@ const TrainingProgramCourses = () => {
     return (
         <>
             <Title level={3}>
-                4. Thêm học phần vào khung đào tạo &nbsp;
-                <Switch
-                    checkedChildren="Upload file"
-                    unCheckedChildren=""
+                {/*<Switch
+                    checkedChildren="Thêm bằng file"
+                    unCheckedChildren="Thêm "
                     defaultChecked
                     onChange={(value) => {
                         setUploadFile(value);
                     }}
                 />
-                <br/>
+                <br/>*/}
             </Title>
             <Row>
                 {uploadFile ? <UploadFileComponent/> :
                     <Col span={24}>
                         <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
-                            <Row justify="start">
-                                <Col span={6}>
-                                    <Tag color="#87d068">Tên học phần</Tag>
+                            {/*<Row justify="start">
+                                <Col span={8}>
+                                    <Tag color="#303641">Tên học phần</Tag>
                                 </Col>
                                 <Col span={3}>
-                                    <Tag color="purple">Số giờ lý thuyết</Tag>
+                                    <Tag color="#303641">Số giờ lý thuyết</Tag>
                                 </Col>
                                 <Col span={3}>
-                                    <Tag color="purple">Số giờ bài tập</Tag>
+                                    <Tag color="#303641">Số giờ bài tập</Tag>
+                                </Col>
+                                <Col span={4}>
+                                    <Tag color="#303641">Số giờ thực hành</Tag>
                                 </Col>
                                 <Col span={3}>
-                                    <Tag color="purple">Số giờ thực hành</Tag>
-                                </Col>
-                                <Col span={3}>
-                                    <Tag color="purple">Loại học phần</Tag>
+                                    <Tag color="#303641">Loại học phần</Tag>
                                 </Col>
 
-                            </Row>
+                            </Row>*/}
                             <br/>
                             <Form.List name="courses">
                                 {(fields, {add, remove}) => (
                                     <>
                                         {fields.map(field => (
 
-                                            <Row justify="start">
-                                                <Col span={6}>
+                                            <Row justify="space-between">
+                                                <Col span={8}>
                                                     <Form.Item
                                                         {...field}
                                                         style={{width: 250}}
@@ -198,7 +198,7 @@ const TrainingProgramCourses = () => {
                                                         fieldKey={[field.fieldKey, 'theory_time']}
                                                         rules={[{required: true, message: 'Nhập số giờ lý thuyết'}]}
                                                     >
-                                                        <InputNumber min={1} max={10} placeholder="Số giờ lý thuyết"/>
+                                                        <InputNumber min={1} max={100} placeholder="Số giờ lý thuyết"/>
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={3}>
@@ -208,7 +208,7 @@ const TrainingProgramCourses = () => {
                                                         fieldKey={[field.fieldKey, 'exercise_time']}
                                                         rules={[{required: true, message: 'Nhập số giờ bài tập'}]}
                                                     >
-                                                        <InputNumber min={1} max={10} placeholder="Số giờ bài tập"/>
+                                                        <InputNumber min={1} max={100} placeholder="Số giờ bài tập"/>
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={3}>
@@ -218,7 +218,7 @@ const TrainingProgramCourses = () => {
                                                         fieldKey={[field.fieldKey, 'practice_time']}
                                                         rules={[{required: true, message: 'Nhập số giờ thực hành'}]}
                                                     >
-                                                        <InputNumber min={1} max={10} placeholder="Số giờ thực hành"/>
+                                                        <InputNumber min={1} max={100} placeholder="Số giờ thực hành"/>
                                                     </Form.Item>
                                                 </Col>
                                                 <Col span={3}>
@@ -253,8 +253,11 @@ const TrainingProgramCourses = () => {
 
                                         ))}
                                         <Form.Item>
-                                            <Button danger type="dashed" onClick={() => add()} icon={<PlusOutlined/>}>
-                                                Add field
+                                            <Button
+                                                block
+                                                onClick={() => add()} icon={<PlusOutlined/>}
+                                            >
+                                                Thêm học phần
                                             </Button>
                                         </Form.Item>
                                     </>
@@ -274,4 +277,4 @@ const TrainingProgramCourses = () => {
     )
 }
 
-export default TrainingProgramCourses;
+export default AddTrainingProgramCourses;

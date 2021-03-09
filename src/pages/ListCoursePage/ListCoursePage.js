@@ -1,16 +1,79 @@
 import {useState, useEffect} from 'react'
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions/index'
-import {message, Popconfirm, Space, Table, Tag} from "antd";
+import {Form, Input, InputNumber, message, Modal, Popconfirm, Space, Table, Tag} from "antd";
 import {DeleteOutlined, EditOutlined, InfoCircleOutlined} from "@ant-design/icons";
 import axios from "axios";
 
 const {Column, ColumnGroup} = Table;
 
+const CollectionCreateForm = ({ visible, onCancel, updatedCourse, dispatch }) => {
+    const [form] = Form.useForm();
+    form.setFieldsValue(updatedCourse);
+    return (
+        <Modal
+            visible={visible}
+            title="Cập nhật thông tin học phần"
+            okText="Cập nhật"
+            cancelText="Thoát"
+            onCancel={onCancel}
+            onOk={() => {
+                form
+                    .validateFields()
+                    .then((values) => {
+                        console.log(values)
+                        axios.put(`/courses/${updatedCourse.uuid}`, values)
+                            .then((res) => message.success("Cập nhật thành công"))
+                            .catch(() => "Không thể cập nhật")
+
+                    })
+                    .then(() => {
+                        form.resetFields();
+                        dispatch(actions.getAllCourse())
+                        onCancel();
+                    })
+                    .catch((info) => {
+                        console.log('Validate Failed:', info);
+                    });
+            }}
+        >
+            <Form
+                form={form}
+                layout="vertical"
+                name="form_in_modal"
+                initialValues={{
+                    modifier: 'public',
+                }}
+            >
+                <Form.Item label="Tên học phần (VN):" name="course_name_vi">
+                    <Input placeholder="Tên học phần bằng Tiếng Việt"
+                           addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
+                </Form.Item>
+                <Form.Item label="Tên học phần (EN):" name="course_name_en">
+                    <Input placeholder="Tên học phần bằng Tiếng Anh"
+                           addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
+                </Form.Item>
+
+                <Form.Item label="Mã học phần:" name="course_code">
+                    <Input placeholder="Nhập mã học phần"
+                           addonBefore={<i className="fas fa-code" style={{color: '#1890FF'}}/>}/>
+                </Form.Item>
+
+                <Form.Item label="Số tín chỉ:" name="credits">
+                    <InputNumber min={1} max={20} defaultValue={0}/>
+                </Form.Item>
+
+            </Form>
+        </Modal>
+    );
+};
+
 const ListCoursePage = () => {
     const dispatch = useDispatch();
     const courseState = useSelector(state => state.courses)
     const [dataSource, setDataSource] = useState([]);
+    const [visible, setVisible] = useState(false);
+    const [updatedCourse, setUpdatedCourse] = useState(null);
 
     useEffect(() => {
         dispatch(actions.getAllCourse())
@@ -23,7 +86,6 @@ const ListCoursePage = () => {
                     ...course,
                     key: index
                 }
-
             })
             setDataSource(dataSource);
         }
@@ -66,28 +128,31 @@ const ListCoursePage = () => {
                     key="action"
                     render={(text, record) => (
                         <Space size="small">
-                            <a>
+                            <a onClick={() => {
+                                setUpdatedCourse(record);
+                                setVisible(true);
+                            }}>
                                 <Tag icon={<EditOutlined/>} color="#55acee">
-                                    Edit
+                                    Sửa
                                 </Tag>
                             </a>
                             <a>
-                                <Tag icon={<DeleteOutlined/>} color="#cd201f">
-
                                     <Popconfirm
                                         title="Xóa học phần này?"
                                         onConfirm={() => {
                                             deleteCourse(record);
                                         }}
                                     >
-                                        Delete
+                                        <Tag icon={<DeleteOutlined/>} color="#cd201f">
+                                            Xóa
+                                        </Tag>
                                     </Popconfirm>
-                                </Tag>
+
                             </a>
 
                             <a>
                                 <Tag icon={<InfoCircleOutlined/>} color="#87d068">
-                                    Detail
+                                    Chi tiết
                                 </Tag>
                             </a>
 
@@ -96,6 +161,14 @@ const ListCoursePage = () => {
                     )}
                 />
             </Table>
+            <CollectionCreateForm
+                visible={visible}
+                dispatch={dispatch}
+                updatedCourse={updatedCourse}
+                onCancel={() => {
+                    setVisible(false);
+                }}
+            />
         </>
     )
 }

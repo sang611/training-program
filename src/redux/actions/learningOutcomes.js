@@ -1,8 +1,9 @@
 import * as actionTypes from "./actionTypes";
 
-export const getAllLearningOutcomes = () => {
+export const getAllLearningOutcomes = (payload) => {
     return {
-        type: actionTypes.GET_ALL_LEARNING_OUTCOME
+        type: actionTypes.GET_ALL_LEARNING_OUTCOME,
+        payload
     }
 }
 export const getAllLearningOutcomesStart = () => {
@@ -19,6 +20,32 @@ export const getAllLearningOutcomesSuccess = (payload) => {
 export const getAllLearningOutcomesFail = (payload) => {
     return {
         type: actionTypes.GET_ALL_LEARNING_OUTCOME_FAIL,
+        payload: payload
+    }
+}
+
+
+
+export const getAllLearningOutcomeTitles = (payload) => {
+    return {
+        type: actionTypes.GET_ALL_LEARNING_OUTCOME_TITLE,
+        payload
+    }
+}
+export const getAllLearningOutcomeTitlesStart = () => {
+    return {
+        type: actionTypes.GET_ALL_LEARNING_OUTCOME_TITLE_START
+    }
+}
+export const getAllLearningOutcomeTitlesSuccess = (payload) => {
+    return {
+        type: actionTypes.GET_ALL_LEARNING_OUTCOME_TITLE_SUCCESS,
+        payload: payload
+    }
+}
+export const getAllLearningOutcomeTitlesFail = (payload) => {
+    return {
+        type: actionTypes.GET_ALL_LEARNING_OUTCOME_TITLE_FAIL,
         payload: payload
     }
 }

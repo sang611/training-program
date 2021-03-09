@@ -26,6 +26,7 @@ import ListCoursePage from "../ListCoursePage";
 import DetailTrainingProgramPage from "../DetailTrainingProgramPage";
 import UpdateTrainingProgramPage from "../UpdateTrainingProgramPage";
 import LearningOutcomePage from "../LearningOutcomePage/LearningOutcomePage";
+import LearningOutcomeTitlePage from "../LearningOutcomeTitlePage/LearningOutcomePageTitle";
 
 const cookies = new Cookies();
 const DashboardPage = () => {
@@ -35,6 +36,7 @@ const DashboardPage = () => {
 
     const dispatch = useDispatch();
     const state = useSelector(state => state.auth)
+    const [isSignin, setIsSignIn] = useState(cookies.get("isAuth"))
 
     const onCollapse = collapsed => {
         setCollapsed(collapsed);
@@ -56,10 +58,10 @@ const DashboardPage = () => {
     }
 
     const onClickMenuItem = (value) => {
-
         localStorage.setItem("menu-active", value.key);
     }
-    return state.isValidToken ? (
+
+    return isSignin ? (
         <Layout style={{minHeight: '100vh'}}>
 
             <Sider
@@ -88,7 +90,7 @@ const DashboardPage = () => {
                     <Menu.Item key="1" icon={<PieChartOutlined/>}>
                         Thống kê
                     </Menu.Item>
-                    <SubMenu key="sub0" icon={<DesktopOutlined/>} title="Chương trình đào tạo">
+                    <SubMenu key="sub0" icon={<DesktopOutlined/>} title="Chương trình đào tạo" className="sub-menu">
                         <Menu.Item key="2">
                             <Link to="/uet/training-programs">Danh sách</Link>
                         </Menu.Item>
@@ -108,7 +110,10 @@ const DashboardPage = () => {
                     </SubMenu>
                     <SubMenu key="sub2" icon={<TableOutlined/>} title="Chuẩn đầu ra">
                         <Menu.Item key="8">
-                            <Link to="/uet/learning-outcomes">Danh sách</Link>
+                            <Link to="/uet/learning-outcomes">Danh sách CĐR</Link>
+                        </Menu.Item>
+                        <Menu.Item key="9">
+                            <Link to="/uet/learning-outcome-titles">Danh sách đầu mục</Link>
                         </Menu.Item>
                         <Menu.Item key="10">Tài liệu</Menu.Item>
                     </SubMenu>
@@ -153,6 +158,7 @@ const DashboardPage = () => {
                             <Route path="/uet/courses/creation" component={CreateCoursePage}/>
                             <Route path="/uet/courses" component={ListCoursePage}/>
                             <Route path="/uet/learning-outcomes" component={LearningOutcomePage}/>
+                            <Route path="/uet/learning-outcome-titles" component={LearningOutcomeTitlePage}/>
                         </Switch>
                     </div>
                 </Content>

@@ -4,33 +4,33 @@ const initialState = {
     response: {},
     loading: false,
     getAllSuccess: false,
-    locs: [],
+    locTitles: [],
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
 
-        case actionTypes.GET_ALL_LEARNING_OUTCOME_START:
+        case actionTypes.GET_ALL_LEARNING_OUTCOME_TITLE_START:
             return {
                 ...state,
                 loading: true,
             }
-        case actionTypes.GET_ALL_LEARNING_OUTCOME_SUCCESS:
+        case actionTypes.GET_ALL_LEARNING_OUTCOME_TITLE_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 error: false,
                 getAllSuccess: true,
-                locs: action.payload.data.learningOutcomes,
+                locTitles: action.payload.data.learningOutcomeTitles,
                 response: action.payload
             }
-        case actionTypes.GET_ALL_LEARNING_OUTCOME_FAIL:
+        case actionTypes.GET_ALL_LEARNING_OUTCOME_TITLE_FAIL:
             return {
                 ...state,
                 loading: false,
                 getAllSuccess: false,
                 error: true,
-                locs: [],
+                locTitles: [],
                 response: action.payload
             }
 

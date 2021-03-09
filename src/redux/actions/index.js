@@ -49,5 +49,9 @@ export {
     getAllLearningOutcomes,
     getAllLearningOutcomesStart,
     getAllLearningOutcomesSuccess,
-    getAllLearningOutcomesFail
+    getAllLearningOutcomesFail,
+    getAllLearningOutcomeTitles,
+    getAllLearningOutcomeTitlesFail,
+    getAllLearningOutcomeTitlesStart,
+    getAllLearningOutcomeTitlesSuccess
 } from './learningOutcomes'

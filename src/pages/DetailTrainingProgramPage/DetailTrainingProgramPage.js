@@ -1,14 +1,20 @@
 import {useState, useEffect} from 'react'
 import axios from "axios";
 import {useParams} from "react-router";
-import {Col, Row, Space, Table, Tag} from "antd";
+import {Affix, Button, Col, Row, Space, Spin, Table, Tag} from "antd";
 import Title from "antd/lib/typography/Title";
 import Parser from 'html-react-parser';
+import {useHistory} from "react-router-dom";
+import * as actions from "../../redux/actions";
+import {useDispatch, useSelector} from "react-redux";
 
 const DetailTrainingProgramPage = (props) => {
     let {uuid} = useParams();
+    let history = useHistory();
     const [trainingProgram, setTrainingProgram] = useState(null)
+    const [loading, setLoading] = useState(false)
     useEffect(() => {
+        setLoading(true)
         axios.get(`/training-programs/${uuid}`)
             .then((res) => {
                 console.log(res.data)
@@ -16,6 +22,7 @@ const DetailTrainingProgramPage = (props) => {
             })
             .catch((e) => {
             })
+            .finally(() => setLoading(false))
     }, [])
 
     const DescriptionItem = ({title, content}) => (
@@ -50,10 +57,10 @@ const DetailTrainingProgramPage = (props) => {
         return (
             <>
                 <Title level={3}>
-                    II. Nội dung chương trình đào tạo
+                    III. Nội dung chương trình đào tạo
                 </Title>
                 <Title level={4}>
-                    2.1. Khung CTĐT
+                    3.1. Khung CTĐT
                 </Title>
                 <Table dataSource={data} bordered pagination={false}>
                     <Column title="STT" dataIndex="stt" key="stt"/>
@@ -98,6 +105,72 @@ const DetailTrainingProgramPage = (props) => {
         )
     }
 
+    const TrainingLOC = ({learning_outcomes}) =>
+    {
+        const dispatch = useDispatch();
+        const [locs, setLocs] = useState([]);
+        const [data, setData]=  useState(learning_outcomes)
+        const state = useSelector(state => state.learningOutcomes);
+
+        useEffect(() => {
+            dispatch(actions.getAllLearningOutcomes(1));
+        }, [])
+
+        useEffect(() => {
+            state.locs.forEach((loc) => {
+                loc.key = loc.uuid;
+                if (loc.children && loc.children.length > 0) {
+                    loc.children.forEach((child) => {
+                        child.children = [];
+                        child.key = child.uuid
+                        for (let oc of state.locs) {
+                            if (child.uuid === oc.parent_uuid) {
+                                child.children.push(oc);
+                            }
+                        }
+                        if (child.children.length === 0) delete child.children;
+                    })
+                } else {
+                    delete loc.children;
+                }
+            })
+
+            setLocs(
+                state.locs.filter((loc) => {
+                    return loc.parent_uuid == null;
+                })
+            );
+
+
+            console.log(data)
+        }, [state])
+
+        const columns = [
+            {
+                title: 'Nội dung',
+                dataIndex: 'content',
+                ellipsis: true,
+                key: 'content',
+            },
+        ];
+
+        return (
+            <>
+                <Title level={3}>
+                    II. Chuẩn đầu ra của CTĐT
+                </Title>
+
+                <Table
+                    pagination={false}
+                    columns={columns}
+                    dataSource={data}
+                    expandable={{indentSize: 40}}
+                />
+            </>
+        )
+
+    }
+
 
     if (trainingProgram) {
         const {
@@ -112,11 +185,17 @@ const DetailTrainingProgramPage = (props) => {
             admission_scale,
             common_destination,
             specific_destination,
-            institution
+            institution,
+            learning_outcomes
         } = trainingProgram
 
-        return (
+        return loading ? <Spin /> : (
             <>
+                <Affix style={{float: 'right'}} offsetTop={10}>
+                    <Button type="primary" onClick={() => history.push(`/uet/training-programs/updating/${trainingProgram.uuid}`)}>
+                        Edit
+                    </Button>
+                </Affix>
                 <Title level={3}>
                     PHẦN I: GIỚI THIỆU CHUNG VỀ CHƯƠNG TRÌNH ĐÀO TẠO
                 </Title>
@@ -169,6 +248,8 @@ const DetailTrainingProgramPage = (props) => {
                     <DescriptionItem title="Hình thức tuyển sinh" content={admission_method}/>
                     <DescriptionItem title="Dự kiến quy mô tuyển sinh" content={admission_scale}/>
                 </Col>
+                <br/>
+                <TrainingLOC learning_outcomes={learning_outcomes}/>
                 <br/>
                 <TrainingCourse/>
             </>

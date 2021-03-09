@@ -2,11 +2,13 @@ import axios from "axios";
 import {useHistory, useParams} from "react-router";
 import {useState, useEffect} from 'react';
 import Title from "antd/lib/typography/Title";
-import {Button, Col, Divider, Form, Input, InputNumber, message, Row, Select, Space} from "antd";
+import {Affix, Button, Col, Divider, Form, Input, InputNumber, message, Row, Select, Space, Spin} from "antd";
 import JoditEditor from "jodit-react";
 import * as actions from "../../redux/actions/institutions";
 import {useDispatch, useSelector} from "react-redux";
-import TrainingProgramCourses from "./TrainingProgramCourses";
+import AddTrainingProgramCourses from "./AddTrainingProgramCourses";
+import AddTrainingProgramLOC from "./AddTrainingProgramLOC";
+import AddTrainingProgramFrame from "./AddTrainingProgramFrame";
 
 const UpdateTrainingProgramPage = () => {
     let {uuid} = useParams();
@@ -15,8 +17,10 @@ const UpdateTrainingProgramPage = () => {
     const [trainingProgram, setTrainingProgram] = useState({})
     const dispatch = useDispatch();
     const insState = useSelector(state => state.institutions)
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        setLoading(true);
         axios.get(`/training-programs/${uuid}`)
             .then((res) => {
                 setTrainingProgram(res.data.trainingProgram)
@@ -47,9 +51,11 @@ const UpdateTrainingProgramPage = () => {
                     admission_method,
                     admission_scale
                 })
+
             })
             .catch((e) => {
             })
+            .finally(() => setLoading(false))
         dispatch(actions.getAllInstitution());
     }, [])
 
@@ -69,8 +75,9 @@ const UpdateTrainingProgramPage = () => {
 
     }
 
-    return (
+    return loading ? <Spin /> : (
         <>
+
             <Form
                 layout="vertical"
                 form={form}
@@ -172,7 +179,6 @@ const UpdateTrainingProgramPage = () => {
                             </Form.Item>
                         </Space>
 
-
                     </Col>
                 </Row>
                 <Title level={3}>3. Thông tin tuyển sinh</Title>
@@ -190,11 +196,13 @@ const UpdateTrainingProgramPage = () => {
                     </Col>
                 </Row>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">Update</Button>
+                    <Button type="primary" htmlType="submit">Cập nhật</Button>
                 </Form.Item>
             </Form>
             <Divider />
-            <TrainingProgramCourses />
+            <AddTrainingProgramFrame trainingProgram={trainingProgram}/>
+            <Divider />
+            <AddTrainingProgramLOC trainingProgram={trainingProgram}/>
         </>
     )
 }

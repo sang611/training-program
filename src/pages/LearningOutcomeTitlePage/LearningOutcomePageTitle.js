@@ -4,144 +4,8 @@ import React, {useEffect, useState, useMemo} from 'react'
 import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions/index"
-import {Option} from "antd/lib/mentions";
 
-const CreateCLO = () => {
-    const dispatch = useDispatch();
-    const [form] = Form.useForm();
-    const [locs, setLocs] = useState([]);
-    const [plos, setPlos] = useState([]);
-    useEffect(() => {
-        axios.get("/learning-outcomes/1")
-            .then((res) => setLocs(res.data.learningOutcomes))
-    }, [])
-
-    const formItemLayoutWithOutLabel = {
-        wrapperCol: {
-            xs: {span: 24, offset: 0},
-            sm: {span: 20, offset: 0},
-        },
-    };
-    const formItemLayout = {
-        labelCol: {
-            xs: {span: 24},
-            sm: {span: 4},
-        },
-        wrapperCol: {
-            xs: {span: 24},
-            sm: {span: 20},
-        },
-    };
-
-    const onFinish = ({contents}) => {
-        const data = {
-            contents: contents,
-            category: 2,
-            plos: plos
-        }
-        axios.post("/learning-outcomes", data)
-            .then((res) => {
-                message.success("CĐR được thêm thành công")
-                dispatch(actions.getAllLearningOutcomes(2))
-            })
-            .catch((e) => message.error("Đã có lỗi xảy ra"))
-        form.resetFields();
-    };
-
-    function handleChange(value) {
-        setPlos(value);
-    }
-
-    return (
-        <>
-            <Select
-                mode="multiple"
-                allowClear
-                size={"middle"}
-                style={{ width: '100%' }}
-                placeholder="Chọn các CĐR CTĐT có liên quan"
-                onChange={handleChange}
-            >
-                {
-                    locs.map((loc) => {
-                        return (
-                            <Option key={loc.uuid}>{loc.content}</Option>
-                        )
-                    })
-                }
-
-            </Select><br/><br/>
-            <Form form={form} name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
-                <Form.List
-                    name="contents"
-                    rules={[{required: true, message: 'Tạo ít nhất 1 nội dung CĐR'}]}
-                >
-                    {(fields, {add, remove}, {errors}) => (
-                        <>
-                            {fields.map((field, index) => (
-                                <Form.Item
-                                    {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                                    /*label={index === 0 ? 'Nội dung' : ''}*/
-                                    required={true}
-                                    key={field.key}
-                                >
-                                    <Form.Item
-                                        {...field}
-                                        validateTrigger={['onChange', 'onBlur']}
-                                        rules={[
-                                            {
-                                                required: true,
-                                                whitespace: true,
-                                                message: "Nhập nội dung CĐR",
-                                            },
-                                        ]}
-                                        noStyle
-                                    >
-                                        <Row>
-                                            <Col span={22}>
-                                                <Input.TextArea placeholder="Mô tả"
-                                                                style={{width: '100%'}}/>
-                                            </Col>
-                                            <Col span={2}>
-
-                                                <MinusCircleOutlined
-                                                    className="dynamic-delete-button"
-                                                    onClick={() => remove(field.name)}
-                                                />
-
-                                            </Col>
-
-                                        </Row>
-
-                                    </Form.Item>
-
-                                </Form.Item>
-                            ))}
-                            <Form.Item>
-                                <Button
-                                    type="dashed"
-                                    block
-                                    onClick={() => add()}
-                                    icon={<PlusOutlined/>}
-                                >
-                                    Thêm CĐR
-                                </Button>
-                                <Form.ErrorList errors={errors}/>
-                            </Form.Item>
-                        </>
-                    )}
-                </Form.List>
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-                </Form.Item>
-            </Form>
-        </>
-    )
-}
-
-const LearningOutcomePage = () => {
+const LearningOutcomeTitlePage = () => {
     const [visibleDrawer, setVisibleDrawer] = useState(false);
     const [visibleModal, setVisibleModal] = useState(false);
     const [editingLOC, setEditingLOC] = useState(null);
@@ -179,10 +43,10 @@ const LearningOutcomePage = () => {
             });
 
         const updateLOC = (values) => {
-            axios.put(`/learning-outcomes/${editingLOC.uuid}`, values)
+            axios.put(`/learning-outcome-titles/${editingLOC.uuid}`, values)
                 .then((res) => {
-                    message.success("Cập nhật CĐR thành công")
-                    dispatch(actions.getAllLearningOutcomes(typeLoc));
+                    message.success("Cập nhật danh mục thành công")
+                    dispatch(actions.getAllLearningOutcomeTitles(typeLoc));
                     setVisibleModal(false);
                 })
                 .catch((e) => {
@@ -218,24 +82,37 @@ const LearningOutcomePage = () => {
     };
 
     const ListLocs = () => {
-        const state = useSelector(state => state.learningOutcomes);
+        const [locs, setLocs] = useState([]);
+        const state = useSelector(state => state.learningOutcomeTitles);
         useEffect(() => {
-            dispatch(actions.getAllLearningOutcomes(typeLoc));
+            dispatch(actions.getAllLearningOutcomeTitles(typeLoc));
         },[])
         useEffect(() => {
-            state.locs.map((loc, index) => {
-                loc.stt = index + 1;
-                return loc;
+            state.locTitles.forEach((loc) => {
+                loc.key = loc.uuid;
+                if (loc.children && loc.children.length > 0) {
+                    loc.children.forEach((child) => {
+                        child.children = [];
+                        child.key = child.uuid
+                        for (let oc of state.locTitles) {
+                            if (child.uuid === oc.parent_uuid) {
+                                child.children.push(oc);
+                            }
+                        }
+                        if (child.children.length === 0) delete child.children;
+                    })
+                } else {
+                    delete loc.children;
+                }
             })
+
+            setLocs(
+                state.locTitles.filter((loc) => {
+                    return loc.parent_uuid == null;
+                })
+            );
         }, [state])
         const columns = [
-            {
-                title: 'STT',
-                dataIndex: 'stt',
-                key: 'stt',
-                width: '80px',
-                render: text => text,
-            },
             {
                 title: 'Nội dung',
                 dataIndex: 'content',
@@ -249,11 +126,12 @@ const LearningOutcomePage = () => {
                 width: '200px',
                 render: (_, record) =>
                     <Space size="middle">
-                        <Button type="primary" onClick={() => showModal(record)}>Chỉnh sửa</Button>
+                        {record.order <= 3 ? <a onClick={() => onCreateChildLOC(record)}>Thêm</a> : ""}
+
+                        <a onClick={() => showModal(record)}>Chỉnh sửa</a>
+
                         <Popconfirm title="Xóa CĐR này?" onConfirm={() => onDeleteLOC(record.uuid)}>
-                            <Button danger type="primary">
-                                Xóa
-                            </Button>
+                            <a>Xóa</a>
                         </Popconfirm>
                     </Space>
 
@@ -261,33 +139,28 @@ const LearningOutcomePage = () => {
             },
         ];
         const onDeleteLOC = (id) => {
-            axios.delete(`/learning-outcomes/${id}`)
+            axios.delete(`/learning-outcome-titles/${id}`)
                 .then((res) => {
                     message.success("Xóa CĐR thành công")
 
                 })
-                .then(() => dispatch(actions.getAllLearningOutcomes(typeLoc)))
+                .then(() => dispatch(actions.getAllLearningOutcomeTitles(typeLoc)))
                 .catch((e) => {
                     message.error("Đã có lỗi xảy ra")
                 })
         }
         return <>
             <Table
-                bordered
                 loading={state.loading}
                 pagination={false}
                 columns={columns}
-                dataSource={
-                    state.locs.map((loc, index) => {
-                        loc.stt = index + 1;
-                        return loc;
-                    })
-                }
+                dataSource={locs}
+                expandable={{indentSize: 40}}
             />
         </>
     }
 
-    const CreatePLO = () => {
+    const CreateLOC = () => {
         const onFinish = ({contents}) => {
             const data = {
                 contents: contents,
@@ -295,10 +168,10 @@ const LearningOutcomePage = () => {
                 category: typeLoc,
                 order: parentOutcome ? parentOutcome.order+1 : 1
             }
-            axios.post("/learning-outcomes", data)
+            axios.post("/learning-outcome-titles", data)
                 .then((res) => {
                     message.success("CĐR được thêm thành công")
-                    dispatch(actions.getAllLearningOutcomes(typeLoc))
+                    dispatch(actions.getAllLearningOutcomeTitles(typeLoc))
                 })
                 .catch((e) => message.error("Đã có lỗi xảy ra"))
             form.resetFields();
@@ -375,7 +248,6 @@ const LearningOutcomePage = () => {
         )
     }
 
-
     const [typeLoc, setTypeLoc] = useState(1);
 
     return (
@@ -393,13 +265,13 @@ const LearningOutcomePage = () => {
             <Button
                 type="primary"
                 shape="circle"
+                danger
                 icon={<PlusOutlined/>}
                 size={"large"}
-                danger
                 style={{
                     position: 'fixed',
                     right: 52,
-                    bottom: 32,
+                    bottom: 32
                 }}
                 onClick={()=> {
                     showDrawer();
@@ -432,19 +304,17 @@ const LearningOutcomePage = () => {
                 </Modal>
             }
             <Drawer
-                title={`Tạo mới chuẩn đầu ra ${typeLoc === 1 ? "chương trình đào tạo" : "học phần"}`}
+                title={`Thêm mới chuẩn đầu ra: ${parentOutcome ? parentOutcome.content : ""}`}
                 width={720}
                 onClose={onCloseDrawer}
                 visible={visibleDrawer}
                 bodyStyle={{paddingBottom: 80}}
             >
-                {
-                    typeLoc === 1 ? <CreatePLO /> : <CreateCLO />
-                }
 
+                <CreateLOC />
             </Drawer>
         </>
     )
 }
 
-export default LearningOutcomePage;
+export default LearningOutcomeTitlePage;

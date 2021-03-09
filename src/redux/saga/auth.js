@@ -34,12 +34,12 @@ export function* authUserSaga(action) {
             yield put(actions.checkAuthTimeOut(360000));
         }
         yield put(actions.authSuccess(token, account.uuid));
-
+        yield cookies.set('isAuth', true, {path: "/"});
 
     } catch (e) {
         yield put(actions.authFail("Failed to sign in"));
+        yield cookies.set('isAuth', false, {path: "/"});
     }
-
 
 }
 
@@ -47,14 +47,16 @@ export function* logoutSaga(action) {
     yield cookies.remove("access_token", {path: "/"});
     yield cookies.remove("account", {path: "/"});
     yield cookies.remove("expirationDate", {path: "/"});
+    yield cookies.remove("isAuth", {path: "/"})
+
     yield localStorage.removeItem("menu-active")
     yield put(actions.logOutSucceed());
 }
 
-export function* authCheckTimeOutSaga(action) {
+/*export function* authCheckTimeOutSaga(action) {
     yield delay(action.expirationTime * 2);
     yield put(actions.authLogout());
-}
+}*/
 
 export function* authCheckStateSaga(action) {
     const token = yield cookies.get("access_token");

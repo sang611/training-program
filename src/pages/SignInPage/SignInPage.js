@@ -7,11 +7,25 @@ import axios from "axios";
 import * as actions from '../../redux/actions/index'
 import {useDispatch, useSelector} from "react-redux";
 import {Redirect} from "react-router-dom";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 function SignInPage(props) {
     const [signInfor, setSignInfo] = useState({});
     const dispatch = useDispatch();
     const state = useSelector(state => state.auth);
+    const [isAuth, setIsAuth] = useState(false);
+
+    /*useEffect(() => {
+        if(state.isValidToken) {
+            cookies.set("isAuth", true)
+        }
+        else {
+            cookies.set("isAuth", false)
+        }
+        setIsAuth(cookies.get("isAuth"))
+    }, [state])*/
 
     const layout = {
         labelCol: {
