@@ -5,6 +5,7 @@ import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions/index"
 import {Option} from "antd/lib/mentions";
+import Search from "antd/lib/input/Search";
 
 const CreateCLO = () => {
     const dispatch = useDispatch();
@@ -42,7 +43,7 @@ const CreateCLO = () => {
         axios.post("/learning-outcomes", data)
             .then((res) => {
                 message.success("CĐR được thêm thành công")
-                dispatch(actions.getAllLearningOutcomes(2))
+                dispatch(actions.getAllLearningOutcomes({typeLoc: 2}))
             })
             .catch((e) => message.error("Đã có lỗi xảy ra"))
         form.resetFields();
@@ -220,7 +221,7 @@ const LearningOutcomePage = () => {
     const ListLocs = () => {
         const state = useSelector(state => state.learningOutcomes);
         useEffect(() => {
-            dispatch(actions.getAllLearningOutcomes(typeLoc));
+            dispatch(actions.getAllLearningOutcomes({typeLoc}));
         },[])
         useEffect(() => {
             state.locs.map((loc, index) => {
@@ -237,9 +238,9 @@ const LearningOutcomePage = () => {
                 render: text => text,
             },
             {
-                title: 'Nội dung',
+                title: 'Chuẩn đầu ra',
                 dataIndex: 'content',
-                ellipsis: true,
+                //ellipsis: true,
                 key: 'content',
 
             },
@@ -266,10 +267,13 @@ const LearningOutcomePage = () => {
                     message.success("Xóa CĐR thành công")
 
                 })
-                .then(() => dispatch(actions.getAllLearningOutcomes(typeLoc)))
+                .then(() => dispatch(actions.getAllLearningOutcomes({typeLoc})))
                 .catch((e) => {
                     message.error("Đã có lỗi xảy ra")
                 })
+        }
+        const onSearch = (value) => {
+            dispatch(actions.getAllLearningOutcomes({typeLoc, content: value.target.value}))
         }
         return <>
             <Table
@@ -283,9 +287,24 @@ const LearningOutcomePage = () => {
                         return loc;
                     })
                 }
+                footer={() => {
+                        return (
+                            <>
+                                <Row>
+                                    <Col span={17} offset={2}>
+                                        <Search placeholder="Tìm kiếm"  style={{ width: '100%'}} onChange={onSearch} />
+                                    </Col>
+                                </Row>
+
+                            </>
+                        )
+                    }
+                }
             />
         </>
     }
+
+    const [typeLoc, setTypeLoc] = useState(1);
 
     const CreatePLO = () => {
         const onFinish = ({contents}) => {
@@ -298,7 +317,8 @@ const LearningOutcomePage = () => {
             axios.post("/learning-outcomes", data)
                 .then((res) => {
                     message.success("CĐR được thêm thành công")
-                    dispatch(actions.getAllLearningOutcomes(typeLoc))
+
+                    dispatch(actions.getAllLearningOutcomes({typeLoc}))
                 })
                 .catch((e) => message.error("Đã có lỗi xảy ra"))
             form.resetFields();
@@ -376,7 +396,7 @@ const LearningOutcomePage = () => {
     }
 
 
-    const [typeLoc, setTypeLoc] = useState(1);
+
 
     return (
         <>
@@ -418,7 +438,7 @@ const LearningOutcomePage = () => {
                     <Form form={updateForm} layout="vertical" name="form_in_modal">
                         <Form.Item
                             name="content"
-                            label="Nội dung"
+                            label="Chuẩn đầu ra"
                             rules={[
                                 {
                                     required: true,

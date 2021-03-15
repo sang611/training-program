@@ -8,16 +8,16 @@ import {useParams} from "react-router";
 import Title from "antd/lib/typography/Title";
 import Dragger from "antd/lib/upload/Dragger";
 
-const AddTrainingProgramCourses = () => {
+const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded}) => {
     const dispatch = useDispatch();
     const courseState = useSelector(state => state.courses)
     const [uploadFile, setUploadFile] = useState(false);
     const [form] = Form.useForm();
+    const [addCourseForm] = Form.useForm();
 
     let {uuid} = useParams();
 
     useEffect(() => {
-
         dispatch(actions.getAllCourse())
     }, [])
 
@@ -28,6 +28,20 @@ const AddTrainingProgramCourses = () => {
             trainingUuid: uuid
         })
             .then((res) => {
+                addCourseForm.resetFields();
+                getNewCoursesAdded(
+                    res.data.newCourses.map(course => {
+                            course.training_program_course = {
+                                theory_time: course.theory_time,
+                                exercise_time: course.exercise_time,
+                                practice_time: course.practice_time,
+                            }
+                            return course;
+                        }
+                    ))
+            })
+            .then(() => {
+                onCloseDrawer();
                 message.success("Thêm học phần vào CTĐT thành công")
             })
             .catch((e) => {
@@ -55,6 +69,7 @@ const AddTrainingProgramCourses = () => {
                 }
             },
         };
+
         function beforeUpload(file) {
             const isXslx = file.type === 'application/vnd.ms-excel' ||
                 file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
@@ -139,7 +154,7 @@ const AddTrainingProgramCourses = () => {
             <Row>
                 {uploadFile ? <UploadFileComponent/> :
                     <Col span={24}>
-                        <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
+                        <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off" form={addCourseForm}>
                             {/*<Row justify="start">
                                 <Col span={8}>
                                     <Tag color="#303641">Tên học phần</Tag>
@@ -265,7 +280,7 @@ const AddTrainingProgramCourses = () => {
                             </Form.List>
                             <Form.Item>
                                 <Button type="primary" htmlType="submit">
-                                    Submit
+                                    Thêm vào khung đào tạo
                                 </Button>
                             </Form.Item>
                         </Form>

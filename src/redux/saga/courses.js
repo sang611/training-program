@@ -16,3 +16,15 @@ export function* getAllCourse(action) {
         yield put(actions.getAllCourseFail(error.response));
     }
 }
+
+export function* getACourse(action) {
+    const {courseUuid} = action.payload;
+    yield put(actions.getACourseStart());
+
+    try {
+        const response = yield axios.get(`/courses/${courseUuid}`);
+        yield put(actions.getACourseSuccess(response.data.course));
+    } catch (error) {
+        yield put(actions.getACourseFail(error.response.data.message));
+    }
+}

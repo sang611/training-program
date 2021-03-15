@@ -42,7 +42,11 @@ export {
     getAllCourse,
     getAllCourseStart,
     getAllCourseSuccess,
-    getAllCourseFail
+    getAllCourseFail,
+    getACourse,
+    getACourseFail,
+    getACourseStart,
+    getACourseSuccess
 } from './courses'
 
 export {

@@ -7,10 +7,11 @@ import * as actionTypes from "../actions/actionTypes";
 
 
 export function* getAllLearningOutcomes(action) {
+    const {typeLoc, content} = action.payload
     yield put(actions.getAllLearningOutcomesStart());
 
     try {
-        const response = yield axios.get(`/learning-outcomes/${action.payload}`);
+        const response = yield axios.get(`/learning-outcomes/${typeLoc}/?content=${content ? content : ""}`);
         yield put(actions.getAllLearningOutcomesSuccess(response));
     } catch (error) {
         yield put(actions.getAllLearningOutcomesFail(error.response));

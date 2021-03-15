@@ -19,7 +19,7 @@ const ListTrainingProgramPage = () => {
     const TrainingItem = ({item}) => {
         return (
             <Card
-                extra={<Link to={`/uet/training-programs/${item.uuid}`}>More</Link>}
+                extra={<Link to={`/uet/training-programs/${item.uuid}`}>Chi tiết</Link>}
                 actions={[
                     <SettingOutlined key="setting" onClick={() => console.log("setting")} />,
                     <Link to={`/uet/training-programs/updating/${item.uuid}`}>
@@ -39,7 +39,7 @@ const ListTrainingProgramPage = () => {
     return (
         <>
             <List
-                grid={{ gutter: 16, column: 4 }}
+                grid={{ gutter: 16, column: 3 }}
                 dataSource={trainingPrograms.training_programs}
                 renderItem={item => (
                     <List.Item>

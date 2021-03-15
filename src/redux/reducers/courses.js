@@ -2,13 +2,14 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     response: {},
-    loading: false,
+    loading: null,
     getAllSuccess: false,
+    course: null,
+    loadingACourse: null
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-
 
         case actionTypes.GET_ALL_COURSE_START:
             return {
@@ -28,6 +29,26 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 getAllSuccess: false,
+                error: true,
+                response: action.payload
+            }
+
+        case actionTypes.GET_A_COURSE_START:
+            return {
+                ...state,
+                loadingACourse: true,
+            }
+        case actionTypes.GET_A_COURSE_SUCCESS:
+            return {
+                ...state,
+                loadingACourse: false,
+                error: false,
+                course: action.payload
+            }
+        case actionTypes.GET_A_COURSE_FAIL:
+            return {
+                ...state,
+                loadingACourse: false,
                 error: true,
                 response: action.payload
             }

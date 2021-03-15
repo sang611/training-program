@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Table, Input, InputNumber, Popconfirm, Form, Typography, Select, Button, Drawer, message} from 'antd';
+import {Table, Input, InputNumber, Popconfirm, Form, Typography, Select, Button, Drawer, message, Space} from 'antd';
 import * as actions from "../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
 import Title from "antd/lib/typography/Title";
@@ -71,7 +71,6 @@ const EditableCell = ({
 
 const AddTrainingProgramFrame = ({trainingProgram}) => {
     const [form] = Form.useForm();
-    const [data, setData] = useState(originData);
     const [dataSource, setDataSource] = useState(trainingProgram.courses);
     const [editingKey, setEditingKey] = useState('');
 
@@ -85,9 +84,6 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
 
     const edit = (record) => {
         form.setFieldsValue({
-            name: '',
-            age: '',
-            address: '',
             ...record,
         });
         setEditingKey(record.key);
@@ -138,16 +134,41 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
         }
     };
 
+    const onDeleteCourse = (courseUuid) => {
+        axios.delete(`/training-programs/courses/${trainingProgram.uuid}/${courseUuid}`)
+            .then((res) => {
+                message.success(res.data.message);
+            })
+            .then(() => {
+                const newData = [...dataSource];
+                setDataSource(
+                    newData.filter((c) => c.uuid !== courseUuid)
+                )
+            })
+            .catch((e) => message.error("Đã có lỗi xảy ra"));
+    }
+
+    const getNewCoursesAdded = (listCourses) => {
+        setDataSource([...dataSource, ...listCourses])
+    }
+
     const columns = [
+        {
+            title: 'STT',
+            dataIndex: 'stt',
+        },
         {
             title: 'Mã học phần',
             dataIndex: 'course_code',
-
         },
         {
             title: 'Tên học phần (vi)',
             dataIndex: 'course_name_vi',
             editable: true,
+        },
+        {
+            title: 'Số tín chỉ',
+            dataIndex: 'credits',
         },
         {
             title: 'Số giờ lý thuyết',
@@ -166,6 +187,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
             editable: true,
 
         },
+
         {
             title: 'Thao tác',
             dataIndex: 'operation',
@@ -174,7 +196,6 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
                 return editable ? (
                     <span>
             <a
-
                 onClick={() => {
                     console.log(record)
                     save(record.uuid)
@@ -185,14 +206,25 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
             >
               Lưu
             </a>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+            <Popconfirm title="Chắc chắn thoát?" onConfirm={cancel}>
               <a>Thoát</a>
             </Popconfirm>
           </span>
                 ) : (
-                    <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                        Sửa
-                    </Typography.Link>
+                    <>
+                        <Space>
+                            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                                Sửa
+                            </Typography.Link>
+                            <Popconfirm title="Học phần sẽ được xóa khỏi CTĐT?" onConfirm={() => onDeleteCourse(record.uuid)}>
+                                <Typography.Link>
+                                    Xóa
+                                </Typography.Link>
+                            </Popconfirm>
+                        </Space>
+
+                    </>
+
                 );
             },
         },
@@ -201,6 +233,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
         if (!col.editable) {
             return col;
         }
+
 
         return {
             ...col,
@@ -223,8 +256,8 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
     };
     return (
         <>
-            <Title level={3}>
-                4. Khung đào tạo &nbsp;
+            <Title level={4}>
+                 Khung chương trình đào tạo &nbsp;
                 {/*<Switch
                     checkedChildren="Thêm bằng file"
                     unCheckedChildren="Thêm "
@@ -243,9 +276,10 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
                         },
                     }}
                     bordered
-                    dataSource={dataSource ? dataSource.map((data) => {
+                    dataSource={dataSource ? dataSource.map((data, index) => {
                         data.key=data.uuid;
-                        return data
+                        data.stt = index+1;
+                        return data;
                     }) : []}
                     pagination={false}
                     columns={mergedColumns}
@@ -260,7 +294,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
                 visible={visibleDrawer}
                 bodyStyle={{paddingBottom: 80}}
             >
-                <AddTrainingProgramCourses />
+                <AddTrainingProgramCourses onCloseDrawer={onCloseDrawer} getNewCoursesAdded={getNewCoursesAdded}/>
             </Drawer>
         </>
 

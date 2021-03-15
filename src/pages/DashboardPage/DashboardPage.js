@@ -27,6 +27,10 @@ import DetailTrainingProgramPage from "../DetailTrainingProgramPage";
 import UpdateTrainingProgramPage from "../UpdateTrainingProgramPage";
 import LearningOutcomePage from "../LearningOutcomePage/LearningOutcomePage";
 import LearningOutcomeTitlePage from "../LearningOutcomeTitlePage/LearningOutcomePageTitle";
+import CreateOutlineCoursePage from "../CreateOutlineCoursePage";
+import ListOutlinePage from "../ListOutlinePage";
+import DetailOutlinePage from "../DetailOutlinePage";
+import UpdateOutlinePage from "../UpdateOutlinePage";
 
 const cookies = new Cookies();
 const DashboardPage = () => {
@@ -149,16 +153,26 @@ const DashboardPage = () => {
                         <Switch>
                             <Route path="/uet/institutions/creation" component={CreateInstitutionPage}/>
                             <Route path="/uet/institutions" component={ListInstitutionPage}/>
+
                             <Route path="/uet/accounts/creation" component={CreateAccountPage}/>
                             <Route path="/uet/accounts" component={ListAccountPage}/>
+
                             <Route path="/uet/training-programs/creation" component={CreateTrainingProgramPage}/>
                             <Route exact path="/uet/training-programs" component={ListTrainingProgramPage}/>
                             <Route exact path="/uet/training-programs/:uuid" component={DetailTrainingProgramPage}/>
                             <Route exact path="/uet/training-programs/updating/:uuid" component={UpdateTrainingProgramPage}/>
+
                             <Route path="/uet/courses/creation" component={CreateCoursePage}/>
-                            <Route path="/uet/courses" component={ListCoursePage}/>
+                            <Route exact path="/uet/courses" component={ListCoursePage}/>
+
+                            <Route exact path="/uet/courses/:uuid/outlines/creating" component={CreateOutlineCoursePage}/>
+                            <Route exact path="/uet/courses/:uuid/outlines/:outlineUuid" component={DetailOutlinePage}/>
+                            <Route exact path="/uet/courses/:uuid/outlines" component={ListOutlinePage}/>
+                            <Route exact path="/uet/courses/:uuid/outlines/:outlineUuid/updating" component={UpdateOutlinePage}/>
+
                             <Route path="/uet/learning-outcomes" component={LearningOutcomePage}/>
                             <Route path="/uet/learning-outcome-titles" component={LearningOutcomeTitlePage}/>
+
                         </Switch>
                     </div>
                 </Content>

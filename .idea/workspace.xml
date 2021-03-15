@@ -2,27 +2,38 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b03111ef-773f-4dae-b9ce-907452fe58db" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/LearningOutcomeTitlePage/LearningOutcomePageTitle.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramFrame.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramLOC.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/redux/reducers/learningOutcomeTitles.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/AddLecturerOutlineForm.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/ContentCourse.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/CreateOutlineCoursePage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/InforCourseOutline.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/LOCOfCourse.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/DetailOutlinePage/DetailOutlinePage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/DetailOutlinePage/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/ListOutlinePage/ListOutlinePage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/ListOutlinePage/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/UpdateOutlinePage/UpdateOutlinePage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/UpdateOutlinePage/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddCourseDocument.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingSequence.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/DashboardPage/DashboardPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DashboardPage/DashboardPage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/CreateCoursePage/CreateCoursePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateCoursePage/CreateCoursePage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/DashboardPage/DashboardPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DashboardPage/DashboardPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/DetailTrainingProgramPage/DetailTrainingProgramPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DetailTrainingProgramPage/DetailTrainingProgramPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/LearningOutcomePage/LearningOutcomePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LearningOutcomePage/LearningOutcomePage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/ListCoursePage/ListCoursePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListCoursePage/ListCoursePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/ListInstitutionPage/ListInstitutionPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListInstitutionPage/ListInstitutionPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/SignInPage/SignInPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/SignInPage/SignInPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/TrainingProgramCourses.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramCourses.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/ListTrainingProgramPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/ListTrainingProgramPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramCourses.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramCourses.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramFrame.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramFrame.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramLOC.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramLOC.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/UpdateTrainingProgramPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/UpdateTrainingProgramPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/actions/actionTypes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/actionTypes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/actions/courses.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/courses.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/actions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/actions/learningOutcomes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/learningOutcomes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/reducers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducers/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/reducers/learningOutcomes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducers/learningOutcomes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/saga/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/saga/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/reducers/courses.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducers/courses.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/saga/courses.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/saga/courses.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/saga/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/saga/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/saga/learningOutcomes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/saga/learningOutcomes.js" afterDir="false" />
     </list>
@@ -35,8 +46,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="CSS File" />
-        <option value="JavaScript File" />
         <option value="React Functional Component" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -60,7 +71,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/redux/reducers" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -72,11 +83,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Web\KLTN\training-scheme-frontend-ant\src\pages\CreateOutlineCoursePage" />
       <recent name="D:\Web\KLTN\training-scheme-frontend-ant\src\redux\reducers" />
       <recent name="D:\Web\KLTN\training-scheme-frontend-ant\src\pages\LearningOutcomeTitlePage" />
       <recent name="D:\Web\KLTN\training-scheme-frontend-ant\src\redux\saga" />
       <recent name="D:\Web\KLTN\training-scheme-frontend-ant\src\redux\actions" />
-      <recent name="D:\Web\KLTN\training-scheme-frontend-ant\src" />
     </key>
   </component>
   <component name="RunManager">
@@ -128,7 +139,9 @@
       <workItem from="1614260088316" duration="5170000" />
       <workItem from="1614657968712" duration="23987000" />
       <workItem from="1615109341801" duration="17629000" />
-      <workItem from="1615215901612" duration="4583000" />
+      <workItem from="1615215901612" duration="12288000" />
+      <workItem from="1615390432850" duration="12323000" />
+      <workItem from="1615562750367" duration="76153000" />
     </task>
     <servers />
   </component>

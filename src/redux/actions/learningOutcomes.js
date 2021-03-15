@@ -3,7 +3,7 @@ import * as actionTypes from "./actionTypes";
 export const getAllLearningOutcomes = (payload) => {
     return {
         type: actionTypes.GET_ALL_LEARNING_OUTCOME,
-        payload
+        payload: payload
     }
 }
 export const getAllLearningOutcomesStart = () => {
@@ -29,7 +29,7 @@ export const getAllLearningOutcomesFail = (payload) => {
 export const getAllLearningOutcomeTitles = (payload) => {
     return {
         type: actionTypes.GET_ALL_LEARNING_OUTCOME_TITLE,
-        payload
+        payload: payload
     }
 }
 export const getAllLearningOutcomeTitlesStart = () => {

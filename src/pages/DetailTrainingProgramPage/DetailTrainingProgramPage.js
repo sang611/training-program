@@ -7,6 +7,8 @@ import Parser from 'html-react-parser';
 import {useHistory} from "react-router-dom";
 import * as actions from "../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
+import {EditOutlined} from "@ant-design/icons";
+import TextArea from "antd/lib/input/TextArea";
 
 const DetailTrainingProgramPage = (props) => {
     let {uuid} = useParams();
@@ -60,7 +62,7 @@ const DetailTrainingProgramPage = (props) => {
                     III. Nội dung chương trình đào tạo
                 </Title>
                 <Title level={4}>
-                    3.1. Khung CTĐT
+                    Khung chương trình đào tạo
                 </Title>
                 <Table dataSource={data} bordered pagination={false}>
                     <Column title="STT" dataIndex="stt" key="stt"/>
@@ -72,44 +74,15 @@ const DetailTrainingProgramPage = (props) => {
                         <Column title="Bài tập" dataIndex="exercise_time" key="exercise_time"/>
                         <Column title="Thực hành" dataIndex="practice_time" key="practice_time"/>
                     </ColumnGroup>
-
-                    {/*<Column title="Address" dataIndex="address" key="address"/>
-                    <Column
-                        title="Tags"
-                        dataIndex="tags"
-                        key="tags"
-                        render={tags => (
-                            <>
-                                {tags.map(tag => (
-
-                                    <Tag color="blue" key={tag}>
-                                        {tag}
-                                    </Tag>
-
-                                ))}
-                            </>
-                        )}
-                    />
-                    <Column
-                        title="Action"
-                        key="action"
-                        render={(text, record) => (
-                            <Space size="middle">
-                                <a>Invite {record.lastName}</a>
-                                <a>Delete</a>
-                            </Space>
-                        )}
-                    />*/}
                 </Table>
             </>
         )
     }
 
-    const TrainingLOC = ({learning_outcomes}) =>
-    {
+    const TrainingLOC = ({learning_outcomes}) => {
         const dispatch = useDispatch();
         const [locs, setLocs] = useState([]);
-        const [data, setData]=  useState(learning_outcomes)
+        const [data, setData] = useState(learning_outcomes)
         const state = useSelector(state => state.learningOutcomes);
 
         useEffect(() => {
@@ -141,7 +114,6 @@ const DetailTrainingProgramPage = (props) => {
                 })
             );
 
-
             console.log(data)
         }, [state])
 
@@ -156,9 +128,6 @@ const DetailTrainingProgramPage = (props) => {
 
         return (
             <>
-                <Title level={3}>
-                    II. Chuẩn đầu ra của CTĐT
-                </Title>
 
                 <Table
                     pagination={false}
@@ -171,6 +140,205 @@ const DetailTrainingProgramPage = (props) => {
 
     }
 
+    const CourseDocument = ({courses, semester}) => {
+        const columns = [
+            {
+                title: 'STT',
+                render: (value, row, index) => index + 1,
+                width: 80
+            },
+            {
+                title: 'Mã học phần',
+                dataIndex: 'course_code',
+                width: 200
+            },
+            {
+                title: 'Tên học phần (vi)',
+                dataIndex: 'course_name_vi',
+            },
+            {
+                title: 'Số tín chỉ',
+                dataIndex: 'credits',
+                width: 100
+            },
+            {
+                title: 'Tài liệu tham khảo',
+                dataIndex: ['training_program_course', 'documents'],
+                width: '50%'
+            },
+
+        ]
+
+        if (semester) {
+            columns.pop();
+        }
+
+        return !semester ? (
+            <>
+                <Title level={4}>
+                    {"Danh mục tài liệu tham khảo"}
+                </Title>
+                <Table
+                    columns={columns}
+                    dataSource={courses.map((course) => {
+                        course.key = course.uuid
+                        return course;
+                    })}
+                    bordered
+                    pagination={false}
+                />
+            </>
+        ) : (
+            <>
+                <Title level={4}>
+                    {"Trình tự đào tạo dự kiến"}
+                </Title>
+
+                {
+                    new Array(trainingProgram.duration * 2).fill(undefined).map((_, index) => {
+                        return (
+                            <>
+                                <Title level={5}>{`Kỳ ${index + 1}`}</Title>
+                                <Row>
+                                    <Col span={15} offset={2}>
+                                        <Table
+                                            columns={columns}
+                                            dataSource={
+                                                courses
+                                                    .filter((course) => course.training_program_course.semester === index + 1)
+                                                    .map((course) => {
+                                                        course.key = course.uuid
+                                                        return course;
+                                                    })}
+                                            bordered
+                                            pagination={false}
+                                            footer={() => {
+                                                return <Row align="end">
+                                                    Tổng số tín chỉ: &nbsp;
+                                                    <b>
+                                                        {
+                                                            courses
+                                                                .filter((course) => course.training_program_course.semester === index + 1)
+                                                                .map(course => course.credits)
+                                                                .reduce((c1, c2) => (c1 + c2), 0)
+                                                        }
+                                                    </b>
+                                                </Row>
+
+                                            }}
+                                        />
+                                    </Col>
+                                </Row>
+                                <br/>
+                            </>
+                        )
+                    })
+                }
+            </>
+        )
+    }
+
+    const Lecturers = ({courses}) => {
+        const [dataSource, setDataSource] = useState([])
+        useEffect(() => {
+            let mix = [];
+            for (let course of courses) {
+                let lecturers = JSON.parse(course.training_program_course.lecturers);
+                course.lecturers = lecturers;
+                if (lecturers) {
+                    for (let lecturer of lecturers) {
+                        mix.push({...course, ...lecturer, courseUuid: course.uuid, lecturerUuid: lecturer.uuid})
+                        setDataSource(
+                            mix
+                        )
+                    }
+                } else {
+                    mix.push({...course, courseUuid: course.uuid})
+                    setDataSource(mix)
+                }
+            }
+
+        }, [])
+
+        useEffect(() => {
+            console.log(">>>", dataSource)
+        }, [dataSource])
+
+        const renderContent = (value, row, index) => {
+            const obj = {
+                children: value,
+                props: {},
+            };
+
+            obj.props.rowSpan = dataSource[index].lecturers ? dataSource[index].lecturers.length : 1;
+
+            if (index > 0) {
+                if (dataSource[index].courseUuid === dataSource[index - 1].courseUuid) {
+                    obj.props.rowSpan = 0;
+                }
+            }
+
+            return obj;
+        }
+        const columns = [
+            {
+                title: 'STT',
+                dataIndex: 'stt',
+                //render: renderContent,
+            },
+            {
+                title: 'Mã học phần',
+                dataIndex: 'course_code',
+                render: renderContent,
+            },
+            {
+                title: 'Tên học phần (vi)',
+                dataIndex: 'course_name_vi',
+                render: renderContent,
+            },
+            {
+                title: 'Số tín chỉ',
+                dataIndex: 'credits',
+                render: renderContent,
+            },
+            {
+                title: 'Cán bộ giảng dạy',
+                colSpan: 3,
+                children: [
+                    {
+                        title: "Họ và tên",
+                        dataIndex: 'fullname'
+                    },
+                    {
+                        title: "Học vị",
+                        dataIndex: "academic_rank"
+                    },
+                    {
+                        title: "Đơn vị công tác",
+                        dataIndex: ['institution', 'vn_name']
+                    }
+                ]
+            },
+        ]
+
+        return (
+            <>
+                <Title level={4}>
+                    Đội ngũ cán bộ giảng dạy
+                </Title>
+                <Table
+                    columns={columns}
+                    dataSource={dataSource.map((course, index) => {
+                        course.key = index;
+                        course.stt = index + 1;
+                        return course;
+                    })}
+                    bordered
+                    pagination={false}
+                />
+            </>
+        )
+    }
 
     if (trainingProgram) {
         const {
@@ -186,15 +354,20 @@ const DetailTrainingProgramPage = (props) => {
             common_destination,
             specific_destination,
             institution,
-            learning_outcomes
+            learning_outcomes,
+            courses
         } = trainingProgram
 
-        return loading ? <Spin /> : (
+        return loading ? <Spin/> : (
             <>
                 <Affix style={{float: 'right'}} offsetTop={10}>
-                    <Button type="primary" onClick={() => history.push(`/uet/training-programs/updating/${trainingProgram.uuid}`)}>
-                        Edit
-                    </Button>
+                    <Button
+                        type="primary"
+                        shape="circle"
+                        icon={<EditOutlined/>}
+                        style={{float: 'right'}}
+                        onClick={() => history.push(`/uet/training-programs/updating/${trainingProgram.uuid}`)}
+                    />
                 </Affix>
                 <Title level={3}>
                     PHẦN I: GIỚI THIỆU CHUNG VỀ CHƯƠNG TRÌNH ĐÀO TẠO
@@ -249,9 +422,16 @@ const DetailTrainingProgramPage = (props) => {
                     <DescriptionItem title="Dự kiến quy mô tuyển sinh" content={admission_scale}/>
                 </Col>
                 <br/>
+                <Title level={3}>
+                    II. Chuẩn đầu ra của CTĐT
+                </Title>
                 <TrainingLOC learning_outcomes={learning_outcomes}/>
                 <br/>
-                <TrainingCourse/>
+                <TrainingCourse/><br/><br/>
+                <CourseDocument courses={courses}/><br/><br/>
+                <Lecturers courses={courses}/><br/><br/>
+                <CourseDocument courses={courses} semester={true}/><br/><br/>
+
             </>
         )
     } else {
@@ -259,5 +439,5 @@ const DetailTrainingProgramPage = (props) => {
     }
 }
 
-export default DetailTrainingProgramPage;
+export default DetailTrainingProgramPage
 

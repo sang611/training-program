@@ -9,6 +9,8 @@ import {useDispatch, useSelector} from "react-redux";
 import AddTrainingProgramCourses from "./AddTrainingProgramCourses";
 import AddTrainingProgramLOC from "./AddTrainingProgramLOC";
 import AddTrainingProgramFrame from "./AddTrainingProgramFrame";
+import AddCourseDocument from "./AddCourseDocument";
+import AddTrainingSequence from "./AddTrainingSequence";
 
 const UpdateTrainingProgramPage = () => {
     let {uuid} = useParams();
@@ -17,10 +19,10 @@ const UpdateTrainingProgramPage = () => {
     const [trainingProgram, setTrainingProgram] = useState({})
     const dispatch = useDispatch();
     const insState = useSelector(state => state.institutions)
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setLoading(true);
+
         axios.get(`/training-programs/${uuid}`)
             .then((res) => {
                 setTrainingProgram(res.data.trainingProgram)
@@ -83,7 +85,10 @@ const UpdateTrainingProgramPage = () => {
                 form={form}
                 onFinish={onUpdateTrainingProgram}
             >
-                <Title level={3}>1. Thông tin chương trình đào tạo</Title>
+                <Title level={3}>
+                    PHẦN I: GIỚI THIỆU CHUNG VỀ CHƯƠNG TRÌNH ĐÀO TẠO
+                </Title>
+                <Title level={4}>1. Thông tin chương trình đào tạo</Title>
                 <Row>
                     <Col span={15} offset={1}>
                         <Row>
@@ -162,7 +167,7 @@ const UpdateTrainingProgramPage = () => {
 
                     </Col>
                 </Row>
-                <Title level={3}>2. Mục tiêu đào tạo</Title>
+                <Title level={4}>2. Mục tiêu đào tạo</Title>
                 <Row>
                     <Col span={20} offset={1}>
 
@@ -181,7 +186,7 @@ const UpdateTrainingProgramPage = () => {
 
                     </Col>
                 </Row>
-                <Title level={3}>3. Thông tin tuyển sinh</Title>
+                <Title level={4}>3. Thông tin tuyển sinh</Title>
                 <Row>
                     <Col span={12} offset={1}>
 
@@ -200,9 +205,21 @@ const UpdateTrainingProgramPage = () => {
                 </Form.Item>
             </Form>
             <Divider />
-            <AddTrainingProgramFrame trainingProgram={trainingProgram}/>
-            <Divider />
+            <Title level={3}>
+                Phần II. Chuẩn đầu ra của CTĐT
+            </Title>
             <AddTrainingProgramLOC trainingProgram={trainingProgram}/>
+
+            <Divider />
+            <Title level={3}>
+                PHẦN III: NỘI DUNG CHƯƠNG TRÌNH ĐÀO TẠO
+            </Title>
+            <AddTrainingProgramFrame trainingProgram={trainingProgram}/><br/><br/>
+            <AddCourseDocument trainingProgram={trainingProgram} type={"doc"}/><br/><br/>
+            <AddCourseDocument trainingProgram={trainingProgram} type={"lec"}/><br/><br/>
+
+            <AddTrainingSequence trainingProgram={trainingProgram} /><br/><br/>
+
         </>
     )
 }

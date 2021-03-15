@@ -15,7 +15,7 @@ const ListLocs = ({trainingProgram}) => {
     const state = useSelector(state => state.learningOutcomes);
 
     useEffect(() => {
-        dispatch(actions.getAllLearningOutcomes(1));
+        dispatch(actions.getAllLearningOutcomes({typeLoc: 1}));
     }, [])
 
     useEffect(() => {
@@ -50,7 +50,7 @@ const ListLocs = ({trainingProgram}) => {
 
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            //console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
             setChoosedLocs(selectedRowKeys);
             setSelectedRowKeys(selectedRowKeys)
         },
@@ -141,7 +141,7 @@ const CreateLOC = ({parentOutcome, onClose}) => {
         axios.post("/learning-outcomes", data)
             .then((res) => {
                 message.success("CĐR được thêm thành công")
-                dispatch(actions.getAllLearningOutcomes(1))
+                dispatch(actions.getAllLearningOutcomes({typeLoc: 1}))
                 onClose();
             })
             .catch((e) => message.error("Đã có lỗi xảy ra"))
@@ -237,10 +237,6 @@ const AddTrainingProgramLOC = ({trainingProgram}) => {
 
     return (
         <>
-            <Title level={3}>
-                5. Cập nhật chuẩn đầu ra &nbsp;
-                <br/>
-            </Title>
             <ListLocs trainingProgram={trainingProgram}/>
 
         </>

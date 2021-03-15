@@ -21,6 +21,7 @@ export function* watchAuth() {
     yield takeEvery(actionTypes.INSTITUTION_GET_ALl, institutionSaga.getAllInstitution);
 
     yield takeEvery(actionTypes.GET_ALL_COURSE, courseSaga.getAllCourse);
+    yield takeEvery(actionTypes.GET_A_COURSE, courseSaga.getACourse);
 
     yield takeEvery(actionTypes.GET_ALL_LEARNING_OUTCOME, learningOutcomeSaga.getAllLearningOutcomes);
     yield takeEvery(actionTypes.GET_ALL_LEARNING_OUTCOME_TITLE, learningOutcomeSaga.getAllLearningOutcomeTitles);
