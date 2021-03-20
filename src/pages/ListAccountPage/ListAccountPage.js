@@ -88,7 +88,7 @@ const ListAccountPage = () => {
             <List
                 className="demo-loadmore-list"
                 itemLayout="horizontal"
-                dataSource={state.accounts.accounts}
+                dataSource={state.accounts ? state.accounts.accounts : []}
                 size="large"
                 style={{overflow: 'scroll', height: '400px'}}
                 renderItem={item => (
@@ -113,7 +113,7 @@ const ListAccountPage = () => {
                     <Pagination
                         current={currentPage}
                         pageSize={10}
-                        total={state.accounts.totalResults}
+                        total={state.accounts ? state.accounts.totalResults : ""}
                         onChange={(e) => {
                             setCurrentPage(e)
                         }}

@@ -7,6 +7,8 @@ const initialState = {
     isSearch: false,
     isFilter: false,
     error: null,
+    user: null,
+    loading: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -59,6 +61,21 @@ const reducer = (state = initialState, action) => {
                 isSearch: false,
                 isFilter: true,
                 filteredAccounts: action.filteredAccounts
+            }
+        case actionTypes.GET_A_USER_START:
+            return {
+                loading: true
+            }
+        case actionTypes.GET_A_USER_SUCCESS:
+            return {
+                loading: false,
+                user: action.payload,
+                error: null
+            }
+        case actionTypes.GET_A_USER_FAIL:
+            return {
+                loading: false,
+                error: action.payload
             }
         default:
             return state;

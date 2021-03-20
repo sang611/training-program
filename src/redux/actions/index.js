@@ -24,7 +24,11 @@ export {
     searchAccounts,
     searchAccountsSuccess,
     filterAccounts,
-    filterAccountsSuccess
+    filterAccountsSuccess,
+    getAUser,
+    getAUserFail,
+    getAUserStart,
+    getAUserSuccess
 } from './accounts';
 
 export {

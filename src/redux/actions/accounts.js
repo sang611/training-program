@@ -82,3 +82,30 @@ export const filterAccounts = (role, accounts) => {
         accounts: accounts
     }
 }
+
+export const getAUser = (payload) => {
+    return {
+        type: actionTypes.GET_A_USER,
+        payload: payload
+    }
+}
+
+export const getAUserStart = () => {
+    return {
+        type: actionTypes.GET_A_USER_START,
+    }
+}
+
+export const getAUserSuccess = (payload) => {
+    return {
+        type: actionTypes.GET_A_USER_SUCCESS,
+        payload: payload
+    }
+}
+
+export const getAUserFail = (error) => {
+    return {
+        type: actionTypes.GET_A_USER_FAIL,
+        error: error
+    }
+}

@@ -1,7 +1,7 @@
 import {takeEvery} from 'redux-saga/effects';
 import * as actionTypes from '../actions/actionTypes';
 import {authUserSaga, logoutSaga, authCheckTimeOutSaga, authCheckStateSaga} from './auth';
-import {fetchAccountsSaga, searchAccountsSaga, filterAccountsSaga, addAccountSaga} from './accounts';
+import {fetchAccountsSaga, searchAccountsSaga, filterAccountsSaga, addAccountSaga, getAUser} from './accounts';
 import * as institutionSaga from "./institutions";
 import * as courseSaga from './courses'
 import * as learningOutcomeSaga from "./learningOutcomes"
@@ -16,6 +16,7 @@ export function* watchAuth() {
     yield takeEvery(actionTypes.SEARCH_ACCOUNTS, searchAccountsSaga);
     yield takeEvery(actionTypes.FILTER_ACCOUNTS, filterAccountsSaga);
     yield takeEvery(actionTypes.ADD_ACCOUNT, addAccountSaga);
+    yield takeEvery(actionTypes.GET_A_USER, getAUser)
 
     yield takeEvery(actionTypes.INSTITUTION_CREATE, institutionSaga.createInstitution);
     yield takeEvery(actionTypes.INSTITUTION_GET_ALl, institutionSaga.getAllInstitution);

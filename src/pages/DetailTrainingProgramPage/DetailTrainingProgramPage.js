@@ -1,20 +1,26 @@
-import {useState, useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import axios from "axios";
 import {useParams} from "react-router";
-import {Affix, Button, Col, Row, Space, Spin, Table, Tag} from "antd";
+import {Affix, Button, Col, Row, Spin, Table} from "antd";
 import Title from "antd/lib/typography/Title";
 import Parser from 'html-react-parser';
 import {useHistory} from "react-router-dom";
 import * as actions from "../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {EditOutlined} from "@ant-design/icons";
-import TextArea from "antd/lib/input/TextArea";
+import {EditOutlined, FilePdfOutlined} from "@ant-design/icons";
+import html2canvas from "html2canvas";
+import {jsPDF} from "jspdf";
+import Cookies from "universal-cookie";
 
+const cookies = new Cookies();
 const DetailTrainingProgramPage = (props) => {
     let {uuid} = useParams();
     let history = useHistory();
+    const user = cookies.get("account")
     const [trainingProgram, setTrainingProgram] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [isExportingPdf, setIsExportingPdf] = useState(false);
+
     useEffect(() => {
         setLoading(true)
         axios.get(`/training-programs/${uuid}`)
@@ -340,6 +346,47 @@ const DetailTrainingProgramPage = (props) => {
         )
     }
 
+    function printDocument() {
+        setIsExportingPdf(true);
+        const input = document.getElementById('training_program');
+        html2canvas(input, {
+            scrollX: -window.scrollX,
+            scrollY: -window.scrollY,
+            windowWidth: document.documentElement.offsetWidth,
+            windowHeight: document.documentElement.offsetHeight
+        })
+            .then((canvas) => {
+                var imgData = canvas.toDataURL('image/png');
+
+                /*
+                Here are the numbers (paper width and height) that I found to work.
+                It still creates a little overlap part between the pages, but good enough for me.
+                if you can find an official number from jsPDF, use them.
+                */
+                var imgWidth = 210;
+                var pageHeight = 295;
+                var imgHeight = canvas.height * imgWidth / canvas.width;
+                var heightLeft = imgHeight;
+
+                var doc = new jsPDF('p', 'mm');
+                var position = 0;
+
+                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                doc.save( 'file.pdf');
+                setIsExportingPdf(false);
+            })
+        ;
+
+    }
+
     if (trainingProgram) {
         const {
             vn_name,
@@ -359,16 +406,18 @@ const DetailTrainingProgramPage = (props) => {
         } = trainingProgram
 
         return loading ? <Spin/> : (
-            <>
-                <Affix style={{float: 'right'}} offsetTop={10}>
-                    <Button
-                        type="primary"
-                        shape="circle"
-                        icon={<EditOutlined/>}
-                        style={{float: 'right'}}
-                        onClick={() => history.push(`/uet/training-programs/updating/${trainingProgram.uuid}`)}
-                    />
-                </Affix>
+            <div id="training_program">
+                {
+                   (!trainingProgram.lock_edit && user.role == 0) ? <Affix style={{float: 'right'}} offsetTop={10}>
+                        <Button
+                            type="primary"
+                            shape="circle"
+                            icon={<EditOutlined/>}
+                            style={{float: 'right'}}
+                            onClick={() => history.push(`/uet/training-programs/updating/${trainingProgram.uuid}`)}
+                        />
+                    </Affix> : ""
+                }
                 <Title level={3}>
                     PHẦN I: GIỚI THIỆU CHUNG VỀ CHƯƠNG TRÌNH ĐÀO TẠO
                 </Title>
@@ -431,8 +480,10 @@ const DetailTrainingProgramPage = (props) => {
                 <CourseDocument courses={courses}/><br/><br/>
                 <Lecturers courses={courses}/><br/><br/>
                 <CourseDocument courses={courses} semester={true}/><br/><br/>
-
-            </>
+                <Row align="end">
+                    <Button icon={<FilePdfOutlined />} onClick={printDocument} loading={isExportingPdf}> Export PDF </Button>
+                </Row>
+            </div>
         )
     } else {
         return "";

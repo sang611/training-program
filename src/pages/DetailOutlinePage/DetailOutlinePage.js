@@ -145,8 +145,6 @@ const DetailOutlinePage = () => {
         axios
             .get(`/outlines/${uuid}/${outlineUuid}`)
             .then((res) => {
-
-                console.log((res.data.outline.lecturers))
                 setOutline(res.data.outline)
             })
             .catch(error => message.error("Đã có lỗi xảy ra"))

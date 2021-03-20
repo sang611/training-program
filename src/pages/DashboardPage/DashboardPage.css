@@ -1,3 +1,4 @@
+/*
 .site-layout .header {
     padding: 0;
     display: flex;
@@ -31,4 +32,41 @@
 
 .ant-layout-sider-trigger {
     background: #303641;
+}
+
+
+
+*/
+
+.menu-item-child {
+    background-color: #24282f !important;
+}
+
+.sub-menu {
+    background-color: #303641 !important;
+}
+
+.ant-menu-dark.ant-menu-inline .ant-menu-item, .ant-menu-dark.ant-menu-inline .ant-menu-submenu-title {
+    border-bottom: solid 0.5px gray;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.ant-menu-submenu.ant-menu-submenu-vertical.sub-menu, .ant-menu-submenu-title, .ant-menu-item.sub-menu {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+
+.ant-layout-sider-children {
+    background: #303641;
+}
+
+.ant-layout-sider-trigger {
+    background: #303641;
+}
+
+.header {
+    padding: 0;
+    display: flex;
+    background-color: #fff;
 }

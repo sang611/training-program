@@ -65,7 +65,7 @@ const CollectionCreateForm = ({ visible, onCancel, updatedCourse, dispatch }) =>
                 </Form.Item>
 
                 <Form.Item label="Số tín chỉ:" name="credits">
-                    <InputNumber min={1} max={20} defaultValue={0}/>
+                    <InputNumber min={1} max={20}/>
                 </Form.Item>
 
                 <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">

@@ -48,10 +48,6 @@ function SignInPage(props) {
     };
 
 
-    const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    };
-
     useEffect(() => {
         localStorage.removeItem("menu-active")
     }, [])

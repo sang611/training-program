@@ -5,6 +5,7 @@ const initialState = {
     loading: null,
     getAllSuccess: false,
     course: null,
+    courses: [],
     loadingACourse: null
 }
 
@@ -22,7 +23,8 @@ const reducer = (state = initialState, action) => {
                 loading: false,
                 error: false,
                 getAllSuccess: true,
-                response: action.payload
+                response: action.payload,
+                courses: action.payload.data.courses
             }
         case actionTypes.GET_ALL_COURSE_FAIL:
             return {

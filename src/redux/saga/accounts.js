@@ -71,3 +71,14 @@ export function* addAccountSaga (action) {
     }
     yield put({type: actionTypes.ADD_ACCOUNT_RESET});
 }
+
+export function* getAUser(action) {
+    yield put(actions.getAUserStart());
+    try {
+        const {accountUuid, role} = action.payload;
+        const {data} = yield axios.get(`/accounts/${accountUuid}/${role}`)
+        yield put(actions.getAUserSuccess(data.user))
+    } catch (e) {
+        yield put(actions.getAUserFail(e))
+    }
+}

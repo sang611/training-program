@@ -35,7 +35,6 @@ const ListLocs = ({trainingProgram}) => {
         {
             title: 'Nội dung chuẩn đầu ra',
             dataIndex: 'content',
-            ellipsis: true,
             key: 'content',
         },
     ];

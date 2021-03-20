@@ -7,7 +7,8 @@ const initialState = {
     loading: false,
     authPath: '/accounts',
     isValidToken: false,
-    isTokenCheckDone: false
+    isTokenCheckDone: false,
+    user: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -23,6 +24,7 @@ const reducer = (state = initialState, action) => {
                 error: null,
                 token: action.idToken,
                 userId: action.userId,
+                user: action.user,
                 isValidToken: true
             }
         case actionTypes.AUTH_FAIL: 

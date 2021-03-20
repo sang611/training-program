@@ -12,28 +12,32 @@ const CreateCoursePage = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const insState = useSelector(state => state.institutions)
+    const courseState = useSelector(state => state.courses)
     const {isValidToken} = useSelector(state => state.auth)
     const [xslxFile, setXslxFile] = useState(null);
     const [isSendingForm, setIsSendinggForm] = useState(false);
     useEffect(() => {
         dispatch(actions.getAllInstitution());
+        dispatch(actions.getAllCourse());
     }, [])
 
     async function onCreateCourse(values) {
         try {
+            console.log(values.required_course)
+            values.required_course = JSON.stringify( values.required_course.map(courseUuid => {
+               return courseState.courses.find(c => c.uuid === courseUuid)
+            })
+            )
             const response = await axios.post("/courses", values)
-            console.log(response.status)
-            if (response.status === 201) {
-                message.success("Tạo mới học phần thành công")
-                form.resetFields()
-            }
+            message.success(response.data.message);
+            form.resetFields();
 
         } catch (e) {
 
             if (e.response.status === 401) {
                 dispatch(actions.authLogout())
             } else {
-                message.error("Đã có lỗi xảy ra. Không thể thêm mới học phần.");
+                message.error(e.response.data.message);
             }
         }
 
@@ -110,11 +114,11 @@ const CreateCoursePage = () => {
                     >
                         <Title level={3}>Thêm mới học phần</Title>
                         <br/>
-                        <Form.Item label="Tên học phần (VN):" name="vn_name">
+                        <Form.Item label="Tên học phần (VN):" name="course_name_vi">
                             <Input placeholder="Tên học phần bằng Tiếng Việt"
                                    addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
-                        <Form.Item label="Tên học phần (EN):" name="en_name">
+                        <Form.Item label="Tên học phần (EN):" name="course_name_en">
                             <Input placeholder="Tên học phần bằng Tiếng Anh"
                                    addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
@@ -125,9 +129,9 @@ const CreateCoursePage = () => {
                         </Form.Item>
 
                         <Form.Item label="Số tín chỉ:" name="credits">
-                            <InputNumber min={1} max={20} defaultValue={0}/>
+                            <InputNumber min={1} max={20}/>
                         </Form.Item>
-                        <Form.Item label="Đơn vị chuyên môn:" name="institution">
+                        <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
                             <Select
                                 showSearch
                                 style={{width: '100%'}}
@@ -140,6 +144,26 @@ const CreateCoursePage = () => {
                                 {
                                     insState.listInstitutions.map((ins, index) =>
                                         <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
+                                    )
+                                }
+
+                            </Select>
+                        </Form.Item>
+                        <Form.Item label="Học phần tiên quyết:" name="required_course">
+                            <Select
+                                showSearch
+                                mode="multiple"
+                                allowClear
+                                style={{width: '100%'}}
+                                placeholder="Chọn học phần tiên quyết"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                            >
+                                {
+                                    courseState.courses.map((course, index) =>
+                                        <Select.Option value={course.uuid} key={index}>{course.course_name_vi}</Select.Option>
                                     )
                                 }
 

@@ -1,8 +1,22 @@
 import axios from "axios";
 import {useHistory, useParams} from "react-router";
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import Title from "antd/lib/typography/Title";
-import {Affix, Button, Col, Divider, Form, Input, InputNumber, message, Row, Select, Space, Spin} from "antd";
+import {
+    Affix,
+    Button,
+    Col,
+    Divider,
+    Form,
+    Input,
+    InputNumber,
+    message,
+    Popconfirm,
+    Row,
+    Select,
+    Space,
+    Spin
+} from "antd";
 import JoditEditor from "jodit-react";
 import * as actions from "../../redux/actions/institutions";
 import {useDispatch, useSelector} from "react-redux";
@@ -11,6 +25,7 @@ import AddTrainingProgramLOC from "./AddTrainingProgramLOC";
 import AddTrainingProgramFrame from "./AddTrainingProgramFrame";
 import AddCourseDocument from "./AddCourseDocument";
 import AddTrainingSequence from "./AddTrainingSequence";
+import {LockOutlined} from "@ant-design/icons";
 
 const UpdateTrainingProgramPage = () => {
     let {uuid} = useParams();
@@ -74,7 +89,21 @@ const UpdateTrainingProgramPage = () => {
         } catch (e) {
             message.error("Đã có lỗi xảy ra")
         }
+    }
 
+    const onLock = async () => {
+        try {
+            const response = await axios.put(`/training-programs/${uuid}`, {lock_edit: 1})
+            console.log(response.status)
+            message.success("Đã khóa chương trình đào tạo");
+
+            setTimeout(() => {
+                history.push(`/uet/training-programs/${uuid}`);
+            }, 3000)
+
+        } catch (e) {
+            message.error("Đã có lỗi xảy ra")
+        }
     }
 
     return loading ? <Spin /> : (
@@ -219,6 +248,18 @@ const UpdateTrainingProgramPage = () => {
             <AddCourseDocument trainingProgram={trainingProgram} type={"lec"}/><br/><br/>
 
             <AddTrainingSequence trainingProgram={trainingProgram} /><br/><br/>
+
+            <Row align="end">
+                <Popconfirm
+                    title="Sau khi khóa sẽ không thể chỉnh sửa?"
+                    cancelText="Hủy"
+                    okText="Khóa"
+                    onConfirm={onLock}
+                >
+                    <Button icon={<LockOutlined />} > Khóa CTĐT </Button>
+                </Popconfirm>
+
+            </Row>
 
         </>
     )

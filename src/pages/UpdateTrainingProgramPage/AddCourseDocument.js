@@ -2,7 +2,7 @@ import Title from "antd/lib/typography/Title";
 import TextArea from "antd/lib/input/TextArea";
 import {Button, message, Select, Table} from "antd";
 import axios from "axios";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
 import {Option} from "antd/lib/mentions";
@@ -13,8 +13,11 @@ const AddCourseDocument = ({trainingProgram, type}) => {
     const dispatch = useDispatch();
     const state = useSelector((state) => state.accounts);
 
+    const [dataSource, setDataSource] = useState(trainingProgram.courses);
+    const [editing, setEditing] = useState([]);
+
     const onUpdateDocument = (trainingProgramUuid, course) => {
-        axios.put(`/training-programs/courses/${trainingProgramUuid}/${course.uuid}`, course)
+        axios.put(`/training-programs/${trainingProgramUuid}/courses/${course.courseUuid}`, course)
             .then((res) => {
                 message.success("Thành công")
             })
@@ -24,6 +27,7 @@ const AddCourseDocument = ({trainingProgram, type}) => {
     }
 
     useEffect(() => {
+
         if (type === "lec") {
             dispatch(actions.fetchAccounts({typeAccount: "GV", fullnameSearch: ""}))
         }
@@ -56,7 +60,8 @@ const AddCourseDocument = ({trainingProgram, type}) => {
                         rows={5}
                         defaultValue={record.training_program_course.documents}
                         onChange={(e) => {
-                            record.documents = e.target.value
+                            setEditing([...editing, record.uuid]);
+                            record.training_program_course.documents = e.target.value
                         }}
                     />) : (
                     <Select
@@ -64,12 +69,15 @@ const AddCourseDocument = ({trainingProgram, type}) => {
                         allowClear
                         style={{width: '300px'}}
                         placeholder="Chọn cán bộ"
-                        defaultValue={JSON.parse(record.training_program_course.lecturers).map(lec => lec.uuid) }
+                        defaultValue={
+                            record.training_program_course.lecturers ?
+                                JSON.parse(record.training_program_course.lecturers).map(lec => lec.uuid) : []
+                        }
                         onChange={value => {
-                            record.lecturers = JSON.stringify(
+                            setEditing([...editing, record.uuid]);
+                            record.training_program_course.lecturers = JSON.stringify(
                                 value.map((val) => {
                                     let lecturer = state.accounts.accounts.find((acc) => acc.uuid === val)
-
                                     return lecturer;
                                 })
                             )
@@ -97,7 +105,11 @@ const AddCourseDocument = ({trainingProgram, type}) => {
             title: '',
             render: (_, record) => {
                 return <Button
-                    onClick={() => onUpdateDocument(trainingProgram.uuid, record)} >Cập nhật</Button>
+                    onClick={() => onUpdateDocument(trainingProgram.uuid, record.training_program_course)}
+                    disabled={!editing.includes(record.uuid)}
+                >
+                    Cập nhật
+                </Button>
             }
         },
 
@@ -110,7 +122,7 @@ const AddCourseDocument = ({trainingProgram, type}) => {
             </Title>
             <Table
                 columns={columns}
-                dataSource={trainingProgram.courses}
+                dataSource={dataSource}
                 bordered
                 pagination={false}
             />

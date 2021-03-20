@@ -22,18 +22,19 @@ export function* authUserSaga(action) {
             authData
         );
         let {account, token} = data;
+        delete account.password;
 
         if (authData.rememberPassword === true) {
             yield cookies.set("access_token", token, {path: "/"});
             yield cookies.set("account", account, {path: "/"});
         } else {
             const expirationDate = yield new Date().getTime() + 360000000 * 2;
+            yield cookies.set("account", account, {path: "/"});
             yield cookies.set("expirationDate", expirationDate, {path: "/"});
             yield cookies.set("access_token", token, {path: "/"});
-            yield cookies.set("account", account, {path: "/"});
             yield put(actions.checkAuthTimeOut(360000));
         }
-        yield put(actions.authSuccess(token, account.uuid));
+        yield put(actions.authSuccess(token, account.uuid, account));
         yield cookies.set('isAuth', true, {path: "/"});
 
     } catch (e) {

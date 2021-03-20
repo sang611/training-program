@@ -1,14 +1,18 @@
 import {Button, Card, List} from "antd";
 import {useEffect, useState} from 'react'
 import axios from "axios";
-import {EditOutlined, EllipsisOutlined, PlusOutlined, SettingOutlined} from "@ant-design/icons";
+import {EditOutlined, EllipsisOutlined, PlusOutlined, SelectOutlined, SettingOutlined} from "@ant-design/icons";
 import {Link, useHistory} from "react-router-dom";
+import {useSelector} from "react-redux";
+import Cookies from "universal-cookie";
 
+const cookies = new Cookies();
 
 const ListTrainingProgramPage = () => {
     const history = useHistory();
 
     const [trainingPrograms, setTrainingPrograms] = useState([]);
+    const user = cookies.get("account")
     useEffect(() => {
          axios.get("/training-programs")
              .then((res) => {
@@ -16,17 +20,25 @@ const ListTrainingProgramPage = () => {
              })
     }, [])
 
+    const studentJoinTraining = () => {
+        axios.post("/")
+    }
+
     const TrainingItem = ({item}) => {
         return (
             <Card
                 extra={<Link to={`/uet/training-programs/${item.uuid}`}>Chi tiết</Link>}
-                actions={[
+                actions={user.role == 0 ? [
                     <SettingOutlined key="setting" onClick={() => console.log("setting")} />,
                     <Link to={`/uet/training-programs/updating/${item.uuid}`}>
                         <EditOutlined key="edit" />
                     </Link>,
                     <EllipsisOutlined key="ellipsis" />,
-                ]}
+                ] : [
+                    <SelectOutlined key="setting" onClick={() => console.log("setting")} />,
+                    <SettingOutlined key="setting" onClick={() => console.log("setting")} />,
+                ]
+                }
                 title={item.vn_name}
             >
                 Card content
@@ -47,19 +59,21 @@ const ListTrainingProgramPage = () => {
                     </List.Item>
                 )}
             />
-            <Button
+            {user.role == 0 ? <Button
                 type="primary"
                 shape="circle"
                 danger
-                icon={<PlusOutlined />}
+                icon={<PlusOutlined/>}
                 size={"large"}
                 style={{
                     position: 'fixed',
                     right: 52,
                     bottom: 32
                 }}
-                onClick={() => {history.push("/uet/training-programs/creation")}}
-            />
+                onClick={() => {
+                    history.push("/uet/training-programs/creation")
+                }}
+            /> : ""}
         </>
     )
 }

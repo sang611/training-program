@@ -113,7 +113,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
                     training_program_course: row.training_program_course
                 });
 
-                axios.put(`/training-programs/courses/${trainingProgram.uuid}/${key}`, {
+                axios.put(`/training-programs/${trainingProgram.uuid}/courses/${key}`, {
                     courseUuid: courseSelected.uuid,
                     ...row.training_program_course
                 })
@@ -135,7 +135,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
     };
 
     const onDeleteCourse = (courseUuid) => {
-        axios.delete(`/training-programs/courses/${trainingProgram.uuid}/${courseUuid}`)
+        axios.delete(`/training-programs/${trainingProgram.uuid}/courses/${courseUuid}`)
             .then((res) => {
                 message.success(res.data.message);
             })
