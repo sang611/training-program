@@ -8,7 +8,7 @@ const initialState = {
     isFilter: false,
     error: null,
     user: null,
-    loading: false
+    loading: null
 }
 
 const reducer = (state = initialState, action) => {

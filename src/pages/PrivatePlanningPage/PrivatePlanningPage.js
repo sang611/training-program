@@ -2,10 +2,12 @@ import Board from 'react-trello'
 import {useDispatch, useSelector} from "react-redux";
 import {useState, useEffect} from 'react'
 import * as actions from '../../redux/actions'
-import {message, Select} from "antd";
+import {message, Row, Select, Space, Tag} from "antd";
 import axios from "axios";
 import {useParams} from "react-router-dom";
 import Cookies from "universal-cookie/lib";
+import Search from "antd/lib/input/Search";
+import {CheckCircleOutlined, ExclamationCircleOutlined} from "@ant-design/icons";
 
 const cookies = new Cookies();
 const PrivatePlanningPage = () => {
@@ -19,9 +21,13 @@ const PrivatePlanningPage = () => {
     const [improvedCourse, setImprovedCourse] = useState([]);
     const [repeatedCourse, setRepeatedCourse] = useState([]);
     const [studentCourse, setStudentCourse] = useState([]);
-    const [semes, setSemes]=  useState(null);
+    const [typeSearch, setTypeSearch] = useState("course_name_vi");
+    const [plannedValid, setPlannedValid] = useState(false);
+    const [numCredits, setNumCredits] = useState(0);
+    const [semes, setSemes]=  useState(1);
     const semesters = [1,2,3,4,5,6,7,8];
     const {uuid, role} = cookies.get("account")
+
 
     useEffect(() => {
         dispatch(actions.getAUser({accountUuid: uuid, role: role}))
@@ -35,7 +41,7 @@ const PrivatePlanningPage = () => {
     )
 
     useEffect(() => {
-        console.log(studentCourse)
+        if(studentCourse) {
             setCompletedCourse(
                 convertCourseToCard(
                     studentCourse.filter((course) => {
@@ -72,23 +78,37 @@ const PrivatePlanningPage = () => {
                     )
                 )
             )
+        }
+
 
     }, [ semes, studentCourse])
 
     useEffect(() => {
-        setAvailableCourse(
-            convertCourseToCard(
-                courses.filter((course) => {
-                        const courseUuid = studentCourse.map(stc => stc.uuid)
-                        return !courseUuid.includes(course.uuid)
-                    }
+        if(studentCourse) {
+            setAvailableCourse(
+                convertCourseToCard(
+                    courses.filter((course) => {
+                            const courseUuid = studentCourse.map(stc => stc.uuid)
+                            return !courseUuid.includes(course.uuid)
+                        }
+                    )
                 )
             )
-        )
-
-    }, [studentCourse])
+        }
 
 
+    }, [studentCourse, courses])
+
+    useEffect(() => {
+        let totalCreditsPlanned = plannedCourses.reduce((a, b) => a+b.credits, 0)
+        if(totalCreditsPlanned <= 30 && totalCreditsPlanned >= 14) {
+            setPlannedValid(true)
+        } else {
+
+            setPlannedValid(false);
+        }
+        setNumCredits(totalCreditsPlanned);
+    }, [plannedCourses])
 
     function convertCourseToCard (courses) {
         return courses.map((course) => {
@@ -97,6 +117,7 @@ const PrivatePlanningPage = () => {
             cardCourse.title = course.course_code;
             cardCourse.description = course.course_name_vi;
             cardCourse.label = course.credits + " tín chỉ";
+            cardCourse.credits = course.credits;
             return cardCourse;
         })
     }
@@ -144,65 +165,119 @@ const PrivatePlanningPage = () => {
 
     const onCardMoveAcrossLanes = (fromLaneId, toLaneId, cardId, index) => {
 
-        const data = {};
-        data.studentUuid = user.uuid;
-        data.courseUuid = cardId;
-        data[toLaneId] = 1;
+        if(fromLaneId !== toLaneId) {
 
-        if(semes) {
-            data.semester = semes;
-            axios.post('/students/course', data)
-                .then(() => {
-                    if(fromLaneId === 'available') {
-                        let changeCourse = courses.filter(course => course.uuid == cardId)[0]
-                        changeCourse.student_course = {};
-                        changeCourse.student_course[toLaneId] = 1;
-                        changeCourse.student_course.semester = semes;
-                        console.log(changeCourse)
-                        setStudentCourse([...studentCourse, changeCourse])
-                    } else {
-                        setStudentCourse(
-                            studentCourse.map(course => {
+            const data = {};
+            data.studentUuid = user.uuid;
+            data.courseUuid = cardId;
+            data[toLaneId] = 1;
 
-                                if (course.uuid == cardId) {
-                                    course.student_course[fromLaneId] = null;
-                                    course.student_course[toLaneId] = 1;
-                                }
+            if (semes) {
+                data.semester = semes;
+                axios.post('/students/course', data)
+                    .then(() => {
+                        if (fromLaneId === 'available') {
+                            let changeCourse = courses.filter(course => course.uuid == cardId)[0]
+                            changeCourse.student_course = {};
+                            changeCourse.student_course[toLaneId] = 1;
+                            changeCourse.student_course.semester = semes;
 
-                                return course
-                            })
-                        )
-                    }
+                            setStudentCourse([...studentCourse, changeCourse])
+                        } else if (toLaneId === 'available') {
+                            setStudentCourse(
+                                studentCourse.filter((course) => course.uuid !== cardId)
+                            )
+                        } else {
 
-                })
-                .catch((e) => {
-                    message.error(e.toString());
-                })
-        } else {
-            message.warn("Vui lòng chọn học kỳ để cập nhật thay đổi")
+                            setStudentCourse(
+                                studentCourse.map(course => {
+                                    if (course.uuid == cardId) {
+                                        course.student_course[fromLaneId] = null;
+                                        course.student_course[toLaneId] = 1;
+                                    }
+
+                                    return course
+                                })
+                            )
+
+                        }
+
+                    })
+                    .catch((e) => {
+                        message.error(e.toString());
+                    })
+            } else {
+                message.warn("Vui lòng chọn học kỳ để cập nhật thay đổi")
+            }
         }
-
     }
+
+
+
+    const onSearch = (value) => {
+        dispatch(actions.getAllCourse({
+            [typeSearch]: value
+        }))
+    }
+
     return (
         <>
-            <Select
-                style={{ width: 120, marginBottom: 40 }}
-                placeholder="Chọn kỳ học"
-                onChange={(value => setSemes(value))}
-            >
-                {
-                    semesters.map(semester => {
-                        return <Select.Option value={semester} key={semester}>
-                            {semester}
+            <Row justify="space-between" style={{marginBottom: 40}}>
+                <Space >
+                    <Search
+                        placeholder="Tìm kiếm học phần"
+                        onSearch={onSearch}
+                        enterButton
+                        style={{ width: 270, }}
+                    />
+                    <Select
+                        style={{ width: 150, }}
+                        placeholder="Tìm kiếm theo"
+                        defaultValue="course_name_vi"
+                        onChange={(value => setTypeSearch(value))}
+                    >
+
+                        <Select.Option key="course_name_vi" value="course_name_vi">
+                            Tên học phần (vi)
                         </Select.Option>
-                    })
+                        <Select.Option key="course_name_en" value="course_name_en">
+                            Tên học phần (en)
+                        </Select.Option>
+                        <Select.Option key="course_code" value="course_code">
+                            Mã học phần
+                        </Select.Option>
+
+                    </Select>
+                </Space>
+
+                <Select
+                    style={{ width: 120 }}
+                    placeholder="Chọn kỳ học"
+                    onChange={(value => setSemes(value))}
+                    defaultValue={1}
+                >
+                    {
+                        semesters.map(semester => {
+                            return <Select.Option value={semester} key={semester}>
+                                Học kỳ {semester}
+                            </Select.Option>
+                        })
+                    }
+                </Select>
+            </Row>
+            <Row justify="end">
+                {
+                    plannedValid ?
+                        <Tag icon={<CheckCircleOutlined />} color="success">{numCredits} tín chỉ</Tag> :
+                        <Tag color="warning" icon={<ExclamationCircleOutlined />}>{numCredits} tín chỉ (Số tín chỉ trong 1 kỳ phải nằm trong khoảng 14-30)</Tag>
                 }
-            </Select>
+            </Row>
+
             <Board
                 data={dataStatusCourse}
                 onCardMoveAcrossLanes={onCardMoveAcrossLanes}
                 style={{
-                    backgroundImage: "url('https://images.wallpaperscraft.com/image/sea_boat_top_view_128638_1280x720.jpg')",
+                    backgroundImage: "url('https://images.wallpaperscraft.com/image/laptop_keyboard_glow_170138_3840x2400.jpg')",
                     backgroundSize: 'cover',
                     backgroundPosition: 'center'
                 }}

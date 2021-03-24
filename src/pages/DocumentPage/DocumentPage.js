@@ -7,7 +7,7 @@ import Modal from "antd/es/modal/Modal";
 import Dragger from "antd/es/upload/Dragger";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
-
+import FileViewer from 'react-file-viewer';
 const cookies = new Cookies();
 const user = cookies.get("account")
 function DocumentPage () {
@@ -56,7 +56,10 @@ function DocumentPage () {
     return (
         <>
             {
-                documents.map(doc => <img src={`data:image/png;base64, ${doc.document_url}`} alt="Red dot" />)
+
+                documents.map(doc => {
+                    return <iframe src={`data:application/pdf;base64,${doc.document_url}`} width="100%" height="100vh"/>
+                })
             }
 
             {user.role == 0 ? <Button

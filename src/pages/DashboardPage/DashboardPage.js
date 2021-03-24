@@ -31,6 +31,8 @@ import CreateOutlineCoursePage from "../CreateOutlineCoursePage";
 import ListOutlinePage from "../ListOutlinePage";
 import DetailOutlinePage from "../DetailOutlinePage";
 import UpdateOutlinePage from "../UpdateOutlinePage";
+import DetailAccountPage from "../DetailAccountPage";
+import DocumentPage from "../DocumentPage";
 
 const cookies = new Cookies();
 const DashboardPage = () => {
@@ -40,11 +42,7 @@ const DashboardPage = () => {
     const [account, setAccount] = useState(cookies.get("account"))
 
     const dispatch = useDispatch();
-    const {isValidToken} = useSelector(state => state.auth)
-
-    useEffect(() => {
-        console.log("account: ", cookies.get("account"))
-    }, [])
+    const {isValidToken} = useSelector(state => state.auth);
 
 
     const onCollapse = collapsed => {
@@ -101,7 +99,9 @@ const DashboardPage = () => {
                                 <Link to="/uet/training-programs">Danh sách</Link>
                             </Menu.Item>
 
-                            <Menu.Item key="4" className="menu-item-child">Tài liệu</Menu.Item>
+                            <Menu.Item key="4" className="menu-item-child">
+                                <Link to="/uet/documents/training-program">Tài liệu</Link>
+                            </Menu.Item>
                         </SubMenu>
                         {
                             <SubMenu key="sub1" icon={<ReadOutlined/>} title="Học phần" className="sub-menu">
@@ -111,7 +111,9 @@ const DashboardPage = () => {
                                 <Menu.Item key="6" className="menu-item-child">
                                     <Link to="/uet/courses/creation">Tạo mới</Link>
                                 </Menu.Item>
-                                <Menu.Item key="7" className="menu-item-child">Tài liệu</Menu.Item>
+                                <Menu.Item key="7" className="menu-item-child">
+                                    <Link to="/uet/documents/course">Tài liệu</Link>
+                                </Menu.Item>
                             </SubMenu>
                         }
 
@@ -122,7 +124,9 @@ const DashboardPage = () => {
                             <Menu.Item key="9" className="menu-item-child">
                                 <Link to="/uet/learning-outcome-titles">Danh sách đầu mục</Link>
                             </Menu.Item>
-                            <Menu.Item key="10" className="menu-item-child">Tài liệu</Menu.Item>
+                            <Menu.Item key="10" className="menu-item-child">
+                                <Link to="/uet/documents/learning-outcome">Tài liệu</Link>
+                            </Menu.Item>
                         </SubMenu>
                         <SubMenu key="sub3" icon={<BankOutlined/>} title="Đơn vị chuyên môn" className="sub-menu">
                             <Menu.Item key="11" className="menu-item-child"><Link to="/uet/institutions">Danh sách</Link></Menu.Item>
@@ -136,7 +140,7 @@ const DashboardPage = () => {
                             Ngành
                         </Menu.Item>
                         <Menu.Item key="16" icon={<FileOutlined/>} className="sub-menu">
-                            Các văn bản liên quan
+                            <Link to="/uet/documents/involved">Các văn bản liên quan</Link>
                         </Menu.Item>
                     </Menu>
                 </Sider>
@@ -179,6 +183,9 @@ const DashboardPage = () => {
 
                                 <Route path="/uet/learning-outcomes" component={LearningOutcomePage}/>
                                 <Route path="/uet/learning-outcome-titles" component={LearningOutcomeTitlePage}/>
+
+                                <Route path="/uet/user/:uuid/:role" component={DetailAccountPage} />
+                                <Route path="/uet/documents/:type" component={DocumentPage} />
 
                             </Switch>
                         </div>

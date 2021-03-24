@@ -69,7 +69,7 @@ const CreateTrainingProgramPage = () => {
                                 </Form.Item>
 
                                 <Form.Item label="Thời gian đào tạo:" name="training_duration">
-                                    <InputNumber min={1} max={10} defaultValue={1}/>
+                                    <InputNumber min={1} max={10} defaultValue={1} stringMode/>
                                 </Form.Item>
                             </Col>
                         </Row>
@@ -110,8 +110,6 @@ const CreateTrainingProgramPage = () => {
                         </Form.Item>
 
                         <br/>
-
-
                     </Col>
                 </Row>
                 <Title level={3}>2. Mục tiêu đào tạo</Title>
@@ -120,14 +118,15 @@ const CreateTrainingProgramPage = () => {
 
                         <Space direction="vertical" style={{width: '100%'}}>
                             <Form.Item label="Mục tiêu chung" name="common_destination">
-                                <JoditEditor
-                                    tabIndex={1}
-                                    value={""}/>
+
+                                <TextArea placeholder={"Nhập nội dung"} rows={10} style={{whiteSpace: 'pre-wrap'}}/>
+
                             </Form.Item>
                             <Form.Item label="Mục tiêu cụ thể" name="specific_destination">
-                                <JoditEditor
+                                {/*<JoditEditor
                                     tabIndex={1}
-                                    value={""}/>
+                                    value={""}/>*/}
+                                <TextArea placeholder={"Nhập nội dung"} rows={10} style={{whiteSpace: 'pre-wrap'}}/>
                             </Form.Item>
                         </Space>
 

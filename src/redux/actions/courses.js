@@ -1,8 +1,9 @@
 import * as actionTypes from "./actionTypes";
 
-export const getAllCourse = () => {
+export const getAllCourse = (payload) => {
     return {
-        type: actionTypes.GET_ALL_COURSE
+        type: actionTypes.GET_ALL_COURSE,
+        payload: payload
     }
 }
 export const getAllCourseStart = () => {

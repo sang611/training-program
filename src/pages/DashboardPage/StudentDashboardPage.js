@@ -18,6 +18,7 @@ import SubMenu from "antd/lib/menu/SubMenu";
 import {useDispatch} from "react-redux";
 import * as actions from '../../redux/actions'
 import Cookies from "universal-cookie";
+import DetailAccountPage from "../DetailAccountPage";
 
 const cookies = new Cookies();
 
@@ -85,7 +86,7 @@ const StudentDashboardPage = () => {
 
 
                             <Route path="/uet/:userUuid/planning" component={PrivatePlanningPage}/>
-
+                            <Route path="/uet/user/:uuid/:role" component={DetailAccountPage} />
                         </Switch>
                     </div>
                 </Content>

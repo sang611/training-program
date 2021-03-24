@@ -45,7 +45,7 @@ const UpdateTrainingProgramPage = () => {
                     vn_name, en_name,
                     training_program_code,
                     graduation_title,
-                    duration,
+                    training_duration,
                     graduation_diploma_vi,
                     graduation_diploma_en,
                     institution,
@@ -59,7 +59,7 @@ const UpdateTrainingProgramPage = () => {
                     vn_name, en_name,
                     training_program_code,
                     graduation_title,
-                    training_duration: duration,
+                    training_duration,
                     institution: institution.uuid,
                     graduation_diploma_vi,
                     graduation_diploma_en,
@@ -91,20 +91,7 @@ const UpdateTrainingProgramPage = () => {
         }
     }
 
-    const onLock = async () => {
-        try {
-            const response = await axios.put(`/training-programs/${uuid}`, {lock_edit: 1})
-            console.log(response.status)
-            message.success("Đã khóa chương trình đào tạo");
 
-            setTimeout(() => {
-                history.push(`/uet/training-programs/${uuid}`);
-            }, 3000)
-
-        } catch (e) {
-            message.error("Đã có lỗi xảy ra")
-        }
-    }
 
     return loading ? <Spin /> : (
         <>
@@ -205,6 +192,7 @@ const UpdateTrainingProgramPage = () => {
                                 <JoditEditor
                                     tabIndex={1}
                                     value={""}/>
+
                             </Form.Item>
                             <Form.Item label="Mục tiêu cụ thể" name="specific_destination">
                                 <JoditEditor
@@ -250,14 +238,7 @@ const UpdateTrainingProgramPage = () => {
             <AddTrainingSequence trainingProgram={trainingProgram} /><br/><br/>
 
             <Row align="end">
-                <Popconfirm
-                    title="Sau khi khóa sẽ không thể chỉnh sửa?"
-                    cancelText="Hủy"
-                    okText="Khóa"
-                    onConfirm={onLock}
-                >
-                    <Button icon={<LockOutlined />} > Khóa CTĐT </Button>
-                </Popconfirm>
+
 
             </Row>
 

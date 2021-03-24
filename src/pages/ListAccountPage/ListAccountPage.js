@@ -2,17 +2,16 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
 import * as actionTypes from '../../redux/actions/actionTypes'
-import {Avatar, Col, List, Pagination, Row, Skeleton, Tabs} from "antd";
+import {Avatar, Col, Descriptions, List, Pagination, Row, Skeleton, Tabs} from "antd";
 import Search from "antd/lib/input/Search";
-import {AndroidOutlined, AppleOutlined} from "@ant-design/icons";
-import {Redirect} from "react-router-dom";
+import {AndroidOutlined, AppleOutlined, DesktopOutlined, MailOutlined, PhoneOutlined} from "@ant-design/icons";
+import {Redirect, useHistory} from "react-router-dom";
 import InfiniteScroll from 'react-infinite-scroller';
 
 
-const count = 3;
-
 const ListAccountPage = () => {
     const dispatch = useDispatch();
+    const history = useHistory();
     const state = useSelector((state) => state.accounts);
 
     const {isValidToken} = useSelector((state) => state.auth)
@@ -90,18 +89,30 @@ const ListAccountPage = () => {
                 itemLayout="horizontal"
                 dataSource={state.accounts ? state.accounts.accounts : []}
                 size="large"
-                style={{overflow: 'scroll', height: '400px'}}
                 renderItem={item => (
                     <List.Item
-                        actions={[<a key="list-loadmore-edit">edit</a>, <a key="list-loadmore-more">more</a>]}
+                        actions={[<a key="list-loadmore-more" onClick={() => history.push(`/uet/user/${item.account.uuid}/${item.account.role}`)}>Chi tiết</a>]}
                         key={item.uuid}
                     >
                         <List.Item.Meta
                             avatar={
-                                <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"/>
+                                <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" size={50}/>
                             }
                             title={item.fullname}
-                            description={item.email}
+                            description={
+                                <Descriptions >
+                                    <Descriptions.Item contentStyle={{color: "gray"}}>
+                                        <MailOutlined />&nbsp;{item.vnu_mail}
+                                    </Descriptions.Item >
+                                    <Descriptions.Item contentStyle={{color: "gray"}}>
+                                        <PhoneOutlined />&nbsp;{item.phone_number}
+                                    </Descriptions.Item>
+                                    <Descriptions.Item contentStyle={{color: "gray"}}>
+                                        <DesktopOutlined />&nbsp;{item.institution.vn_name}
+                                    </Descriptions.Item>
+
+                                </Descriptions>
+                            }
                         />
 
                     </List.Item>

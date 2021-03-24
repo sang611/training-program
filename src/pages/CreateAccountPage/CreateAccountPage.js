@@ -143,8 +143,8 @@ const CreateAccountPage = () => {
                             <Col span={12}>
                                 <Form.Item label="Giới tính:" name="gender">
                                     <Radio.Group name="radio-gender">
-                                        <Radio value={1}>Nam</Radio>
-                                        <Radio value={2}>Nữ</Radio>
+                                        <Radio value={0}>Nam</Radio>
+                                        <Radio value={1}>Nữ</Radio>
                                     </Radio.Group>
                                 </Form.Item>
                             </Col>
@@ -182,10 +182,7 @@ const CreateAccountPage = () => {
                                 }
 
                             </Select>
-
-
                         </Form.Item>
-
                         <Form.Item
                             label="Email VNU"
                             name="vnu_mail"
@@ -279,15 +276,18 @@ const CreateAccountPage = () => {
                         <Row>
                             <Col span={12}>
                                 <Form.Item label="Ngày sinh:" name="birth_date">
-                                    <DatePicker defaultValue={moment('01/01/2021', 'DD/MM/YYYY')}
-                                                format={['DD/MM/YYYY', 'DD/MM/YY']}/>
+                                    <DatePicker
+                                        defaultValue={moment('01/01/2021', 'DD/MM/YYYY')}
+                                        format={['DD/MM/YYYY', 'DD/MM/YY']}
+                                        onChange={(val) => console.log(val) }
+                                    />
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
                                 <Form.Item label="Giới tính:" name="gender">
                                     <Radio.Group name="radio-gender">
-                                        <Radio value={1}>Nam</Radio>
-                                        <Radio value={2}>Nữ</Radio>
+                                        <Radio value={0}>Nam</Radio>
+                                        <Radio value={1}>Nữ</Radio>
                                     </Radio.Group>
                                 </Form.Item>
                             </Col>
@@ -382,7 +382,7 @@ const CreateAccountPage = () => {
     return !isValidToken ? <Redirect to="/uet/signin"/> : (
         <>
             <Row>
-                <Col span={8}>
+                <Col span={24}>
                     <Tabs defaultActiveKey="1" onTabClick={(e) => {
                         setTypeAccount(e)
                         console.log(e, typeof e)
@@ -395,7 +395,7 @@ const CreateAccountPage = () => {
                                 </span>
                             }
                             key={1}
-                        >
+                        >{addingLecturerForm()}
                         </Tabs.TabPane>
                         <Tabs.TabPane
                             tab={
@@ -405,12 +405,12 @@ const CreateAccountPage = () => {
                                 </span>
                             }
                             key={2}
-                        >
+                        >{addingStudentForm()}
                         </Tabs.TabPane>
                     </Tabs>
                 </Col>
             </Row>
-            {typeAccount == 1 ? addingLecturerForm() : addingStudentForm()}
+
         </>
 
 

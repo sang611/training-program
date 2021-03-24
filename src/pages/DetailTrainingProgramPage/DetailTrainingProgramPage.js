@@ -201,7 +201,7 @@ const DetailTrainingProgramPage = (props) => {
                 </Title>
 
                 {
-                    new Array(trainingProgram.duration * 2).fill(undefined).map((_, index) => {
+                    new Array(trainingProgram.training_duration * 2).fill(undefined).map((_, index) => {
                         return (
                             <>
                                 <Title level={5}>{`Kỳ ${index + 1}`}</Title>
@@ -393,7 +393,7 @@ const DetailTrainingProgramPage = (props) => {
             en_name,
             training_program_code,
             graduation_title,
-            duration,
+            training_duration,
             graduation_diploma_en,
             graduation_diploma_vi,
             admission_method,
@@ -430,7 +430,7 @@ const DetailTrainingProgramPage = (props) => {
                         <DescriptionItem title="Tên ngành đào tạo (EN)" content={en_name}/>
                         <DescriptionItem title="Mã ngành đào tạo" content={training_program_code}/>
                         <DescriptionItem title="Danh hiệu tốt nghiệp" content={graduation_title}/>
-                        <DescriptionItem title="Thời gian đào tạo" content={duration + " năm"}/>
+                        <DescriptionItem title="Thời gian đào tạo" content={training_duration + " năm"}/>
                         <DescriptionItem title="Tên văn bằng tốt nghiệp (VI)" content={graduation_diploma_vi}/>
                         <DescriptionItem title="Tên văn bằng tốt nghiệp (EN)" content={graduation_diploma_en}/>
                         <DescriptionItem title="Đơn vị được giao nhiệm vụ đào tạo"

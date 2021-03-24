@@ -7,10 +7,21 @@ import * as actionTypes from "../actions/actionTypes";
 
 
 export function* getAllCourse(action) {
+    let course_name_vi = "", course_name_en = "", course_code="";
+    if(action.payload){
+
+        course_name_vi = action.payload.course_name_vi;
+        course_name_en = action.payload.course_name_en;
+        course_code = action.payload.course_code;
+    }
+
+
     yield put(actions.getAllCourseStart());
 
     try {
-        const response = yield axios.get("/courses");
+        const response = yield axios.get(
+            `/courses/?course_name_vi=${course_name_vi ? course_name_vi : ""}&course_name_en=${course_name_en ? course_name_en : ""}&course_code=${course_code ? course_code : ""}`
+        );
         yield put(actions.getAllCourseSuccess(response));
     } catch (error) {
         yield put(actions.getAllCourseFail(error.response));

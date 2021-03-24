@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react'
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions/index'
-import {Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Table, Tag} from "antd";
-import {DeleteOutlined, EditOutlined, InfoCircleOutlined} from "@ant-design/icons";
+import {Button, Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Spin, Table, Tag} from "antd";
+import {DeleteOutlined, EditOutlined, InfoCircleOutlined, ReloadOutlined, SearchOutlined} from "@ant-design/icons";
 import axios from "axios";
 import {useHistory} from "react-router-dom";
 
@@ -15,6 +15,10 @@ const CollectionCreateForm = ({ visible, onCancel, updatedCourse, dispatch }) =>
     useEffect(() => {
         dispatch(actions.getAllInstitution());
     }, [])
+
+
+
+
     return (
         <Modal
             visible={visible}
@@ -127,17 +131,61 @@ const ListCoursePage = () => {
             })
     }
 
+    const getColumnSearchProps = (dataIndex ) => (
+        {
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+                <div style={{ padding: 8 }}>
+                    <Input
+                        placeholder={`Tìm kiếm`}
+                        value={selectedKeys[0]}
+                        onChange={e => {
+                            onSearchCourse(dataIndex, e.target.value)
+                        }}
+                        style={{ width: dataIndex == 'course_code' ? 100 : 190, marginBottom: 8, display: 'block' }}
+                    />
+                </div>
+            ),
+            filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+        }
+    )
+
+    const onSearchCourse = (dataIndex, searchText) => {
+        dispatch(actions.getAllCourse(
+            {
+                [dataIndex]: searchText
+            }
+        ))
+    }
+
     return (
         <>
+            <Button type="primary" icon={<ReloadOutlined />} shape="circle" onClick={
+                () => dispatch(actions.getAllCourse())
+            }/>
             <Table
                 dataSource={dataSource}
                 loading={courseState.loading}
                 bordered
             >
-                <Column title="Mã học phần" dataIndex="course_code" key="course_code"/>
-                <ColumnGroup title="Tên học phần">
-                    <Column title="Tiếng Việt" dataIndex="course_name_vi" key="course_name_vi"/>
-                    <Column title="Tiếng Anh" dataIndex="course_name_en" key="course_name_en"/>
+                <Column
+                    title="Mã học phần"
+                    dataIndex="course_code"
+                    key="course_code"
+                    { ...getColumnSearchProps('course_code') }
+                />
+                <ColumnGroup title="Tên học phần" >
+                    <Column
+                        title="Tiếng Việt"
+                        dataIndex="course_name_vi"
+                        key="course_name_vi"
+                        { ...getColumnSearchProps('course_name_vi') }
+                    />
+                    <Column
+                        title="Tiếng Anh"
+                        dataIndex="course_name_en"
+                        key="course_name_en"
+                        { ...getColumnSearchProps('course_name_en') }
+                    />
                 </ColumnGroup>
 
                 <Column title="Số tín chỉ" dataIndex="credits" key="credits"/>

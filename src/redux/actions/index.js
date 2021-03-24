@@ -63,3 +63,10 @@ export {
     getAllLearningOutcomeTitlesStart,
     getAllLearningOutcomeTitlesSuccess
 } from './learningOutcomes'
+
+export {
+    getAllDocuments,
+    getAllDocumentStart,
+    getAllDocumentSuccess,
+    getAllDocumentFail
+} from './documents'

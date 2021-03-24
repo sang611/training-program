@@ -5,7 +5,7 @@ import {fetchAccountsSaga, searchAccountsSaga, filterAccountsSaga, addAccountSag
 import * as institutionSaga from "./institutions";
 import * as courseSaga from './courses'
 import * as learningOutcomeSaga from "./learningOutcomes"
-
+import * as documentSaga from './documents'
 
 export function* watchAuth() {
     yield takeEvery(actionTypes.AUTH_USER, authUserSaga);
@@ -26,6 +26,8 @@ export function* watchAuth() {
 
     yield takeEvery(actionTypes.GET_ALL_LEARNING_OUTCOME, learningOutcomeSaga.getAllLearningOutcomes);
     yield takeEvery(actionTypes.GET_ALL_LEARNING_OUTCOME_TITLE, learningOutcomeSaga.getAllLearningOutcomeTitles);
+
+    yield takeEvery(actionTypes.GET_ALL_DOCUMENT, documentSaga.getAllDocument)
 }
 
 
