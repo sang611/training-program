@@ -109,3 +109,30 @@ export const getAUserFail = (error) => {
         error: error
     }
 }
+
+export const getDetailUser = (payload) => {
+    return {
+        type: actionTypes.GET_DETAIL_USER,
+        payload: payload
+    }
+}
+
+export const getDetailUserStart = () => {
+    return {
+        type: actionTypes.GET_DETAIL_USER_START
+    }
+}
+
+export const getDetailUserSuccess = (payload) => {
+    return {
+        type: actionTypes.GET_DETAIL_USER_SUCCESS,
+        payload: payload
+    }
+}
+
+export const getDetailUserFail = (error) => {
+    return {
+        type: actionTypes.GET_DETAIL_USER_FAIL,
+        error: error
+    }
+}

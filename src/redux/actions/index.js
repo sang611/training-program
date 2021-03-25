@@ -29,7 +29,11 @@ export {
     getAUser,
     getAUserFail,
     getAUserStart,
-    getAUserSuccess
+    getAUserSuccess,
+    getDetailUserFail,
+    getDetailUserStart,
+    getDetailUserSuccess,
+    getDetailUser
 } from './accounts';
 
 export {

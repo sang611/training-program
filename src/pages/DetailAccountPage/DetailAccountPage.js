@@ -24,8 +24,7 @@ import './DetailAccountPage.css'
 import moment from "moment";
 import Cookies from "universal-cookie/lib";
 
-const cookies = new Cookies();
-const currentUser = cookies.get("account")
+
 
 const UpdateStudentProfile = ({user}) => {
     const [form] = Form.useForm();
@@ -156,11 +155,13 @@ const UpdateStudentProfile = ({user}) => {
 
 const DetailAccountPage = () => {
     const {uuid, role} = useParams();
-
+    const {userRole} = useSelector(state => state.auth)
     const dispatch = useDispatch();
-    const {loading, user, error} = useSelector(state => state.accounts)
+    const {loadingDetailUser, detailUser, errorDetailUser} = useSelector(state => state.accounts)
+
     useEffect(() => {
-        dispatch(actions.getAUser({accountUuid: uuid, role: role}));
+        dispatch(actions.getDetailUser({accountUuid: uuid, role: role}));
+
     }, [])
 
     const StudentInfoDescription = (user) => (
@@ -203,8 +204,8 @@ const DetailAccountPage = () => {
     )
 
 
-    return loading ? <Spin/> : (
-        user ? (
+    return loadingDetailUser ? <Spin/> : (
+        detailUser ? (
             <>
                 <div style={{
                     position: 'relative',
@@ -213,7 +214,7 @@ const DetailAccountPage = () => {
                     <Space>
                         <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" size={100}/>
                         <Title level={4}>
-                            {user.fullname}
+                            {detailUser.fullname}
                         </Title>
                     </Space>
                 </div>
@@ -232,15 +233,15 @@ const DetailAccountPage = () => {
                                 }
                             </Descriptions.Item>
                             <Descriptions.Item contentStyle={{color: "gray"}}>
-                                <MailOutlined/>&ensp;{user.email}
+                                <MailOutlined/>&ensp;{detailUser.email}
                             </Descriptions.Item>
                             <Descriptions.Item contentStyle={{color: "gray"}}>
-                                <Icon component={() => <i className="fas fa-birthday-cake"></i>}/>&ensp;{user.birthday}
+                                <Icon component={() => <i className="fas fa-birthday-cake"></i>}/>&ensp;{detailUser.birthday}
                             </Descriptions.Item>
                             <Descriptions.Item contentStyle={{color: "gray"}}>
                                 <Icon component={() => <i className="fas fa-venus-mars"></i>}/>&ensp;
                                 {
-                                    user.gender == 1 ? "Nữ" : "Nam"
+                                    detailUser.gender == 1 ? "Nữ" : "Nam"
                                 }
                             </Descriptions.Item>
                         </Descriptions>
@@ -249,20 +250,20 @@ const DetailAccountPage = () => {
                 </div>
                 <br/><br/>
                 {
-                    currentUser.role == 0 ? (
+                    userRole == 0 ? (
                         <Tabs defaultActiveKey="1" type="card" size={"middle"}>
                             <Tabs.TabPane tab="Hồ sơ" key="1">
                                 <Row>
                                     <Col span={15}>
                                         {
-                                            role == 3 ? StudentInfoDescription(user) : LecturerInfoDescription(user)
+                                            role == 3 ? StudentInfoDescription(detailUser) : LecturerInfoDescription(detailUser)
                                         }
                                     </Col>
                                 </Row>
                             </Tabs.TabPane>
                             <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
                                 {
-                                    role == 3 ? <UpdateStudentProfile user={user}/> : ""
+                                    role == 3 ? <UpdateStudentProfile user={detailUser}/> : ""
                                 }
                             </Tabs.TabPane>
                         </Tabs>
@@ -270,17 +271,15 @@ const DetailAccountPage = () => {
                         <Row>
                             <Col span={15}>
                                 {
-                                    role == 3 ? StudentInfoDescription(user) : LecturerInfoDescription(user)
+                                    role == 3 ? StudentInfoDescription(detailUser) : LecturerInfoDescription(detailUser)
                                 }
                             </Col>
                         </Row>
                     )
                 }
 
-
-
             </>
-        ) : ""
+        ) : "abc"
     )
 }
 

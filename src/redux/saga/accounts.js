@@ -82,3 +82,14 @@ export function* getAUser(action) {
         yield put(actions.getAUserFail(e))
     }
 }
+
+export function* getDetailUser(action) {
+    yield put(actions.getDetailUserStart());
+    try {
+        const {accountUuid, role} = action.payload;
+        const {data} = yield axios.get(`/accounts/${accountUuid}/${role}`)
+        yield put(actions.getDetailUserSuccess(data.user))
+    } catch (e) {
+        yield put(actions.getDetailUserFail(e))
+    }
+}

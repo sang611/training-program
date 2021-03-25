@@ -20,10 +20,21 @@ const PrivateRoute = ({ component: Component, children, ...rest }) => {
         axios.defaults.withCredentials = true;
         axios.post("http://localhost:9000/accounts/checkAccessToken")
         .then(() => {
-          dispatch(actions.setIsValidToken(true));
+            dispatch(actions.setIsValidToken(true));
             jwt.verify(token, "training_program_2019_fc9f03e8", function (err, decoded) {
-                dispatch(actions.setCurrentUser(decoded))
+                if(decoded) {
+                    dispatch(actions.setCurrentUser(decoded));
+                    if(decoded.role > 0) {
+                        dispatch(actions.getAUser({
+                            accountUuid: decoded.uuid,
+                            role: decoded.role
+                        }))
+                    }
+                }
+
             })
+
+
         })
         .catch((err) => {
           dispatch(actions.setIsValidToken(false))

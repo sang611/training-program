@@ -15,23 +15,25 @@ const PrivatePlanningPage = () => {
     const dispatch = useDispatch();
     const {courses} = useSelector(state => state.courses)
     const {user} = useSelector(state => state.accounts)
+
     const [availableCourses, setAvailableCourse] = useState([]);
     const [plannedCourses, setPlannedCourse] = useState([]);
     const [completedCourse, setCompletedCourse] = useState([]);
     const [improvedCourse, setImprovedCourse] = useState([]);
     const [repeatedCourse, setRepeatedCourse] = useState([]);
     const [studentCourse, setStudentCourse] = useState([]);
+
     const [typeSearch, setTypeSearch] = useState("course_name_vi");
     const [plannedValid, setPlannedValid] = useState(false);
     const [numCredits, setNumCredits] = useState(0);
     const [semes, setSemes]=  useState(1);
+
     const {currentUser, userRole} = useSelector(state => state.auth);
     const semesters = [1,2,3,4,5,6,7,8];
 
 
 
     useEffect(() => {
-        dispatch(actions.getAUser({accountUuid: currentUser.uuid, role: userRole}))
         dispatch(actions.getAllCourse());
     }, [])
 
@@ -90,7 +92,7 @@ const PrivatePlanningPage = () => {
                 convertCourseToCard(
                     courses.filter((course) => {
                             const courseUuid = studentCourse.map(stc => stc.uuid)
-                            return !courseUuid.includes(course.uuid)
+                            return !courseUuid.includes(course.uuid) && course.institutionUuid === user.institutionUuid
                         }
                     )
                 )
@@ -128,35 +130,35 @@ const PrivatePlanningPage = () => {
             {
                 id: 'available',
                 title: 'Danh sách học phần',
-                label: '2/2',
+                label: availableCourses.length + " học phần",
                 cards: availableCourses,
 
             },
             {
                 id: 'working',
                 title: 'Dự định',
-                label: '2/2',
+                label: plannedCourses.length + " học phần",
                 cards: plannedCourses,
 
             },
             {
                 id: 'improved',
                 title: 'Học cải thiện',
-                label: '0/0',
+                label: improvedCourse.length + " học phần",
                 cards: improvedCourse,
 
             },
             {
                 id: 'repeated',
                 title: 'Học lại',
-                label: '0/0',
+                label: repeatedCourse.length + " học phần",
                 cards: repeatedCourse,
 
             },
             {
                 id: 'completed',
                 title: 'Hoàn thành',
-                label: '0/0',
+                label: completedCourse.length + " học phần",
                 cards: completedCourse,
 
             }

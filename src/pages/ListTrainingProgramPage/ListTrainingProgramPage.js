@@ -1,4 +1,4 @@
-import {Button, Card, List, message, Modal, Popconfirm, Table} from "antd";
+import {Badge, Button, Card, List, message, Modal, Popconfirm, Table} from "antd";
 import React, {useEffect, useState} from 'react'
 import axios from "axios";
 import {
@@ -16,6 +16,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Cookies from "universal-cookie";
 import * as actions from "../../redux/actions";
 import './ListTrainingProgramPage.css'
+import Icon from "@ant-design/icons/es";
 
 const cookies = new Cookies();
 
@@ -48,7 +49,7 @@ const MatrixCourses = ({visibleCourseMatrix, setVisibleCourseMatrix, trainingLis
                 title: training.vn_name,
                 render: (_, course) => {
                     const courseOfTraining = training.courses.find((c) => c.uuid === course.uuid);
-                    if(courseOfTraining)  {
+                    if (courseOfTraining) {
                         return courseOfTraining.training_program_course.course_type;
                     }
                 }
@@ -76,8 +77,8 @@ const MatrixCourses = ({visibleCourseMatrix, setVisibleCourseMatrix, trainingLis
                     pagination={false}
                     dataSource={
                         courses.map((course, index) => {
-                            course.key=index;
-                            course.stt=index+1;
+                            course.key = index;
+                            course.stt = index + 1;
                             return course;
                         })
                     }
@@ -113,7 +114,7 @@ const MatrixLoc = ({visibleLocMatrix, setVisibleLocMatrix, trainingList}) => {
                     training.learning_outcomes.forEach((locOfTraining) => {
                         let clo = locOfTraining.clos.find((c) => c.uuid === loc.uuid);
 
-                        if(clo) {
+                        if (clo) {
                             clo.outlines.forEach(outline => {
                                 const {course_code} = outline.course;
                                 const {level} = outline.outline_learning_outcome;
@@ -123,7 +124,7 @@ const MatrixLoc = ({visibleLocMatrix, setVisibleLocMatrix, trainingList}) => {
                             })
                         }
                     })
-                return data
+                    return data
                 }
             }
         })
@@ -131,33 +132,54 @@ const MatrixLoc = ({visibleLocMatrix, setVisibleLocMatrix, trainingList}) => {
 
     return (
         <>
-                <Modal
-                    visible={visibleLocMatrix}
-                    title="Ma trận chuẩn đầu ra"
-                    okText="OK"
-                    className="modal-locs"
-                    onCancel={() => {
-                        setVisibleLocMatrix(false);
-                    }}
-                    onOk={() => {
-                        setVisibleLocMatrix(false);
-                    }}
+            <Modal
+                visible={visibleLocMatrix}
+                title="Ma trận chuẩn đầu ra"
+                okText="OK"
+                className="modal-locs"
+                onCancel={() => {
+                    setVisibleLocMatrix(false);
+                }}
+                onOk={() => {
+                    setVisibleLocMatrix(false);
+                }}
+            >
+                <Table
+                    columns={columns}
+                    bordered
+                    pagination={false}
+                    dataSource={
+                        locs.map((loc, index) => {
+                            loc.key = index;
+                            return loc;
+                        })
+                    }
                 >
-                    <Table
-                        columns={columns}
-                        bordered
-                        pagination={false}
-                        dataSource={
-                            locs.map((loc, index) => {
-                                loc.key = index;
-                                return loc;
-                            })
-                        }
-                    >
 
-                    </Table>
-                </Modal>
+                </Table>
+            </Modal>
 
+        </>
+    )
+}
+
+const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, trainingItem}) => {
+    return (
+        <>
+            <Modal
+                visible={visibleCourseList}
+                title={`Danh sách học phần - ${trainingItem ? trainingItem.vn_name : ""}`}
+                okText="OK"
+                className="modal-courses-training"
+                onCancel={() => {
+                    setVisibleCourseList(false);
+                }}
+                onOk={() => {
+                    setVisibleCourseList(false);
+                }}
+            >
+
+            </Modal>
         </>
     )
 }
@@ -170,25 +192,40 @@ const ListTrainingProgramPage = () => {
     const dispatch = useDispatch();
     const [visibleCourseMatrix, setVisibleCourseMatrix] = useState(false);
     const [visibleLocMatrix, setVisibleLocMatrix] = useState(false);
+    const {user} = useSelector(state => state.accounts)
 
+    const [visibleCourseList, setVisibleCourseList] = useState(false);
+    const [chosenTraining, setChosenTraining] = useState(null);
 
-
+    const getAllTrainingProgram = () => {
+        axios.get("/training-programs")
+            .then((res) => {
+                setTrainingPrograms(res.data.training_programs)
+            })
+    }
 
     useEffect(() => {
-         axios.get("/training-programs")
-             .then((res) => {
-                 setTrainingPrograms(res.data.training_programs)
-             })
-
+        getAllTrainingProgram();
     }, [])
+
+
 
 
     const studentJoinTraining = (training) => {
         axios.post("/students/training-program/follow", {
-            studentUuid: currentUser.student.uuid,
+            studentUuid: user.uuid,
             trainingProgramUuid: training.uuid
         }).then((res) => {
-            message.success(res.data.message);
+        })
+
+    }
+
+    const studentUnjoinTraining = (training) => {
+        axios.post("/students/training-program/unfollow", {
+            studentUuid: user.uuid,
+            trainingProgramUuid: training.uuid
+        }).then((res) => {
+            getAllTrainingProgram()
         })
 
     }
@@ -208,41 +245,59 @@ const ListTrainingProgramPage = () => {
     }
 
 
+    const actionStudent = (item, isFollow) => {
 
-    const actionStudent = (item) => [
-        <SelectOutlined key="select" onClick={() => studentJoinTraining(item)} />,
-        <SettingOutlined key="setting" onClick={() => console.log("setting")} />,
-    ]
+        return [
+            <SelectOutlined
+                key="select"
+                onClick={() => {
+                    if (!isFollow)
+                        return studentJoinTraining(item)
+                    else
+                        return studentUnjoinTraining(item)
+                }}
+            />,
+            <Icon
+                component={()=><i className="fas fa-th-list" />}
+                key="setting"
+                onClick={() => {
+                    setChosenTraining(item);
+                    setVisibleCourseList(true)
+                }}
+            />,
+        ]
+    }
 
     const actionAdmin = (item) => [
         <Link to={`/uet/training-programs/updating/${item.uuid}`}>
-            <EditOutlined key="edit" />
+            <EditOutlined key="edit"/>
         </Link>,
         <Popconfirm
             title="Sau khi khóa sẽ không thể chỉnh sửa?"
             cancelText="Hủy"
             okText="Khóa"
-            onConfirm={()=>onLock(item.uuid)}
+            onConfirm={() => onLock(item.uuid)}
         >
-            <LockOutlined />
+            <LockOutlined/>
         </Popconfirm>,
         <Popconfirm
             title="Xóa CTĐT?"
             cancelText="Hủy"
             okText="Xóa"
-            onConfirm={()=>onDeleteTrainingProgram(item.uuid)}
+            onConfirm={() => onDeleteTrainingProgram(item.uuid)}
         >
-            <DeleteOutlined />
+            <DeleteOutlined/>
         </Popconfirm>,
         ,
     ]
 
-    const TrainingItem = ({item}) => {
+    const TrainingItem = ({item, isFollow}) => {
+
         return (
             <Card
                 extra={<Link to={`/uet/training-programs/${item.uuid}`}>Chi tiết</Link>}
                 actions={
-                    userRole == 0 ? actionAdmin(item) : ( userRole == 3 ? actionStudent(item) : "")
+                    userRole == 0 ? actionAdmin(item) : (userRole == 3 ? actionStudent(item, isFollow) : "")
                 }
                 title={item.vn_name}
             >
@@ -256,7 +311,7 @@ const ListTrainingProgramPage = () => {
             <Button
                 type="primary"
                 shape="circle"
-                icon={<BuildOutlined />}
+                icon={<BuildOutlined/>}
                 size={"large"}
                 style={{
                     position: 'fixed',
@@ -270,7 +325,7 @@ const ListTrainingProgramPage = () => {
             <Button
                 type="primary"
                 shape="circle"
-                icon={<InsertRowBelowOutlined />}
+                icon={<InsertRowBelowOutlined/>}
                 size={"large"}
                 style={{
                     position: 'fixed',
@@ -300,17 +355,26 @@ const ListTrainingProgramPage = () => {
     )
 
 
-
     return trainingPrograms ? (
         <>
             <List
-                grid={{ gutter: 16, column: 3 }}
+                grid={{
+                    gutter: 16,
+                    xs: 1,
+                    sm: 2,
+                    md: 3,
+                    lg: 4,
+                    xl: 4,
+                    xxl: 4,
+                }}
                 dataSource={trainingPrograms}
-                renderItem={item => (
-                    <List.Item>
-                        <TrainingItem item={item} />
-                    </List.Item>
-                )}
+                renderItem={item => {
+                        return <List.Item>
+                            <TrainingItem item={item}/>
+                        </List.Item>
+                    }
+
+                }
             />
             <MatrixCourses
                 visibleCourseMatrix={visibleCourseMatrix}
@@ -321,6 +385,11 @@ const ListTrainingProgramPage = () => {
                 visibleLocMatrix={visibleLocMatrix}
                 setVisibleLocMatrix={setVisibleLocMatrix}
                 trainingList={trainingPrograms}
+            />
+            <ListCourseOfTraining
+                visibleCourseList={visibleCourseList}
+                setVisibleCourseList={setVisibleCourseList}
+                trainingItem={chosenTraining}
             />
             {userRole == 0 ? ButtonActions : ""}
         </>

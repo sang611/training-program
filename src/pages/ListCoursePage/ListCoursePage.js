@@ -10,13 +10,19 @@ const {Column, ColumnGroup} = Table;
 
 const CollectionCreateForm = ({ visible, onCancel, updatedCourse, dispatch }) => {
     const [form] = Form.useForm();
-    form.setFieldsValue(updatedCourse);
+    const courseState = useSelector(state => state.courses)
+    if(updatedCourse) {
+        const required_course = (JSON.parse(updatedCourse.required_course) || []).map(course => course.uuid);
+        form.setFieldsValue(updatedCourse);
+        form.setFieldsValue({
+            required_course: required_course
+        });
+    }
+
     const insState = useSelector(state => state.institutions)
     useEffect(() => {
         dispatch(actions.getAllInstitution());
     }, [])
-
-
 
 
     return (
@@ -31,6 +37,11 @@ const CollectionCreateForm = ({ visible, onCancel, updatedCourse, dispatch }) =>
                     .validateFields()
                     .then((values) => {
                         console.log(values)
+                        values.required_course = JSON.stringify(
+                            values.required_course.map(id => {
+                                return courseState.courses.find(course => course.uuid === id);
+                            })
+                        )
                         axios.put(`/courses/${updatedCourse.uuid}`, values)
                             .then((res) => message.success("Cập nhật thành công"))
                             .catch(() => "Không thể cập nhật")
@@ -90,7 +101,26 @@ const CollectionCreateForm = ({ visible, onCancel, updatedCourse, dispatch }) =>
 
                     </Select>
                 </Form.Item>
+                <Form.Item label="Học phần tiên quyết:" name="required_course">
+                    <Select
+                        showSearch
+                        mode="multiple"
+                        allowClear
+                        style={{width: '100%'}}
+                        placeholder="Chọn học phần tiên quyết"
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                    >
+                        {
+                            courseState.courses.map((course, index) =>
+                                <Select.Option value={course.uuid} key={index}>{course.course_name_vi}</Select.Option>
+                            )
+                        }
 
+                    </Select>
+                </Form.Item>
             </Form>
         </Modal>
     );

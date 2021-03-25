@@ -24,10 +24,8 @@ export function* authUserSaga(action) {
         );
         let {account, token} = data;
 
-        const decoded = yield jwt.verify(token, "training_program_2019_fc9f03e8");
-        console.log("CURRENT USER", decoded)
 
-        yield put(actions.setCurrentUser(decoded));
+        yield put(actions.setCurrentUser(account));
 
         delete account.password;
 

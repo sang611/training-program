@@ -1,4 +1,6 @@
-.modal-courses, .modal-locs {
+.modal-courses,
+.modal-locs,
+.modal-courses-training {
     width: 80% !important;
     top: 0 !important;
 }

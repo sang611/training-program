@@ -15,8 +15,6 @@ const token = cookies.get('access_token')
 
 function App() {
 
-
-
     return (
         <div className="App">
             <Switch>

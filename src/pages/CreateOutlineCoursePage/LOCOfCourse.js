@@ -15,6 +15,11 @@ const PLO = ({clos, setClos}) => {
         dispatch(actions.getAllLearningOutcomes({typeLoc: 0}))
     }, [])
 
+    useEffect(() => {
+        setClos(locs
+            .filter((loc) => loc.category === 2 && !loc.isLink))
+    }, [locs])
+
     const columnPLOs = [
         {
             title: "Chuẩn đầu ra của CTĐT",
@@ -48,7 +53,8 @@ const PLO = ({clos, setClos}) => {
             onHeaderRow={(columns, index) => {
                 return {
                     onClick: () => {
-                        setClos(null)
+                        setClos(locs
+                            .filter((loc) => loc.category === 2 && !loc.isLink))
                     },
                 };
             }}
@@ -65,6 +71,7 @@ const CLO = ({clos, setClos, setLoc, learning_outcomes}) => {
     const [dataSource, setDataSource] = useState([]);
 
     useEffect(() => {
+
         if(learning_outcomes) {
             if(clos) {
                 setDataSource(
@@ -79,24 +86,11 @@ const CLO = ({clos, setClos, setLoc, learning_outcomes}) => {
                     })
                 )
             }
-            else {
-                console.log("render loc", locs)
-                setDataSource(
-                    locs
-                        .filter((loc) => loc.category === 2 && !loc.isLink)
-                        .map((loc) => {
-                            loc.key = loc.uuid;
-                            learning_outcomes.forEach((l) => {
-                                if(l.uuid === loc.uuid)
-                                    loc.level = l.outline_learning_outcome.level;
-                            })
-                            console.log(loc.level)
-                            return loc;
-                        })
-                )
-            }
-        }
 
+        }
+        else {
+            setDataSource(clos);
+        }
 
     }, [clos, locs])
 
@@ -129,30 +123,33 @@ const CLO = ({clos, setClos, setLoc, learning_outcomes}) => {
             title: 'Bậc',
             dataIndex: 'level',
             key: 'level',
-            render: (text, record) => (
-                <InputNumber
-                    size="small"
-                    min={1}
-                    max={6}
-                    defaultValue={record.level}
-                    style={{width: 50}}
-                    onChange={
-                        (val) => {
-                            record.level = val;
-                            cloSelected.forEach((clo) => {
-                                if(clo.uuid === record.uuid) {
-                                    if(!clo.level) {
-                                        clo.outline_learning_outcome.level = record.level;
+            render: (text, record) => {
+                if(!record.level) {record.level=1}
+                return (
+
+                    <InputNumber
+                        size="small"
+                        min={1}
+                        max={6}
+                        defaultValue={record.level}
+                        style={{width: 50}}
+                        onChange={
+                            (val) => {
+                                record.level = val;
+                                cloSelected.forEach((clo) => {
+                                    if (clo.uuid === record.uuid) {
+                                        if (!clo.level) {
+                                            clo.outline_learning_outcome.level = record.level;
+                                        } else {
+                                            clo.level = record.level;
+                                        }
                                     }
-                                    else {
-                                        clo.level = record.level;
-                                    }
-                                }
-                            })
+                                })
+                            }
                         }
-                    }
-                />
-            ),
+                    />
+                )
+            },
         },
     ]
     const onSelectChange = selectedRowKeys => {
@@ -171,7 +168,6 @@ const CLO = ({clos, setClos, setLoc, learning_outcomes}) => {
                 cloSelected.filter((clo) => clo.uuid !== record.uuid)
             )
         }
-
     }
 
 

@@ -3,22 +3,24 @@
   <component name="ChangeListManager">
     <list default="true" id="b03111ef-773f-4dae-b9ce-907452fe58db" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/CreateCoursePage/CreateCoursePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateCoursePage/CreateCoursePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/LOCOfCourse.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/LOCOfCourse.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/DashboardPage/StudentDashboardPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DashboardPage/StudentDashboardPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/DashboardPage/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DashboardPage/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/DetailAccountPage/DetailAccountPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DetailAccountPage/DetailAccountPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/DetailTrainingProgramPage/DetailTrainingProgramPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DetailTrainingProgramPage/DetailTrainingProgramPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/ListCoursePage/ListCoursePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListCoursePage/ListCoursePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/ListTrainingProgramPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/ListTrainingProgramPage.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/ListTrainingProgramPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/ListTrainingProgramPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/PrivatePlanningPage/PrivatePlanningPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PrivatePlanningPage/PrivatePlanningPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/SignInPage/SignInPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/SignInPage/SignInPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/private.route.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/private.route.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/actions/accounts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/accounts.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/actions/actionTypes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/actionTypes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/auth.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/actions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/reducers/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducers/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/reducers/accounts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducers/accounts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/saga/accounts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/saga/accounts.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/redux/saga/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/saga/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redux/saga/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/saga/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

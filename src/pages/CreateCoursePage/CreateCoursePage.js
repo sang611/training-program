@@ -22,11 +22,13 @@ const CreateCoursePage = () => {
     }, [])
 
     async function onCreateCourse(values) {
-        /*console.log(values.required_course)
-        values.required_course = JSON.stringify( values.required_course.map(courseUuid => {
-                return courseState.courses.find(c => c.uuid === courseUuid)
-            })
-        )*/
+        if(values.required_course) {
+            values.required_course = JSON.stringify( values.required_course.map(courseUuid => {
+                    return courseState.courses.find(c => c.uuid === courseUuid)
+                })
+            )
+        }
+
         try {
             const response = await axios.post("/courses", values)
             message.success(response.data.message);
