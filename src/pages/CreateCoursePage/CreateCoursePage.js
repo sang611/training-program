@@ -22,12 +22,12 @@ const CreateCoursePage = () => {
     }, [])
 
     async function onCreateCourse(values) {
-        try {
-            console.log(values.required_course)
-            values.required_course = JSON.stringify( values.required_course.map(courseUuid => {
-               return courseState.courses.find(c => c.uuid === courseUuid)
+        /*console.log(values.required_course)
+        values.required_course = JSON.stringify( values.required_course.map(courseUuid => {
+                return courseState.courses.find(c => c.uuid === courseUuid)
             })
-            )
+        )*/
+        try {
             const response = await axios.post("/courses", values)
             message.success(response.data.message);
             form.resetFields();
@@ -128,8 +128,8 @@ const CreateCoursePage = () => {
                                    addonBefore={<i className="fas fa-code" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
 
-                        <Form.Item label="Số tín chỉ:" name="credits">
-                            <InputNumber min={1} max={20}/>
+                        <Form.Item label="Số tín chỉ:" name="credits" >
+                            <InputNumber min={1} max={20} defaultValue={1}/>
                         </Form.Item>
                         <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
                             <Select

@@ -131,7 +131,6 @@ const MatrixLoc = ({visibleLocMatrix, setVisibleLocMatrix, trainingList}) => {
 
     return (
         <>
-
                 <Modal
                     visible={visibleLocMatrix}
                     title="Ma trận chuẩn đầu ra"
@@ -166,20 +165,32 @@ const MatrixLoc = ({visibleLocMatrix, setVisibleLocMatrix, trainingList}) => {
 const ListTrainingProgramPage = () => {
     const history = useHistory();
 
+    const {currentUser, userRole} = useSelector(state => state.auth);
     const [trainingPrograms, setTrainingPrograms] = useState(null);
-    const user = cookies.get("account")
+    const dispatch = useDispatch();
     const [visibleCourseMatrix, setVisibleCourseMatrix] = useState(false);
     const [visibleLocMatrix, setVisibleLocMatrix] = useState(false);
+
+
+
 
     useEffect(() => {
          axios.get("/training-programs")
              .then((res) => {
                  setTrainingPrograms(res.data.training_programs)
              })
+
     }, [])
 
-    const studentJoinTraining = () => {
-        axios.post("/")
+
+    const studentJoinTraining = (training) => {
+        axios.post("/students/training-program/follow", {
+            studentUuid: currentUser.student.uuid,
+            trainingProgramUuid: training.uuid
+        }).then((res) => {
+            message.success(res.data.message);
+        })
+
     }
 
     const onLock = async (uuid) => {
@@ -196,35 +207,42 @@ const ListTrainingProgramPage = () => {
         console.log("deleted")
     }
 
+
+
+    const actionStudent = (item) => [
+        <SelectOutlined key="select" onClick={() => studentJoinTraining(item)} />,
+        <SettingOutlined key="setting" onClick={() => console.log("setting")} />,
+    ]
+
+    const actionAdmin = (item) => [
+        <Link to={`/uet/training-programs/updating/${item.uuid}`}>
+            <EditOutlined key="edit" />
+        </Link>,
+        <Popconfirm
+            title="Sau khi khóa sẽ không thể chỉnh sửa?"
+            cancelText="Hủy"
+            okText="Khóa"
+            onConfirm={()=>onLock(item.uuid)}
+        >
+            <LockOutlined />
+        </Popconfirm>,
+        <Popconfirm
+            title="Xóa CTĐT?"
+            cancelText="Hủy"
+            okText="Xóa"
+            onConfirm={()=>onDeleteTrainingProgram(item.uuid)}
+        >
+            <DeleteOutlined />
+        </Popconfirm>,
+        ,
+    ]
+
     const TrainingItem = ({item}) => {
         return (
             <Card
                 extra={<Link to={`/uet/training-programs/${item.uuid}`}>Chi tiết</Link>}
-                actions={user.role == 0 ? [
-                    <Link to={`/uet/training-programs/updating/${item.uuid}`}>
-                        <EditOutlined key="edit" />
-                    </Link>,
-                    <Popconfirm
-                        title="Sau khi khóa sẽ không thể chỉnh sửa?"
-                        cancelText="Hủy"
-                        okText="Khóa"
-                        onConfirm={()=>onLock(item.uuid)}
-                    >
-                        <LockOutlined />
-                    </Popconfirm>,
-                    <Popconfirm
-                        title="Xóa CTĐT?"
-                        cancelText="Hủy"
-                        okText="Xóa"
-                        onConfirm={()=>onDeleteTrainingProgram(item.uuid)}
-                    >
-                        <DeleteOutlined />
-                    </Popconfirm>,
-                    ,
-                ] : [
-                    <SelectOutlined key="select" onClick={() => console.log("setting")} />,
-                    <SettingOutlined key="setting" onClick={() => console.log("setting")} />,
-                ]
+                actions={
+                    userRole == 0 ? actionAdmin(item) : ( userRole == 3 ? actionStudent(item) : "")
                 }
                 title={item.vn_name}
             >
@@ -304,7 +322,7 @@ const ListTrainingProgramPage = () => {
                 setVisibleLocMatrix={setVisibleLocMatrix}
                 trainingList={trainingPrograms}
             />
-            {user.role == 0 ? ButtonActions : ""}
+            {userRole == 0 ? ButtonActions : ""}
         </>
     ) : ""
 }

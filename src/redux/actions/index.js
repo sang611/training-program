@@ -9,7 +9,8 @@ export {
     checkAuthTimeOut,
     setAuthRedirectPath,
     setIsValidToken,
-    setTokenCheckDone
+    setTokenCheckDone,
+    setCurrentUser
 } from './auth';
 
 export {

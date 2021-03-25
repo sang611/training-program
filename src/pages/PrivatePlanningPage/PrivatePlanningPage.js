@@ -25,12 +25,13 @@ const PrivatePlanningPage = () => {
     const [plannedValid, setPlannedValid] = useState(false);
     const [numCredits, setNumCredits] = useState(0);
     const [semes, setSemes]=  useState(1);
+    const {currentUser, userRole} = useSelector(state => state.auth);
     const semesters = [1,2,3,4,5,6,7,8];
-    const {uuid, role} = cookies.get("account")
+
 
 
     useEffect(() => {
-        dispatch(actions.getAUser({accountUuid: uuid, role: role}))
+        dispatch(actions.getAUser({accountUuid: currentUser.uuid, role: userRole}))
         dispatch(actions.getAllCourse());
     }, [])
 

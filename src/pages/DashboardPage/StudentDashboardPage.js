@@ -15,7 +15,7 @@ import LearningOutcomeTitlePage from "../LearningOutcomeTitlePage/LearningOutcom
 import PrivatePlanningPage from "../PrivatePlanningPage/PrivatePlanningPage";
 import {ApartmentOutlined, CompassOutlined, TeamOutlined, UserOutlined} from "@ant-design/icons";
 import SubMenu from "antd/lib/menu/SubMenu";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
 import Cookies from "universal-cookie";
 import DetailAccountPage from "../DetailAccountPage";
@@ -24,7 +24,7 @@ const cookies = new Cookies();
 
 const StudentDashboardPage = () => {
     const dispatch = useDispatch();
-    const account = cookies.get("account");
+   const {currentUser, userRole} = useSelector(state => state.auth)
 
 
     const onClickMenuItem = (value) => {
@@ -52,9 +52,11 @@ const StudentDashboardPage = () => {
                                 <Link to="/uet/accounts">Giảng viên</Link>
                             </Menu.Item>
                             <Menu.Item key="3" icon={<CompassOutlined />}>
-                                <Link to={`/uet/${account.uuid}/planning`}>Kế hoạch học tập</Link>
+                                <Link to={`/uet/${currentUser.uuid}/planning`}>Kế hoạch học tập</Link>
                             </Menu.Item>
-                            <SubMenu key="4" icon={<UserOutlined />} title={account.username}>
+                            <SubMenu key="4" icon={<UserOutlined />} title={
+                                currentUser.student ? currentUser.student.fullname : currentUser.employee.fullname
+                            }>
 
                                <Menu.Item key="4-1" onClick={() => dispatch(actions.authLogout())}>Đăng xuất</Menu.Item>
 

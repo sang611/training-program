@@ -42,7 +42,7 @@ function SignInPage(props) {
         },
     };
     const onFinish = (values) => {
-        console.log('Success:', values);
+
         setSignInfo(values);
         dispatch(actions.auth(values));
     };

@@ -25,7 +25,7 @@ import moment from "moment";
 import Cookies from "universal-cookie/lib";
 
 const cookies = new Cookies();
-const userRole = cookies.get("account").role
+const currentUser = cookies.get("account")
 
 const UpdateStudentProfile = ({user}) => {
     const [form] = Form.useForm();
@@ -249,7 +249,7 @@ const DetailAccountPage = () => {
                 </div>
                 <br/><br/>
                 {
-                    userRole == 0 ? (
+                    currentUser.role == 0 ? (
                         <Tabs defaultActiveKey="1" type="card" size={"middle"}>
                             <Tabs.TabPane tab="Hồ sơ" key="1">
                                 <Row>

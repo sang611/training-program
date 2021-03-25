@@ -16,10 +16,11 @@ const cookies = new Cookies();
 const DetailTrainingProgramPage = (props) => {
     let {uuid} = useParams();
     let history = useHistory();
-    const user = cookies.get("account")
+    //const user = cookies.get("account")
     const [trainingProgram, setTrainingProgram] = useState(null)
     const [loading, setLoading] = useState(false)
     const [isExportingPdf, setIsExportingPdf] = useState(false);
+    const {currentUser, userRole} = useSelector(state => state.auth);
 
     useEffect(() => {
         setLoading(true)
@@ -408,7 +409,7 @@ const DetailTrainingProgramPage = (props) => {
         return loading ? <Spin/> : (
             <div id="training_program">
                 {
-                   (!trainingProgram.lock_edit && user.role == 0) ? <Affix style={{float: 'right'}} offsetTop={10}>
+                   (!trainingProgram.lock_edit && userRole == 0) ? <Affix style={{float: 'right'}} offsetTop={10}>
                         <Button
                             type="primary"
                             shape="circle"

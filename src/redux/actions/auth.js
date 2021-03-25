@@ -78,3 +78,10 @@ export const setTokenCheckDone = (isDone) => {
     }
 }
 
+export const setCurrentUser = (currentUser) => {
+    return {
+        type: actionTypes.SET_CURRENT_USER,
+        currentUser: currentUser
+    }
+}
+

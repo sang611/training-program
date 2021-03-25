@@ -3,6 +3,7 @@ import Cookies from "universal-cookie";
 import axios from "axios";
 import * as constants from "../../constants/string";
 import * as actions from "../actions/index";
+import jwt from "jsonwebtoken";
 
 
 const cookies = new Cookies();
@@ -22,14 +23,20 @@ export function* authUserSaga(action) {
             authData
         );
         let {account, token} = data;
+
+        const decoded = yield jwt.verify(token, "training_program_2019_fc9f03e8");
+        console.log("CURRENT USER", decoded)
+
+        yield put(actions.setCurrentUser(decoded));
+
         delete account.password;
 
         if (authData.rememberPassword === true) {
             yield cookies.set("access_token", token, {path: "/"});
-            yield cookies.set("account", account, {path: "/"});
+
         } else {
             const expirationDate = yield new Date().getTime() + 360000000 * 2;
-            yield cookies.set("account", account, {path: "/"});
+           // yield cookies.set("account", account, {path: "/"});
             yield cookies.set("expirationDate", expirationDate, {path: "/"});
             yield cookies.set("access_token", token, {path: "/"});
             yield put(actions.checkAuthTimeOut(360000));

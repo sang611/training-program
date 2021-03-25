@@ -8,11 +8,11 @@ import axios from "axios";
 
 const cookies = new Cookies();
 const AccountDashboardPage = () => {
-    const account = cookies.get("account")
+    const {currentUser, userRole} = useSelector(state => state.auth);
     const {isValidToken} = useSelector(state => state.auth)
 
     return isValidToken ? (
-        account.role === 0 ? <DashboardPage /> : <StudentDashboardPage />
+        userRole === 0 ? <DashboardPage /> : <StudentDashboardPage />
     ) : <Redirect to="/uet/signin"/>
 
 }

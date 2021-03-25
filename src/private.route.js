@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import * as actions from './redux/actions/index';
 import axios from "axios";
 import Cookies from "universal-cookie";
+import jwt from "jsonwebtoken";
 
 const cookies = new Cookies();
 const PrivateRoute = ({ component: Component, children, ...rest }) => {
@@ -14,12 +15,15 @@ const PrivateRoute = ({ component: Component, children, ...rest }) => {
   const {isValidToken} = checkToken;
   useEffect(() => {
     const token = cookies.get("access_token");
+    const account = cookies.get("account");
     if (token) {
-
         axios.defaults.withCredentials = true;
         axios.post("http://localhost:9000/accounts/checkAccessToken")
         .then(() => {
-          dispatch(actions.setIsValidToken(true))
+          dispatch(actions.setIsValidToken(true));
+            jwt.verify(token, "training_program_2019_fc9f03e8", function (err, decoded) {
+                dispatch(actions.setCurrentUser(decoded))
+            })
         })
         .catch((err) => {
           dispatch(actions.setIsValidToken(false))
@@ -31,7 +35,7 @@ const PrivateRoute = ({ component: Component, children, ...rest }) => {
   }, []);
 
   if (!isTokenValidated) return "";
-  return !isValidToken ? (
+  return !isValidToken  ? (
     <Route
       {...rest}
       render={(props) => {
