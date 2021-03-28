@@ -75,3 +75,10 @@ export {
     getAllDocumentSuccess,
     getAllDocumentFail
 } from './documents'
+
+export {
+    getAllMajor,
+    getAllMajorFail,
+    getAllMajorStart,
+    getAllMajorSuccess
+} from './majors'

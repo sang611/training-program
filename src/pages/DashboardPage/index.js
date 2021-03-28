@@ -15,12 +15,11 @@ const AccountDashboardPage = () => {
     const dispatch = useDispatch();
 
 
-        return isValidToken ? (
-            userRole === 0 ? <DashboardPage /> : (
-                user ? <StudentDashboardPage /> : ''
-            )
-        ) : <Redirect to="/uet/signin"/>
-
+    return isValidToken ? (
+        userRole === 0 ? <DashboardPage/> : (
+            user ? <StudentDashboardPage/> : ''
+        )
+    ) : <Redirect to="/uet/signin"/>
 
 
 }

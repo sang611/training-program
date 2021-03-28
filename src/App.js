@@ -1,5 +1,5 @@
 import './App.css';
-import {Route, Switch} from 'react-router-dom'
+import {Route, Switch, useHistory} from 'react-router-dom'
 import SignInPage from './pages/SignInPage/SignInPage';
 import DashboardPage from "./pages/DashboardPage";
 import PrivateRoute from "./private.route";
@@ -8,12 +8,27 @@ import {useDispatch, useSelector} from "react-redux";
 import * as actions from './redux/actions'
 import jwt from 'jsonwebtoken'
 import {useEffect} from "react";
+import axios from "axios";
 
 
-const cookies = new Cookies();
-const token = cookies.get('access_token')
+
 
 function App() {
+
+    const dispatch = useDispatch();
+
+    axios.defaults.baseURL = "http://localhost:9000"
+    axios.interceptors.response.use( (response) => {
+        // Return a successful response back to the calling service
+        return response;
+    }, (error) => {
+        // Return any error which is not due to authentication back to the calling service
+
+        if (error.response.status === 401) {
+            dispatch(actions.authLogout())
+        }
+        return Promise.reject(error);
+    })
 
     return (
         <div className="App">

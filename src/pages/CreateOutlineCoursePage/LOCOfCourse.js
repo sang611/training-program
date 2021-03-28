@@ -126,11 +126,10 @@ const CLO = ({clos, setClos, setLoc, learning_outcomes}) => {
             render: (text, record) => {
                 if(!record.level) {record.level=1}
                 return (
-
                     <InputNumber
                         size="small"
                         min={1}
-                        max={6}
+                        max={4}
                         defaultValue={record.level}
                         style={{width: 50}}
                         onChange={

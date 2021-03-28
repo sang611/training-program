@@ -1,4 +1,4 @@
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useState, useEffect} from 'react'
 import {useHistory, useParams} from "react-router-dom";
 import axios from "axios";
@@ -134,11 +134,12 @@ const LOCs = ({locs}) => {
     )
 }
 
-const DetailOutlinePage = () => {
+const DetailOutlinePage = (props) => {
     const history = useHistory();
     const {outlineUuid, uuid} = useParams();
     const [outline, setOutline] = useState(null);
-
+    const {userRole} = useSelector(state => state.auth)
+    const {user} = useSelector(state => state.accounts);
 
     useEffect(() => {
 
@@ -151,18 +152,30 @@ const DetailOutlinePage = () => {
 
     }, [])
 
+    const checkIsModerator = () => {
+        if (userRole == 1 || userRole == 2)
+            return !!user.courses.find((course) => uuid == course.uuid).employee_Course.isModerator
+        return false
+    }
+
     return !outline ? <Spin/> : (
         <>
+            {
+                (userRole == 0 || checkIsModerator()) ?
+                    <Affix style={{
+                        float: 'right',
+                    }} offsetTop={80}>
+                        <Button
+                            type="primary"
+                            shape="circle"
+                            icon={<EditOutlined/>}
+                            style={{float: 'right'}}
+                            onClick={() => history.push(`/uet/courses/${uuid}/outlines/${outlineUuid}/updating`)}
+                        />
+                    </Affix> : ''
+            }
 
-            <Affix style={{float: 'right'}} offsetTop={10}>
-                <Button
-                    type="primary"
-                    shape="circle"
-                    icon={<EditOutlined/>}
-                    style={{float: 'right'}}
-                    onClick={() => history.push(`/uet/courses/${uuid}/outlines/${outlineUuid}/updating`)}
-                />
-            </Affix>
+
             <br/>
             <Title level={4}>
                 1. Thông tin về các giảng viên môn học

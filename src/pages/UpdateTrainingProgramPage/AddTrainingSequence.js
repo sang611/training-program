@@ -20,7 +20,7 @@ const AddTrainingSequence = ({trainingProgram}) => {
         dispatch(actions.getAllCourse());
 
         let semesters = [];
-        for (let i = 1; i <= trainingProgram.duration * 2; ++i) {
+        for (let i = 1; i <= trainingProgram.training_duration * 2; ++i) {
             let data = {semester: i, key: i};
             semesters.push(data)
         }

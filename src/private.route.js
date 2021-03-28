@@ -27,7 +27,6 @@ const PrivateRoute = ({ component: Component, children, ...rest }) => {
                     if(decoded.role > 0) {
                         dispatch(actions.getAUser({
                             accountUuid: decoded.uuid,
-                            role: decoded.role
                         }))
                     }
                 }

@@ -121,6 +121,7 @@ const PrivatePlanningPage = () => {
             cardCourse.description = course.course_name_vi;
             cardCourse.label = course.credits + " tín chỉ";
             cardCourse.credits = course.credits;
+
             return cardCourse;
         })
     }

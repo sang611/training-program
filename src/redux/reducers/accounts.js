@@ -12,7 +12,7 @@ const initialState = {
     loading: null,
 
     detailUser: null,
-    loadingDetailUser: false,
+    loadingDetailUser: null,
     errorDetailUser: null,
 }
 

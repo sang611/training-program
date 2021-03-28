@@ -27,7 +27,7 @@ import AddCourseDocument from "./AddCourseDocument";
 import AddTrainingSequence from "./AddTrainingSequence";
 import {LockOutlined} from "@ant-design/icons";
 
-const UpdateTrainingProgramPage = () => {
+const UpdateTrainingProgramPage = (props) => {
     let {uuid} = useParams();
     let history = useHistory();
     const [form] = Form.useForm();
@@ -189,15 +189,14 @@ const UpdateTrainingProgramPage = () => {
 
                         <Space direction="vertical" style={{width: '100%'}}>
                             <Form.Item label="Mục tiêu chung" name="common_destination">
-                                <JoditEditor
+                                {/*<JoditEditor
                                     tabIndex={1}
-                                    value={""}/>
+                                    value={""}/>*/}
+                                    <Input.TextArea rows={5}/>
 
                             </Form.Item>
                             <Form.Item label="Mục tiêu cụ thể" name="specific_destination">
-                                <JoditEditor
-                                    tabIndex={1}
-                                    value={""}/>
+                                <Input.TextArea rows={5}/>
                             </Form.Item>
                         </Space>
 

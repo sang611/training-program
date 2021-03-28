@@ -12,11 +12,11 @@ import html2canvas from "html2canvas";
 import {jsPDF} from "jspdf";
 import Cookies from "universal-cookie";
 
-const cookies = new Cookies();
+
 const DetailTrainingProgramPage = (props) => {
     let {uuid} = useParams();
     let history = useHistory();
-    //const user = cookies.get("account")
+
     const [trainingProgram, setTrainingProgram] = useState(null)
     const [loading, setLoading] = useState(false)
     const [isExportingPdf, setIsExportingPdf] = useState(false);
@@ -26,7 +26,6 @@ const DetailTrainingProgramPage = (props) => {
         setLoading(true)
         axios.get(`/training-programs/${uuid}`)
             .then((res) => {
-                console.log(res.data)
                 setTrainingProgram(res.data.trainingProgram)
             })
             .catch((e) => {
@@ -447,19 +446,18 @@ const DetailTrainingProgramPage = (props) => {
                 </Title>
                 <Row>
                     <Col offset={1} span={20}>
-                        <div id={"common_destination"}>
-                            {Parser(common_destination)}
+                        <div id="common_destination">
+                            {common_destination}
                         </div>
-
                     </Col>
-                </Row>
+                </Row><br/>
                 <Title level={5}>
                     2.2. Mục tiêu cụ thể
                 </Title>
                 <Row>
                     <Col offset={1} span={20}>
                         <div id={"specific_destination"}>
-                            {Parser(specific_destination)}
+                            {specific_destination}
                         </div>
                     </Col>
                 </Row>

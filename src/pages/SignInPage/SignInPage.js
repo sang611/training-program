@@ -27,22 +27,7 @@ function SignInPage(props) {
         setIsAuth(cookies.get("isAuth"))
     }, [state])*/
 
-    const layout = {
-        labelCol: {
-            span: 8,
-        },
-        wrapperCol: {
-            span: 16,
-        },
-    };
-    const tailLayout = {
-        wrapperCol: {
-            offset: 8,
-            span: 16,
-        },
-    };
     const onFinish = (values) => {
-
         setSignInfo(values);
         dispatch(actions.auth(values));
     };
@@ -52,7 +37,7 @@ function SignInPage(props) {
         localStorage.removeItem("menu-active")
     }, [])
 
-    return state.isValidToken ? <Redirect to="/" /> : (
+    return state.isValidToken ? <Redirect to="/uet/training-programs" /> : (
 
         <div className="login-container">
             <Row>

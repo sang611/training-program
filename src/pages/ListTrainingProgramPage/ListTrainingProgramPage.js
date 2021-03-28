@@ -1,11 +1,11 @@
-import {Badge, Button, Card, List, message, Modal, Popconfirm, Table} from "antd";
+import {Badge, Button, Card, Descriptions, List, message, Modal, Popconfirm, Table, Tag} from "antd";
 import React, {useEffect, useState} from 'react'
 import axios from "axios";
 import {
     BuildOutlined,
     DeleteOutlined,
     EditOutlined,
-    EllipsisOutlined, InsertRowBelowOutlined,
+    EllipsisOutlined, InfoCircleOutlined, InsertRowBelowOutlined,
     LockOutlined,
     PlusOutlined,
     SelectOutlined,
@@ -18,7 +18,6 @@ import * as actions from "../../redux/actions";
 import './ListTrainingProgramPage.css'
 import Icon from "@ant-design/icons/es";
 
-const cookies = new Cookies();
 
 const MatrixCourses = ({visibleCourseMatrix, setVisibleCourseMatrix, trainingList}) => {
     const dispatch = useDispatch();
@@ -164,6 +163,50 @@ const MatrixLoc = ({visibleLocMatrix, setVisibleLocMatrix, trainingList}) => {
 }
 
 const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, trainingItem}) => {
+    const history = useHistory();
+
+    const columns = [
+        {
+            title: "Mã học phần",
+            dataIndex: "course_code",
+            key: "course_code"
+        },
+        {
+            title: "Tên học phần",
+            children: [
+                {
+                    title: "Tên học phần (vi)",
+                    dataIndex: "course_name_vi",
+                    key: "course_name_vi"
+                },
+                {
+                    title: "Tên học phần (en)",
+                    dataIndex: "course_name_en",
+                    key: "course_name_en"
+                }
+            ]
+        },
+        {
+            title: "Số tín chỉ",
+            dataIndex: "credits",
+            key: "credits"
+        },
+        {
+            title: "Đề cương",
+            render: (_, record) => {
+                return (
+                    <a>
+                        <Tag
+                            icon={<InfoCircleOutlined/>}
+                            color="#87d068"
+                            onClick={() => history.push(`/uet/courses/${record.uuid}/outlines`)}>
+                            Đề cương
+                        </Tag>
+                    </a>
+                )
+            }
+        }
+    ]
     return (
         <>
             <Modal
@@ -178,6 +221,13 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
                     setVisibleCourseList(false);
                 }}
             >
+                <Table
+                    columns={columns}
+                    dataSource={trainingItem ? trainingItem.courses : []}
+                    bordered
+                    pagination={false}
+                />
+
 
             </Modal>
         </>
@@ -202,13 +252,14 @@ const ListTrainingProgramPage = () => {
             .then((res) => {
                 setTrainingPrograms(res.data.training_programs)
             })
+            .catch(err => {
+
+            })
     }
 
     useEffect(() => {
         getAllTrainingProgram();
     }, [])
-
-
 
 
     const studentJoinTraining = (training) => {
@@ -301,7 +352,13 @@ const ListTrainingProgramPage = () => {
                 }
                 title={item.vn_name}
             >
-                Card content
+                <Descriptions column={1}>
+                    <Descriptions.Item label="Số học phần">
+                        {
+                            item.courses.length
+                        }
+                    </Descriptions.Item>
+                </Descriptions>
             </Card>
         )
     }
@@ -359,12 +416,12 @@ const ListTrainingProgramPage = () => {
         <>
             <List
                 grid={{
-                    gutter: 16,
+                    gutter: 30,
                     xs: 1,
                     sm: 2,
                     md: 3,
-                    lg: 4,
-                    xl: 4,
+                    lg: 3,
+                    xl: 3,
                     xxl: 4,
                 }}
                 dataSource={trainingPrograms}

@@ -159,7 +159,13 @@ const ListInstitutionPage = () => {
         <>
             <Table
                 columns={columns}
-                dataSource={listInstitutions}
+                dataSource={
+                    listInstitutions.map(ins => {
+                        ins.key=ins.uuid;
+                        return ins;
+                    })
+                }
+                bordered
                 pagination={{position: ['bottomCenter']}}
             />
             <Drawer
