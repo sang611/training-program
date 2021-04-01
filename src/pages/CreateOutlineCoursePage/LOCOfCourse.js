@@ -65,6 +65,7 @@ const PLO = ({clos, setClos}) => {
 
 const CLO = ({clos, setClos, setLoc, learning_outcomes}) => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
     const {locs} = useSelector(state => state.learningOutcomes);
 
     const [cloSelected, setCloSelected] = useState([]);
@@ -86,7 +87,6 @@ const CLO = ({clos, setClos, setLoc, learning_outcomes}) => {
                     })
                 )
             }
-
         }
         else {
             setDataSource(clos);
@@ -101,9 +101,11 @@ const CLO = ({clos, setClos, setLoc, learning_outcomes}) => {
     }, [])
 
     useEffect(() => {
+
         setSelectedRowKeys(
             cloSelected.map((clo) => clo.uuid)
         )
+
     }, [clos, cloSelected])
 
     useEffect(() => {
@@ -152,6 +154,7 @@ const CLO = ({clos, setClos, setLoc, learning_outcomes}) => {
         },
     ]
     const onSelectChange = selectedRowKeys => {
+        console.log(selectedRowKeys)
         setSelectedRowKeys(selectedRowKeys);
     };
 
@@ -182,10 +185,10 @@ const CLO = ({clos, setClos, setLoc, learning_outcomes}) => {
                 columns={columnCLOs}
                 bordered
                 rowSelection={rowSelection}
-                dataSource={
-                    dataSource
-                }
-
+                dataSource={dataSource ? dataSource.map(clo => {
+                    clo.key = clo.uuid;
+                    return clo;
+                }) : []}
             />
         </>
     )

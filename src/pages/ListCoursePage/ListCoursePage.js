@@ -32,6 +32,9 @@ const CollectionCreateForm = ({ visible, onCancel, updatedCourse, dispatch }) =>
             okText="Cập nhật"
             cancelText="Thoát"
             onCancel={onCancel}
+            style={{
+                top: '20px'
+            }}
             onOk={() => {
                 form
                     .validateFields()
@@ -56,6 +59,7 @@ const CollectionCreateForm = ({ visible, onCancel, updatedCourse, dispatch }) =>
                         console.log('Validate Failed:', info);
                     });
             }}
+
         >
             <Form
                 form={form}

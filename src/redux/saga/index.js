@@ -7,6 +7,7 @@ import * as courseSaga from './courses'
 import * as learningOutcomeSaga from "./learningOutcomes"
 import * as documentSaga from './documents'
 import * as majorSaga from './majors'
+import * as trainingProgramSaga from './training_programs'
 
 export function* watchAuth() {
     yield takeEvery(actionTypes.AUTH_USER, authUserSaga);
@@ -32,6 +33,8 @@ export function* watchAuth() {
     yield takeEvery(actionTypes.GET_ALL_DOCUMENT, documentSaga.getAllDocument)
 
     yield takeEvery(actionTypes.GET_ALL_MAJOR, majorSaga.getAllMajor);
+
+    yield takeEvery(actionTypes.GET_ALL_TRAINING_PROGRAMS, trainingProgramSaga.getAllTrainingPrograms);
 }
 
 

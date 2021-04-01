@@ -408,7 +408,7 @@ const DetailTrainingProgramPage = (props) => {
         return loading ? <Spin/> : (
             <div id="training_program">
                 {
-                   (!trainingProgram.lock_edit && userRole == 0) ? <Affix style={{float: 'right'}} offsetTop={10}>
+                   (!trainingProgram.lock_edit && userRole == 0) ? <Affix style={{float: 'right'}} offsetTop={100}>
                         <Button
                             type="primary"
                             shape="circle"

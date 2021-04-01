@@ -82,3 +82,11 @@ export {
     getAllMajorStart,
     getAllMajorSuccess
 } from './majors'
+
+export {
+    getAllTrainingProgram,
+    getAllTrainingProgramFail,
+    getAllTrainingProgramStart,
+    getAllTrainingProgramSuccess
+} from './training_programs'
+

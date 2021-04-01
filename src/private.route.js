@@ -15,10 +15,10 @@ const PrivateRoute = ({ component: Component, children, ...rest }) => {
   const {isValidToken} = checkToken;
   useEffect(() => {
     const token = cookies.get("access_token");
-    const account = cookies.get("account");
+
     if (token) {
         axios.defaults.withCredentials = true;
-        axios.post("http://localhost:9000/accounts/checkAccessToken")
+        axios.post("/accounts/checkAccessToken")
         .then(() => {
             dispatch(actions.setIsValidToken(true));
             jwt.verify(token, "training_program_2019_fc9f03e8", function (err, decoded) {

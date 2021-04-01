@@ -40,14 +40,14 @@ const EmployeeAssignCourses = ({employee}) => {
     useEffect(() => {
         setSelectedRowKeys(
             employee.courses.map((course) =>
-                course.employee_Course.isModerator ? course.uuid : ''
+                course.employee_course.isModerator ? course.uuid : ''
             )
         )
     }, [])
 
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const checkIsModerator = (record) => {
-        return !!employee.courses.find((course) => course.uuid == record.uuid).employee_Course.isModerator
+        return !!employee.courses.find((course) => course.uuid == record.uuid).employee_course.isModerator
     }
     const rowSelection = {
         onChange: (selectedRowKeys, selectedRows) => {

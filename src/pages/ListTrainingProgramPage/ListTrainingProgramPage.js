@@ -1,4 +1,4 @@
-import {Badge, Button, Card, Descriptions, List, message, Modal, Popconfirm, Table, Tag} from "antd";
+import {Badge, Button, Card, Descriptions, List, message, Modal, Popconfirm, Spin, Table, Tag} from "antd";
 import React, {useEffect, useState} from 'react'
 import axios from "axios";
 import {
@@ -236,10 +236,10 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
 
 const ListTrainingProgramPage = () => {
     const history = useHistory();
-
+const dispatch = useDispatch();
     const {currentUser, userRole} = useSelector(state => state.auth);
-    const [trainingPrograms, setTrainingPrograms] = useState(null);
-    const dispatch = useDispatch();
+    const {trainingPrograms, loadingAllTrainings, errors} = useSelector(state => state.trainingPrograms)
+    const [loadingTraining, setLoadingTraining] = useState(true);
     const [visibleCourseMatrix, setVisibleCourseMatrix] = useState(false);
     const [visibleLocMatrix, setVisibleLocMatrix] = useState(false);
     const {user} = useSelector(state => state.accounts)
@@ -247,39 +247,22 @@ const ListTrainingProgramPage = () => {
     const [visibleCourseList, setVisibleCourseList] = useState(false);
     const [chosenTraining, setChosenTraining] = useState(null);
 
-    const getAllTrainingProgram = () => {
+    /*const getAllTrainingProgram = () => {
+
         axios.get("/training-programs")
             .then((res) => {
                 setTrainingPrograms(res.data.training_programs)
+
             })
             .catch(err => {
-
+                message.error(err.response.data.message);
             })
-    }
+            .finally(() => setLoadingTraining(false))
+    }*/
 
     useEffect(() => {
-        getAllTrainingProgram();
+        dispatch(actions.getAllTrainingProgram());
     }, [])
-
-
-    const studentJoinTraining = (training) => {
-        axios.post("/students/training-program/follow", {
-            studentUuid: user.uuid,
-            trainingProgramUuid: training.uuid
-        }).then((res) => {
-        })
-
-    }
-
-    const studentUnjoinTraining = (training) => {
-        axios.post("/students/training-program/unfollow", {
-            studentUuid: user.uuid,
-            trainingProgramUuid: training.uuid
-        }).then((res) => {
-            getAllTrainingProgram()
-        })
-
-    }
 
     const onLock = async (uuid) => {
         try {
@@ -299,15 +282,6 @@ const ListTrainingProgramPage = () => {
     const actionStudent = (item, isFollow) => {
 
         return [
-            <SelectOutlined
-                key="select"
-                onClick={() => {
-                    if (!isFollow)
-                        return studentJoinTraining(item)
-                    else
-                        return studentUnjoinTraining(item)
-                }}
-            />,
             <Icon
                 component={()=><i className="fas fa-th-list" />}
                 key="setting"
@@ -412,7 +386,8 @@ const ListTrainingProgramPage = () => {
     )
 
 
-    return trainingPrograms ? (
+    return loadingAllTrainings == false  ? (
+        !errors ?
         <>
             <List
                 grid={{
@@ -449,8 +424,8 @@ const ListTrainingProgramPage = () => {
                 trainingItem={chosenTraining}
             />
             {userRole == 0 ? ButtonActions : ""}
-        </>
-    ) : ""
+        </> : <div>{errors.toString()}</div>
+    ) : <Spin />
 }
 
 export default ListTrainingProgramPage;

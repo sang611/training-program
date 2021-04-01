@@ -9,11 +9,10 @@ import Cookies from "universal-cookie/lib";
 import Search from "antd/lib/input/Search";
 import {CheckCircleOutlined, ExclamationCircleOutlined} from "@ant-design/icons";
 
-const cookies = new Cookies();
 const PrivatePlanningPage = () => {
 
     const dispatch = useDispatch();
-    const {courses} = useSelector(state => state.courses)
+    const [courses, setCourses] = useState([]);
     const {user} = useSelector(state => state.accounts)
 
     const [availableCourses, setAvailableCourse] = useState([]);
@@ -21,6 +20,7 @@ const PrivatePlanningPage = () => {
     const [completedCourse, setCompletedCourse] = useState([]);
     const [improvedCourse, setImprovedCourse] = useState([]);
     const [repeatedCourse, setRepeatedCourse] = useState([]);
+
     const [studentCourse, setStudentCourse] = useState([]);
 
     const [typeSearch, setTypeSearch] = useState("course_name_vi");
@@ -39,9 +39,11 @@ const PrivatePlanningPage = () => {
 
     useEffect(() => {
         if(user)
+            setCourses(user.training_program.courses);
             setStudentCourse(user.courses)
         }, [user]
     )
+
 
     useEffect(() => {
         if(studentCourse) {
@@ -92,7 +94,7 @@ const PrivatePlanningPage = () => {
                 convertCourseToCard(
                     courses.filter((course) => {
                             const courseUuid = studentCourse.map(stc => stc.uuid)
-                            return !courseUuid.includes(course.uuid) && course.institutionUuid === user.institutionUuid
+                            return !courseUuid.includes(course.uuid)
                         }
                     )
                 )
@@ -219,9 +221,18 @@ const PrivatePlanningPage = () => {
 
 
     const onSearch = (value) => {
-        dispatch(actions.getAllCourse({
-            [typeSearch]: value
-        }))
+        value = value.target.value;
+        if(value.trim() != "") {
+            setCourses(
+                [...user.training_program.courses].filter(course => {
+                    return course[typeSearch].toLowerCase().trim()
+                        .includes(value.toLowerCase().trim());
+                })
+            )
+        } else {
+            setCourses(user.training_program.courses);
+        }
+
     }
 
     return (
@@ -230,7 +241,7 @@ const PrivatePlanningPage = () => {
                 <Space >
                     <Search
                         placeholder="Tìm kiếm học phần"
-                        onSearch={onSearch}
+                        onChange={onSearch}
                         enterButton
                         style={{ width: 270, }}
                     />

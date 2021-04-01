@@ -33,8 +33,11 @@ const UpdateStudentProfile = ({user, userRole}) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const insState = useSelector(state => state.institutions)
+    const {trainingPrograms} = useSelector(state => state.trainingPrograms)
+
     useEffect(() => {
         dispatch(actions.getAllInstitution());
+        dispatch(actions.getAllTrainingProgram())
     }, [])
 
     useEffect(() => {
@@ -104,25 +107,27 @@ const UpdateStudentProfile = ({user, userRole}) => {
                         <Form.Item label="Số điện thoại:" name="phone_number">
                             <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
                         </Form.Item>
-                        <Form.Item label="Đơn vị chuyên môn:" name="institution">
+
+                        <Form.Item label="Thuộc chương trình đào tạo:" name="trainingProgram">
                             <Select
                                 showSearch
                                 style={{width: 200}}
-                                placeholder="Đơn vị chuyên môn"
+                                placeholder="Chương trình đào tạo"
                                 optionFilterProp="children"
-                                defaultValue={user.institution.uuid}
+                                defaultValue={user.training_program.uuid}
                                 filterOption={(input, option) =>
                                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                 }
                             >
                                 {
-                                    insState.listInstitutions.map((ins, index) =>
+                                    trainingPrograms.map((ins, index) =>
                                         <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
                                     )
                                 }
                             </Select>
 
                         </Form.Item>
+
                         <Form.Item label="Lớp môn học:" name="class">
                             <Input placeholder="Lớp môn học của sinh viên"
                                    addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
@@ -522,8 +527,8 @@ const DetailAccountPage = () => {
                             }
                         </Tabs.TabPane>
                         {
-                            (userRole == 0 && (detailUser.account.role == 1 || detailUser.account.role == 2) ) ||
-                            (currentUser.uuid == uuid && (detailUser.account.role == 1 || detailUser.account.role == 2) )
+                            (userRole == 0 && (detailUser.account.role == 1 || detailUser.account.role == 2)) ||
+                            (currentUser.uuid == uuid && (detailUser.account.role == 1 || detailUser.account.role == 2))
                                 ?
                                 <Tabs.TabPane tab="Học phần phụ trách" key="3">
                                     <EmployeeAssignCourses employee={detailUser}/>

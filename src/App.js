@@ -1,5 +1,5 @@
 import './App.css';
-import {Route, Switch, useHistory} from 'react-router-dom'
+import {Redirect, Route, Switch, useHistory} from 'react-router-dom'
 import SignInPage from './pages/SignInPage/SignInPage';
 import DashboardPage from "./pages/DashboardPage";
 import PrivateRoute from "./private.route";
@@ -33,6 +33,7 @@ function App() {
     return (
         <div className="App">
             <Switch>
+                <Route exact path="/" component={()=><Redirect to="/uet/training-programs" />} />
                 <Route exact={true} path="/uet/signin" component={SignInPage}/>
                 <PrivateRoute>
                     <Route path="/" component={DashboardPage}/>

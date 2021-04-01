@@ -22,9 +22,11 @@ const CreateAccountPage = () => {
     const dispatch = useDispatch();
     const accState = useSelector(state => state.accounts)
     const insState = useSelector(state => state.institutions)
+    const {trainingPrograms} = useSelector(state => state.trainingPrograms)
 
     useEffect(() => {
         dispatch(actions.getAllInstitution());
+        dispatch(actions.getAllTrainingProgram());
     }, [])
 
     useEffect(() => {
@@ -149,14 +151,6 @@ const CreateAccountPage = () => {
                                 </Form.Item>
                             </Col>
                         </Row>
-
-
-                        <Form.Item label="Email cá nhân:" name="email">
-                            <Input placeholder="Địa chỉ email" rules={[{type: 'email'}]} addonBefore={<MailTwoTone/>}/>
-                        </Form.Item>
-                        <Form.Item label="Số điện thoại:" name="phone_number">
-                            <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
-                        </Form.Item>
                         <Form.Item label="Học hàm:" name="academic_rank">
                             <Input placeholder="Học hàm của giảng viên"
                                    addonBefore={<i className="fas fa-brain" style={{color: '#1890FF'}}/>}/>
@@ -209,7 +203,7 @@ const CreateAccountPage = () => {
                         </Form.Item>
                         <br/>
                         <Form.Item {...buttonItemLayout}>
-                            <Button type="primary" htmlType="submit">Submit</Button>
+                            <Button type="primary" htmlType="submit">Thêm giảng viên</Button>
                         </Form.Item>
                     </Form>
                 </Col>
@@ -238,9 +232,7 @@ const CreateAccountPage = () => {
                         <br/><br/>
                         <Form.Item>
                             <Button type="primary" loading={isSendingForm} onClick={onUploadXslxFile}>
-                                {
-                                    isSendingForm ? "Loading" : "Submit"
-                                }
+                                Thêm danh sách GV
                             </Button>
                         </Form.Item>
 
@@ -292,25 +284,18 @@ const CreateAccountPage = () => {
                                 </Form.Item>
                             </Col>
                         </Row>
-
-                        <Form.Item label="Email cá nhân:" name="email">
-                            <Input placeholder="Địa chỉ email" rules={[{type: 'email'}]} addonBefore={<MailTwoTone/>}/>
-                        </Form.Item>
-                        <Form.Item label="Số điện thoại:" name="phone_number">
-                            <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
-                        </Form.Item>
-                        <Form.Item label="Đơn vị chuyên môn:" name="institution">
+                        <Form.Item label="Thuộc chương trình đào tạo:" name="trainingProgram">
                             <Select
                                 showSearch
                                 style={{width: 200}}
-                                placeholder="Đơn vị chuyên môn"
+                                placeholder="Chương trình đào tạo"
                                 optionFilterProp="children"
                                 filterOption={(input, option) =>
                                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                 }
                             >
                                 {
-                                    insState.listInstitutions.map((ins, index) =>
+                                    trainingPrograms.map((ins, index) =>
                                         <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
                                     )
                                 }
@@ -390,7 +375,7 @@ const CreateAccountPage = () => {
                         <Tabs.TabPane
                             tab={
                                 <span>
-                                  <AppleOutlined/>
+                                  <i className="fas fa-chalkboard-teacher"/>&ensp;
                                   Giảng viên
                                 </span>
                             }
@@ -400,7 +385,7 @@ const CreateAccountPage = () => {
                         <Tabs.TabPane
                             tab={
                                 <span>
-                                  <AndroidOutlined/>
+                                  <i className="fas fa-user-graduate"/>&ensp;
                                   Sinh viên
                                 </span>
                             }

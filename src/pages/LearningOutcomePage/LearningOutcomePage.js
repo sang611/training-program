@@ -34,9 +34,9 @@ const CreateCLO = () => {
         },
     };
 
-    const onFinish = ({contents}) => {
+    const onFinish = (values) => {
         const data = {
-            contents: contents,
+            locs: values.locs,
             category: 2,
             plos: plos
         }
@@ -59,7 +59,7 @@ const CreateCLO = () => {
                 mode="multiple"
                 allowClear
                 size={"middle"}
-                style={{ width: '100%' }}
+                style={{width: '100%'}}
                 placeholder="Chọn các CĐR CTĐT có liên quan"
                 onChange={handleChange}
             >
@@ -74,49 +74,35 @@ const CreateCLO = () => {
             </Select><br/><br/>
             <Form form={form} name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
                 <Form.List
-                    name="contents"
+                    name="locs"
                     rules={[{required: true, message: 'Tạo ít nhất 1 nội dung CĐR'}]}
                 >
-                    {(fields, {add, remove}, {errors}) => (
+                    {(fields, { add, remove }, {errors}) => (
                         <>
-                            {fields.map((field, index) => (
-                                <Form.Item
-                                    {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                                    /*label={index === 0 ? 'Nội dung' : ''}*/
-                                    required={true}
-                                    key={field.key}
-                                >
+                            {fields.map(({ key, name, fieldKey, ...restField }) => (
+                                <Space key={key} align="start">
                                     <Form.Item
-                                        {...field}
-                                        validateTrigger={['onChange', 'onBlur']}
-                                        rules={[
-                                            {
-                                                required: true,
-                                                whitespace: true,
-                                                message: "Nhập nội dung CĐR",
-                                            },
-                                        ]}
-                                        noStyle
+                                        {...restField}
+                                        name={[name, 'content']}
+                                        fieldKey={[fieldKey, 'content']}
+                                        rules={[{ required: true, message: 'Nhập nội dung chuẩn đầu ra' }]}
                                     >
-                                        <Row>
-                                            <Col span={22}>
-                                                <Input.TextArea placeholder="Mô tả"
-                                                                style={{width: '100%'}}/>
-                                            </Col>
-                                            <Col span={2}>
-
-                                                <MinusCircleOutlined
-                                                    className="dynamic-delete-button"
-                                                    onClick={() => remove(field.name)}
-                                                />
-
-                                            </Col>
-
-                                        </Row>
-
+                                        <Input.TextArea placeholder="Mô tả" cols={100}/>
                                     </Form.Item>
-
-                                </Form.Item>
+                                    <Form.Item
+                                        {...restField}
+                                        name={[name, 'title']}
+                                        fieldKey={[fieldKey, 'title']}
+                                        rules={[{ required: true, message: '' }]}
+                                    >
+                                        <Select placeholder="Nhóm">
+                                            <Select.Option key={1} value={1}>Kiến thức</Select.Option>
+                                            <Select.Option key={2} value={2}>Kỹ năng</Select.Option>
+                                            <Select.Option key={3} value={3}>Đạo đức</Select.Option>
+                                        </Select>
+                                    </Form.Item>
+                                    <MinusCircleOutlined onClick={() => remove(name)} />
+                                </Space>
                             ))}
                             <Form.Item>
                                 <Button
@@ -127,8 +113,8 @@ const CreateCLO = () => {
                                 >
                                     Thêm CĐR
                                 </Button>
-                                <Form.ErrorList errors={errors}/>
                             </Form.Item>
+                            <Form.ErrorList errors={errors}/>
                         </>
                     )}
                 </Form.List>
@@ -222,7 +208,7 @@ const LearningOutcomePage = () => {
         const state = useSelector(state => state.learningOutcomes);
         useEffect(() => {
             dispatch(actions.getAllLearningOutcomes({typeLoc}));
-        },[])
+        }, [])
         useEffect(() => {
             state.locs.map((loc, index) => {
                 loc.stt = index + 1;
@@ -288,17 +274,17 @@ const LearningOutcomePage = () => {
                     })
                 }
                 footer={() => {
-                        return (
-                            <>
-                                <Row>
-                                    <Col span={17} offset={2}>
-                                        <Search placeholder="Tìm kiếm"  style={{ width: '100%'}} onChange={onSearch} />
-                                    </Col>
-                                </Row>
+                    return (
+                        <>
+                            <Row>
+                                <Col span={17} offset={2}>
+                                    <Search placeholder="Tìm kiếm" style={{width: '100%'}} onChange={onSearch}/>
+                                </Col>
+                            </Row>
 
-                            </>
-                        )
-                    }
+                        </>
+                    )
+                }
                 }
             />
         </>
@@ -307,13 +293,15 @@ const LearningOutcomePage = () => {
     const [typeLoc, setTypeLoc] = useState(1);
 
     const CreatePLO = () => {
-        const onFinish = ({contents}) => {
+        const onFinish = (values) => {
             const data = {
-                contents: contents,
+                locs: values.locs,
                 parent_uuid: parentOutcome ? parentOutcome.uuid : null,
                 category: typeLoc,
-                order: parentOutcome ? parentOutcome.order+1 : 1
+                order: parentOutcome ? parentOutcome.order + 1 : 1
             }
+
+
             axios.post("/learning-outcomes", data)
                 .then((res) => {
                     message.success("CĐR được thêm thành công")
@@ -326,7 +314,7 @@ const LearningOutcomePage = () => {
         return (
             <>
                 <Form form={form} name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
-                    <Form.List
+                   {/* <Form.List
                         name="contents"
                         rules={[{required: true, message: 'Tạo ít nhất 1 nội dung CĐR'}]}
                     >
@@ -335,13 +323,12 @@ const LearningOutcomePage = () => {
                                 {fields.map((field, index) => (
                                     <Form.Item
                                         {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                                        /*label={index === 0 ? 'Nội dung' : ''}*/
                                         required={true}
                                         key={field.key}
                                     >
                                         <Form.Item
                                             {...field}
-                                            validateTrigger={['onChange', 'onBlur']}
+                                            validateTrigger={['onSubmit']}
                                             rules={[
                                                 {
                                                     required: true,
@@ -351,24 +338,19 @@ const LearningOutcomePage = () => {
                                             ]}
                                             noStyle
                                         >
-                                            <Row>
-                                                <Col span={22}>
-                                                    <Input.TextArea placeholder="Mô tả"
-                                                                    style={{width: '100%'}}/>
-                                                </Col>
-                                                <Col span={2}>
-
-                                                    <MinusCircleOutlined
-                                                        className="dynamic-delete-button"
-                                                        onClick={() => remove(field.name)}
-                                                    />
-
-                                                </Col>
-
-                                            </Row>
-
+                                            <Input.TextArea placeholder="Mô tả" cols={100}/>
                                         </Form.Item>
-
+                                        <Form.Item name="type">
+                                            <Select defaultValue={1}>
+                                                <Select.Option key={1} value={1}>Kiến thức</Select.Option>
+                                                <Select.Option key={2} value={2}>Kỹ năng</Select.Option>
+                                                <Select.Option key={3} value={3}>Đạo đức</Select.Option>
+                                            </Select>
+                                        </Form.Item>
+                                        <MinusCircleOutlined
+                                            className="dynamic-delete-button"
+                                            onClick={() => remove(field.name)}
+                                        />
                                     </Form.Item>
                                 ))}
                                 <Form.Item>
@@ -384,7 +366,54 @@ const LearningOutcomePage = () => {
                                 </Form.Item>
                             </>
                         )}
+                    </Form.List>*/}
+
+                    <Form.List
+                        name="locs"
+                        rules={[{required: true, message: 'Tạo ít nhất 1 nội dung CĐR'}]}
+                    >
+                        {(fields, { add, remove }, {errors}) => (
+                            <>
+                                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                                    <Space key={key} align="start">
+                                        <Form.Item
+                                            {...restField}
+                                            name={[name, 'content']}
+                                            fieldKey={[fieldKey, 'content']}
+                                            rules={[{ required: true, message: 'Nhập nội dung chuẩn đầu ra' }]}
+                                        >
+                                            <Input.TextArea placeholder="Mô tả" cols={100}/>
+                                        </Form.Item>
+                                        <Form.Item
+                                            {...restField}
+                                            name={[name, 'title']}
+                                            fieldKey={[fieldKey, 'title']}
+                                            rules={[{ required: true, message: '' }]}
+                                        >
+                                            <Select placeholder="Nhóm">
+                                                <Select.Option key={1} value={1}>Kiến thức</Select.Option>
+                                                <Select.Option key={2} value={2}>Kỹ năng</Select.Option>
+                                                <Select.Option key={3} value={3}>Đạo đức</Select.Option>
+                                            </Select>
+                                        </Form.Item>
+                                        <MinusCircleOutlined onClick={() => remove(name)} />
+                                    </Space>
+                                ))}
+                                <Form.Item>
+                                    <Button
+                                        type="dashed"
+                                        block
+                                        onClick={() => add()}
+                                        icon={<PlusOutlined/>}
+                                    >
+                                        Thêm CĐR
+                                    </Button>
+                                </Form.Item>
+                                <Form.ErrorList errors={errors}/>
+                            </>
+                        )}
                     </Form.List>
+
                     <Form.Item>
                         <Button type="primary" htmlType="submit">
                             Submit
@@ -396,17 +425,16 @@ const LearningOutcomePage = () => {
     }
 
 
-
-
     return (
         <>
             <Radio.Group value={typeLoc} onChange={(e) => setTypeLoc(e.target.value)}>
                 <Radio value={1}>Chương trình đào tạo</Radio>
                 <Radio value={2}>Học phần</Radio>
             </Radio.Group><br/><br/>
+
             {
                 useMemo(() => {
-                    return  <ListLocs />
+                    return <ListLocs/>
                 }, [typeLoc])
             }
 
@@ -421,7 +449,7 @@ const LearningOutcomePage = () => {
                     right: 52,
                     bottom: 32,
                 }}
-                onClick={()=> {
+                onClick={() => {
                     showDrawer();
                     setParentOutcome(null)
                 }}
@@ -446,7 +474,7 @@ const LearningOutcomePage = () => {
                                 },
                             ]}
                         >
-                            <Input.TextArea />
+                            <Input.TextArea/>
                         </Form.Item>
                     </Form>
                 </Modal>
@@ -459,7 +487,7 @@ const LearningOutcomePage = () => {
                 bodyStyle={{paddingBottom: 80}}
             >
                 {
-                    typeLoc === 1 ? <CreatePLO /> : <CreateCLO />
+                    typeLoc === 1 ? <CreatePLO/> : <CreateCLO/>
                 }
 
             </Drawer>

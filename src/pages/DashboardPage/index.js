@@ -9,10 +9,10 @@ import * as actions from '../../redux/actions'
 
 const cookies = new Cookies();
 const AccountDashboardPage = () => {
-    const {currentUser, userRole} = useSelector(state => state.auth);
+    const {userRole} = useSelector(state => state.auth);
     const {isValidToken} = useSelector(state => state.auth)
     const {user} = useSelector(state => state.accounts)
-    const dispatch = useDispatch();
+
 
 
     return isValidToken ? (

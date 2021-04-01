@@ -4,7 +4,7 @@ import {
     DesktopOutlined,
     FileOutlined, LogoutOutlined, PartitionOutlined,
     PieChartOutlined,
-    ReadOutlined, TableOutlined,
+    ReadOutlined, SolutionOutlined, TableOutlined,
     TeamOutlined,
     UserOutlined
 } from "@ant-design/icons";
@@ -34,6 +34,7 @@ import UpdateOutlinePage from "../UpdateOutlinePage";
 import DetailAccountPage from "../DetailAccountPage";
 import DocumentPage from "../DocumentPage";
 import MajorPage from "../MajorPage";
+import SubMenu from "antd/lib/menu/SubMenu";
 
 const cookies = new Cookies();
 const DashboardPage = () => {
@@ -68,7 +69,6 @@ const DashboardPage = () => {
 
     return (
             <Layout style={{minHeight: '100vh'}}>
-
                         <Sider
                             breakpoint="lg"
                             collapsedWidth="0"
@@ -163,9 +163,31 @@ const DashboardPage = () => {
                                     width: 'calc(100% - 260px)'
                                 }}
                             >
-                                <Menu theme="light" mode="horizontal" style={{marginLeft: 'auto'}}>
-                                    <Menu.Item key="1" onClick={onSignOut}>Đăng xuất <LogoutOutlined/></Menu.Item>
+                                <Menu
+                                    theme="light"
+                                    mode="horizontal"
+                                    style={{
+                                        marginLeft: 'auto'
+                                    }}>
+                                    {/*<Menu.Item key="1" onClick={onSignOut}>Đăng xuất <LogoutOutlined/></Menu.Item>*/}
+                                    <SubMenu key="4" icon={<UserOutlined />} title={"admin"}>
+                                        <Menu.Item
+                                            key="4-1"
+                                            icon={<SolutionOutlined />}
+                                        >
+                                            Hồ sơ
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            key="4-2"
+                                            icon={<LogoutOutlined />}
+                                            onClick={() => dispatch(actions.authLogout())}
+                                        >
+                                            Đăng xuất
+                                        </Menu.Item>
+
+                                    </SubMenu>
                                 </Menu>
+
                             </Header>
                             <Content style={{margin: '0 16px', marginTop: '64px'}}>
                                 <Breadcrumb style={{margin: '16px 0'}}>

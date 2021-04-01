@@ -19,15 +19,15 @@ export function* authUserSaga(action) {
     };
     try {
         const {data} = yield axios.post(
-            "http://localhost:9000/accounts/login",
+            "/accounts/login",
             authData
         );
         let {account, token} = data;
 
-
+        delete account.password;
         yield put(actions.setCurrentUser(account));
 
-        delete account.password;
+
 
         if (authData.rememberPassword === true) {
             yield cookies.set("access_token", token, {path: "/"});
