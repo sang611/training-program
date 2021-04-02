@@ -47,7 +47,6 @@ function DocumentPage () {
         beforeUpload: (file) => {
             formData.set("file", file);
             return false;
-
         }
 
     };
@@ -60,15 +59,20 @@ function DocumentPage () {
         axios.post("/documents", formData)
             .then((res) => {
                 message.success(res.data.message);
+                form.resetFields();
                 documents.push(res.data.document)
-                setUploadingDoc(false);
             })
             .catch((err) => {
-                message.error(err.response.data.message)
+                if(err.response) {
+                    message.error(err.response.data.message)
+                }
+                else {
+                    message.error("Đã xảy ra lỗi")
+                }
             })
             .finally(() => {
+                setUploadingDoc(false);
                 handleOk();
-
             })
     }
 
@@ -102,7 +106,6 @@ function DocumentPage () {
                         form
                             .validateFields()
                             .then((values) => {
-                                form.resetFields();
                                 onUploadFile(values);
                             })
                             .catch((info) => {

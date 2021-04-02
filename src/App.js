@@ -9,12 +9,14 @@ import * as actions from './redux/actions'
 import jwt from 'jsonwebtoken'
 import {useEffect} from "react";
 import axios from "axios";
+import ForbiddenPage from "./pages/ForbiddenPage/ForbiddenPage";
 
 
 
 
 function App() {
 
+    const history = useHistory();
     const dispatch = useDispatch();
 
     axios.defaults.baseURL = "http://localhost:9000"
@@ -27,12 +29,16 @@ function App() {
         if (error.response.status === 401) {
             dispatch(actions.authLogout())
         }
+        else if (error.response.status === 403) {
+            history.push("/forbidden")
+        }
         return Promise.reject(error);
     })
 
     return (
         <div className="App">
             <Switch>
+                <Route exact path="/forbidden" component={ForbiddenPage} />
                 <Route exact path="/" component={()=><Redirect to="/uet/training-programs" />} />
                 <Route exact={true} path="/uet/signin" component={SignInPage}/>
                 <PrivateRoute>

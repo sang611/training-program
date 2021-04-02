@@ -6,6 +6,7 @@ import {useEffect, useState} from 'react'
 import axios from "axios";
 import Checkbox from "antd/es/checkbox/Checkbox";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
+import CreatePLO from "../LearningOutcomePage/CreatePLO";
 
 
 const ListLocs = ({trainingProgram}) => {
@@ -66,12 +67,15 @@ const ListLocs = ({trainingProgram}) => {
 
     const onAddLocsToTrainingProgram = () => {
         console.log(choosedLocs)
-        axios.post("/training-programs/learning-outcomes", {
-            trainingUuid: trainingProgram.uuid,
-            locs: choosedLocs
-        })
-            .then((res) => {message.success("Cập nhật CĐR thành công")})
-            .catch((e) => {message.error(e.response.data.message)})
+        if(choosedLocs.length > 0) {
+            axios.post("/training-programs/learning-outcomes", {
+                trainingUuid: trainingProgram.uuid,
+                locs: choosedLocs
+            })
+                .then((res) => {message.success("Cập nhật CĐR thành công")})
+                .catch((e) => {message.error(e.response.data.message)})
+        }
+
     }
 
     const [parentOutcome, setParentOutcome] = useState(null);
@@ -119,118 +123,12 @@ const ListLocs = ({trainingProgram}) => {
             visible={visibleDrawer}
             bodyStyle={{paddingBottom: 80}}
         >
-            <CreateLOC parentOutcome={parentOutcome} onClose={onCloseDrawer}/>
+            <CreatePLO />
         </Drawer>
 
     </>
 }
 
-const CreateLOC = ({parentOutcome, onClose}) => {
-    const dispatch = useDispatch();
-    const [form] = Form.useForm();
-    const onFinish = ({contents}) => {
-        const data = {
-            contents: contents,
-            parent_uuid: parentOutcome ? parentOutcome.uuid : null,
-            category: 1,
-            order: parentOutcome ? parentOutcome.order+1 : 1
-        }
-
-        console.log(data)
-        axios.post("/learning-outcomes", data)
-            .then((res) => {
-                message.success("CĐR được thêm thành công")
-                dispatch(actions.getAllLearningOutcomes({typeLoc: 1}))
-                onClose();
-            })
-            .catch((e) => message.error("Đã có lỗi xảy ra"))
-        form.resetFields();
-    };
-    const formItemLayoutWithOutLabel = {
-        wrapperCol: {
-            xs: {span: 24, offset: 0},
-            sm: {span: 20, offset: 0},
-        },
-    };
-    const formItemLayout = {
-        labelCol: {
-            xs: {span: 24},
-            sm: {span: 4},
-        },
-        wrapperCol: {
-            xs: {span: 24},
-            sm: {span: 20},
-        },
-    };
-    return (
-        <>
-            <Form form={form} name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
-                <Form.List
-                    name="contents"
-                    rules={[{required: true, message: 'Tạo ít nhất 1 nội dung CĐR'}]}
-                >
-                    {(fields, {add, remove}, {errors}) => (
-                        <>
-                            {fields.map((field, index) => (
-                                <Form.Item
-                                    {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-                                    /*label={index === 0 ? 'Nội dung' : ''}*/
-                                    required={true}
-                                    key={field.key}
-                                >
-                                    <Form.Item
-                                        {...field}
-                                        validateTrigger={['onChange', 'onBlur']}
-                                        rules={[
-                                            {
-                                                required: true,
-                                                whitespace: true,
-                                                message: "Nhập nội dung CĐR",
-                                            },
-                                        ]}
-                                        noStyle
-                                    >
-                                        <Row>
-                                            <Col span={22}>
-                                                <Input.TextArea placeholder="Mô tả"
-                                                                style={{width: '100%'}}/>
-                                            </Col>
-                                            <Col span={2}>
-                                                <MinusCircleOutlined
-                                                    className="dynamic-delete-button"
-                                                    onClick={() => remove(field.name)}
-                                                />
-                                            </Col>
-
-                                        </Row>
-
-                                    </Form.Item>
-
-                                </Form.Item>
-                            ))}
-                            <Form.Item>
-                                <Button
-                                    type="dashed"
-                                    block
-                                    onClick={() => add()}
-                                    icon={<PlusOutlined/>}
-                                >
-                                    Thêm CĐR
-                                </Button>
-                                <Form.ErrorList errors={errors}/>
-                            </Form.Item>
-                        </>
-                    )}
-                </Form.List>
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-                </Form.Item>
-            </Form>
-        </>
-    )
-}
 
 const AddTrainingProgramLOC = ({trainingProgram}) => {
 

@@ -5,6 +5,7 @@ const initialState = {
     loading: false,
     getAllSuccess: false,
     locs: [],
+    total: 0
 }
 
 const reducer = (state = initialState, action) => {
@@ -22,7 +23,8 @@ const reducer = (state = initialState, action) => {
                 error: false,
                 getAllSuccess: true,
                 locs: action.payload.data.learningOutcomes,
-                response: action.payload
+                response: action.payload,
+                total: action.payload.data.totalResults
             }
         case actionTypes.GET_ALL_LEARNING_OUTCOME_FAIL:
             return {

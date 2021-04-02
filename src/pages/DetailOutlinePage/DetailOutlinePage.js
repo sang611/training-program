@@ -154,7 +154,7 @@ const DetailOutlinePage = (props) => {
 
     const checkIsModerator = () => {
         if (userRole == 1 || userRole == 2)
-            return !!user.courses.find((course) => uuid == course.uuid).employee_Course.isModerator
+            return !!(user.courses.find((course) => uuid == course.uuid).employee_Course.isModerator)
         return false
     }
 

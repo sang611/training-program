@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Button, Checkbox, Col, Divider, Form, Image, Input, Row} from "antd";
+import {Button, Checkbox, Col, Divider, Form, Image, Input, notification, Row} from "antd";
 import './SignInPage.css'
 import Title from "antd/lib/typography/Title";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
@@ -36,6 +36,23 @@ function SignInPage(props) {
     useEffect(() => {
         localStorage.removeItem("menu-active")
     }, [])
+
+    useEffect(() =>{
+        if(state.error) {
+        console.log(")))))))))", state.error)
+        notification.error({
+            message: 'Đăng nhập không thành công',
+            description:
+                'Email hoặc mật khẩu không đúng',
+            onClick: () => {
+                console.log('Notification Clicked!');
+            },
+        });
+
+    }
+    }, [state.error])
+
+
 
     return state.isValidToken ? <Redirect to="/uet/training-programs" /> : (
 

@@ -28,7 +28,6 @@ export function* authUserSaga(action) {
         yield put(actions.setCurrentUser(account));
 
 
-
         if (authData.rememberPassword === true) {
             yield cookies.set("access_token", token, {path: "/"});
 

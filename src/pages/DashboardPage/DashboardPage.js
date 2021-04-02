@@ -158,7 +158,7 @@ const DashboardPage = () => {
                                 id="header-nav"
                                 style={{
                                     position: 'fixed',
-                                    zIndex: 1,
+                                    zIndex: 100,
                                     backgroundColor: '#fff',
                                     width: 'calc(100% - 260px)'
                                 }}

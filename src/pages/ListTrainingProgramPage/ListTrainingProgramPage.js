@@ -325,6 +325,7 @@ const dispatch = useDispatch();
                     userRole == 0 ? actionAdmin(item) : (userRole == 3 ? actionStudent(item, isFollow) : "")
                 }
                 title={item.vn_name}
+                hoverable
             >
                 <Descriptions column={1}>
                     <Descriptions.Item label="Số học phần">
