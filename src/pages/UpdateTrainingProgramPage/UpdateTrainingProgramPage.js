@@ -1,31 +1,15 @@
 import axios from "axios";
 import {useHistory, useParams} from "react-router";
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Title from "antd/lib/typography/Title";
-import {
-    Affix,
-    Button,
-    Col,
-    Divider,
-    Form,
-    Input,
-    InputNumber,
-    message,
-    Popconfirm,
-    Row,
-    Select,
-    Space,
-    Spin
-} from "antd";
-import JoditEditor from "jodit-react";
+import {Button, Col, Divider, Form, Input, InputNumber, message, Row, Select, Space, Spin} from "antd";
 import * as actions from "../../redux/actions/institutions";
 import {useDispatch, useSelector} from "react-redux";
-import AddTrainingProgramCourses from "./AddTrainingProgramCourses";
 import AddTrainingProgramLOC from "./AddTrainingProgramLOC";
 import AddTrainingProgramFrame from "./AddTrainingProgramFrame";
 import AddCourseDocument from "./AddCourseDocument";
 import AddTrainingSequence from "./AddTrainingSequence";
-import {LockOutlined} from "@ant-design/icons";
+import AddTrainingProgramClass from "./AddTrainingProgramClass";
 
 const UpdateTrainingProgramPage = (props) => {
     let {uuid} = useParams();
@@ -231,16 +215,13 @@ const UpdateTrainingProgramPage = (props) => {
                 PHẦN III: NỘI DUNG CHƯƠNG TRÌNH ĐÀO TẠO
             </Title>
             <AddTrainingProgramFrame trainingProgram={trainingProgram}/><br/><br/>
+
             <AddCourseDocument trainingProgram={trainingProgram} type={"doc"}/><br/><br/>
             <AddCourseDocument trainingProgram={trainingProgram} type={"lec"}/><br/><br/>
 
             <AddTrainingSequence trainingProgram={trainingProgram} /><br/><br/>
 
-            <Row align="end">
-
-
-            </Row>
-
+            <AddTrainingProgramClass trainingProgram={trainingProgram} />
         </>
     )
 }

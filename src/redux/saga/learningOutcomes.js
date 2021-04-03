@@ -7,13 +7,17 @@ import * as actionTypes from "../actions/actionTypes";
 
 
 export function* getAllLearningOutcomes(action) {
-    let {typeLoc, content, page} = action.payload
+    let {typeLoc, content, page, title} = action.payload
     content = content ? content : "";
     page = page ? page : 1;
+    title = title ? title : "";
+    typeLoc = typeLoc ? typeLoc : 1;
+
     yield put(actions.getAllLearningOutcomesStart());
 
     try {
-        const response = yield axios.get(`/learning-outcomes/${typeLoc ? typeLoc : 0}/?content=${content ? content : ""}&page=${page}`);
+        const response =
+            yield axios.get(`/learning-outcomes/${typeLoc}/?content=${content}&page=${page}&title=${title}`);
         yield put(actions.getAllLearningOutcomesSuccess(response));
     } catch (error) {
         yield put(actions.getAllLearningOutcomesFail(error.response));

@@ -4,7 +4,9 @@ const initialState = {
     response: {},
     loading: false,
     getAllSuccess: false,
-    listInstitutions: []
+    listInstitutions: [],
+    isCreating: null,
+    createSuccess: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -12,19 +14,19 @@ const reducer = (state = initialState, action) => {
         case actionTypes.INSTITUTION_CREATE_START:
             return {
                 ...state,
-                loading: true
+                isCreating: true
             }
         case actionTypes.INSTITUTION_CREATE_SUCCESS:
             return {
                 ...state,
-                response: action.payload,
-                loading: false
+                isCreating: true,
+                createSuccess: true
             }
         case actionTypes.INSTITUTION_CREATE_FAIL:
             return {
                 ...state,
-                response: action.payload,
-                loading: false
+                isCreating: false,
+                createSuccess: false
             }
 
         case actionTypes.INSTITUTION_GET_ALl_START:

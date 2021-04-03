@@ -1,8 +1,9 @@
 import * as actionTypes from "./actionTypes";
 
-export const getAllDocuments = () => {
+export const getAllDocuments = (payload) => {
     return {
-        type: actionTypes.GET_ALL_DOCUMENT
+        type: actionTypes.GET_ALL_DOCUMENT,
+        payload: payload
     }
 }
 

@@ -32,11 +32,9 @@ import {course} from "../../constants/Items";
 const UpdateStudentProfile = ({user, userRole}) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-    const insState = useSelector(state => state.institutions)
     const {trainingPrograms} = useSelector(state => state.trainingPrograms)
 
     useEffect(() => {
-        dispatch(actions.getAllInstitution());
         dispatch(actions.getAllTrainingProgram())
     }, [])
 
@@ -46,13 +44,12 @@ const UpdateStudentProfile = ({user, userRole}) => {
             fullname: user.fullname,
             student_code: user.student_code,
             gender: user.gender,
+            address: user.address,
             email: user.email,
             phone_number: user.phone_number,
             class: user.class,
             vnu_mail: user.vnu_mail
         });
-
-
     }, [])
 
     const onUpdateStudentInfor = (values) => {
@@ -94,15 +91,22 @@ const UpdateStudentProfile = ({user, userRole}) => {
                             <Col span={12}>
                                 <Form.Item label="Giới tính:" name="gender">
                                     <Radio.Group name="radio-gender" defaultValue={user.gender}>
-                                        <Radio value={0}>Nam</Radio>
-                                        <Radio value={1}>Nữ</Radio>
+                                        <Radio value={"Nam"}>Nam</Radio>
+                                        <Radio value={"Nữ"}>Nữ</Radio>
                                     </Radio.Group>
                                 </Form.Item>
                             </Col>
                         </Row>
+                        <Form.Item label="Địa chỉ:" name="address">
+                            <Input placeholder="Nhập địa chỉ"
+                                   addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
+                        </Form.Item>
 
                         <Form.Item label="Email cá nhân:" name="email">
                             <Input placeholder="Địa chỉ email" rules={[{type: 'email'}]} addonBefore={<MailTwoTone/>}/>
+                        </Form.Item>
+                        <Form.Item label="Email VNU:" name="vnu_mail">
+                            <Input placeholder="Địa chỉ email vnu" rules={[{type: 'email'}]} addonBefore={<MailTwoTone/>}/>
                         </Form.Item>
                         <Form.Item label="Số điện thoại:" name="phone_number">
                             <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
@@ -289,9 +293,10 @@ const DetailAccountPage = () => {
             <Descriptions.Item label="Ngày sinh">{user.birthday}</Descriptions.Item>
             <Descriptions.Item label="Mã sinh viên">{user.student_code}</Descriptions.Item>
             <Descriptions.Item label="Lớp">{user.class}</Descriptions.Item>
-            <Descriptions.Item label="Email">
+            <Descriptions.Item label="Email VNU">
                 {user.vnu_mail}
-                <br/>
+            </Descriptions.Item>
+            <Descriptions.Item label="Email cá nhân">
                 {user.email}
             </Descriptions.Item>
             <Descriptions.Item label="Số điện thoại">{user.phone_number}</Descriptions.Item>

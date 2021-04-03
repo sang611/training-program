@@ -4,9 +4,9 @@ import axios from "../../my.axios";
 
 export function* getAllDocument(action) {
     yield put(actions.getAllDocumentStart());
-
+    let {doc_of} = action.payload;
     try {
-        const response = yield axios.get("/documents");
+        const response = yield axios.get(`/documents/${doc_of}`);
         yield put(actions.getAllDocumentSuccess(response));
     } catch (error) {
         yield put(actions.getAllDocumentFail(error.response));

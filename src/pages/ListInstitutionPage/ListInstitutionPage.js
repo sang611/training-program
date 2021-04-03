@@ -1,38 +1,26 @@
-import {
-    Table,
-    Tag,
-    Space,
-    Spin,
-    Button,
-    Popconfirm,
-    message,
-    Drawer,
-    Row,
-    Col,
-    Divider,
-    Image,
-    Descriptions, Form, Input
-} from 'antd';
+import {Button, Descriptions, Drawer, Image, message, Popconfirm, Space, Spin, Table, Tag} from 'antd';
 import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions/institutions'
 import axios from "axios";
-import Icon, {
-    ArrowRightOutlined,
-    DownloadOutlined,
+import {
+    AppstoreAddOutlined,
+    DeleteOutlined,
     EditOutlined,
-    ForwardOutlined, InboxOutlined,
+    InfoCircleOutlined,
     InfoCircleTwoTone
 } from "@ant-design/icons";
-import Dragger from "antd/lib/upload/Dragger";
 import CreateInstitutionPage from "../CreateInstitutionPage";
 
 const ListInstitutionPage = () => {
     const [visible, setVisible] = useState(false);
+    const [visibleDrawerCreate, setVisibleDrawerCreate] = useState(false);
     const [ins, setIns] = useState({});
+    const [parentIns, setParentIns] = useState(null);
     const dispatch = useDispatch();
 
-    const {loading, listInstitutions} = useSelector(state => state.institutions)
+    const {loading, listInstitutions, createSuccess} = useSelector(state => state.institutions)
+
 
     const onDeleteIns = async (id) => {
         await axios.delete(`/institutions/${id}`)
@@ -47,12 +35,6 @@ const ListInstitutionPage = () => {
 
 
     const columns = [
-        {
-            title: 'STT',
-            dataIndex: 'stt',
-            key: 'stt',
-            render: text => text,
-        },
         {
             title: 'Tên (VN)',
             dataIndex: 'vn_name',
@@ -78,17 +60,24 @@ const ListInstitutionPage = () => {
             key: 'action',
             render: (text, record) => (
                 <Space size="middle">
+                    <Button type="primary" shape="circle" icon={<InfoCircleOutlined />}
+                            onClick={() => showDrawer(record)}/>
                     <Popconfirm
                         title="Xóa đơn vị này?"
                         onConfirm={() => onDeleteIns(record.uuid)}
-
                     >
-                        <Button type="danger">
-                            Delete
-                        </Button>
+                        <Button type="danger" shape="circle" icon={<DeleteOutlined />}/>
                     </Popconfirm>
-                    <Button type="dashed" shape="circle" icon={<InfoCircleTwoTone/>}
-                            onClick={() => showDrawer(record)}/>
+                    {
+                        !record.parent_uuid ?
+                            <Button
+                                type="dashed"
+                                shape="circle"
+                                icon={<AppstoreAddOutlined />}
+                                onClick={() => showDrawerCreate(record)}
+                            />
+                            : ''
+                    }
                 </Space>
             ),
         },
@@ -98,11 +87,12 @@ const ListInstitutionPage = () => {
     const [editSuccess, setEditSuccess] = useState(false);
 
     useEffect(() => {
+        if(createSuccess) onCloseModalCreate();
         setEditSuccess(false)
         onClose();
         dispatch(actions.getAllInstitution());
 
-    }, [editSuccess])
+    }, [editSuccess, createSuccess])
 
     useEffect(() => {
         listInstitutions.map((ins, index) => {
@@ -117,15 +107,33 @@ const ListInstitutionPage = () => {
         setVisible(true);
     };
 
+    const showDrawerCreate = (parentIns) => {
+        setParentIns(parentIns);
+        setVisibleDrawerCreate(true);
+    }
+
+    useEffect(() => {
+        console.log(parentIns)
+    }, [parentIns])
+
     const onClose = () => {
         setVisible(false)
     };
 
-
+    const onCloseModalCreate = () => {
+        setVisibleDrawerCreate(false);
+    }
 
     const detailComponent = () => {
         return (
-            <Descriptions title={ins.vn_name} bordered>
+            <Descriptions
+                title={ins.vn_name}
+                bordered
+                column={1}
+                contentStyle={{
+                    width: '75%'
+                }}
+            >
                 <Descriptions.Item label="Tên đơn vị (TV)" span={3}>{ins.vn_name}</Descriptions.Item>
                 <Descriptions.Item label="Tên đơn vị (TA)" span={3}>{ins.en_name}</Descriptions.Item>
                 <Descriptions.Item label="Tên đơn vị (ABV)"
@@ -160,18 +168,21 @@ const ListInstitutionPage = () => {
             <Table
                 columns={columns}
                 dataSource={
-                    listInstitutions.map(ins => {
-                        ins.key=ins.uuid;
-                        return ins;
-                    })
+                    listInstitutions
+                        .filter(ins => ins.parent_uuid === null)
+                        .map(ins => {
+                            ins.key = ins.uuid;
+                            return ins;
+                        })
                 }
                 bordered
+                indentSize={40}
                 pagination={{position: ['bottomCenter']}}
             />
             <Drawer
                 width={800}
                 placement="right"
-                closable={false}
+                closable={true}
                 onClose={onClose}
                 visible={visible}
                 title={isEdited ? "Cập nhật thông tin đơn vị" : "Thông tin chi tiết đơn vị"}
@@ -185,9 +196,18 @@ const ListInstitutionPage = () => {
                         onClick={() => setIsEdited(!isEdited)}
                     /> : ""
                 }
-
                 {!isEdited ? detailComponent() : editComponent()}
+            </Drawer>
 
+            <Drawer
+                closable={true}
+                width={800}
+                placement="right"
+                visible={visibleDrawerCreate}
+                onClose={onCloseModalCreate}
+                title={`Thêm mới bộ môn, PTN: ${parentIns ? parentIns.vn_name : ''} `}
+            >
+                <CreateInstitutionPage parentIns={parentIns}/>
             </Drawer>
         </>
 

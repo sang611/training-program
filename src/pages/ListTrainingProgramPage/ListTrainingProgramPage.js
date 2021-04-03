@@ -1,19 +1,16 @@
-import {Badge, Button, Card, Descriptions, List, message, Modal, Popconfirm, Spin, Table, Tag} from "antd";
+import {Button, Card, Descriptions, List, message, Modal, Popconfirm, Spin, Table} from "antd";
 import React, {useEffect, useState} from 'react'
 import axios from "axios";
 import {
     BuildOutlined,
     DeleteOutlined,
     EditOutlined,
-    EllipsisOutlined, InfoCircleOutlined, InsertRowBelowOutlined,
+    InsertRowBelowOutlined,
     LockOutlined,
-    PlusOutlined,
-    SelectOutlined,
-    SettingOutlined
+    PlusOutlined
 } from "@ant-design/icons";
 import {Link, useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import Cookies from "universal-cookie";
 import * as actions from "../../redux/actions";
 import './ListTrainingProgramPage.css'
 import Icon from "@ant-design/icons/es";
@@ -110,20 +107,31 @@ const MatrixLoc = ({visibleLocMatrix, setVisibleLocMatrix, trainingList}) => {
                 title: training.vn_name,
                 render: (_, loc) => {
                     let data = [];
+                    let courseCodesOfTraining = training.courses.map(course => course.course_code)
                     training.learning_outcomes.forEach((locOfTraining) => {
-                        let clo = locOfTraining.clos.find((c) => c.uuid === loc.uuid);
+                        if(locOfTraining.uuid === loc.uuid) {
+                            let clos = locOfTraining.clos;
+                            clos.forEach(clo => {
+                                let outlines = clo.outlines;
+                                outlines.forEach((outline) => {
+                                    if(courseCodesOfTraining.includes(outline.course.course_code)){
+                                        let course_level = (
 
-                        if (clo) {
-                            clo.outlines.forEach(outline => {
-                                const {course_code} = outline.course;
-                                const {level} = outline.outline_learning_outcome;
+                                                `${outline.course.course_code} (${outline.outline_learning_outcome.level})`
 
+                                        )
+                                        if(!data.includes(course_level)) {
+                                            data.push(course_level);
+                                        }
 
-                                data = [...data, <div>{`${course_code} (${level})`}</div>]
+                                    }
+                                })
                             })
                         }
                     })
-                    return data
+                    return data.map(d => (
+                        <div>{d}</div>
+                    ))
                 }
             }
         })
@@ -191,7 +199,7 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
             dataIndex: "credits",
             key: "credits"
         },
-        {
+        /*{
             title: "Đề cương",
             render: (_, record) => {
                 return (
@@ -205,7 +213,7 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
                     </a>
                 )
             }
-        }
+        }*/
     ]
     return (
         <>
@@ -220,6 +228,7 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
                 onOk={() => {
                     setVisibleCourseList(false);
                 }}
+                footer={null}
             >
                 <Table
                     columns={columns}
@@ -236,10 +245,9 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
 
 const ListTrainingProgramPage = () => {
     const history = useHistory();
-const dispatch = useDispatch();
-    const {currentUser, userRole} = useSelector(state => state.auth);
+    const dispatch = useDispatch();
+    const {userRole} = useSelector(state => state.auth);
     const {trainingPrograms, loadingAllTrainings, errors} = useSelector(state => state.trainingPrograms)
-    const [loadingTraining, setLoadingTraining] = useState(true);
     const [visibleCourseMatrix, setVisibleCourseMatrix] = useState(false);
     const [visibleLocMatrix, setVisibleLocMatrix] = useState(false);
     const {user} = useSelector(state => state.accounts)
@@ -247,18 +255,6 @@ const dispatch = useDispatch();
     const [visibleCourseList, setVisibleCourseList] = useState(false);
     const [chosenTraining, setChosenTraining] = useState(null);
 
-    /*const getAllTrainingProgram = () => {
-
-        axios.get("/training-programs")
-            .then((res) => {
-                setTrainingPrograms(res.data.training_programs)
-
-            })
-            .catch(err => {
-                message.error(err.response.data.message);
-            })
-            .finally(() => setLoadingTraining(false))
-    }*/
 
     useEffect(() => {
         dispatch(actions.getAllTrainingProgram());
@@ -283,7 +279,7 @@ const dispatch = useDispatch();
 
         return [
             <Icon
-                component={()=><i className="fas fa-th-list" />}
+                component={() => <i className="fas fa-th-list"/>}
                 key="setting"
                 onClick={() => {
                     setChosenTraining(item);
@@ -387,46 +383,46 @@ const dispatch = useDispatch();
     )
 
 
-    return loadingAllTrainings == false  ? (
+    return loadingAllTrainings == false ? (
         !errors ?
-        <>
-            <List
-                grid={{
-                    gutter: 30,
-                    xs: 1,
-                    sm: 2,
-                    md: 3,
-                    lg: 3,
-                    xl: 3,
-                    xxl: 4,
-                }}
-                dataSource={trainingPrograms}
-                renderItem={item => {
+            <>
+                <List
+                    grid={{
+                        gutter: 30,
+                        xs: 1,
+                        sm: 2,
+                        md: 3,
+                        lg: 3,
+                        xl: 4,
+                        xxl: 4,
+                    }}
+                    dataSource={trainingPrograms}
+                    renderItem={item => {
                         return <List.Item>
                             <TrainingItem item={item}/>
                         </List.Item>
                     }
 
-                }
-            />
-            <MatrixCourses
-                visibleCourseMatrix={visibleCourseMatrix}
-                setVisibleCourseMatrix={setVisibleCourseMatrix}
-                trainingList={trainingPrograms}
-            />
-            <MatrixLoc
-                visibleLocMatrix={visibleLocMatrix}
-                setVisibleLocMatrix={setVisibleLocMatrix}
-                trainingList={trainingPrograms}
-            />
-            <ListCourseOfTraining
-                visibleCourseList={visibleCourseList}
-                setVisibleCourseList={setVisibleCourseList}
-                trainingItem={chosenTraining}
-            />
-            {userRole == 0 ? ButtonActions : ""}
-        </> : <div>{errors.toString()}</div>
-    ) : <Spin />
+                    }
+                />
+                <MatrixCourses
+                    visibleCourseMatrix={visibleCourseMatrix}
+                    setVisibleCourseMatrix={setVisibleCourseMatrix}
+                    trainingList={trainingPrograms}
+                />
+                <MatrixLoc
+                    visibleLocMatrix={visibleLocMatrix}
+                    setVisibleLocMatrix={setVisibleLocMatrix}
+                    trainingList={trainingPrograms}
+                />
+                <ListCourseOfTraining
+                    visibleCourseList={visibleCourseList}
+                    setVisibleCourseList={setVisibleCourseList}
+                    trainingItem={chosenTraining}
+                />
+                {userRole == 0 ? ButtonActions : ""}
+            </> : <div>{errors.toString()}</div>
+    ) : <Spin/>
 }
 
 export default ListTrainingProgramPage;

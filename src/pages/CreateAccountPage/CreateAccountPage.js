@@ -68,6 +68,9 @@ const CreateAccountPage = () => {
         multiple: false,
         onChange(info) {
             const {status} = info.file;
+            if(status === 'removed') {
+                setXslxFile(null);
+            }
             if (status !== 'uploading') {
                 console.log(info.file, info.fileList);
             }
@@ -80,36 +83,60 @@ const CreateAccountPage = () => {
     };
 
     function beforeUpload(file) {
+
         const isXslx = file.type === 'application/vnd.ms-excel' ||
             file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
         if (!isXslx) {
             message.error('Chỉ hỗ trợ upload file xslx!');
 
         } else {
-            setXslxFile(file);
+            if(!xslxFile) {
+                setXslxFile(file);
+            }
         }
         return false;
     }
 
     async function onUploadXslxFile() {
         if(xslxFile) {
-            setIsSendinggForm(true);
-            const fdt = new FormData();
-            fdt.set("employeesFile", xslxFile);
-            axios.post("/employees/list", fdt)
-                .then((res) => {
-                    console.log(res.data);
-                    message.success("Đã thêm thành công danh sách giảng viên")
-                })
-                .then(() => {
-                    setIsSendinggForm(false)
-                    form.resetFields();
-                })
-                .catch((error) => {
-                    setIsSendinggForm(false)
-                    console.log(error.response)
-                    message.error(error.response.data.message)
-                })
+            if(typeAccount == 1) {
+                setIsSendinggForm(true);
+                const fdt = new FormData();
+                fdt.set("employeesFile", xslxFile);
+                axios.post("/employees/list", fdt)
+                    .then((res) => {
+                        console.log(res.data);
+                        message.success("Đã thêm thành công danh sách giảng viên")
+                    })
+                    .then(() => {
+                        setIsSendinggForm(false)
+                        form.resetFields();
+                    })
+                    .catch((error) => {
+                        setIsSendinggForm(false)
+                        console.log(error.response)
+                        message.error(error.response.data.message)
+                    })
+            }
+            else if (typeAccount == 2) {
+                setIsSendinggForm(true);
+                const fdt = new FormData();
+                fdt.set("studentsFile", xslxFile);
+                axios.post("/students/list", fdt)
+                    .then((res) => {
+                        console.log(res.data);
+                        message.success("Đã thêm thành công danh sách sinh viên")
+                    })
+                    .then(() => {
+                        setIsSendinggForm(false)
+                        form.resetFields();
+                    })
+                    .catch((error) => {
+                        setIsSendinggForm(false)
+                        message.error(error.response.data.message)
+                    })
+            }
+
         }
         else {
             message.info("Không có file nào được chọn!")
@@ -215,9 +242,7 @@ const CreateAccountPage = () => {
                                 {...propsDragger}
                                 height={200}
                                 beforeUpload={beforeUpload}
-                                onRemove={() => {
-                                    setXslxFile(null)
-                                }}>
+                                >
                                 <p className="ant-upload-drag-icon">
                                     <InboxOutlined/>
                                 </p>
@@ -229,7 +254,6 @@ const CreateAccountPage = () => {
                             </Dragger>
                         </Form.Item>
 
-                        <br/><br/>
                         <Form.Item>
                             <Button type="primary" loading={isSendingForm} onClick={onUploadXslxFile}>
                                 Thêm danh sách GV
@@ -257,7 +281,7 @@ const CreateAccountPage = () => {
                         }}
                         onFinish={onCreateAccount}
                     >
-                        <Form.Item label="Họ tên sinh viên:" name="full_name">
+                        <Form.Item label="Họ tên sinh viên:" name="fullname">
                             <Input placeholder="Nhập tên sinh viên"
                                    addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
@@ -267,7 +291,7 @@ const CreateAccountPage = () => {
                         </Form.Item>
                         <Row>
                             <Col span={12}>
-                                <Form.Item label="Ngày sinh:" name="birth_date">
+                                <Form.Item label="Ngày sinh:" name="birthday">
                                     <DatePicker
                                         defaultValue={moment('01/01/2021', 'DD/MM/YYYY')}
                                         format={['DD/MM/YYYY', 'DD/MM/YY']}
@@ -278,12 +302,13 @@ const CreateAccountPage = () => {
                             <Col span={12}>
                                 <Form.Item label="Giới tính:" name="gender">
                                     <Radio.Group name="radio-gender">
-                                        <Radio value={0}>Nam</Radio>
-                                        <Radio value={1}>Nữ</Radio>
+                                        <Radio value={"Nam"}>Nam</Radio>
+                                        <Radio value={"Nữ"}>Nữ</Radio>
                                     </Radio.Group>
                                 </Form.Item>
                             </Col>
                         </Row>
+
                         <Form.Item label="Thuộc chương trình đào tạo:" name="trainingProgram">
                             <Select
                                 showSearch
@@ -352,10 +377,10 @@ const CreateAccountPage = () => {
                             Hỗ trợ file .xslx
                         </p>
                     </Dragger>
-                    <br/><br/>
+                    <br/>
                     <Button type="primary" onClick={onUploadXslxFile} loading={isSendingForm}>
                         {
-                            isSendingForm ? "Loading" : "Submit"
+                            isSendingForm ? "Loading" : "Thêm danh sách SV"
                         }
                     </Button>
 

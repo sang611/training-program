@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Button, Checkbox, Col, Divider, Form, Image, Input, notification, Row} from "antd";
+import {Button, Checkbox, Col, Divider, Form, Image, Input, message, Modal, notification, Row} from "antd";
 import './SignInPage.css'
 import Title from "antd/lib/typography/Title";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
@@ -9,7 +9,52 @@ import {useDispatch, useSelector} from "react-redux";
 import {Redirect} from "react-router-dom";
 import Cookies from "universal-cookie";
 
-const cookies = new Cookies();
+
+const ForgotPasswordForm = ({ visible, onCreate, onCancel }) => {
+    const [form] = Form.useForm();
+    return (
+        <Modal
+            visible={visible}
+            title="Quên mật khẩu?"
+            okText="Gửi"
+            cancelText="Hủy"
+            onCancel={onCancel}
+            onOk={() => {
+                form
+                    .validateFields()
+                    .then((values) => {
+                        form.resetFields();
+                        onCreate(values);
+                    })
+                    .catch((info) => {
+                        console.log('Validate Failed:', info);
+                    });
+            }}
+        >
+            <Form
+                form={form}
+                layout="vertical"
+                name="form_in_modal"
+                initialValues={{
+                    modifier: 'public',
+                }}
+            >
+                <Form.Item
+                    name="email"
+                    label="Email"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Nhập email đã đăng ký để nhận lại mật khẩu!',
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+            </Form>
+        </Modal>
+    );
+};
 
 function SignInPage(props) {
     const [signInfor, setSignInfo] = useState({});
@@ -39,7 +84,7 @@ function SignInPage(props) {
 
     useEffect(() =>{
         if(state.error) {
-        console.log(")))))))))", state.error)
+
         notification.error({
             message: 'Đăng nhập không thành công',
             description:
@@ -48,9 +93,26 @@ function SignInPage(props) {
                 console.log('Notification Clicked!');
             },
         });
+    } else if(state.user) {
+            notification.success({
+                message: 'Đăng nhập thành công',
+                description:
+                    'Hệ thống quản lý Chương trình đào tạo',
+            });
+        }
+    }, [state.error, state.user])
 
-    }
-    }, [state.error])
+    const [visible, setVisible] = useState(false);
+
+    const onCreate = (values) => {
+        console.log('Received values of form: ', values);
+        axios.post("accounts/password/reset", {email: values.email})
+            .then((res) => {
+                message.success(`Kiểm tra email ${values.email} để lấy lại mật khẩu mới!`)
+            })
+            .catch(e => message.error(e.response.data.message))
+        setVisible(false);
+    };
 
 
 
@@ -105,7 +167,7 @@ function SignInPage(props) {
                                         },
                                     ]}
                                 >
-                                    <Input
+                                    <Input.Password
                                         prefix={<LockOutlined className="site-form-item-icon"/>}
                                         type="password"
                                         placeholder="Mật khẩu"
@@ -118,7 +180,9 @@ function SignInPage(props) {
                                         <Checkbox>Ghi nhớ đăng nhập</Checkbox>
                                     </Form.Item>
 
-                                    <a className="login-form-forgot" href="">
+                                    <a className="login-form-forgot" onClick={() => {
+                                        setVisible(true);
+                                    }}>
                                         Quên mật khẩu
                                     </a>
                                 </Form.Item>
@@ -133,6 +197,13 @@ function SignInPage(props) {
                     </div>
                 </Col>
             </Row>
+            <ForgotPasswordForm
+                visible={visible}
+                onCreate={onCreate}
+                onCancel={() => {
+                    setVisible(false);
+                }}
+            />
         </div>
     )
 }

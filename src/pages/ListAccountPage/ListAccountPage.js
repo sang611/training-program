@@ -153,6 +153,9 @@ const ListAccountPage = () => {
                                     <Descriptions.Item contentStyle={{color: "gray"}}>
                                         <DesktopOutlined/>&nbsp;{item.institution ? item.institution.vn_name : ''}
                                     </Descriptions.Item>
+                                    <Descriptions.Item contentStyle={{color: "gray"}}>
+                                        <DesktopOutlined/>&nbsp;{item.institution ? item.institution.parent.vn_name : ''}
+                                    </Descriptions.Item>
                                 </Descriptions>
                             }
                         />

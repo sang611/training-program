@@ -1,18 +1,21 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useMemo} from "react";
 import {useHistory, useParams} from "react-router-dom";
 import Cookies from "universal-cookie";
-import {Button, Form, Input, message} from "antd";
-import {InboxOutlined, UploadOutlined} from "@ant-design/icons";
+import {Button, Card, Form, Input, List, message} from "antd";
+import {CloudDownloadOutlined, DeleteOutlined, EditOutlined, InboxOutlined, UploadOutlined} from "@ant-design/icons";
 import Modal from "antd/es/modal/Modal";
 import Dragger from "antd/es/upload/Dragger";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
 import axios from "axios";
+import Meta from "antd/lib/card/Meta";
+import Title from "antd/es/typography/Title";
+const FileDownload = require('js-file-download');
 
 
-function DocumentPage () {
+function DocumentPage() {
     const history = useHistory();
-    const {type} = useParams();
+    const {doc_of} = useParams();
     const dispatch = useDispatch();
     const {documents, loading} = useSelector(state => state.documents);
     const {userRole} = useSelector(state => state.auth);
@@ -21,9 +24,24 @@ function DocumentPage () {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [uploadingDoc, setUploadingDoc] = useState(false);
 
+    const [previewDoc, setPreviewDoc] = useState(null);
+
     useEffect(() => {
-        dispatch(actions.getAllDocuments());
-    }, [])
+        dispatch(actions.getAllDocuments({doc_of}));
+        setPreviewDoc(null);
+    }, [doc_of])
+
+    useEffect(() => {
+       if(previewDoc) {
+           showModal();
+       }
+    }, [previewDoc])
+
+    useEffect(() => {
+        if(!isModalVisible) {
+
+        }
+    }, [isModalVisible])
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -36,7 +54,6 @@ function DocumentPage () {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
-
 
     const props = {
         name: 'file',
@@ -54,7 +71,8 @@ function DocumentPage () {
     const onUploadFile = (values) => {
 
         formData.set("name", values.title)
-        formData.set("description", values.description)
+        formData.set("description", values.description || "")
+        formData.set("category", doc_of);
         setUploadingDoc(true);
         axios.post("/documents", formData)
             .then((res) => {
@@ -63,10 +81,9 @@ function DocumentPage () {
                 documents.push(res.data.document)
             })
             .catch((err) => {
-                if(err.response) {
+                if (err.response) {
                     message.error(err.response.data.message)
-                }
-                else {
+                } else {
                     message.error("Đã xảy ra lỗi")
                 }
             })
@@ -76,46 +93,9 @@ function DocumentPage () {
             })
     }
 
-    return (
-        <>
-            {
-                documents.map(doc => {
-                    return <iframe src={`https://drive.google.com/file/d/${doc.document_url}/preview`} width="100%" height="100vh"/>
-                })
-            }
-
-            {userRole == 0 ? <Button
-                type="primary"
-                shape="circle"
-                danger
-                icon={<UploadOutlined />}
-                size={"large"}
-                style={{
-                    position: 'fixed',
-                    right: 52,
-                    bottom: 32
-                }}
-                onClick={showModal}
-            /> : ""}
-            <Modal
-                title="Thêm mới tài liệu"
-                visible={isModalVisible}
-                confirmLoading={uploadingDoc}
-                onOk={
-                    () => {
-                        form
-                            .validateFields()
-                            .then((values) => {
-                                onUploadFile(values);
-                            })
-                            .catch((info) => {
-                                console.log('Validate Failed:', info);
-                            });
-                    }
-                }
-                onCancel={handleCancel}
-            >
-
+    const FormUploadFile = () => {
+        return (
+            <>
                 <Form
                     form={form}
                     layout="vertical"
@@ -135,16 +115,16 @@ function DocumentPage () {
                             },
                         ]}
                     >
-                        <Input />
+                        <Input/>
                     </Form.Item>
                     <Form.Item name="description" label="Mô tả">
-                        <Input.TextArea />
+                        <Input.TextArea/>
                     </Form.Item>
 
                     <Form.Item name="file" label="Upload tài liệu">
                         <Dragger {...props}>
                             <p className="ant-upload-drag-icon">
-                                <InboxOutlined />
+                                <InboxOutlined/>
                             </p>
                             <p className="ant-upload-text">Click hoặc kéo thả vào đây để upload file</p>
                             <p className="ant-upload-hint">
@@ -154,7 +134,151 @@ function DocumentPage () {
                     </Form.Item>
 
                 </Form>
-            </Modal>
+            </>
+        )
+    }
+
+
+    return (
+        <>
+            <center>
+                <Title level={2}>{
+                    function (){
+                        if(doc_of === 'training-program') return "Tài liệu chương trình đào tạo"
+                        if(doc_of === 'course') return "Tài liệu học phần"
+                        if(doc_of === 'learning-outcome') return "Tài liệu chuẩn đầu ra"
+                        if(doc_of === 'involved') return "Các văn bản liên quan"
+                    }()
+                }</Title>
+            </center>
+            <br/>
+            {
+                useMemo(() => {
+                    return (
+                        <List
+                            grid={{
+                                gutter: 50,
+                                xs: 1,
+                                sm: 2,
+                                md: 3,
+                                lg: 3,
+                                xl: 4,
+                                xxl: 4,
+                            }}
+                            dataSource={documents}
+                            renderItem={item => (
+                                <List.Item>
+                                    <Card
+                                        hoverable
+                                        bodyStyle={{
+                                            padding: '0'
+                                        }}
+                                        actions={userRole == 0 ? [
+                                            <CloudDownloadOutlined key="download" onClick={() => {
+                                                axios.get(`/documents/downloadOneFile/${item.document_url}`, {responseType: 'blob'})
+                                                    .then(res => {
+                                                        FileDownload(res.data, 'tmp.pdf');
+                                                    })
+                                            }}/>,
+                                            <EditOutlined key="edit"/>,
+                                            <DeleteOutlined key="delete"/>
+                                        ] : [
+                                            <CloudDownloadOutlined key="download" onClick={() => {
+                                                axios.get(`/documents/downloadOneFile/${item.document_url}`, {responseType: 'blob'})
+                                                    .then(res => {
+                                                        FileDownload(res.data, 'tmp.pdf');
+                                                    })
+                                            }}/>
+                                        ]}
+                                    >
+                                        <center>
+                                            <img
+                                                width='100%'
+                                                height='250px'
+                                                alt="Document"
+                                                src={`https://drive.google.com/thumbnail?authuser=0&sz=w320&id=${item.document_url}`}
+                                                onClick={() => {
+                                                    setPreviewDoc(item);
+                                                }}
+                                            />
+                                        </center>
+                                        <div>
+
+                                            <Meta
+                                                title={item.name}
+                                                description={item.description || "Không có mô tả"}
+                                                style={{width: '100%', padding: '15px'}}
+                                            />
+                                        </div>
+                                    </Card>
+                                </List.Item>
+                            )}
+                        />
+                    )
+                }, [documents])
+
+            }
+
+            {userRole == 0 ? <Button
+                type="primary"
+                shape="circle"
+                danger
+                icon={<UploadOutlined/>}
+                size={"large"}
+                style={{
+                    position: 'fixed',
+                    right: 52,
+                    bottom: 32
+                }}
+                onClick={() => {
+                    setPreviewDoc(null);
+                    showModal();
+                }}
+            /> : ""}
+            {
+                previewDoc ?
+                    <Modal
+                        visible={isModalVisible}
+                        footer={null}
+                        width='80%'
+                        style={{top: 0}}
+                        onCancel={() => {
+                            handleCancel();
+                        }
+                        }
+                    >
+                        <iframe
+                            src={`https://drive.google.com/file/d/${previewDoc.document_url}/preview`}
+                            style={{
+                                width: '100%',
+                                height: '92vh'
+                            }}
+                        />
+                    </Modal>
+                    :
+                    <Modal
+                        title={"Thêm mới tài liệu"}
+                        visible={isModalVisible}
+                        confirmLoading={uploadingDoc}
+                        onOk={
+                            () => {
+                                form
+                                    .validateFields()
+                                    .then((values) => {
+                                        onUploadFile(values);
+                                    })
+                                    .catch((info) => {
+                                        console.log('Validate Failed:', info);
+                                    });
+                            }
+                        }
+                        onCancel={handleCancel}
+
+                    >
+                        <FormUploadFile/>
+                    </Modal>
+            }
+
         </>
     )
 }

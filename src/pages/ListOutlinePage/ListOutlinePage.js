@@ -34,11 +34,11 @@ const ListOutlinePage = (props) => {
                     <Link to={`/uet/courses/${course.uuid}/outlines/${item.uuid}`}>Chi tiết</Link>
                 }
                 actions={[
-                    <SettingOutlined key="setting" onClick={() => console.log("setting")} />,
+                    <SettingOutlined key="setting" onClick={() => console.log("setting")}/>,
                     <Link to={`/uet/courses/${course.uuid}/outlines/${item.uuid}/updating`}>
-                        <EditOutlined key="edit" />
+                        <EditOutlined key="edit"/>
                     </Link>,
-                    <EllipsisOutlined key="ellipsis" />,
+                    <EllipsisOutlined key="ellipsis"/>,
                 ]}
                 title={item.vn_name}
             >
@@ -48,14 +48,14 @@ const ListOutlinePage = (props) => {
     };
 
     const gridAdmin = {
-        gutter: 16,
-        xs: 1,
-        sm: 2,
-        md: 3,
-        lg: 4,
-        xl: 4,
-        xxl: 4,
-    },
+            gutter: 16,
+            xs: 1,
+            sm: 2,
+            md: 3,
+            lg: 4,
+            xl: 4,
+            xxl: 4,
+        },
         gridNotAdmin = {
             gutter: 16,
             xs: 1,
@@ -64,28 +64,28 @@ const ListOutlinePage = (props) => {
             lg: 4,
             xl: 4,
             xxl: 4,
-        }
+        };
 
-        const checkIsModerator = () => {
+    const checkIsModerator = () => {
 
-            let c = user.courses.find(
-                (courseAssign) => courseAssign.uuid === course.uuid
-            )
-            return !!c.employee_Course.isModerator;
+        let c = user.courses.find(
+            (courseAssign) => courseAssign.uuid === course.uuid
+        )
+        return !!c.employee_course.isModerator;
 
-        }
+    }
 
-    return !course ? <Spin /> : (
+    return !course ? <Spin/> : (
         <>
             <Title level={2}>
                 {`Đề cương môn học ${course.course_name_vi} - ${course.course_code}`}
             </Title>
             <List
-                grid={ userRole === 0 ? gridAdmin : gridNotAdmin}
+                grid={userRole === 0 ? gridAdmin : gridNotAdmin}
                 dataSource={outlines}
                 renderItem={item => (
                     <List.Item>
-                        <OutlineItem item={item} />
+                        <OutlineItem item={item}/>
                     </List.Item>
                 )}
             />
@@ -95,14 +95,16 @@ const ListOutlinePage = (props) => {
                         type="primary"
                         shape="circle"
                         danger
-                        icon={<PlusOutlined />}
+                        icon={<PlusOutlined/>}
                         size={"large"}
                         style={{
                             position: 'fixed',
                             right: 52,
                             bottom: 32
                         }}
-                        onClick={() => {history.push(`/uet/courses/${course.uuid}/outlines/creating`)}}
+                        onClick={() => {
+                            history.push(`/uet/courses/${course.uuid}/outlines/creating`)
+                        }}
                     /> : ''
             }
 
@@ -110,4 +112,4 @@ const ListOutlinePage = (props) => {
     )
 }
 
-export default ListOutlinePage ;
+export default ListOutlinePage;

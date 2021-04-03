@@ -10,16 +10,13 @@ import axios from "axios";
 import {useForm} from "antd/lib/form/Form";
 
 const CreateInstitutionPage = (props) => {
-    const {isEdited, institution} = props;
+    const {isEdited, institution, parentIns} = props;
     const dispatch = useDispatch();
     const [formData, setFormData] = useState(new FormData());
     const state = useSelector((state) => state.institutions)
     const {isValidToken} = useSelector(state => state.auth)
 
     useEffect(() => {
-        if (state.response.status === 401) {
-            dispatch(actions.authLogout())
-        }
         if (state.response.status === 201) {
             message.success("Đã thêm một đơn vị mới");
         }
@@ -27,34 +24,26 @@ const CreateInstitutionPage = (props) => {
 
     const layout = {
         labelCol: {
-            span: 4,
+            span: 5,
         },
         wrapperCol: {
-            span: 12,
+            span: 15,
         },
     };
 
-    const validateMessages = {
-        required: '${label} không được để trống!',
-        types: {
-            email: '${label} is not a valid email!',
-            number: '${label} is not a valid number!',
-        },
-        number: {
-            range: '${label} must be between ${min} and ${max}',
-        },
-    };
 
     const onFinish = (values) => {
 
         console.log(values)
 
-        formData.set('vn_name', values.vn_name);
-        formData.set('en_name', values.en_name);
-        formData.set('abbreviation', values.abbreviation);
-        formData.set('address', values.address);
-        formData.set('description', values.description);
-
+        formData.set('vn_name', values.vn_name || "");
+        formData.set('en_name', values.en_name || "");
+        formData.set('abbreviation', values.abbreviation || "");
+        formData.set('address', values.address || "");
+        formData.set('description', values.description || "");
+        if(parentIns) {
+            formData.set('parent_uuid', parentIns.uuid)
+        }
         if(isEdited) {
             let {uuid} = props.institution;
             axios.put(`/institutions/${uuid}`, formData)
@@ -97,8 +86,6 @@ const CreateInstitutionPage = (props) => {
             form={form}
             name="nest-messages"
             onFinish={onFinish}
-            validateMessages={validateMessages}
-
         >
             <Form.Item
                 name={'vn_name'}

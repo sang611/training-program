@@ -1,4 +1,4 @@
-import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
+import {PlusOutlined} from "@ant-design/icons";
 import {
     Button,
     Col,
@@ -15,12 +15,11 @@ import {
     Space,
     Table
 } from "antd";
-import React, {useEffect, useState, useMemo} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions/index"
 import {Option} from "antd/lib/mentions";
-import Search from "antd/lib/input/Search";
 import CreatePLO from "./CreatePLO";
 import CreateCLO from "./CreateCLO";
 
@@ -80,7 +79,6 @@ const ListLocs = ({typeLoc, currentPage, onPaginateLOC, showModal}) => {
     }
 
 
-
     return <>
         <Table
             bordered
@@ -94,6 +92,7 @@ const ListLocs = ({typeLoc, currentPage, onPaginateLOC, showModal}) => {
                 })
             }
         />
+        <br/>
         <Row align="center">
             <Col>
                 <Pagination
@@ -117,12 +116,17 @@ const LearningOutcomePage = () => {
     const [typeLoc, setTypeLoc] = useState(1);
     const [content, setContent] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [title, setTitle] = useState(0);
 
     const [updateForm] = Form.useForm();
 
+    function fetchLOC(params) {
+        dispatch(actions.getAllLearningOutcomes(params))
+    }
+
     useEffect(() => {
-        dispatch(actions.getAllLearningOutcomes({typeLoc}));
-    }, [typeLoc])
+        fetchLOC({typeLoc, content, title, page: currentPage});
+    }, [typeLoc, content, title, currentPage])
 
     useEffect(() => {
         updateForm.setFieldsValue(editingLOC)
@@ -136,8 +140,6 @@ const LearningOutcomePage = () => {
     };
 
 
-
-
     const onUpdateLOC = () => {
         updateForm
             .validateFields()
@@ -146,7 +148,7 @@ const LearningOutcomePage = () => {
                 axios.put(`/learning-outcomes/${editingLOC.uuid}`, values)
                     .then((res) => {
                         message.success("Cập nhật CĐR thành công")
-                        dispatch(actions.getAllLearningOutcomes(typeLoc));
+                        fetchLOC({typeLoc, content, title, page: currentPage});
                         updateForm.resetFields();
                         setVisibleModal(false);
                     })
@@ -170,23 +172,25 @@ const LearningOutcomePage = () => {
     }
 
     const onPaginateLOC = (page) => {
-        dispatch(actions.getAllLearningOutcomes({
-            typeLoc,
-            page,
-            content
-        }))
         setCurrentPage(page);
     }
+
 
     const onSearch = (e) => {
         let search = e.target.value;
         setContent(search);
-        dispatch(actions.getAllLearningOutcomes({typeLoc, content: search, page: 1}))
         setCurrentPage(1)
+    }
+
+    const onFilterByTitle = (value) => {
+        setTitle(value);
     }
 
     return (
         <>
+            <div style={{paddingRight: '60px'}}>
+
+
             <Row justify="space-between">
                 <Col>
                     <Radio.Group value={typeLoc} onChange={(e) => setTypeLoc(e.target.value)}>
@@ -195,7 +199,28 @@ const LearningOutcomePage = () => {
                     </Radio.Group>
                 </Col>
                 <Col span={10}>
-                    <Search placeholder="Tìm kiếm" style={{width: '100%'}} onChange={onSearch}/>
+                    <Row>
+                        <Col span={6}>
+                            <Select
+                                onChange={onFilterByTitle}
+                                size="large"
+                                defaultValue={0}
+                                style={{width: '100%'}}
+                            >
+                                <Option key='all' value={0}>Tất cả</Option>
+                                <Option key='kien_thuc' value={1}>Kiến thức</Option>
+                                <Option key='ki_nang' value={2}>Kĩ năng</Option>
+                                <Option key='dao_duc' value={3}>Đạo đức</Option>
+                            </Select>
+                        </Col>
+                        <Col span={18}>
+                            <Input placeholder="Tìm kiếm" onChange={onSearch} style={{width: '100%'}} size="large"/>
+                        </Col>
+
+
+                    </Row>
+
+
                 </Col>
             </Row><br/>
 
@@ -209,7 +234,7 @@ const LearningOutcomePage = () => {
                     />
                 }, [typeLoc, currentPage, content])
             }
-
+            </div>
             <Button
                 type="primary"
                 shape="circle"
@@ -218,7 +243,7 @@ const LearningOutcomePage = () => {
                 danger
                 style={{
                     position: 'fixed',
-                    right: 52,
+                    right: 40,
                     bottom: 32,
                 }}
                 onClick={() => {

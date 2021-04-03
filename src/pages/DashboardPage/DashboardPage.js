@@ -1,19 +1,23 @@
-import {Breadcrumb, Row, Col, Divider, Image, Layout, Menu} from "antd";
+import {Breadcrumb, Divider, Image, Layout, Menu} from "antd";
 import {
     BankOutlined,
     DesktopOutlined,
-    FileOutlined, LogoutOutlined, PartitionOutlined,
+    FileOutlined,
+    LogoutOutlined,
+    PartitionOutlined,
     PieChartOutlined,
-    ReadOutlined, SolutionOutlined, TableOutlined,
+    ReadOutlined,
+    SolutionOutlined,
+    TableOutlined,
     TeamOutlined,
     UserOutlined
 } from "@ant-design/icons";
 import 'antd/dist/antd.css';
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import './DashboardPage.css'
 import * as actions from '../../redux/actions'
 import {useDispatch, useSelector} from "react-redux";
-import {Link, Redirect, Route, Switch} from "react-router-dom";
+import {Link, Route, Switch} from "react-router-dom";
 import CreateInstitutionPage from '../CreateInstitutionPage'
 import ListInstitutionPage from '../ListInstitutionPage'
 import CreateAccountPage from "../CreateAccountPage";
@@ -59,9 +63,6 @@ const DashboardPage = () => {
         }
     };
 
-    const onSignOut = () => {
-        dispatch(actions.authLogout());
-    }
 
     const onClickMenuItem = (value) => {
         localStorage.setItem("menu-active", value.key);
@@ -83,6 +84,7 @@ const DashboardPage = () => {
                             style={{
                                 position: 'fixed',
                                 height: '100%',
+                                //overflow: 'auto',
                             }}
                         >
                             <div className="logo" id="logo">
@@ -105,7 +107,6 @@ const DashboardPage = () => {
                                     <Menu.Item key="2" className="menu-item-child">
                                         <Link to="/uet/training-programs">Danh sách</Link>
                                     </Menu.Item>
-
                                     <Menu.Item key="4" className="menu-item-child">
                                         <Link to="/uet/documents/training-program">Tài liệu</Link>
                                     </Menu.Item>
@@ -128,9 +129,9 @@ const DashboardPage = () => {
                                     <Menu.Item key="8" className="menu-item-child">
                                         <Link to="/uet/learning-outcomes">Danh sách CĐR</Link>
                                     </Menu.Item>
-                                    <Menu.Item key="9" className="menu-item-child">
+                                    {/*<Menu.Item key="9" className="menu-item-child">
                                         <Link to="/uet/learning-outcome-titles">Danh sách đầu mục</Link>
-                                    </Menu.Item>
+                                    </Menu.Item>*/}
                                     <Menu.Item key="10" className="menu-item-child">
                                         <Link to="/uet/documents/learning-outcome">Tài liệu</Link>
                                     </Menu.Item>
@@ -223,7 +224,7 @@ const DashboardPage = () => {
                                         <Route path="/uet/learning-outcome-titles" component={LearningOutcomeTitlePage}/>
 
                                         <Route path="/uet/user/:uuid" component={DetailAccountPage} />
-                                        <Route path="/uet/documents/:type" component={DocumentPage} />
+                                        <Route path="/uet/documents/:doc_of" component={DocumentPage} />
 
                                         <Route path="/uet/majors" component={MajorPage} />
 
