@@ -6,17 +6,6 @@ import Title from "antd/lib/typography/Title";
 import AddTrainingProgramCourses from "./AddTrainingProgramCourses";
 import axios from "axios";
 
-const originData = [];
-
-for (let i = 0; i < 10; i++) {
-    originData.push({
-        key: i.toString(),
-        name: `Edrward ${i}`,
-        age: 32,
-        address: `London Park no. ${i}`,
-    });
-}
-
 const EditableCell = ({
                           editing,
                           dataIndex,
@@ -152,6 +141,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
         setDataSource([...dataSource, ...listCourses])
     }
 
+
     const columns = [
         {
             title: 'STT',
@@ -187,7 +177,19 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
             editable: true,
 
         },
+        {
+            title: 'Học phần tiên quyết',
+            editable: false,
+            render: (_, record) => {
 
+                    const requiredCourse = JSON.parse(record.required_course);
+                     return requiredCourse ? requiredCourse.map((course, index) => {
+                        return <div>{course.course_code}</div>
+                    }) : ''
+
+                }
+
+        },
         {
             title: 'Thao tác',
             dataIndex: 'operation',
@@ -234,7 +236,6 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
             return col;
         }
 
-
         return {
             ...col,
             onCell: (record) => ({
@@ -254,7 +255,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
     const onCloseDrawer = () => {
         setVisibleDrawer(false);
     };
-    return (
+    return trainingProgram ? (
         <>
             <Title level={4}>
                  Khung chương trình đào tạo &nbsp;
@@ -298,6 +299,6 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
             </Drawer>
         </>
 
-    );
+    ) : '';
 };
 export default AddTrainingProgramFrame;

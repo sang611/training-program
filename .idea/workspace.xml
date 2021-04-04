@@ -2,29 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b03111ef-773f-4dae-b9ce-907452fe58db" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/StudentStatisticPage/StudentStatisticPage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/StudentStatisticPage/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramClass.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/StudentStatisticPage/CompletedCreditsStatistic.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/StudentStatisticPage/CourseTypeByStatusStatistic.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/StudentStatisticPage/CreditStatistic.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/StudentStatisticPage/ListCourseStatic.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/SummaryContentTraining.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/CreateAccountPage/CreateAccountPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateAccountPage/CreateAccountPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/CreateInstitutionPage/CreateInstitutionPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateInstitutionPage/CreateInstitutionPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/DashboardPage/DashboardPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DashboardPage/DashboardPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/DashboardPage/StudentDashboardPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DashboardPage/StudentDashboardPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/DetailAccountPage/DetailAccountPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DetailAccountPage/DetailAccountPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/DocumentPage/DocumentPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DocumentPage/DocumentPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LearningOutcomePage/LearningOutcomePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LearningOutcomePage/LearningOutcomePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/ListAccountPage/ListAccountPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListAccountPage/ListAccountPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/ListInstitutionPage/ListInstitutionPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListInstitutionPage/ListInstitutionPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/ListOutlinePage/ListOutlinePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListOutlinePage/ListOutlinePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/ListTrainingProgramPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/ListTrainingProgramPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/SignInPage/SignInPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/SignInPage/SignInPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramLOC.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramLOC.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/ListTrainingProgramPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/ListTrainingProgramPage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/PrivatePlanningPage/PrivatePlanningPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PrivatePlanningPage/PrivatePlanningPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/StudentStatisticPage/StudentStatisticPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/StudentStatisticPage/StudentStatisticPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramCourses.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramCourses.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramFrame.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramFrame.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/UpdateTrainingProgramPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/UpdateTrainingProgramPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/actions/documents.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/actions/documents.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/reducers/institutions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/reducers/institutions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/saga/documents.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/saga/documents.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/saga/learningOutcomes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/saga/learningOutcomes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,8 +28,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="CSS File" />
-        <option value="React Functional Component" />
         <option value="JavaScript File" />
+        <option value="React Functional Component" />
       </list>
     </option>
   </component>

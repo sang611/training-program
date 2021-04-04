@@ -14,6 +14,7 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded}) => {
     const [uploadFile, setUploadFile] = useState(false);
     const [form] = Form.useForm();
     const [addCourseForm] = Form.useForm();
+    const [courseType, setCourseType] = useState("B");
 
     let {uuid} = useParams();
 
@@ -23,6 +24,10 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded}) => {
 
     const onFinish = values => {
         console.log('Received values of form:', values);
+        values.courses = values.courses.map((course) => {
+            course.course_type = courseType;
+            return course;
+        })
         axios.post("/training-programs/courses", {
             courses: values.courses,
             trainingUuid: uuid
@@ -45,8 +50,12 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded}) => {
                 message.success("Thêm học phần vào CTĐT thành công")
             })
             .catch((e) => {
-                console.log(e.response)
-                message.error(e.response.data.message)
+                if (e.response) {
+                    message.error(e.response.data.message)
+                } else {
+                    message.error(e.message);
+                }
+
             })
     };
 
@@ -151,132 +160,130 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded}) => {
                 />
                 <br/>*/}
             </Title>
+            <Space>
+                <h4>
+                    Loại học phần:
+                </h4>
+                <Select
+                    showSearch
+                    defaultValue={courseType}
+                    placeholder="Loại học phần"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                    onChange={(val) => {
+                        setCourseType(val)
+                    }}
+                >
+
+                    <Select.Option value="B"
+                                   key={1}>Bắt buộc</Select.Option>
+                    <Select.Option value="L"
+                                   key={2}>Tự chọn</Select.Option>
+                    <Select.Option value="BT"
+                                   key={3}>Bổ trợ</Select.Option>
+
+
+                </Select>
+            </Space>
+            <br/><br/>
             <Row>
                 {uploadFile ? <UploadFileComponent/> :
                     <Col span={24}>
                         <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off" form={addCourseForm}>
-                            {/*<Row justify="start">
-                                <Col span={8}>
-                                    <Tag color="#303641">Tên học phần</Tag>
-                                </Col>
-                                <Col span={3}>
-                                    <Tag color="#303641">Số giờ lý thuyết</Tag>
-                                </Col>
-                                <Col span={3}>
-                                    <Tag color="#303641">Số giờ bài tập</Tag>
-                                </Col>
-                                <Col span={4}>
-                                    <Tag color="#303641">Số giờ thực hành</Tag>
-                                </Col>
-                                <Col span={3}>
-                                    <Tag color="#303641">Loại học phần</Tag>
-                                </Col>
-
-                            </Row>*/}
-                            <br/>
                             <Form.List name="courses">
-                                {(fields, {add, remove}) => (
-                                    <>
-                                        {fields.map(field => (
+                                {
+                                    (fields, {add, remove}) => (
+                                        <>
+                                            {fields.map(field => (
 
-                                            <Row justify="space-between">
-                                                <Col span={8}>
-                                                    <Form.Item
-                                                        {...field}
-                                                        style={{width: 250}}
-                                                        name={[field.name, 'course_uuid']}
-                                                        fieldKey={[field.fieldKey, 'course_uuid']}
-                                                    >
-                                                        <Select
-                                                            showSearch
-
-                                                            placeholder="Tên học phần"
-                                                            optionFilterProp="children"
-                                                            filterOption={(input, option) =>
-                                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                                            }
+                                                <Row justify="space-between">
+                                                    <Col span={9}>
+                                                        <Form.Item
+                                                            {...field}
+                                                            style={{width: 250}}
+                                                            name={[field.name, 'course_uuid']}
+                                                            fieldKey={[field.fieldKey, 'course_uuid']}
                                                         >
-                                                            {
-                                                                courseState.response.data.courses.map((ins, index) =>
-                                                                    <Select.Option value={ins.uuid}
-                                                                                   key={index}>{ins.course_name_vi}</Select.Option>
-                                                                )
-                                                            }
+                                                            <Select
+                                                                showSearch
 
-                                                        </Select>
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={3}>
-                                                    <Form.Item
-                                                        {...field}
-                                                        name={[field.name, 'theory_time']}
-                                                        fieldKey={[field.fieldKey, 'theory_time']}
-                                                        rules={[{required: true, message: 'Nhập số giờ lý thuyết'}]}
-                                                    >
-                                                        <InputNumber min={1} max={100} placeholder="Số giờ lý thuyết"/>
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={3}>
-                                                    <Form.Item
-                                                        {...field}
-                                                        name={[field.name, 'exercise_time']}
-                                                        fieldKey={[field.fieldKey, 'exercise_time']}
-                                                        rules={[{required: true, message: 'Nhập số giờ bài tập'}]}
-                                                    >
-                                                        <InputNumber min={1} max={100} placeholder="Số giờ bài tập"/>
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={3}>
-                                                    <Form.Item
-                                                        {...field}
-                                                        name={[field.name, 'practice_time']}
-                                                        fieldKey={[field.fieldKey, 'practice_time']}
-                                                        rules={[{required: true, message: 'Nhập số giờ thực hành'}]}
-                                                    >
-                                                        <InputNumber min={1} max={100} placeholder="Số giờ thực hành"/>
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={3}>
+                                                                placeholder="Tên học phần"
+                                                                optionFilterProp="children"
+                                                                filterOption={(input, option) =>
+                                                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                                }
+                                                            >
+                                                                {
+                                                                    courseState.response.data.courses.map((ins, index) =>
+                                                                        <Select.Option value={ins.uuid}
+                                                                                       key={index}>{ins.course_name_vi}</Select.Option>
+                                                                    )
+                                                                }
+
+                                                            </Select>
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={3}>
+                                                        <Form.Item
+                                                            {...field}
+                                                            name={[field.name, 'theory_time']}
+                                                            fieldKey={[field.fieldKey, 'theory_time']}
+                                                            rules={[{required: true, message: 'Nhập số giờ lý thuyết'}]}
+                                                        >
+                                                            <InputNumber min={1} max={100}
+                                                                         placeholder="Số giờ lý thuyết"/>
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={3}>
+                                                        <Form.Item
+                                                            {...field}
+                                                            name={[field.name, 'exercise_time']}
+                                                            fieldKey={[field.fieldKey, 'exercise_time']}
+                                                            rules={[{required: true, message: 'Nhập số giờ bài tập'}]}
+                                                        >
+                                                            <InputNumber min={1} max={100}
+                                                                         placeholder="Số giờ bài tập"/>
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={3}>
+                                                        <Form.Item
+                                                            {...field}
+                                                            name={[field.name, 'practice_time']}
+                                                            fieldKey={[field.fieldKey, 'practice_time']}
+                                                            rules={[{required: true, message: 'Nhập số giờ thực hành'}]}
+                                                        >
+                                                            <InputNumber min={1} max={100}
+                                                                         placeholder="Số giờ thực hành"/>
+                                                        </Form.Item>
+                                                    </Col>
+                                                    {/*<Col span={3}>
                                                     <Form.Item
                                                         {...field}
                                                         style={{width: 100}}
                                                         name={[field.name, 'course_type']}
                                                         fieldKey={[field.fieldKey, 'course_type']}
                                                     >
-                                                        <Select
-                                                            showSearch
-                                                            placeholder="Loại học phần"
-                                                            optionFilterProp="children"
-                                                            filterOption={(input, option) =>
-                                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                                            }
-                                                        >
-                                                            {
-                                                                ["B", "L"].map((type, index) =>
-                                                                    <Select.Option value={type}
-                                                                                   key={index}>{type}</Select.Option>
-                                                                )
-                                                            }
 
-                                                        </Select>
                                                     </Form.Item>
-                                                </Col>
-                                                <Col span={2}>
-                                                    <MinusCircleOutlined onClick={() => remove(field.name)}/>
-                                                </Col>
-                                            </Row>
+                                                </Col>*/}
+                                                    <Col span={2}>
+                                                        <MinusCircleOutlined onClick={() => remove(field.name)}/>
+                                                    </Col>
+                                                </Row>
 
-                                        ))}
-                                        <Form.Item>
-                                            <Button
-                                                block
-                                                onClick={() => add()} icon={<PlusOutlined/>}
-                                            >
-                                                Thêm học phần
-                                            </Button>
-                                        </Form.Item>
-                                    </>
-                                )}
+                                            ))}
+                                            <Form.Item>
+                                                <Button
+                                                    block
+                                                    onClick={() => add()} icon={<PlusOutlined/>}
+                                                >
+                                                    Thêm học phần
+                                                </Button>
+                                            </Form.Item>
+                                        </>
+                                    )}
                             </Form.List>
                             <Form.Item>
                                 <Button type="primary" htmlType="submit">

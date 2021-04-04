@@ -48,7 +48,8 @@ const UpdateStudentProfile = ({user, userRole}) => {
             email: user.email,
             phone_number: user.phone_number,
             class: user.class,
-            vnu_mail: user.vnu_mail
+            vnu_mail: user.vnu_mail,
+
         });
     }, [])
 
@@ -81,11 +82,8 @@ const UpdateStudentProfile = ({user, userRole}) => {
                         <Row>
                             <Col span={12}>
                                 <Form.Item label="Ngày sinh:" name="birthday">
-                                    <DatePicker
-                                        defaultValue={moment('01/01/2021', 'DD/MM/YYYY')}
-                                        format={['DD/MM/YYYY', 'DD/MM/YY']}
-                                        onChange={(val) => console.log(val)}
-                                    />
+                                    <DatePicker defaultValue={moment(user.birthday, 'YYYY/MM/DD')}
+                                                format={['DD/MM/YYYY', 'DD/MM/YY']}/>
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
@@ -208,8 +206,9 @@ const UpdateLecturerProfile = ({user, userRole}) => {
                     <Row>
                         <Col span={12}>
                             <Form.Item label="Ngày sinh:" name="birthday">
-                                <DatePicker defaultValue={moment('01/01/2021', 'DD/MM/YYYY')}
-                                            format={['DD/MM/YYYY', 'DD/MM/YY']}/>
+                                <DatePicker defaultValue={moment(user.birthday, 'YYYY/MM/DD')}
+                                            format={['DD/MM/YYYY', 'DD/MM/YY']}
+                                />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -290,7 +289,13 @@ const DetailAccountPage = () => {
             className="user-info-desc"
         >
             <Descriptions.Item label="Họ và tên">{user.fullname}</Descriptions.Item>
-            <Descriptions.Item label="Ngày sinh">{user.birthday}</Descriptions.Item>
+            <Descriptions.Item label="Ngày sinh">{
+                function () {
+                    let parts = user.birthday.split('-');
+                    let mydate = parts[2] + '/' + parts[1] + '/' + parts[0]
+                    return mydate
+                } ()
+            }</Descriptions.Item>
             <Descriptions.Item label="Mã sinh viên">{user.student_code}</Descriptions.Item>
             <Descriptions.Item label="Lớp">{user.class}</Descriptions.Item>
             <Descriptions.Item label="Email VNU">
@@ -310,7 +315,13 @@ const DetailAccountPage = () => {
             className="user-info-desc"
         >
             <Descriptions.Item label="Họ và tên">{user.fullname}</Descriptions.Item>
-            <Descriptions.Item label="Ngày sinh">{user.birthday}</Descriptions.Item>
+            <Descriptions.Item label="Ngày sinh">{
+                function () {
+                    let parts = user.birthday.split('-');
+                    let mydate = parts[2] + '/' + parts[1] + '/' + parts[0]
+                    return mydate
+                } ()
+            }</Descriptions.Item>
             <Descriptions.Item label="Học hàm">{user.academic_rank}</Descriptions.Item>
             <Descriptions.Item label="Học vị">{user.academic_degree}</Descriptions.Item>
             <Descriptions.Item label="Email">

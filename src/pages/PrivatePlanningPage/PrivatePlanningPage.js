@@ -2,7 +2,7 @@ import Board from 'react-trello'
 import {useDispatch, useSelector} from "react-redux";
 import {useState, useEffect} from 'react'
 import * as actions from '../../redux/actions'
-import {message, Row, Select, Space, Tag} from "antd";
+import {Col, Input, message, Row, Select, Space, Tag} from "antd";
 import axios from "axios";
 import {useParams} from "react-router-dom";
 import Cookies from "universal-cookie/lib";
@@ -24,12 +24,14 @@ const PrivatePlanningPage = () => {
     const [studentCourse, setStudentCourse] = useState([]);
 
     const [typeSearch, setTypeSearch] = useState("course_name_vi");
+    const [typeCourse, setTypeCourse] = useState("ALL");
+    const [searchText, setSearchtext] = useState("");
     const [plannedValid, setPlannedValid] = useState(false);
     const [numCredits, setNumCredits] = useState(0);
     const [semes, setSemes]=  useState(1);
 
     const {currentUser, userRole} = useSelector(state => state.auth);
-    const semesters = [1,2,3,4,5,6,7,8];
+    const semesters = new Array(user.training_program.training_duration * 2).fill(undefined);
 
 
 
@@ -205,7 +207,6 @@ const PrivatePlanningPage = () => {
                                     return course
                                 })
                             )
-
                         }
 
                     })
@@ -218,67 +219,98 @@ const PrivatePlanningPage = () => {
         }
     }
 
+    useEffect(() => {
 
-
-    const onSearch = (value) => {
-        value = value.target.value;
-        if(value.trim() != "") {
             setCourses(
-                [...user.training_program.courses].filter(course => {
-                    return course[typeSearch].toLowerCase().trim()
-                        .includes(value.toLowerCase().trim());
+                [...user.training_program.courses]
+                    .filter(course => {
+                        console.log(course.training_program_course.course_type)
+                        return typeCourse == "ALL" || course.training_program_course.course_type == typeCourse;
+                    })
+                    .filter(course => {
+                    let courseTypeSearch = course[typeSearch]
+                        .toLowerCase()
+                        .trim()
+                        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+
+                    return courseTypeSearch
+                        .includes(
+                            searchText.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
                 })
             )
-        } else {
-            setCourses(user.training_program.courses);
-        }
 
+    }, [typeSearch, typeCourse, searchText])
+
+    const onSearch = (value) => {
+        value = value.target.value.trim().toLowerCase();
+        setSearchtext(value)
     }
 
     return (
         <>
-            <Row justify="space-between" style={{marginBottom: 40}}>
-                <Space >
-                    <Search
-                        placeholder="Tìm kiếm học phần"
-                        onChange={onSearch}
-                        enterButton
-                        style={{ width: 270, }}
-                    />
-                    <Select
-                        style={{ width: 150, }}
-                        placeholder="Tìm kiếm theo"
-                        defaultValue="course_name_vi"
-                        onChange={(value => setTypeSearch(value))}
-                    >
-
-                        <Select.Option key="course_name_vi" value="course_name_vi">
-                            Tên học phần (vi)
-                        </Select.Option>
-                        <Select.Option key="course_name_en" value="course_name_en">
-                            Tên học phần (en)
-                        </Select.Option>
-                        <Select.Option key="course_code" value="course_code">
-                            Mã học phần
-                        </Select.Option>
-
-                    </Select>
-                </Space>
-
-                <Select
-                    style={{ width: 120 }}
-                    placeholder="Chọn kỳ học"
-                    onChange={(value => setSemes(value))}
-                    defaultValue={1}
-                >
-                    {
-                        semesters.map(semester => {
-                            return <Select.Option value={semester} key={semester}>
-                                Học kỳ {semester}
+            <Row justify="space-between" style={{marginBottom: 30}}>
+                <Col span={15}>
+                    <Input.Group compact >
+                        <Select
+                            style={{ width: 100, }}
+                            defaultValue="ALL"
+                            onChange={(value => setTypeCourse(value))}
+                        >
+                            <Select.Option key="1" value="ALL">
+                                Tất cả
                             </Select.Option>
-                        })
-                    }
-                </Select>
+                            <Select.Option key="2" value="B">
+                                Bắt buộc
+                            </Select.Option>
+                            <Select.Option key="3" value="L">
+                                Tự chọn
+                            </Select.Option>
+                            <Select.Option key="4" value="BT">
+                                Bổ trợ
+                            </Select.Option>
+                        </Select>
+                        <Input
+                            placeholder="Tìm kiếm học phần"
+                            onChange={onSearch}
+                            style={{ width: 270, }}
+                        />
+                        <Select
+                            style={{ width: 150, }}
+                            placeholder="Tìm kiếm theo"
+                            defaultValue="course_name_vi"
+                            onChange={(value => setTypeSearch(value))}
+                        >
+                            <Select.Option key="course_name_vi" value="course_name_vi">
+                                Tên học phần (vi)
+                            </Select.Option>
+                            <Select.Option key="course_name_en" value="course_name_en">
+                                Tên học phần (en)
+                            </Select.Option>
+                            <Select.Option key="course_code" value="course_code">
+                                Mã học phần
+                            </Select.Option>
+                        </Select>
+                    </Input.Group>
+                </Col>
+                <Col>
+                    <Select
+                        style={{ width: 120 }}
+                        placeholder="Chọn kỳ học"
+                        onChange={(value => setSemes(value))}
+                        defaultValue={1}
+                    >
+                        {
+                            semesters.map((_, index) => {
+                                return <Select.Option value={index + 1} key={index}>
+                                    Học kỳ {index + 1}
+                                </Select.Option>
+                            })
+                        }
+                    </Select>
+                </Col>
+
+
+
             </Row>
             <Row justify="end">
                 {

@@ -10,6 +10,7 @@ import AddTrainingProgramFrame from "./AddTrainingProgramFrame";
 import AddCourseDocument from "./AddCourseDocument";
 import AddTrainingSequence from "./AddTrainingSequence";
 import AddTrainingProgramClass from "./AddTrainingProgramClass";
+import SummaryContentTraining from "./SummaryContentTraining";
 
 const UpdateTrainingProgramPage = (props) => {
     let {uuid} = useParams();
@@ -214,6 +215,7 @@ const UpdateTrainingProgramPage = (props) => {
             <Title level={3}>
                 PHẦN III: NỘI DUNG CHƯƠNG TRÌNH ĐÀO TẠO
             </Title>
+            <SummaryContentTraining trainingProgram={trainingProgram} /><br/><br/>
             <AddTrainingProgramFrame trainingProgram={trainingProgram}/><br/><br/>
 
             <AddCourseDocument trainingProgram={trainingProgram} type={"doc"}/><br/><br/>

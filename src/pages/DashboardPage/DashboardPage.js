@@ -55,8 +55,9 @@ const DashboardPage = () => {
         if (collapsed) {
             setTimeout(() => {
                 document.getElementById("header-nav").style.width = '100%'
+                document.getElementById("nav-sider").style.overflow = '';
                 document.querySelector("#layout-content").style.marginLeft = '0px';
-            }, 200)
+            }, 100)
         } else {
             document.querySelector("#layout-content").style.marginLeft = '260px';
             document.getElementById("header-nav").style.width = 'calc(100% - 260px)'
@@ -84,8 +85,9 @@ const DashboardPage = () => {
                             style={{
                                 position: 'fixed',
                                 height: '100%',
-                                //overflow: 'auto',
+                                overflow: 'auto',
                             }}
+                            id="nav-sider"
                         >
                             <div className="logo" id="logo">
                                 <Divider>

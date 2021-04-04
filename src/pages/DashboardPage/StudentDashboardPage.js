@@ -42,7 +42,7 @@ const StudentDashboardPage = () => {
     return (
         <>
             <Layout>
-                <Header style={{position: 'fixed', zIndex: 1, width: '100%', backgroundColor: '#fff'}}>
+                <Header style={{position: 'fixed', zIndex: 10, width: '100%', backgroundColor: '#fff'}}>
                     <Row justify='space-between'>
 
                         <Image
