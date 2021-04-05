@@ -8,7 +8,7 @@ import {Redirect} from "react-router-dom";
 import Dragger from "antd/lib/upload/Dragger";
 import {InboxOutlined} from "@ant-design/icons";
 
-const CreateCoursePage = () => {
+const CreateCoursePage = ({onCancelModal}) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const insState = useSelector(state => state.institutions)
@@ -28,11 +28,12 @@ const CreateCoursePage = () => {
                 })
             )
         }
-
         try {
             const response = await axios.post("/courses", values)
             message.success(response.data.message);
             form.resetFields();
+            dispatch(actions.getAllCourse());
+            onCancelModal();
 
         } catch (e) {
 
@@ -99,8 +100,8 @@ const CreateCoursePage = () => {
 
     const formItemLayout =
         {
-            labelCol: {span: 4},
-            wrapperCol: {span: 14},
+            labelCol: {span: 5, offset: 1},
+            wrapperCol: {span: 14, offset: 1},
         }
 
 
@@ -114,8 +115,7 @@ const CreateCoursePage = () => {
                         form={form}
                         onFinish={onCreateCourse}
                     >
-                        <Title level={3}>Thêm mới học phần</Title>
-                        <br/>
+
                         <Form.Item label="Tên học phần (VN):" name="course_name_vi">
                             <Input placeholder="Tên học phần bằng Tiếng Việt"
                                    addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
@@ -171,7 +171,7 @@ const CreateCoursePage = () => {
 
                             </Select>
                         </Form.Item>
-                        <Form.Item wrapperCol={{ span: 14, offset: 4 }}  >
+                        <Form.Item wrapperCol={{ span: 14, offset: 7 }}  >
                             <Button type="primary" htmlType="submit">Thêm</Button>
                         </Form.Item>
 

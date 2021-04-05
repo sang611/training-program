@@ -73,7 +73,6 @@ const CreateOutlineCoursePage = () => {
             </Title>
             {
                 <InforCourseOutline courseUuid={uuid} course={course}/>
-
             }
 
             <br/>
@@ -133,12 +132,12 @@ const CreateOutlineCoursePage = () => {
             <br/><br/>
             <Row justify="space-between">
                 <Button onClick={() => history.push(`/uet/courses/${uuid}/outlines`)}>Thoát</Button>
-                    <Button type="primary" onClick={onSubmitOutline}>Lưu</Button>
+                <Button type="primary" onClick={onSubmitOutline}>Lưu</Button>
 
             </Row>
 
         </>
-    ) : <Spin />
+    ) : <Spin/>
 }
 
 export default CreateOutlineCoursePage;

@@ -139,7 +139,7 @@ const ListAccountPage = () => {
                         <List.Item.Meta
                             avatar={
                                 <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                                        size={50}/>
+                                        size={64}/>
                             }
                             title={item.fullname}
                             description={

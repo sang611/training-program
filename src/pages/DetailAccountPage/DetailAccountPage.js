@@ -55,7 +55,12 @@ const UpdateStudentProfile = ({user, userRole}) => {
 
     const onUpdateStudentInfor = (values) => {
         axios.put(`/students/${user.uuid}`, values)
-            .then(res => message.success(res.data.message))
+            .then(res => {
+                message.success(res.data.message)
+                dispatch(actions.getAUser({
+                    accountUuid: user.account.uuid
+                }))
+            })
             .catch(e => message.error(e.response.data.message))
     }
 
@@ -82,8 +87,20 @@ const UpdateStudentProfile = ({user, userRole}) => {
                         <Row>
                             <Col span={12}>
                                 <Form.Item label="Ngày sinh:" name="birthday">
-                                    <DatePicker defaultValue={moment(user.birthday, 'YYYY/MM/DD')}
+                                    {
+                                        user.birthday ?
+                                            <DatePicker
+                                                defaultValue={
+                                                    moment(user.birthday, 'YYYY/MM/DD')
+                                                }
                                                 format={['DD/MM/YYYY', 'DD/MM/YY']}/>
+                                            :
+                                            <DatePicker
+                                                placeholder="Chọn ngày sinh"
+                                                format={['DD/MM/YYYY', 'DD/MM/YY']}
+                                            />
+                                    }
+
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
@@ -104,7 +121,8 @@ const UpdateStudentProfile = ({user, userRole}) => {
                             <Input placeholder="Địa chỉ email" rules={[{type: 'email'}]} addonBefore={<MailTwoTone/>}/>
                         </Form.Item>
                         <Form.Item label="Email VNU:" name="vnu_mail">
-                            <Input placeholder="Địa chỉ email vnu" rules={[{type: 'email'}]} addonBefore={<MailTwoTone/>}/>
+                            <Input placeholder="Địa chỉ email vnu" rules={[{type: 'email'}]}
+                                   addonBefore={<MailTwoTone/>}/>
                         </Form.Item>
                         <Form.Item label="Số điện thoại:" name="phone_number">
                             <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
@@ -152,6 +170,35 @@ const UpdateStudentProfile = ({user, userRole}) => {
     )
 }
 
+const StudentInfoDescription = ({user}) => user ? (
+    <Descriptions
+        title={"Thông tin sinh viên"}
+        column={{xs: 1, sm: 1, md: 1}}
+        bordered
+        className="user-info-desc"
+    >
+        <Descriptions.Item label="Họ và tên">{user.fullname}</Descriptions.Item>
+        <Descriptions.Item label="Ngày sinh">{
+            function () {
+                if (user.birthday) {
+                    let parts = user.birthday.split('-');
+                    let mydate = parts[2] + '/' + parts[1] + '/' + parts[0]
+                    return mydate
+                }
+            }()
+        }</Descriptions.Item>
+        <Descriptions.Item label="Mã sinh viên">{user.student_code}</Descriptions.Item>
+        <Descriptions.Item label="Lớp">{user.class}</Descriptions.Item>
+        <Descriptions.Item label="Email VNU">
+            {user.vnu_mail}
+        </Descriptions.Item>
+        <Descriptions.Item label="Email cá nhân">
+            {user.email}
+        </Descriptions.Item>
+        <Descriptions.Item label="Số điện thoại">{user.phone_number}</Descriptions.Item>
+    </Descriptions>
+) : ''
+
 const UpdateLecturerProfile = ({user, userRole}) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
@@ -175,7 +222,6 @@ const UpdateLecturerProfile = ({user, userRole}) => {
             academic_degree: user.academic_degree,
             institutionUuid: user.institution ? user.institution.uuid : ''
         });
-
     }, [])
 
 
@@ -183,6 +229,9 @@ const UpdateLecturerProfile = ({user, userRole}) => {
         axios.put(`/employees/${user.uuid}`, values)
             .then((res) => {
                 message.success(res.data.message)
+                dispatch(actions.getAUser({
+                    accountUuid: user.account.uuid
+                }))
             })
             .catch((err) => message.error(err.response.data.message))
     }
@@ -206,9 +255,19 @@ const UpdateLecturerProfile = ({user, userRole}) => {
                     <Row>
                         <Col span={12}>
                             <Form.Item label="Ngày sinh:" name="birthday">
-                                <DatePicker defaultValue={moment(user.birthday, 'YYYY/MM/DD')}
+                                {
+                                    user.birthday ?
+                                        <DatePicker
+                                            defaultValue={
+                                                moment(user.birthday, 'YYYY/MM/DD')
+                                            }
+                                            format={['DD/MM/YYYY', 'DD/MM/YY']}/>
+                                        :
+                                        <DatePicker
+                                            placeholder="Chọn ngày sinh"
                                             format={['DD/MM/YYYY', 'DD/MM/YY']}
-                                />
+                                        />
+                                }
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -271,6 +330,35 @@ const UpdateLecturerProfile = ({user, userRole}) => {
     )
 }
 
+const LecturerInfoDescription = ({user}) => user ? (
+    <Descriptions
+        title={"Thông tin giảng viên"}
+        column={{xs: 1, sm: 1, md: 1}}
+        bordered
+        className="user-info-desc"
+    >
+        <Descriptions.Item label="Họ và tên">{user.fullname}</Descriptions.Item>
+        <Descriptions.Item label="Ngày sinh">{
+            function () {
+                if (user.birthday) {
+                    let parts = user.birthday.split('-');
+                    let mydate = parts[2] + '/' + parts[1] + '/' + parts[0]
+                    return mydate
+                }
+                return '';
+            }()
+        }</Descriptions.Item>
+        <Descriptions.Item label="Học hàm">{user.academic_rank}</Descriptions.Item>
+        <Descriptions.Item label="Học vị">{user.academic_degree}</Descriptions.Item>
+        <Descriptions.Item label="Email">
+            {user.vnu_mail}
+            <br/>
+            {user.email}
+        </Descriptions.Item>
+        <Descriptions.Item label="Số điện thoại">{user.phone_number}</Descriptions.Item>
+    </Descriptions>
+) : ''
+
 const DetailAccountPage = () => {
     const {uuid} = useParams();
     const {userRole, currentUser} = useSelector(state => state.auth)
@@ -281,60 +369,31 @@ const DetailAccountPage = () => {
         dispatch(actions.getDetailUser({accountUuid: uuid}));
     }, [uuid])
 
-    const StudentInfoDescription = (user) => (
-        <Descriptions
-            title={"Thông tin sinh viên"}
-            column={{xs: 1, sm: 1, md: 1}}
-            bordered
-            className="user-info-desc"
-        >
-            <Descriptions.Item label="Họ và tên">{user.fullname}</Descriptions.Item>
-            <Descriptions.Item label="Ngày sinh">{
-                function () {
-                    let parts = user.birthday.split('-');
-                    let mydate = parts[2] + '/' + parts[1] + '/' + parts[0]
-                    return mydate
-                } ()
-            }</Descriptions.Item>
-            <Descriptions.Item label="Mã sinh viên">{user.student_code}</Descriptions.Item>
-            <Descriptions.Item label="Lớp">{user.class}</Descriptions.Item>
-            <Descriptions.Item label="Email VNU">
-                {user.vnu_mail}
-            </Descriptions.Item>
-            <Descriptions.Item label="Email cá nhân">
-                {user.email}
-            </Descriptions.Item>
-            <Descriptions.Item label="Số điện thoại">{user.phone_number}</Descriptions.Item>
-        </Descriptions>
-    )
-    const LecturerInfoDescription = (user) => (
-        <Descriptions
-            title={"Thông tin giảng viên"}
-            column={{xs: 1, sm: 1, md: 1}}
-            bordered
-            className="user-info-desc"
-        >
-            <Descriptions.Item label="Họ và tên">{user.fullname}</Descriptions.Item>
-            <Descriptions.Item label="Ngày sinh">{
-                function () {
-                    let parts = user.birthday.split('-');
-                    let mydate = parts[2] + '/' + parts[1] + '/' + parts[0]
-                    return mydate
-                } ()
-            }</Descriptions.Item>
-            <Descriptions.Item label="Học hàm">{user.academic_rank}</Descriptions.Item>
-            <Descriptions.Item label="Học vị">{user.academic_degree}</Descriptions.Item>
-            <Descriptions.Item label="Email">
-                {user.vnu_mail}
-                <br/>
-                {user.email}
-            </Descriptions.Item>
-            <Descriptions.Item label="Số điện thoại">{user.phone_number}</Descriptions.Item>
-        </Descriptions>
-    )
 
     const DetailActivities = () => {
         let role = detailUser.account.role;
+
+        <Tabs defaultActiveKey="1" type="card" size={"middle"}>
+            <Tabs.TabPane tab="Hồ sơ" key="1">
+
+            </Tabs.TabPane>
+            {
+                (userRole == 0 || currentUser.uuid == uuid) ?
+                    <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
+
+                    </Tabs.TabPane>
+                    : ''
+            }
+            {
+                (role == 1 || role == 2) ?
+                    <Tabs.TabPane tab="Học phần phụ trách" key="3">
+
+                    </Tabs.TabPane>
+                    : ''
+            }
+
+        </Tabs>
+
         if (userRole == 0) {
             if (role == 1 || role == 2)
                 return (
@@ -343,7 +402,9 @@ const DetailAccountPage = () => {
                             <Row>
                                 <Col span={15}>
                                     {
-                                        role == 3 ? StudentInfoDescription(detailUser) : LecturerInfoDescription(detailUser)
+                                        role == 3 ?
+                                            <StudentInfoDescription user={detailUser}/> :
+                                            <LecturerInfoDescription user={detailUser}/>
                                     }
                                 </Col>
                             </Row>
@@ -376,7 +437,9 @@ const DetailAccountPage = () => {
                             <Row>
                                 <Col span={15}>
                                     {
-                                        role == 3 ? StudentInfoDescription(detailUser) : LecturerInfoDescription(detailUser)
+                                        role == 3 ?
+                                            <StudentInfoDescription user={detailUser}/> :
+                                            <LecturerInfoDescription user={detailUser}/>
                                     }
                                 </Col>
                             </Row>
@@ -406,7 +469,10 @@ const DetailAccountPage = () => {
                             <Row>
                                 <Col span={15}>
                                     {
-                                        role == 3 ? StudentInfoDescription(detailUser) : LecturerInfoDescription(detailUser)
+                                        role == 3 ?
+                                            <StudentInfoDescription user={detailUser}/> :
+                                            <LecturerInfoDescription user={detailUser}/>
+                                    }
                                     }
                                 </Col>
                             </Row>
@@ -434,7 +500,6 @@ const DetailAccountPage = () => {
                             <EmployeeAssignCourses/>
                         </Tabs.TabPane>
                     </Tabs>
-
                 )
             } else {
                 return (
@@ -443,7 +508,9 @@ const DetailAccountPage = () => {
                             <Row>
                                 <Col span={15}>
                                     {
-                                        role == 3 ? StudentInfoDescription(detailUser) : LecturerInfoDescription(detailUser)
+                                        role == 3 ?
+                                            <StudentInfoDescription user={detailUser}/> :
+                                            <LecturerInfoDescription user={detailUser}/>
                                     }
                                 </Col>
                             </Row>
@@ -524,7 +591,9 @@ const DetailAccountPage = () => {
                             <Row>
                                 <Col span={15}>
                                     {
-                                        detailUser.account.role == 3 ? StudentInfoDescription(detailUser) : LecturerInfoDescription(detailUser)
+                                        detailUser.account.role == 3 ?
+                                            <StudentInfoDescription user={detailUser} /> :
+                                            <LecturerInfoDescription user={detailUser} />
                                     }
                                 </Col>
                             </Row>

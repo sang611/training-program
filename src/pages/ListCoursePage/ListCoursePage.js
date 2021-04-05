@@ -2,16 +2,24 @@ import {useState, useEffect} from 'react'
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions/index'
 import {Button, Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Spin, Table, Tag} from "antd";
-import {DeleteOutlined, EditOutlined, InfoCircleOutlined, ReloadOutlined, SearchOutlined} from "@ant-design/icons";
+import {
+    DeleteOutlined,
+    EditOutlined,
+    InfoCircleOutlined,
+    PlusCircleOutlined, PlusOutlined,
+    ReloadOutlined,
+    SearchOutlined
+} from "@ant-design/icons";
 import axios from "axios";
 import {useHistory} from "react-router-dom";
+import CreateCoursePage from "../CreateCoursePage";
 
 const {Column, ColumnGroup} = Table;
 
-const CollectionCreateForm = ({ visible, onCancel, updatedCourse, dispatch }) => {
+const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
     const [form] = Form.useForm();
     const courseState = useSelector(state => state.courses)
-    if(updatedCourse) {
+    if (updatedCourse) {
         const required_course = (JSON.parse(updatedCourse.required_course) || []).map(course => course.uuid);
         form.setFieldsValue(updatedCourse);
         form.setFieldsValue({
@@ -136,6 +144,7 @@ const ListCoursePage = () => {
     const [dataSource, setDataSource] = useState([]);
     const [visible, setVisible] = useState(false);
     const [updatedCourse, setUpdatedCourse] = useState(null);
+    const [isModalCreateVisible, setIsModalCreateVisible] = useState(false);
     const history = useHistory();
 
     useEffect(() => {
@@ -165,21 +174,21 @@ const ListCoursePage = () => {
             })
     }
 
-    const getColumnSearchProps = (dataIndex ) => (
+    const getColumnSearchProps = (dataIndex) => (
         {
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-                <div style={{ padding: 8 }}>
+            filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
+                <div style={{padding: 8}}>
                     <Input
                         placeholder={`Tìm kiếm`}
                         value={selectedKeys[0]}
                         onChange={e => {
                             onSearchCourse(dataIndex, e.target.value)
                         }}
-                        style={{ width: dataIndex == 'course_code' ? 100 : 190, marginBottom: 8, display: 'block' }}
+                        style={{width: dataIndex == 'course_code' ? 100 : 190, marginBottom: 8, display: 'block'}}
                     />
                 </div>
             ),
-            filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+            filterIcon: filtered => <SearchOutlined style={{color: filtered ? '#1890ff' : undefined}}/>,
         }
     )
 
@@ -191,11 +200,49 @@ const ListCoursePage = () => {
         ))
     }
 
+    const showModalCreate = () => {
+        setIsModalCreateVisible(true);
+    };
+
+    const handleOkCreate = () => {
+        setIsModalCreateVisible(false);
+    };
+
+    const handleCancelCreate = () => {
+        setIsModalCreateVisible(false);
+    };
+
     return (
         <>
-            <Button type="primary" icon={<ReloadOutlined />} shape="circle" onClick={
-                () => dispatch(actions.getAllCourse())
-            }/>
+            <Space>
+                <Button
+                    type="primary"
+                    icon={<ReloadOutlined/>}
+                    shape="circle"
+                    onClick={
+                        () => dispatch(actions.getAllCourse())
+                    }
+                />
+                <Button
+                    type="primary"
+                    danger
+                    icon={<PlusOutlined/>}
+                    shape="circle"
+                    onClick={showModalCreate}
+                />
+            </Space>
+            <br/><br/>
+            <Modal
+                title="Thêm mới học phần"
+                visible={isModalCreateVisible}
+                onOk={handleOkCreate}
+                onCancel={handleCancelCreate}
+                width='50%'
+                footer={null}
+            >
+                <CreateCoursePage onCancelModal={handleCancelCreate}/>
+            </Modal>
+
             <Table
                 dataSource={dataSource}
                 loading={courseState.loading}
@@ -205,20 +252,20 @@ const ListCoursePage = () => {
                     title="Mã học phần"
                     dataIndex="course_code"
                     key="course_code"
-                    { ...getColumnSearchProps('course_code') }
+                    {...getColumnSearchProps('course_code')}
                 />
-                <ColumnGroup title="Tên học phần" >
+                <ColumnGroup title="Tên học phần">
                     <Column
                         title="Tiếng Việt"
                         dataIndex="course_name_vi"
                         key="course_name_vi"
-                        { ...getColumnSearchProps('course_name_vi') }
+                        {...getColumnSearchProps('course_name_vi')}
                     />
                     <Column
                         title="Tiếng Anh"
                         dataIndex="course_name_en"
                         key="course_name_en"
-                        { ...getColumnSearchProps('course_name_en') }
+                        {...getColumnSearchProps('course_name_en')}
                     />
                 </ColumnGroup>
 
@@ -228,7 +275,7 @@ const ListCoursePage = () => {
                     dataIndex="institution"
                     key="institution"
                     render={
-                        (ins) => ins.vn_name
+                        (ins) => ins ? ins.vn_name : ''
                     }
                 />
                 <Column
@@ -245,16 +292,16 @@ const ListCoursePage = () => {
                                 </Tag>
                             </a>
                             <a>
-                                    <Popconfirm
-                                        title="Xóa học phần này?"
-                                        onConfirm={() => {
-                                            deleteCourse(record);
-                                        }}
-                                    >
-                                        <Tag icon={<DeleteOutlined/>} color="#cd201f">
-                                            Xóa
-                                        </Tag>
-                                    </Popconfirm>
+                                <Popconfirm
+                                    title="Xóa học phần này?"
+                                    onConfirm={() => {
+                                        deleteCourse(record);
+                                    }}
+                                >
+                                    <Tag icon={<DeleteOutlined/>} color="#cd201f">
+                                        Xóa
+                                    </Tag>
+                                </Popconfirm>
 
                             </a>
 

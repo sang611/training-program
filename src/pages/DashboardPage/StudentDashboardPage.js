@@ -26,6 +26,7 @@ import Cookies from "universal-cookie";
 import DetailAccountPage from "../DetailAccountPage";
 import DocumentPage from "../DocumentPage";
 import StudentStatisticPage from "../StudentStatisticPage";
+import CreateOutlineCoursePage from "../CreateOutlineCoursePage";
 
 
 const StudentDashboardPage = () => {
@@ -88,12 +89,15 @@ const StudentDashboardPage = () => {
 
                             </SubMenu>
                             <SubMenu key="4" icon={<UserOutlined/>} title={user.fullname}>
-                                <Menu.Item
-                                    key="4-1"
-                                    icon={<PieChartOutlined />}
-                                >
-                                    <Link to="/uet/statistic">Thống kê</Link>
-                                </Menu.Item>
+                                {
+                                    userRole == 3 ?
+                                        <Menu.Item
+                                            key="4-1"
+                                            icon={<PieChartOutlined />}
+                                        >
+                                            <Link to="/uet/statistic">Thống kê</Link>
+                                        </Menu.Item> : ''
+                                }
                                 <Menu.Item
                                     key="4-2"
                                     icon={<SolutionOutlined/>}
@@ -126,7 +130,6 @@ const StudentDashboardPage = () => {
                     <div className="site-layout-background" style={{padding: 30, minHeight: '100vh'}}>
                         <Switch>
                             <Route path="/uet/institutions" component={ListInstitutionPage}/>
-
                             <Route path="/uet/accounts" component={ListAccountPage}/>
 
                             <Route exact path="/uet/training-programs" component={ListTrainingProgramPage}/>
@@ -134,8 +137,8 @@ const StudentDashboardPage = () => {
 
                             <Route exact path="/uet/courses" component={ListCoursePage}/>
 
-                            <Route exact path="/uet/courses/:uuid/outlines/:outlineUuid"
-                                   component={DetailOutlinePage}/>
+                            <Route exact path="/uet/courses/:uuid/outlines/creating" component={CreateOutlineCoursePage}/>
+                            <Route exact path="/uet/courses/:uuid/outlines/:outlineUuid" component={DetailOutlinePage}/>
                             <Route exact path="/uet/courses/:uuid/outlines" component={ListOutlinePage}/>
                             <Route path="/uet/:userUuid/planning" component={PrivatePlanningPage}/>
                             <Route path="/uet/user/:uuid" component={DetailAccountPage}/>

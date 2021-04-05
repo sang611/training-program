@@ -329,6 +329,11 @@ const ListTrainingProgramPage = () => {
                             item.courses.length
                         }
                     </Descriptions.Item>
+                    <Descriptions.Item label="Số lớp đang áp dụng">
+                        {
+                            JSON.parse(item.classes).length
+                        }
+                    </Descriptions.Item>
                 </Descriptions>
             </Card>
         )
@@ -393,7 +398,7 @@ const ListTrainingProgramPage = () => {
                         sm: 2,
                         md: 3,
                         lg: 3,
-                        xl: 4,
+                        xl: userRole > 0 ? 4 : 3,
                         xxl: 4,
                     }}
                     dataSource={trainingPrograms}

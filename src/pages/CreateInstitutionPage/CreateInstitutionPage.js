@@ -17,7 +17,7 @@ const CreateInstitutionPage = (props) => {
     const {isValidToken} = useSelector(state => state.auth)
 
     useEffect(() => {
-        if (state.response.status === 201) {
+        if (state.createSuccess) {
             message.success("Đã thêm một đơn vị mới");
         }
     }, [state])

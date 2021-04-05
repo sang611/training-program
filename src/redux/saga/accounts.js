@@ -17,7 +17,7 @@ export function* fetchAccountsSaga (action) {
     } catch(error) {
         console.log(error)
         yield put(actions.fetchAccountsFail(error));
-    }   
+    }
 }
 
 export function* searchAccountsSaga (action) {
@@ -60,8 +60,10 @@ export function* addAccountSaga (action) {
         const {values, typeAccount} = action.payload;
         console.log(action.payload)
         if(typeAccount == 1) {
+
             yield axios.post("/employees", values)
         } else if (typeAccount == 2) {
+
             yield axios.post("/students", values)
         }
 

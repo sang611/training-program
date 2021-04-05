@@ -118,9 +118,9 @@ const DashboardPage = () => {
                                         <Menu.Item key="5" className="menu-item-child">
                                             <Link to="/uet/courses">Danh sách</Link>
                                         </Menu.Item>
-                                        <Menu.Item key="6" className="menu-item-child">
+                                       {/* <Menu.Item key="6" className="menu-item-child">
                                             <Link to="/uet/courses/creation">Tạo mới</Link>
-                                        </Menu.Item>
+                                        </Menu.Item>*/}
                                         <Menu.Item key="7" className="menu-item-child">
                                             <Link to="/uet/documents/course">Tài liệu</Link>
                                         </Menu.Item>

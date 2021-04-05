@@ -1,7 +1,6 @@
-import {Pie} from "@ant-design/charts";
-import {Row, Col, Space, Select, Divider} from "antd";
+import {Col, Divider, Row, Select, Space} from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import {useState, useEffect, useMemo} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import CreditStatistic from "./CreditStatistic";
 import CourseTypeByStatusStatistic from "./CourseTypeByStatusStatistic";
 import Title from "antd/lib/typography/Title";

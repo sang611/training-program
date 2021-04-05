@@ -204,30 +204,7 @@ const CreateAccountPage = () => {
 
                             </Select>
                         </Form.Item>
-                        <Form.Item
-                            label="Email VNU"
-                            name="vnu_mail"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'VNU mail không được để trống!',
-                                },
-                            ]}
-                        >
-                            <Input suffix={<i className="far fa-envelope"/>}/>
-                        </Form.Item>
-                        <Form.Item
-                            label="Password"
-                            name="password"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Mật khẩu không được để trống!',
-                                },
-                            ]}
-                        >
-                            <Input.Password/>
-                        </Form.Item>
+                        {UsernamePasswordForm}
                         <br/>
                         <Form.Item {...buttonItemLayout}>
                             <Button type="primary" htmlType="submit">Thêm giảng viên</Button>
@@ -331,33 +308,10 @@ const CreateAccountPage = () => {
                             <Input placeholder="Lớp môn học của sinh viên"
                                    addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
-                        <Form.Item
-                            label="Email VNU"
-                            name="vnu_mail"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'VNU mail không được để trống!',
-                                },
-                            ]}
-                        >
-                            <Input suffix={<i className="far fa-envelope"/>}/>
-                        </Form.Item>
-                        <Form.Item
-                            label="Password"
-                            name="password"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Mật khẩu không được để trống!',
-                                },
-                            ]}
-                        >
-                            <Input.Password/>
-                        </Form.Item>
+                        {UsernamePasswordForm}
                         <br/>
                         <Form.Item {...buttonItemLayout}>
-                            <Button type="primary" htmlType="submit">Submit</Button>
+                            <Button type="primary" htmlType="submit">Tạo</Button>
                         </Form.Item>
                     </Form>
                 </Col>
@@ -388,6 +342,35 @@ const CreateAccountPage = () => {
             </Row>
         )
     }
+
+    const UsernamePasswordForm = (
+        <>
+            <Form.Item
+                label="Email VNU"
+                name="vnu_mail"
+                rules={[
+                    {
+                        required: true,
+                        message: 'VNU mail không được để trống!',
+                    },
+                ]}
+            >
+                <Input suffix={<i className="far fa-envelope"/>}/>
+            </Form.Item>
+            <Form.Item
+                label="Mật khẩu"
+                name="password"
+                rules={[
+                    {
+                        required: true,
+                        message: 'Mật khẩu không được để trống!',
+                    },
+                ]}
+            >
+                <Input.Password/>
+            </Form.Item>
+        </>
+    )
 
     return !isValidToken ? <Redirect to="/uet/signin"/> : (
         <>
