@@ -197,7 +197,9 @@ const CreateAccountPage = () => {
                                 }
                             >
                                 {
-                                    insState.listInstitutions.map((ins, index) =>
+                                    insState.listInstitutions
+                                        .filter(ins => ins.parent_uuid)
+                                        .map((ins, index) =>
                                         <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
                                     )
                                 }

@@ -28,9 +28,9 @@ const ListAccountPage = () => {
 
     const onDeleteAccount = (item) => {
         let apiUrl = "";
-        if(item.account.role == 1 || item.account.role == 2) {
+        if (item.account.role == 1 || item.account.role == 2) {
             apiUrl = `employees/${item.uuid}`;
-        } else if(item.account.role == 3) {
+        } else if (item.account.role == 3) {
             apiUrl = `students/${item.uuid}`;
         }
         axios.delete(apiUrl)
@@ -77,13 +77,12 @@ const ListAccountPage = () => {
     }
 
 
-
     return (
         <div>
-            {
-                userRole == 0 ?
-                    <Row>
-                        <Col span={8}>
+            <Row>
+                <Col span={8}>
+                    {
+                        userRole == 0 ?
                             <Tabs defaultActiveKey="1" onTabClick={(e) => setTypeAccount(e)}>
                                 <Tabs.TabPane
                                     tab={
@@ -106,23 +105,25 @@ const ListAccountPage = () => {
                                 >
                                 </Tabs.TabPane>
                             </Tabs>
-                        </Col>
-                        <Col span={8} offset={8}>
-                            <Search
-                                placeholder="Nhập để tìm"
-                                enterButton="Tìm kiếm"
-                                size="large"
-                                loading={false}
-                                onChange={(e) => {
-                                    console.log(e.target.value)
-                                    setSearchText(e.target.value);
-                                }
-                                }
+                            : ''
+                    }
 
-                            />
-                        </Col>
-                    </Row> : ''
-            }
+                </Col>
+                <Col span={8} offset={8}>
+                    <Search
+                        placeholder="Nhập để tìm"
+                        enterButton="Tìm kiếm"
+                        size="large"
+                        loading={false}
+                        onChange={(e) => {
+                            console.log(e.target.value)
+                            setSearchText(e.target.value);
+                        }
+                        }
+
+                    />
+                </Col>
+            </Row>
 
             <br/>
 
@@ -143,18 +144,18 @@ const ListAccountPage = () => {
                             }
                             title={item.fullname}
                             description={
-                                <Descriptions size={"small"} column={{xs: 1, sm: 1, md: 4}}>
+                                <Descriptions size={"small"} column={{xs: 1, sm: 1, md: 2}}>
                                     <Descriptions.Item contentStyle={{color: "gray"}}>
-                                        <MailOutlined/>&nbsp;{item.vnu_mail}
+                                        <MailOutlined/>&ensp;{item.vnu_mail}
                                     </Descriptions.Item>
                                     <Descriptions.Item contentStyle={{color: "gray"}}>
-                                        <PhoneOutlined/>&nbsp;{item.phone_number}
+                                        <PhoneOutlined/>&ensp;{item.phone_number}
                                     </Descriptions.Item>
                                     <Descriptions.Item contentStyle={{color: "gray"}}>
-                                        <DesktopOutlined/>&nbsp;{item.institution ? item.institution.vn_name : ''}
+                                        <DesktopOutlined/>&ensp;{item.institution ? item.institution.vn_name : ''}
                                     </Descriptions.Item>
                                     <Descriptions.Item contentStyle={{color: "gray"}}>
-                                        <DesktopOutlined/>&nbsp;{item.institution ? item.institution.parent.vn_name : ''}
+                                        <DesktopOutlined/>&ensp;{item.institution ? item.institution.parent.vn_name : ''}
                                     </Descriptions.Item>
                                 </Descriptions>
                             }

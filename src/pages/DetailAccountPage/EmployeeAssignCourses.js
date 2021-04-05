@@ -12,7 +12,7 @@ const {Column, ColumnGroup} = Table;
 const EmployeeAssignCourses = ({employee}) => {
     const dispatch = useDispatch();
     const {courses} = useSelector(state => state.courses)
-    const {userRole} = useSelector(state => state.auth)
+    const {userRole, currentUser} = useSelector(state => state.auth)
     const history = useHistory();
     const {uuid} = useParams();
     useEffect(() => {
@@ -146,51 +146,55 @@ const EmployeeAssignCourses = ({employee}) => {
 
             </Table>
             <br/><br/>
-            <Form
-                {...{
-                    labelCol: {span: 5},
-                    wrapperCol: {span: 16},
-                }}
-                name="basic"
-                initialValues={{remember: true}}
-                onFinish={onAssignCourse}
-            >
-                <Form.Item
-                    label="Chọn các học phần"
-                    name="courses"
-                >
-                    <Select
-                        mode="multiple"
-                        allowClear
-                        style={{width: '100%'}}
-                        placeholder="Chọn các học phần giảng viên phụ trách"
-                        defaultValue={employee.courses.map(course => course.uuid)}
-                        filterOption={(input, option) =>
-
-                            option.children[2].toLowerCase().indexOf(input.toLowerCase()) >= 0
-
-
-                        }
+            {
+                userRole != 3 || currentUser.uuid === uuid ?
+                    <Form
+                        {...{
+                            labelCol: {span: 5},
+                            wrapperCol: {span: 16},
+                        }}
+                        name="basic"
+                        initialValues={{remember: true}}
+                        onFinish={onAssignCourse}
                     >
-                        {
-                            courses.map((course, index) => {
-                                return (
-                                    <Select.Option key={course.uuid}>
-                                        {course.course_code} - {course.course_name_vi}
-                                    </Select.Option>
-                                )
-                            })
-                        }
-                    </Select>
-                </Form.Item>
-                <Form.Item {...{
-                    wrapperCol: {offset: 5, span: 16},
-                }}>
-                    <Button type="primary" htmlType="submit">
-                        Lưu
-                    </Button>
-                </Form.Item>
-            </Form>
+                        <Form.Item
+                            label="Chọn các học phần"
+                            name="courses"
+                        >
+                            <Select
+                                mode="multiple"
+                                allowClear
+                                style={{width: '100%'}}
+                                placeholder="Chọn các học phần giảng viên phụ trách"
+                                defaultValue={employee.courses.map(course => course.uuid)}
+                                filterOption={(input, option) =>
+
+                                    option.children[2].toLowerCase().indexOf(input.toLowerCase()) >= 0
+
+
+                                }
+                            >
+                                {
+                                    courses.map((course, index) => {
+                                        return (
+                                            <Select.Option key={course.uuid}>
+                                                {course.course_code} - {course.course_name_vi}
+                                            </Select.Option>
+                                        )
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                        <Form.Item {...{
+                            wrapperCol: {offset: 5, span: 16},
+                        }}>
+                            <Button type="primary" htmlType="submit">
+                                Lưu
+                            </Button>
+                        </Form.Item>
+                    </Form> : ''
+            }
+
 
 
         </>

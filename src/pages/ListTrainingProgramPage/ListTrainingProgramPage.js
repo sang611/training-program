@@ -331,7 +331,7 @@ const ListTrainingProgramPage = () => {
                     </Descriptions.Item>
                     <Descriptions.Item label="Số lớp đang áp dụng">
                         {
-                            JSON.parse(item.classes).length
+                            item.classes ? JSON.parse(item.classes).length : 0
                         }
                     </Descriptions.Item>
                 </Descriptions>

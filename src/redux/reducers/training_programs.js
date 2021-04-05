@@ -18,12 +18,14 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 loadingAllTrainings: false,
                 trainingPrograms: action.payload.data.training_programs,
+                errors: null
             }
         case actionTypes.GET_ALL_TRAINING_PROGRAMS_FAIL:
             return {
                 ...state,
                 loadingAllTrainings: false,
                 errors: action.payload.data.message,
+                trainingPrograms: []
             }
         default:
             return {...state}

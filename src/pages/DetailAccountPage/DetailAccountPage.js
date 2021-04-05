@@ -12,7 +12,7 @@ import {
     Select,
     Space,
     Spin,
-    Tabs
+    Tabs, Upload
 } from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import React, {useState, useEffect} from "react"
@@ -28,11 +28,19 @@ import UpdateLoginInfor from "./UpdateLoginInfor";
 import EmployeeAssignCourses from "./EmployeeAssignCourses";
 import {course} from "../../constants/Items";
 
+function handleBirthday (user) {
+    if (user.birthday) {
+        let parts = user.birthday.split('-');
+        let mydate = parts[2] + '/' + parts[1] + '/' + parts[0]
+        return mydate
+    }
+}
 
 const UpdateStudentProfile = ({user, userRole}) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const {trainingPrograms} = useSelector(state => state.trainingPrograms)
+
 
     useEffect(() => {
         dispatch(actions.getAllTrainingProgram())
@@ -179,13 +187,7 @@ const StudentInfoDescription = ({user}) => user ? (
     >
         <Descriptions.Item label="Họ và tên">{user.fullname}</Descriptions.Item>
         <Descriptions.Item label="Ngày sinh">{
-            function () {
-                if (user.birthday) {
-                    let parts = user.birthday.split('-');
-                    let mydate = parts[2] + '/' + parts[1] + '/' + parts[0]
-                    return mydate
-                }
-            }()
+            handleBirthday(user)
         }</Descriptions.Item>
         <Descriptions.Item label="Mã sinh viên">{user.student_code}</Descriptions.Item>
         <Descriptions.Item label="Lớp">{user.class}</Descriptions.Item>
@@ -333,26 +335,20 @@ const UpdateLecturerProfile = ({user, userRole}) => {
 const LecturerInfoDescription = ({user}) => user ? (
     <Descriptions
         title={"Thông tin giảng viên"}
-        column={{xs: 1, sm: 1, md: 1}}
+        column={{xs: 1, sm: 1}}
         bordered
         className="user-info-desc"
     >
         <Descriptions.Item label="Họ và tên">{user.fullname}</Descriptions.Item>
         <Descriptions.Item label="Ngày sinh">{
-            function () {
-                if (user.birthday) {
-                    let parts = user.birthday.split('-');
-                    let mydate = parts[2] + '/' + parts[1] + '/' + parts[0]
-                    return mydate
-                }
-                return '';
-            }()
+            handleBirthday(user)
         }</Descriptions.Item>
         <Descriptions.Item label="Học hàm">{user.academic_rank}</Descriptions.Item>
         <Descriptions.Item label="Học vị">{user.academic_degree}</Descriptions.Item>
-        <Descriptions.Item label="Email">
+        <Descriptions.Item label="Email VNU">
             {user.vnu_mail}
-            <br/>
+        </Descriptions.Item>
+        <Descriptions.Item label="Email">
             {user.email}
         </Descriptions.Item>
         <Descriptions.Item label="Số điện thoại">{user.phone_number}</Descriptions.Item>
@@ -362,8 +358,46 @@ const LecturerInfoDescription = ({user}) => user ? (
 const DetailAccountPage = () => {
     const {uuid} = useParams();
     const {userRole, currentUser} = useSelector(state => state.auth)
+    const {user} = useSelector(state => state.accounts)
     const dispatch = useDispatch();
     const {loadingDetailUser, detailUser, errorDetailUser} = useSelector(state => state.accounts)
+    const [isShowAvaFile, setIsShowAvaFile] = useState(true);
+
+    const props = {
+        name: 'file',
+        action: user ? userRole == 3 ?
+            `${axios.defaults.baseURL}/students/${user.uuid}/avatar`:
+            `${axios.defaults.baseURL}/employees/${user.uuid}/avatar` : ""
+        ,
+        headers: {
+            authorization: 'authorization-text',
+        },
+        onChange(info) {
+            if (info.file.status !== 'uploading') {
+                console.log(info.file, info.fileList);
+            }
+            if (info.file.status === 'done') {
+
+                    dispatch(actions.getAUser({
+                        accountUuid: currentUser.uuid,
+                    }))
+
+
+                setIsShowAvaFile(false);
+                message.success(`Upload ảnh đại diện thành công`);
+            } else if (info.file.status === 'error') {
+                message.error(`Upload ảnh đại diện không thành công.`);
+            }
+        },
+        progress: {
+            strokeColor: {
+                '0%': '#108ee9',
+                '100%': '#87d068',
+            },
+            strokeWidth: 3,
+            format: percent => `${parseFloat(percent.toFixed(2))}%`,
+        },
+    };
 
     useEffect(() => {
         dispatch(actions.getDetailUser({accountUuid: uuid}));
@@ -372,29 +406,51 @@ const DetailAccountPage = () => {
 
     const DetailActivities = () => {
         let role = detailUser.account.role;
-
-        <Tabs defaultActiveKey="1" type="card" size={"middle"}>
-            <Tabs.TabPane tab="Hồ sơ" key="1">
-
-            </Tabs.TabPane>
-            {
-                (userRole == 0 || currentUser.uuid == uuid) ?
-                    <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
-
+        return (
+            <>
+                <Tabs defaultActiveKey="1" type="card" size={"middle"}>
+                    <Tabs.TabPane tab="Hồ sơ" key="1">
+                        <Row>
+                            <Col span={15}>
+                                {
+                                    role == 3 ?
+                                        <StudentInfoDescription user={detailUser}/> :
+                                        <LecturerInfoDescription user={detailUser}/>
+                                }
+                            </Col>
+                        </Row>
                     </Tabs.TabPane>
-                    : ''
-            }
-            {
-                (role == 1 || role == 2) ?
-                    <Tabs.TabPane tab="Học phần phụ trách" key="3">
+                    {
+                        (userRole == 0 || currentUser.uuid == uuid) ?
+                            <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
+                                {
+                                    role == 3 ?
+                                        <UpdateStudentProfile
+                                            user={detailUser}
+                                            userRole={userRole}
+                                        /> :
+                                        <UpdateLecturerProfile
+                                            user={detailUser}
+                                            userRole={userRole}
+                                        />
+                                }
+                            </Tabs.TabPane>
+                            : ''
+                    }
+                    {
+                        (role == 1 || role == 2) ?
+                            <Tabs.TabPane tab="Học phần phụ trách" key="3">
+                                <EmployeeAssignCourses employee={detailUser}/>
+                            </Tabs.TabPane>
+                            : ''
+                    }
 
-                    </Tabs.TabPane>
-                    : ''
-            }
+                </Tabs>
+            </>
+            )
 
-        </Tabs>
 
-        if (userRole == 0) {
+       /* if (userRole == 0) {
             if (role == 1 || role == 2)
                 return (
                     <Tabs defaultActiveKey="1" type="card" size={"middle"}>
@@ -532,9 +588,8 @@ const DetailAccountPage = () => {
                     </Tabs>
                 )
             }
-        }
+        }*/
     }
-
 
     return loadingDetailUser == false ? (
         <>
@@ -543,7 +598,18 @@ const DetailAccountPage = () => {
                 bottom: '-20px'
             }}>
                 <Space>
-                    <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" size={100}/>
+                    {
+                        currentUser.uuid == uuid ?
+                            <Upload {...props} showUploadList={isShowAvaFile}>
+                                <Avatar
+                                    src={user.avatar}
+                                    size={100}
+                                    style={{cursor: 'pointer'}}
+                                />
+                            </Upload> :
+                            <Avatar src={detailUser.avatar} size={100}/>
+                    }
+
                     <Title level={4}>
                         {detailUser.fullname}
                     </Title>
@@ -571,7 +637,7 @@ const DetailAccountPage = () => {
                         </Descriptions.Item>
                         <Descriptions.Item contentStyle={{color: "gray"}}>
                             <Icon
-                                component={() => <i className="fas fa-birthday-cake"></i>}/>&ensp;{detailUser.birthday}
+                                component={() => <i className="fas fa-birthday-cake"></i>}/>&ensp;{handleBirthday(detailUser)}
                         </Descriptions.Item>
                         <Descriptions.Item contentStyle={{color: "gray"}}>
                             <Icon component={() => <i className="fas fa-venus-mars"></i>}/>&ensp;
@@ -585,7 +651,7 @@ const DetailAccountPage = () => {
             </div>
             <br/><br/>
             {
-                (userRole == 0 || currentUser.uuid == uuid) ? (
+                /*(userRole == 0 || currentUser.uuid == uuid) ? (
                     <Tabs defaultActiveKey="1" type="card" size={"middle"}>
                         <Tabs.TabPane tab="Hồ sơ" key="1">
                             <Row>
@@ -628,7 +694,8 @@ const DetailAccountPage = () => {
                             }
                         </Col>
                     </Row>
-                )
+                )*/
+                <DetailActivities />
             }
 
         </>

@@ -27,6 +27,7 @@ import DetailAccountPage from "../DetailAccountPage";
 import DocumentPage from "../DocumentPage";
 import StudentStatisticPage from "../StudentStatisticPage";
 import CreateOutlineCoursePage from "../CreateOutlineCoursePage";
+import Avatar from "antd/es/avatar/avatar";
 
 
 const StudentDashboardPage = () => {
@@ -43,7 +44,13 @@ const StudentDashboardPage = () => {
     return (
         <>
             <Layout>
-                <Header style={{position: 'fixed', zIndex: 10, width: '100%', backgroundColor: '#fff'}}>
+                <Header style={{
+                    position: 'fixed',
+                    zIndex: 10,
+                    width: '100%',
+                    backgroundColor: '#fff',
+                    boxShadow: '0 0 5px gray'
+                }}>
                     <Row justify='space-between'>
 
                         <Image
@@ -88,7 +95,7 @@ const StudentDashboardPage = () => {
                                 </Menu.Item>
 
                             </SubMenu>
-                            <SubMenu key="4" icon={<UserOutlined/>} title={user.fullname}>
+                            <SubMenu key="4" icon={<Avatar src={user.avatar}/>} title={" " + user.fullname}>
                                 {
                                     userRole == 3 ?
                                         <Menu.Item
@@ -102,6 +109,7 @@ const StudentDashboardPage = () => {
                                     key="4-2"
                                     icon={<SolutionOutlined/>}
                                 >
+
                                     <Link to={`/uet/user/${currentUser.uuid}`}>Hồ sơ</Link>
 
                                 </Menu.Item>

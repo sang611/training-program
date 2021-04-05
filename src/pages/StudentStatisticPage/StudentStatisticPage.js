@@ -1,4 +1,4 @@
-import {Col, Divider, Row, Select, Space} from "antd";
+import {Col, Divider, Row, Select, Space, Tag} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useMemo, useState} from 'react'
 import CreditStatistic from "./CreditStatistic";
@@ -29,29 +29,37 @@ const StudentStatisticPage = () => {
             {
                 useMemo(() => (
                     <>
-                        <Space>
-                            <Title level={3}>
-                                Thống kê tiến độ học tập
-                            </Title>
-                            <Select
-                                style={{width: 120}}
-                                placeholder="Chọn kỳ học"
-                                onChange={(value => setSemes(value))}
-                                defaultValue={0}
-                            >
+                        <Row justify="space-between" align="middle">
+                            <Space>
+                                <Title level={3}>
+                                    Thống kê tiến độ học tập
+                                </Title>
+                                <Select
+                                    style={{width: 120}}
+                                    placeholder="Chọn kỳ học"
+                                    onChange={(value => setSemes(value))}
+                                    defaultValue={0}
+                                >
 
-                                <Select.Option value={0} key={0}>
-                                    Hiện tại
-                                </Select.Option>
-                                {
-                                    semesters.map((_, index) => {
-                                        return <Select.Option value={index + 1} key={index + 1}>
-                                            Học kỳ {index + 1}
-                                        </Select.Option>
-                                    })
-                                }
-                            </Select>
-                        </Space>
+                                    <Select.Option value={0} key={0}>
+                                        Hiện tại
+                                    </Select.Option>
+                                    {
+                                        semesters.map((_, index) => {
+                                            return <Select.Option value={index + 1} key={index + 1}>
+                                                Học kỳ {index + 1}
+                                            </Select.Option>
+                                        })
+                                    }
+                                </Select>
+                            </Space>
+
+                            <Tag color="volcano">
+                                <Title level={4} style={{margin: 0}}>
+                                    {training_program.vn_name}
+                                </Title>
+                            </Tag>
+                        </Row>
                         <Divider/>
                         <Row>
                             <Col sm={{span: 24}} md={{span: 12}} lg={{span: 8}} xl={{span: 8}} xxl={{span: 8}}>

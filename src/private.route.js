@@ -24,7 +24,7 @@ const PrivateRoute = ({ component: Component, children, ...rest }) => {
             jwt.verify(token, "training_program_2019_fc9f03e8", function (err, decoded) {
                 if(decoded) {
                     dispatch(actions.setCurrentUser(decoded));
-                    if(decoded.role > 0) {
+                    if(decoded.role >= 0) {
                         dispatch(actions.getAUser({
                             accountUuid: decoded.uuid,
                         }))

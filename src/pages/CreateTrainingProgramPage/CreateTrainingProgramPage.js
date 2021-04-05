@@ -40,7 +40,7 @@ const CreateTrainingProgramPage = () => {
             >
                 <Title level={3}>1. Thông tin chương trình đào tạo</Title>
                 <Row>
-                    <Col span={15} offset={1}>
+                    <Col span={20} offset={1}>
                         <Row>
                             <Col span={12}>
                                 <Form.Item label="Tên ngành đào tạo (VN):" name="vn_name">
@@ -89,8 +89,7 @@ const CreateTrainingProgramPage = () => {
                                 </Form.Item>
                             </Col>
                         </Row>
-
-                        <Form.Item label="Đơn vị chuyên môn:" name="institution">
+                        {/*<Form.Item label="Đơn vị chuyên môn:" name="institution">
                             <Select
                                 showSearch
                                 style={{width: 200}}
@@ -107,7 +106,7 @@ const CreateTrainingProgramPage = () => {
                                 }
 
                             </Select>
-                        </Form.Item>
+                        </Form.Item>*/}
 
                         <br/>
                     </Col>

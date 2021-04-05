@@ -37,12 +37,6 @@ function DocumentPage() {
        }
     }, [previewDoc])
 
-    useEffect(() => {
-        if(!isModalVisible) {
-
-        }
-    }, [isModalVisible])
-
     const showModal = () => {
         setIsModalVisible(true);
     };
@@ -157,7 +151,7 @@ function DocumentPage() {
                     return (
                         <List
                             grid={{
-                                gutter: 50,
+                                gutter: [50, 30],
                                 xs: 1,
                                 sm: 2,
                                 md: 3,
