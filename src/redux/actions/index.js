@@ -90,3 +90,10 @@ export {
     getAllTrainingProgramSuccess
 } from './training_programs'
 
+export {
+    getAllNotification,
+    getAllNotificationFail,
+    getAllNotificationStart,
+    getAllNotificationSuccess,
+} from './notifications'
+

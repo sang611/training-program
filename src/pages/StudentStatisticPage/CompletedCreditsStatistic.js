@@ -66,11 +66,11 @@ const CompletedCreditsStatistic = ({trainingProgram, courses}) => {
         },
         {
             type: 'Tự chọn',
-            value: LTotal - LTotal_,
+            value: trainingProgram.require_L - LTotal_,
         },
         {
             type: 'Bổ trợ',
-            value: BTTotal - BTTotal_,
+            value: trainingProgram.require_BT - BTTotal_,
         },
 
     ];

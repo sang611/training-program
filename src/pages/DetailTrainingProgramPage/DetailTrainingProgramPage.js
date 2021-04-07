@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import axios from "axios";
 import {useParams} from "react-router";
-import {Affix, Button, Col, Row, Spin, Table} from "antd";
+import {Affix, Button, Col, Descriptions, Row, Spin, Table} from "antd";
 import Title from "antd/lib/typography/Title";
 import Parser from 'html-react-parser';
 import {useHistory} from "react-router-dom";
@@ -10,7 +10,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {EditOutlined, FilePdfOutlined} from "@ant-design/icons";
 import html2canvas from "html2canvas";
 import {jsPDF} from "jspdf";
-import Cookies from "universal-cookie";
 
 
 const DetailTrainingProgramPage = (props) => {
@@ -55,73 +54,94 @@ const DetailTrainingProgramPage = (props) => {
                 key: course.uuid,
                 stt: index + 1,
                 course_code: course.course_code,
-                course_name: course.course_name_vi,
+                course_name_vi: course.course_name_vi,
+                course_name_en: course.course_name_en,
                 credits: course.credits,
+                required_course: course.required_course,
                 theory_time: course.training_program_course.theory_time,
                 exercise_time: course.training_program_course.exercise_time,
                 practice_time: course.training_program_course.practice_time,
             }
         })
+        let requireSummary = JSON.parse(trainingProgram.require_summary);
         return (
             <>
                 <Title level={3}>
                     III. Nội dung chương trình đào tạo
                 </Title>
                 <Title level={4}>
+                    Tóm tắt yêu cầu chương trình đào tạo
+                </Title>
+                <Row>
+                    <Col span={12}>
+                        <Descriptions column={1} contentStyle={{fontWeight: 'bold', fontSize: '18px'}} bordered>
+                            <Descriptions.Item label="Tổng số tín chỉ của chương trình đào tạo" labelStyle={{fontWeight: 'bold'}}>
+                                {requireSummary ? requireSummary.total : ''}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Khối kiến thức chung">
+                                {requireSummary ? requireSummary.common : ''}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Khối kiến thức theo lĩnh vực">
+                                {requireSummary ? requireSummary.field : ''}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Khối kiến thức theo khối ngành" span={2}>
+                                {requireSummary ? requireSummary.major_unit : ''}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Khối kiến thức theo nhóm ngành">
+                                {requireSummary ? requireSummary.major_group : ''}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Khối kiến thức ngành">
+                                {requireSummary ? requireSummary.major : ''}
+                            </Descriptions.Item>
+                        </Descriptions>
+                    </Col>
+                </Row>
+
+                <br/>
+                <Title level={4}>
                     Khung chương trình đào tạo
                 </Title>
                 <Table dataSource={data} bordered pagination={false}>
                     <Column title="STT" dataIndex="stt" key="stt"/>
                     <Column title="Mã học phần" dataIndex="course_code" key="course_code"/>
-                    <Column title="Học phần" dataIndex="course_name" key="course_name"/>
+                    <Column
+                        title="Học phần"
+                        key="course_name"
+                        render={
+                            (_, record) => {
+                                return (
+                                    <>
+                                        <div>{record.course_name_vi}</div>
+                                        <div>
+                                            <i>{record.course_name_en}</i>
+                                        </div>
+                                    </>
+                                )
+                            }
+                        }
+                    />
                     <Column title="Số tín chỉ" dataIndex="credits" key="credits"/>
                     <ColumnGroup title="Số giờ tín chỉ">
                         <Column title="Lý thuyết" dataIndex="theory_time" key="theory_time"/>
                         <Column title="Bài tập" dataIndex="exercise_time" key="exercise_time"/>
                         <Column title="Thực hành" dataIndex="practice_time" key="practice_time"/>
                     </ColumnGroup>
+                    <Column
+                        title="Học phần tiên quyết"
+                        key="credits"
+                        render={(_, record) => {
+                            const requiredCourse = JSON.parse(record.required_course);
+                            return requiredCourse ? requiredCourse.map((course, index) => {
+                                return <div>{course.course_code}</div>
+                            }) : ''
+                        }}
+                    />
                 </Table>
             </>
         )
     }
 
     const TrainingLOC = ({learning_outcomes}) => {
-        const dispatch = useDispatch();
-        const [locs, setLocs] = useState([]);
-        const [data, setData] = useState(learning_outcomes)
-        const state = useSelector(state => state.learningOutcomes);
-
-        useEffect(() => {
-            dispatch(actions.getAllLearningOutcomes(1));
-        }, [])
-
-        useEffect(() => {
-            state.locs.forEach((loc) => {
-                loc.key = loc.uuid;
-                if (loc.children && loc.children.length > 0) {
-                    loc.children.forEach((child) => {
-                        child.children = [];
-                        child.key = child.uuid
-                        for (let oc of state.locs) {
-                            if (child.uuid === oc.parent_uuid) {
-                                child.children.push(oc);
-                            }
-                        }
-                        if (child.children.length === 0) delete child.children;
-                    })
-                } else {
-                    delete loc.children;
-                }
-            })
-
-            setLocs(
-                state.locs.filter((loc) => {
-                    return loc.parent_uuid == null;
-                })
-            );
-
-            console.log(data)
-        }, [state])
 
         const columns = [
             {
@@ -138,7 +158,7 @@ const DetailTrainingProgramPage = (props) => {
                 <Table
                     pagination={false}
                     columns={columns}
-                    dataSource={data}
+                    dataSource={learning_outcomes}
                     expandable={{indentSize: 40}}
                 />
             </>
@@ -156,11 +176,12 @@ const DetailTrainingProgramPage = (props) => {
             {
                 title: 'Mã học phần',
                 dataIndex: 'course_code',
-                width: 200
+                width: '10%'
             },
             {
                 title: 'Tên học phần (vi)',
                 dataIndex: 'course_name_vi',
+                width: '30%'
             },
             {
                 title: 'Số tín chỉ',
@@ -170,7 +191,7 @@ const DetailTrainingProgramPage = (props) => {
             {
                 title: 'Tài liệu tham khảo',
                 dataIndex: ['training_program_course', 'documents'],
-                width: '50%'
+                width: '40%'
             },
 
         ]
@@ -400,7 +421,6 @@ const DetailTrainingProgramPage = (props) => {
             admission_scale,
             common_destination,
             specific_destination,
-            institution,
             learning_outcomes,
             courses
         } = trainingProgram

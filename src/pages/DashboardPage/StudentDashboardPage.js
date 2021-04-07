@@ -1,7 +1,6 @@
-import {Breadcrumb, Col, Image, Layout, Menu, Row, Space} from "antd";
+import {Breadcrumb, Image, Layout, Menu, notification, Row} from "antd";
 import {Content, Header} from "antd/lib/layout/layout";
 import 'antd/dist/antd.css';
-import './StudentDashboardPage.css'
 import {Link, Route, Switch, useHistory} from "react-router-dom";
 import ListInstitutionPage from "../ListInstitutionPage";
 import ListAccountPage from "../ListAccountPage";
@@ -12,29 +11,55 @@ import DetailOutlinePage from "../DetailOutlinePage";
 import ListOutlinePage from "../ListOutlinePage";
 import PrivatePlanningPage from "../PrivatePlanningPage/PrivatePlanningPage";
 import {
-    ApartmentOutlined, AuditOutlined,
-    CompassOutlined, FileOutlined,
-    LogoutOutlined, PieChartOutlined, SnippetsOutlined,
+    ApartmentOutlined,
+    AuditOutlined,
+    CompassOutlined,
+    FileOutlined,
+    LogoutOutlined,
+    PieChartOutlined,
+    SnippetsOutlined,
     SolutionOutlined,
-    TeamOutlined,
-    UserOutlined
+    TeamOutlined
 } from "@ant-design/icons";
 import SubMenu from "antd/lib/menu/SubMenu";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
-import Cookies from "universal-cookie";
 import DetailAccountPage from "../DetailAccountPage";
 import DocumentPage from "../DocumentPage";
 import StudentStatisticPage from "../StudentStatisticPage";
 import CreateOutlineCoursePage from "../CreateOutlineCoursePage";
 import Avatar from "antd/es/avatar/avatar";
+import UpdateOutlinePage from "../UpdateOutlinePage";
+import {io} from "socket.io-client";
+import {useEffect, useRef} from "react";
 
 
 const StudentDashboardPage = () => {
     const dispatch = useDispatch();
     const {currentUser, userRole} = useSelector(state => state.auth)
     const {user} = useSelector(state => state.accounts)
-    const history = useHistory();
+    let socket = useRef(null);
+    const URL = "http://localhost:9000";
+
+    useEffect(() => {
+        socket.current = io(URL, {
+            autoConnect: true,
+        });
+
+        socket.current.on(user.uuid, (data) => {
+            if(data.is_accepted) {
+                notification.success({
+                    message: data.message,
+                });
+            } else {
+                notification.error({
+                    message: data.message,
+                });
+            }
+
+        })
+
+    }, [user])
 
     const onClickMenuItem = (value) => {
         if (value.key != "4" && value.key != "4-1")
@@ -148,6 +173,8 @@ const StudentDashboardPage = () => {
                             <Route exact path="/uet/courses/:uuid/outlines/creating" component={CreateOutlineCoursePage}/>
                             <Route exact path="/uet/courses/:uuid/outlines/:outlineUuid" component={DetailOutlinePage}/>
                             <Route exact path="/uet/courses/:uuid/outlines" component={ListOutlinePage}/>
+                            <Route exact path="/uet/courses/:uuid/outlines/:outlineUuid/updating"
+                                   component={UpdateOutlinePage}/>
                             <Route path="/uet/:userUuid/planning" component={PrivatePlanningPage}/>
                             <Route path="/uet/user/:uuid" component={DetailAccountPage}/>
 

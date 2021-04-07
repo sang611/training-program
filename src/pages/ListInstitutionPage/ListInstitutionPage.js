@@ -1,16 +1,13 @@
 import {Button, Descriptions, Drawer, Image, message, Popconfirm, Space, Spin, Table, Tag} from 'antd';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions/institutions'
 import axios from "axios";
-import {
-    AppstoreAddOutlined,
-    DeleteOutlined,
-    EditOutlined,
-    InfoCircleOutlined,
-    InfoCircleTwoTone
-} from "@ant-design/icons";
+import {AppstoreAddOutlined, DeleteOutlined, EditOutlined, InfoCircleOutlined} from "@ant-design/icons";
 import CreateInstitutionPage from "../CreateInstitutionPage";
+import { io } from "socket.io-client";
+
+
 
 const ListInstitutionPage = () => {
     const [visible, setVisible] = useState(false);
@@ -20,6 +17,7 @@ const ListInstitutionPage = () => {
     const dispatch = useDispatch();
 
     const {loading, listInstitutions, createSuccess} = useSelector(state => state.institutions)
+
 
 
     const onDeleteIns = async (id) => {
@@ -90,6 +88,7 @@ const ListInstitutionPage = () => {
         if(createSuccess) onCloseModalCreate();
         setEditSuccess(false)
         onClose();
+
         dispatch(actions.getAllInstitution());
 
     }, [editSuccess, createSuccess])
@@ -112,9 +111,6 @@ const ListInstitutionPage = () => {
         setVisibleDrawerCreate(true);
     }
 
-    useEffect(() => {
-        console.log(parentIns)
-    }, [parentIns])
 
     const onClose = () => {
         setVisible(false)

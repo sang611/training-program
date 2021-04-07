@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Button, Checkbox, Col, Divider, Form, Image, Input, message, Modal, notification, Row} from "antd";
+import {Button, Carousel, Checkbox, Col, Divider, Form, Image, Input, message, Modal, notification, Row} from "antd";
 import './SignInPage.css'
 import Title from "antd/lib/typography/Title";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
@@ -123,8 +123,8 @@ function SignInPage(props) {
                 <Col span={14}>
                     <img
                         src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
-                        alt="No Image"
-                        id="signin-image"
+                        alt="No image"
+                        className="signin-image"
                     />
 
                 </Col>

@@ -8,6 +8,7 @@ import learningOutcomeTitlesReducer from "./learningOutcomeTitles";
 import documentReducer from "./documents"
 import majorReducer from './majors'
 import training_programs from "./training_programs";
+import notifications from "./notifications";
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
     learningOutcomeTitles: learningOutcomeTitlesReducer,
     documents: documentReducer,
     majors: majorReducer,
-    trainingPrograms: training_programs
+    trainingPrograms: training_programs,
+    notifications: notifications
 });
 
 export default (state, action) =>

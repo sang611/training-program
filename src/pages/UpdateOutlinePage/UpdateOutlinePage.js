@@ -1,7 +1,7 @@
 import {useHistory, useParams} from "react-router-dom";
 import {useState, useEffect} from 'react';
 import axios from "axios";
-import {Button, message, Row, Spin} from "antd";
+import {Button, Col, message, notification, Row, Spin} from "antd";
 import Title from "antd/lib/typography/Title";
 import AddLecturerOutlineForm from "../CreateOutlineCoursePage/AddLecturerOutlineForm";
 import InforCourseOutline from "../CreateOutlineCoursePage/InforCourseOutline";
@@ -14,7 +14,8 @@ import LOCOfCourse from "../CreateOutlineCoursePage/LOCOfCourse";
 const UpdateOutlinePage = () => {
     const history = useHistory();
     const {uuid, outlineUuid} = useParams();
-
+    const {userRole} = useSelector(state => state.auth)
+    const {user} = useSelector(state => state.accounts)
     const [outline, setOutline] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -27,6 +28,7 @@ const UpdateOutlinePage = () => {
     const [teachingFormality, setTeachingFormality] = useState("");
     const [coursePolicy, setCoursePolicy] = useState("");
     const [examFormality, setExamFormality] = useState("");
+    const [descriptionEdit, setDescriptionEdit] = useState(null);
 
     const dispatch = useDispatch();
     const {course} = useSelector(state => state.courses)
@@ -69,12 +71,25 @@ const UpdateOutlinePage = () => {
             teachingFormality,
             coursePolicy,
             examFormality,
-            courseUuid: uuid
+            courseUuid: uuid,
+            description_edit: descriptionEdit,
+            userRole: userRole,
+            outlineUuid: outline.uuid,
+            userRequestId: user.uuid
         };
 
         axios.post("/outlines", data)
             .then((res) => {
-                message.success(res.data.message);
+                if(userRole > 0) {
+
+                    notification.success({
+                        message: res.data.message,
+                        description: "Cập nhật sẽ được thực hiện sau khi admin chấp nhận!"
+                    });
+                }
+                else {
+                    message.success(res.data.message)
+                }
             })
             .catch((err) => message.error("Đã có lỗi xảy ra"))
     }
@@ -160,6 +175,26 @@ const UpdateOutlinePage = () => {
             </Title>
             <ContentCourse setExamFormality={setExamFormality} content={outline.examFormality}/>
             <br/><br/>
+
+            {
+               userRole > 0 ?
+                   <>
+                       <Title level={4}>
+                           Mô tả những phần đã chỉnh sửa
+                       </Title>
+                       <Row>
+                           <Col span={16}>
+                               <TextArea
+                                   rows="8"
+                                   onChange={(e) => {
+                                       setDescriptionEdit(e.target.value)
+                                   }}
+                               />
+                           </Col>
+                       </Row>
+                       <br/><br/>
+                   </> : ''
+            }
 
             <Row justify="space-between">
                 <Button onClick={() => history.push(`/uet/courses/${uuid}/outlines`)}>Thoát</Button>

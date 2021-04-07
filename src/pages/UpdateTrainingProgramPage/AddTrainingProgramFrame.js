@@ -295,7 +295,11 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
                 visible={visibleDrawer}
                 bodyStyle={{paddingBottom: 80}}
             >
-                <AddTrainingProgramCourses onCloseDrawer={onCloseDrawer} getNewCoursesAdded={getNewCoursesAdded}/>
+                <AddTrainingProgramCourses
+                    onCloseDrawer={onCloseDrawer}
+                    getNewCoursesAdded={getNewCoursesAdded}
+                    trainingProgram={trainingProgram}
+                />
             </Drawer>
         </>
 

@@ -1,10 +1,9 @@
-.login-container img#signin-image{
-   height: 100vh !important;
+.login-container .signin-image{
+   height: 100vh;
    width: 100%;
-   background-size: cover;
-   background-position: center;
-   background-repeat: no-repeat;
+
 }
+
 
 #siginin-form-wrapper {
    width: 100%;

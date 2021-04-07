@@ -10,6 +10,7 @@ import TextArea from "antd/lib/input/TextArea";
 import {EditOutlined} from "@ant-design/icons";
 
 const Lecturers = ({lecturers}) => {
+
     const columns = [
         {
             title: 'STT',
@@ -134,7 +135,7 @@ const LOCs = ({locs}) => {
     )
 }
 
-const DetailOutlinePage = (props) => {
+const DetailOutlinePage = () => {
     const history = useHistory();
     const {outlineUuid, uuid} = useParams();
     const [outline, setOutline] = useState(null);
@@ -154,7 +155,7 @@ const DetailOutlinePage = (props) => {
 
     const checkIsModerator = () => {
         if (userRole == 1 || userRole == 2)
-            return !!(user.courses.find((course) => uuid == course.uuid).employee_Course.isModerator)
+            return !!(user.courses.find((course) => uuid == course.uuid).employee_course.isModerator)
         return false
     }
 
@@ -191,7 +192,7 @@ const DetailOutlinePage = (props) => {
                 3. Mục tiêu môn học
             </Title>
             {
-                Parser(outline.goal)
+                outline.goal ? Parser(outline.goal) : ''
             }
             <Title level={4}>
                 4. Chuẩn đầu ra
@@ -201,39 +202,40 @@ const DetailOutlinePage = (props) => {
             <Title level={4}>
                 5. Tóm tắt nội dung môn học
             </Title>
+
             {outline.summary_content}
 
             <Title level={4}>
                 6. Nội dung chi tiết
             </Title>
             {
-                Parser(outline.detail_content)
+                outline.detail_content ? Parser(outline.detail_content) : ''
             }
             <Title level={4}>
                 7. Học liệu
             </Title>
             {
-                Parser(outline.documents)
+                outline.documents ? Parser(outline.documents) : ''
             }
 
             <Title level={4}>
                 8. Hình thức tổ chức dạy học
             </Title>
             {
-                Parser(outline.teachingFormality)
+                outline.teachingFormality ? Parser(outline.teachingFormality) : ''
             }
             <Title level={4}>
                 9. Chính sách đối với môn học và các yêu cầu khác của giảng viên
             </Title>
             {
-                Parser(outline.coursePolicy)
+                outline.coursePolicy ? Parser(outline.coursePolicy) : ''
             }
 
             <Title level={4}>
                 10. Phương pháp, hình thức kiểm tra, đánh giá kết quả học tập môn học
             </Title>
             {
-                Parser(outline.examFormality)
+                outline.examFormality ? Parser(outline.examFormality) : ''
             }
 
         </>

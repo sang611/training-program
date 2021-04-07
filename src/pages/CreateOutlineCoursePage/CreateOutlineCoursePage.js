@@ -48,7 +48,6 @@ const CreateOutlineCoursePage = () => {
             courseUuid: uuid
         };
 
-
         axios.post("/outlines", data)
             .then((res) => {
                 message.success(res.data.message);

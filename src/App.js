@@ -3,21 +3,18 @@ import {Redirect, Route, Switch, useHistory} from 'react-router-dom'
 import SignInPage from './pages/SignInPage/SignInPage';
 import DashboardPage from "./pages/DashboardPage";
 import PrivateRoute from "./private.route";
-import Cookies from "universal-cookie";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import * as actions from './redux/actions'
-import jwt from 'jsonwebtoken'
-import {useEffect} from "react";
 import axios from "axios";
 import ForbiddenPage from "./pages/ForbiddenPage/ForbiddenPage";
-
-
 
 
 function App() {
 
     const history = useHistory();
     const dispatch = useDispatch();
+
+
 
     axios.defaults.baseURL = "http://localhost:9000"
     axios.interceptors.response.use( (response) => {

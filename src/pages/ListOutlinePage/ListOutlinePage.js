@@ -41,6 +41,7 @@ const ListOutlinePage = (props) => {
                     <EllipsisOutlined key="ellipsis"/>,
                 ]}
                 title={item.vn_name}
+                hoverable
             >
                 Card content
             </Card>
