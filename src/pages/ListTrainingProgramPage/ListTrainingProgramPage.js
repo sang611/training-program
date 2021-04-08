@@ -1,4 +1,4 @@
-import {Button, Card, Descriptions, List, message, Modal, Popconfirm, Spin, Table} from "antd";
+import {Button, Card, Col, Descriptions, Divider, List, message, Modal, Popconfirm, Row, Spin, Table} from "antd";
 import React, {useEffect, useState} from 'react'
 import axios from "axios";
 import {
@@ -14,6 +14,9 @@ import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
 import './ListTrainingProgramPage.css'
 import Icon from "@ant-design/icons/es";
+import Search from "antd/lib/input/Search";
+import Text from "antd/es/typography/Text";
+import Title from "antd/lib/typography/Title";
 
 
 const MatrixCourses = ({visibleCourseMatrix, setVisibleCourseMatrix, trainingList}) => {
@@ -254,11 +257,14 @@ const ListTrainingProgramPage = () => {
 
     const [visibleCourseList, setVisibleCourseList] = useState(false);
     const [chosenTraining, setChosenTraining] = useState(null);
+    const [vnNameSearch, setVnNameSearch] = useState("");
 
 
     useEffect(() => {
-        dispatch(actions.getAllTrainingProgram());
-    }, [])
+        dispatch(actions.getAllTrainingProgram({
+            vnNameSearch
+        }));
+    }, [vnNameSearch])
 
     const onLock = async (uuid) => {
         try {
@@ -271,7 +277,13 @@ const ListTrainingProgramPage = () => {
     }
 
     const onDeleteTrainingProgram = (uuid) => {
-        console.log("deleted")
+        axios.delete(`/training-programs/${uuid}`)
+            .then(res => {
+                message.success("Đã xóa chương trình đào tạo")
+            })
+            .catch(e => {
+                message.error("Không thể xóa chương trình đào tạo")
+            })
     }
 
 
@@ -388,28 +400,53 @@ const ListTrainingProgramPage = () => {
     )
 
 
-    return loadingAllTrainings == false ? (
+    return  (
         !errors ?
             <>
-                <List
-                    grid={{
-                        gutter: 30,
-                        xs: 1,
-                        sm: 2,
-                        md: 3,
-                        lg: 3,
-                        xl: userRole > 0 ? 4 : 3,
-                        xxl: 4,
-                    }}
-                    dataSource={trainingPrograms}
-                    renderItem={item => {
-                        return <List.Item>
-                            <TrainingItem item={item}/>
-                        </List.Item>
-                    }
+                <Row align="middle">
+                    <Col span={14}>
+                        <Title level={4}>
+                            <Text underline type="danger">
+                                Chương trình đào tạo Đại học Công nghệ
+                            </Text>
+                        </Title>
 
-                    }
-                />
+                    </Col>
+                    <Col span={10}>
+                        <Search
+                            placeholder="Tìm kiếm chương trình đào tạo"
+                            enterButton
+                            size="large"
+                            onChange={(e) => setVnNameSearch(e.target.value)}
+                        />
+                    </Col>
+                </Row>
+                <Divider />
+                {
+                    loadingAllTrainings == false ?
+                        (
+                            <List
+                                grid={{
+                                    gutter: 30,
+                                    xs: 1,
+                                    sm: 2,
+                                    md: 3,
+                                    lg: 3,
+                                    xl: userRole > 0 ? 4 : 3,
+                                    xxl: 4,
+                                }}
+                                dataSource={trainingPrograms}
+                                renderItem={item => {
+                                    return <List.Item>
+                                        <TrainingItem item={item}/>
+                                    </List.Item>
+                                }
+
+                                }
+                            />
+                        ) : <Spin />
+                }
+
                 <MatrixCourses
                     visibleCourseMatrix={visibleCourseMatrix}
                     setVisibleCourseMatrix={setVisibleCourseMatrix}
@@ -427,7 +464,7 @@ const ListTrainingProgramPage = () => {
                 />
                 {userRole == 0 ? ButtonActions : ""}
             </> : <div>{errors.toString()}</div>
-    ) : <Spin/>
+    )
 }
 
 export default ListTrainingProgramPage;

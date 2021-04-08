@@ -143,7 +143,7 @@ const UpdateTrainingProgramPage = (props) => {
                             </Col>
                         </Row>
 
-                        <Form.Item label="Đơn vị chuyên môn:" name="institution">
+                        {/*<Form.Item label="Đơn vị chuyên môn:" name="institution">
                             <Select
                                 showSearch
                                 style={{width: 200}}
@@ -161,13 +161,12 @@ const UpdateTrainingProgramPage = (props) => {
 
                             </Select>
 
-                        </Form.Item>
-
-                        <br/>
+                        </Form.Item>*/}
 
 
                     </Col>
                 </Row>
+                <br/>
                 <Title level={4}>2. Mục tiêu đào tạo</Title>
                 <Row>
                     <Col span={20} offset={1}>

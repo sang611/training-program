@@ -98,6 +98,7 @@ function SignInPage(props) {
                 message: 'Đăng nhập thành công',
                 description:
                     'Hệ thống quản lý Chương trình đào tạo',
+                placement: 'topLeft'
             });
         }
     }, [state.error, state.user])

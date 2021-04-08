@@ -62,7 +62,7 @@ const CompletedCreditsStatistic = ({trainingProgram, courses}) => {
     var data = [
         {
             type: 'Bắt buộc',
-            value: BTotal - BTotal_,
+            value: (JSON.parse(trainingProgram.require_summary).total-trainingProgram.require_L-trainingProgram.require_BT) - BTotal_,
         },
         {
             type: 'Tự chọn',
@@ -88,7 +88,9 @@ const CompletedCreditsStatistic = ({trainingProgram, courses}) => {
             style: {
                 textAlign: 'center',
                 fontSize: 14,
+                fill: '#303030'
             },
+            autoRotate: false
         },
         interactions: [{ type: 'element-selected' }, { type: 'element-active' }],
         statistic: {
@@ -100,7 +102,7 @@ const CompletedCreditsStatistic = ({trainingProgram, courses}) => {
                     textOverflow: 'ellipsis',
                 },
                 formatter: function formatter() {
-                    return 'Số tín chỉ còn thiếu';
+                    return 'Còn thiếu';
                 },
             },
         },

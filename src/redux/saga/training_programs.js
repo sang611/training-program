@@ -2,11 +2,20 @@ import {put} from "redux-saga/effects";
 import * as actions from "../actions";
 import axios from "../../my.axios";
 
-export function* getAllTrainingPrograms() {
+export function* getAllTrainingPrograms({payload}) {
+
+    let url = "";
+    if(payload) {
+        let vnNameSearch = payload.vnNameSearch ? payload.vnNameSearch : ""
+        url = `/training-programs/?vn_name=${vnNameSearch}`;
+    } else {
+        url = `/training-programs/?vn_name=`
+    }
+
     try {
         yield put(actions.getAllTrainingProgramStart());
         const response = yield axios.get(
-            `/training-programs`
+            url
         );
         yield put(actions.getAllTrainingProgramSuccess(response));
     } catch (error) {

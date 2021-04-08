@@ -75,7 +75,8 @@ const DetailTrainingProgramPage = (props) => {
                 <Row>
                     <Col span={12}>
                         <Descriptions column={1} contentStyle={{fontWeight: 'bold', fontSize: '18px'}} bordered>
-                            <Descriptions.Item label="Tổng số tín chỉ của chương trình đào tạo" labelStyle={{fontWeight: 'bold'}}>
+                            <Descriptions.Item label="Tổng số tín chỉ của chương trình đào tạo"
+                                               labelStyle={{fontWeight: 'bold'}}>
                                 {requireSummary ? requireSummary.total : ''}
                             </Descriptions.Item>
                             <Descriptions.Item label="Khối kiến thức chung">
@@ -401,7 +402,7 @@ const DetailTrainingProgramPage = (props) => {
                     doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                     heightLeft -= pageHeight;
                 }
-                doc.save( 'file.pdf');
+                doc.save('file.pdf');
                 setIsExportingPdf(false);
             })
         ;
@@ -428,7 +429,7 @@ const DetailTrainingProgramPage = (props) => {
         return loading ? <Spin/> : (
             <div id="training_program">
                 {
-                   (!trainingProgram.lock_edit && userRole == 0) ? <Affix style={{float: 'right'}} offsetTop={100}>
+                    (!trainingProgram.lock_edit && userRole == 0) ? <Affix style={{float: 'right'}} offsetTop={100}>
                         <Button
                             type="primary"
                             shape="circle"
@@ -481,7 +482,7 @@ const DetailTrainingProgramPage = (props) => {
                         </div>
                     </Col>
                 </Row>
-
+                <br/>
                 <Title level={4}>
                     3. Thông tin tuyển sinh
                 </Title>
@@ -500,7 +501,8 @@ const DetailTrainingProgramPage = (props) => {
                 <Lecturers courses={courses}/><br/><br/>
                 <CourseDocument courses={courses} semester={true}/><br/><br/>
                 <Row align="end">
-                    <Button icon={<FilePdfOutlined />} onClick={printDocument} loading={isExportingPdf}> Export PDF </Button>
+                    <Button icon={<FilePdfOutlined/>} onClick={printDocument} loading={isExportingPdf}> Export
+                        PDF </Button>
                 </Row>
             </div>
         )

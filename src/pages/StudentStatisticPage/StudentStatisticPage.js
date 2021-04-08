@@ -63,10 +63,12 @@ const StudentStatisticPage = () => {
                         <Divider/>
                         <Row>
                             <Col sm={{span: 24}} md={{span: 12}} lg={{span: 8}} xl={{span: 8}} xxl={{span: 8}}>
+
                                 <CreditStatistic
                                     courses={courses}
                                     semes={semes}
                                 />
+
                             </Col>
                             <Col sm={{span: 24}} md={{span: 12}} lg={{span: 8}} xl={{span: 8}} xxl={{span: 8}}>
                                 <CourseTypeByStatusStatistic
@@ -83,7 +85,9 @@ const StudentStatisticPage = () => {
                                             />
 
                             </Col>
-                        </Row><br/>
+                        </Row>
+
+                        <br/>
                         <Divider/>
                         <Row>
                             <Col sm={24} md={{span: 11}}>

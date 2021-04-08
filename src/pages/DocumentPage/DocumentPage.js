@@ -10,7 +10,9 @@ import * as actions from '../../redux/actions'
 import axios from "axios";
 import Meta from "antd/lib/card/Meta";
 import Title from "antd/es/typography/Title";
-const FileDownload = require('js-file-download');
+import Paragraph from "antd/lib/typography/Paragraph";
+import DocumentCard from "./DocumentCard";
+
 
 
 function DocumentPage() {
@@ -26,10 +28,12 @@ function DocumentPage() {
 
     const [previewDoc, setPreviewDoc] = useState(null);
 
+
     useEffect(() => {
         dispatch(actions.getAllDocuments({doc_of}));
         setPreviewDoc(null);
     }, [doc_of])
+
 
     useEffect(() => {
        if(previewDoc) {
@@ -72,7 +76,7 @@ function DocumentPage() {
             .then((res) => {
                 message.success(res.data.message);
                 form.resetFields();
-                documents.push(res.data.document)
+                dispatch(actions.getAllDocuments({doc_of}));
             })
             .catch((err) => {
                 if (err.response) {
@@ -162,49 +166,7 @@ function DocumentPage() {
                             dataSource={documents}
                             renderItem={item => (
                                 <List.Item>
-                                    <Card
-                                        hoverable
-                                        bodyStyle={{
-                                            padding: '0'
-                                        }}
-                                        actions={userRole == 0 ? [
-                                            <CloudDownloadOutlined key="download" onClick={() => {
-                                                axios.get(`/documents/downloadOneFile/${item.document_url}`, {responseType: 'blob'})
-                                                    .then(res => {
-                                                        FileDownload(res.data, 'tmp.pdf');
-                                                    })
-                                            }}/>,
-                                            <EditOutlined key="edit"/>,
-                                            <DeleteOutlined key="delete"/>
-                                        ] : [
-                                            <CloudDownloadOutlined key="download" onClick={() => {
-                                                axios.get(`/documents/downloadOneFile/${item.document_url}`, {responseType: 'blob'})
-                                                    .then(res => {
-                                                        FileDownload(res.data, 'tmp.pdf');
-                                                    })
-                                            }}/>
-                                        ]}
-                                    >
-                                        <center>
-                                            <img
-                                                width='100%'
-                                                height='250px'
-                                                alt="Document"
-                                                src={`https://drive.google.com/thumbnail?authuser=0&sz=w320&id=${item.document_url}`}
-                                                onClick={() => {
-                                                    setPreviewDoc(item);
-                                                }}
-                                            />
-                                        </center>
-                                        <div>
-
-                                            <Meta
-                                                title={item.name}
-                                                description={item.description || "Không có mô tả"}
-                                                style={{width: '100%', padding: '15px'}}
-                                            />
-                                        </div>
-                                    </Card>
+                                    <DocumentCard userRole={userRole} item={item} setPreviewDoc={setPreviewDoc}/>
                                 </List.Item>
                             )}
                         />
