@@ -1,13 +1,8 @@
 import DashboardPage from "./DashboardPage";
-import {useDispatch, useSelector} from "react-redux";
-import {useState, useEffect} from "react";
-import Cookies from "universal-cookie";
+import {useSelector} from "react-redux";
 import StudentDashboardPage from "./StudentDashboardPage";
 import {Redirect} from "react-router-dom";
-import axios from "axios";
-import * as actions from '../../redux/actions'
 
-const cookies = new Cookies();
 const AccountDashboardPage = () => {
     const {userRole} = useSelector(state => state.auth);
     const {isValidToken} = useSelector(state => state.auth)

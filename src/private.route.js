@@ -29,6 +29,7 @@ const PrivateRoute = ({component: Component, children, ...rest}) => {
                                 accountUuid: decoded.uuid,
                             }))
 
+
                         }
 
                     })

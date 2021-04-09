@@ -15,7 +15,7 @@ import {
     Tabs, Upload
 } from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useMemo} from "react"
 import {useParams} from "react-router-dom";
 import * as actions from '../../redux/actions'
 import Title from "antd/lib/typography/Title";
@@ -38,6 +38,7 @@ function handleBirthday (user) {
 
 const UpdateStudentProfile = ({user, userRole}) => {
     const [form] = Form.useForm();
+    const {uuid} = useParams();
     const dispatch = useDispatch();
     const {trainingPrograms} = useSelector(state => state.trainingPrograms)
 
@@ -65,9 +66,7 @@ const UpdateStudentProfile = ({user, userRole}) => {
         axios.put(`/students/${user.uuid}`, values)
             .then(res => {
                 message.success(res.data.message)
-                dispatch(actions.getAUser({
-                    accountUuid: user.account.uuid
-                }))
+                dispatch(actions.getDetailUser({accountUuid: uuid}));
             })
             .catch(e => message.error(e.response.data.message))
     }
@@ -136,20 +135,20 @@ const UpdateStudentProfile = ({user, userRole}) => {
                             <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
                         </Form.Item>
 
-                        <Form.Item label="Thuộc chương trình đào tạo:" name="trainingProgram">
+                        <Form.Item label="Thuộc chương trình đào tạo:" name="trainingProgramUuid">
                             <Select
                                 showSearch
                                 style={{width: 200}}
                                 placeholder="Chương trình đào tạo"
                                 optionFilterProp="children"
-                                defaultValue={user.training_program.uuid}
+                                defaultValue={user.training_program ? user.training_program.uuid : ''}
                                 filterOption={(input, option) =>
                                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                 }
                             >
                                 {
-                                    trainingPrograms.map((ins, index) =>
-                                        <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
+                                    trainingPrograms.map((trains, index) =>
+                                        <Select.Option value={trains.uuid} key={index}>{trains.vn_name}</Select.Option>
                                     )
                                 }
                             </Select>
@@ -205,10 +204,10 @@ const UpdateLecturerProfile = ({user, userRole}) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const insState = useSelector(state => state.institutions)
-    const {courses} = useSelector(state => state.courses)
+    const {uuid} = useParams();
+
     useEffect(() => {
         dispatch(actions.getAllInstitution());
-        dispatch(actions.getAllCourse());
     }, [])
 
     useEffect(() => {
@@ -231,9 +230,7 @@ const UpdateLecturerProfile = ({user, userRole}) => {
         axios.put(`/employees/${user.uuid}`, values)
             .then((res) => {
                 message.success(res.data.message)
-                dispatch(actions.getAUser({
-                    accountUuid: user.account.uuid
-                }))
+                dispatch(actions.getDetailUser({accountUuid: uuid}));
             })
             .catch((err) => message.error(err.response.data.message))
     }
@@ -355,13 +352,59 @@ const LecturerInfoDescription = ({user}) => user ? (
     </Descriptions>
 ) : ''
 
+
+const DetailActivities = ({detailUser, userRole, currentUser, uuid}) => (
+    <>
+        <Tabs defaultActiveKey="1" type="card" size={"middle"}>
+            <Tabs.TabPane tab="Hồ sơ" key="1">
+                <Row>
+                    <Col span={15}>
+                        {
+                            detailUser.account.role == 3 ?
+                                <StudentInfoDescription user={detailUser}/> :
+                                <LecturerInfoDescription user={detailUser}/>
+                        }
+                    </Col>
+                </Row>
+            </Tabs.TabPane>
+            {
+                (userRole == 0 || currentUser.uuid == uuid) ?
+                    <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
+                        {
+
+                            detailUser.account.role == 3 ?
+                                <UpdateStudentProfile
+                                    user={detailUser}
+                                    userRole={userRole}
+                                /> :
+                                <UpdateLecturerProfile
+                                    user={detailUser}
+                                    userRole={userRole}
+                                />
+                        }
+                    </Tabs.TabPane>
+                    : ''
+            }
+            {
+                (detailUser.account.role == 1 || detailUser.account.role == 2) ?
+                    <Tabs.TabPane tab="Học phần phụ trách" key="3">
+                        <EmployeeAssignCourses employee={detailUser}/>
+                    </Tabs.TabPane>
+                    : ''
+            }
+
+        </Tabs>
+    </>
+)
+
 const DetailAccountPage = () => {
     const {uuid} = useParams();
     const {userRole, currentUser} = useSelector(state => state.auth)
     const {user} = useSelector(state => state.accounts)
     const dispatch = useDispatch();
-    const {loadingDetailUser, detailUser, errorDetailUser} = useSelector(state => state.accounts)
+    const {loadingDetailUser, detailUser} = useSelector(state => state.accounts)
     const [isShowAvaFile, setIsShowAvaFile] = useState(true);
+
 
     const props = {
         name: 'file',
@@ -403,51 +446,6 @@ const DetailAccountPage = () => {
         dispatch(actions.getDetailUser({accountUuid: uuid}));
     }, [uuid])
 
-
-    const DetailActivities = () => {
-        let role = detailUser.account.role;
-        return (
-            <>
-                <Tabs defaultActiveKey="1" type="card" size={"middle"}>
-                    <Tabs.TabPane tab="Hồ sơ" key="1">
-                        <Row>
-                            <Col span={15}>
-                                {
-                                    role == 3 ?
-                                        <StudentInfoDescription user={detailUser}/> :
-                                        <LecturerInfoDescription user={detailUser}/>
-                                }
-                            </Col>
-                        </Row>
-                    </Tabs.TabPane>
-                    {
-                        (userRole == 0 || currentUser.uuid == uuid) ?
-                            <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
-                                {
-                                    role == 3 ?
-                                        <UpdateStudentProfile
-                                            user={detailUser}
-                                            userRole={userRole}
-                                        /> :
-                                        <UpdateLecturerProfile
-                                            user={detailUser}
-                                            userRole={userRole}
-                                        />
-                                }
-                            </Tabs.TabPane>
-                            : ''
-                    }
-                    {
-                        (role == 1 || role == 2) ?
-                            <Tabs.TabPane tab="Học phần phụ trách" key="3">
-                                <EmployeeAssignCourses employee={detailUser}/>
-                            </Tabs.TabPane>
-                            : ''
-                    }
-
-                </Tabs>
-            </>
-            )
 
 
        /* if (userRole == 0) {
@@ -589,9 +587,9 @@ const DetailAccountPage = () => {
                 )
             }
         }*/
-    }
 
-    return loadingDetailUser == false ? (
+
+    return loadingDetailUser == false && detailUser ? (
         <>
             <div style={{
                 position: 'relative',
@@ -602,7 +600,7 @@ const DetailAccountPage = () => {
                         currentUser.uuid == uuid ?
                             <Upload {...props} showUploadList={isShowAvaFile}>
                                 <Avatar
-                                    src={user.avatar}
+                                    src={user.avatar.includes(':') ? user.avatar : `data:image/jpeg;base64, ${user.avatar}`}
                                     size={100}
                                     style={{cursor: 'pointer'}}
                                 />
@@ -650,8 +648,8 @@ const DetailAccountPage = () => {
 
             </div>
             <br/><br/>
-            {
-                /*(userRole == 0 || currentUser.uuid == uuid) ? (
+            {/*{
+                (userRole == 0 || currentUser.uuid == uuid) ? (
                     <Tabs defaultActiveKey="1" type="card" size={"middle"}>
                         <Tabs.TabPane tab="Hồ sơ" key="1">
                             <Row>
@@ -694,10 +692,10 @@ const DetailAccountPage = () => {
                             }
                         </Col>
                     </Row>
-                )*/
-                <DetailActivities />
-            }
+                )
 
+            }*/}
+            <DetailActivities detailUser={detailUser} userRole={userRole} currentUser={currentUser} uuid={uuid}/>
         </>
 
     ) : <Spin/>
