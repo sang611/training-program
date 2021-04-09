@@ -238,9 +238,8 @@ const DashboardPage = () => {
                     </Header>
                     <Content style={{margin: '0 16px', marginTop: '64px'}}>
                         <Breadcrumb style={{margin: '16px 0'}}>
-                            <Breadcrumb.Item>User</Breadcrumb.Item>
-                            <Breadcrumb.Item>Bill</Breadcrumb.Item>
                         </Breadcrumb>
+
                         <div className="site-layout-background" style={{padding: 24, minHeight: '100vh'}}>
                             <Switch>
                                 <Route path="/uet/institutions/creation" component={CreateInstitutionPage}/>

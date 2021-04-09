@@ -28,7 +28,7 @@ import UpdateLoginInfor from "./UpdateLoginInfor";
 import EmployeeAssignCourses from "./EmployeeAssignCourses";
 import {course} from "../../constants/Items";
 
-function handleBirthday (user) {
+function handleBirthday(user) {
     if (user.birthday) {
         let parts = user.birthday.split('-');
         let mydate = parts[2] + '/' + parts[1] + '/' + parts[0]
@@ -41,10 +41,11 @@ const UpdateStudentProfile = ({user, userRole}) => {
     const {uuid} = useParams();
     const dispatch = useDispatch();
     const {trainingPrograms} = useSelector(state => state.trainingPrograms)
-
+    const {majors} = useSelector(state => state.majors)
 
     useEffect(() => {
         dispatch(actions.getAllTrainingProgram())
+        dispatch(actions.getAllMajor());
     }, [])
 
     useEffect(() => {
@@ -58,15 +59,20 @@ const UpdateStudentProfile = ({user, userRole}) => {
             phone_number: user.phone_number,
             class: user.class,
             vnu_mail: user.vnu_mail,
-
+            majorUuid: user.major ? user.major.uuid : "",
+            trainingProgramUuid: user.training_program ? user.training_program.uuid : ""
         });
+
+
     }, [])
 
     const onUpdateStudentInfor = (values) => {
         axios.put(`/students/${user.uuid}`, values)
             .then(res => {
                 message.success(res.data.message)
+
                 dispatch(actions.getDetailUser({accountUuid: uuid}));
+
             })
             .catch(e => message.error(e.response.data.message))
     }
@@ -135,13 +141,32 @@ const UpdateStudentProfile = ({user, userRole}) => {
                             <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
                         </Form.Item>
 
+
+                        <Form.Item label="Ngành đào tạo:" name="majorUuid">
+
+                            <Select
+                                showSearch
+                                style={{width: '100%'}}
+                                placeholder="Ngành"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                            >
+                                {
+                                    majors.map((major, index) =>
+                                        <Select.Option value={major.uuid} key={index}>{major.vn_name}</Select.Option>
+                                    )
+                                }
+                            </Select>
+                        </Form.Item>
+
                         <Form.Item label="Thuộc chương trình đào tạo:" name="trainingProgramUuid">
                             <Select
                                 showSearch
-                                style={{width: 200}}
+                                style={{width: '100%'}}
                                 placeholder="Chương trình đào tạo"
                                 optionFilterProp="children"
-                                defaultValue={user.training_program ? user.training_program.uuid : ''}
                                 filterOption={(input, option) =>
                                     option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                 }
@@ -180,15 +205,17 @@ const UpdateStudentProfile = ({user, userRole}) => {
 const StudentInfoDescription = ({user}) => user ? (
     <Descriptions
         title={"Thông tin sinh viên"}
-        column={{xs: 1, sm: 1, md: 1}}
+        column={{xs: 1, sm: 1, md: 2}}
         bordered
         className="user-info-desc"
+        labelStyle={{width: '150px'}}
     >
         <Descriptions.Item label="Họ và tên">{user.fullname}</Descriptions.Item>
         <Descriptions.Item label="Ngày sinh">{
             handleBirthday(user)
         }</Descriptions.Item>
         <Descriptions.Item label="Mã sinh viên">{user.student_code}</Descriptions.Item>
+        <Descriptions.Item label="Ngành">{user.major ? user.major.vn_name : ''}</Descriptions.Item>
         <Descriptions.Item label="Lớp">{user.class}</Descriptions.Item>
         <Descriptions.Item label="Email VNU">
             {user.vnu_mail}
@@ -353,49 +380,195 @@ const LecturerInfoDescription = ({user}) => user ? (
 ) : ''
 
 
-const DetailActivities = ({detailUser, userRole, currentUser, uuid}) => (
-    <>
-        <Tabs defaultActiveKey="1" type="card" size={"middle"}>
-            <Tabs.TabPane tab="Hồ sơ" key="1">
-                <Row>
-                    <Col span={15}>
-                        {
-                            detailUser.account.role == 3 ?
-                                <StudentInfoDescription user={detailUser}/> :
-                                <LecturerInfoDescription user={detailUser}/>
-                        }
-                    </Col>
-                </Row>
-            </Tabs.TabPane>
-            {
-                (userRole == 0 || currentUser.uuid == uuid) ?
-                    <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
-                        {
+const DetailActivities = ({detailUser, currentUser, userRole}) => {
+    let role = detailUser.account.role;
+    const {uuid} = useParams();
+    return (
+        <>
 
-                            detailUser.account.role == 3 ?
-                                <UpdateStudentProfile
-                                    user={detailUser}
-                                    userRole={userRole}
-                                /> :
-                                <UpdateLecturerProfile
-                                    user={detailUser}
-                                    userRole={userRole}
-                                />
-                        }
-                    </Tabs.TabPane>
-                    : ''
-            }
-            {
-                (detailUser.account.role == 1 || detailUser.account.role == 2) ?
-                    <Tabs.TabPane tab="Học phần phụ trách" key="3">
-                        <EmployeeAssignCourses employee={detailUser}/>
-                    </Tabs.TabPane>
-                    : ''
-            }
+            <Tabs defaultActiveKey="1" type="card" size={"middle"}>
+                <Tabs.TabPane tab="Hồ sơ" key="1">
+                    <Row>
+                        <Col span={24}>
+                            {
+                                role == 3 ?
+                                    <StudentInfoDescription user={detailUser}/> :
+                                    <LecturerInfoDescription user={detailUser}/>
+                            }
+                        </Col>
+                    </Row>
+                </Tabs.TabPane>
+                {
+                    (userRole == 0 || currentUser.uuid == uuid) ?
+                        <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
+                            {
+                                role == 3 ?
+                                    <UpdateStudentProfile
+                                        user={detailUser}
+                                        userRole={userRole}
+                                    /> :
+                                    <UpdateLecturerProfile
+                                        user={detailUser}
+                                        userRole={userRole}
+                                    />
+                            }
+                        </Tabs.TabPane>
+                        : ''
+                }
+                {
+                    (role == 1 || role == 2) ?
+                        <Tabs.TabPane tab="Học phần phụ trách" key="3">
+                            <EmployeeAssignCourses employee={detailUser}/>
+                        </Tabs.TabPane>
+                        : ''
+                }
 
-        </Tabs>
-    </>
-)
+            </Tabs>
+        </>
+    )
+
+
+    /* if (userRole == 0) {
+         if (role == 1 || role == 2)
+             return (
+                 <Tabs defaultActiveKey="1" type="card" size={"middle"}>
+                     <Tabs.TabPane tab="Hồ sơ" key="1">
+                         <Row>
+                             <Col span={15}>
+                                 {
+                                     role == 3 ?
+                                         <StudentInfoDescription user={detailUser}/> :
+                                         <LecturerInfoDescription user={detailUser}/>
+                                 }
+                             </Col>
+                         </Row>
+                     </Tabs.TabPane>
+                     <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
+                         {
+                             role == 3 ?
+                                 <UpdateStudentProfile
+                                     user={detailUser}
+                                     userRole={userRole}
+                                 /> :
+                                 <UpdateLecturerProfile
+                                     user={detailUser}
+                                     userRole={userRole}
+                                 />
+                         }
+                     </Tabs.TabPane>
+                     {
+                         userRole == 1 ?
+                             <Tabs.TabPane tab="Học phần phụ trách" key="3">
+                                 <EmployeeAssignCourses/>
+                             </Tabs.TabPane> : ''
+                     }
+                 </Tabs>
+             )
+         else
+             return (
+                 <Tabs defaultActiveKey="1" type="card" size={"middle"}>
+                     <Tabs.TabPane tab="Hồ sơ" key="1">
+                         <Row>
+                             <Col span={15}>
+                                 {
+                                     role == 3 ?
+                                         <StudentInfoDescription user={detailUser}/> :
+                                         <LecturerInfoDescription user={detailUser}/>
+                                 }
+                             </Col>
+                         </Row>
+                     </Tabs.TabPane>
+                     <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
+                         {
+                             role == 3 ?
+                                 <UpdateStudentProfile
+                                     user={detailUser}
+                                     userRole={userRole}
+                                 /> :
+                                 <UpdateLecturerProfile
+                                     user={detailUser}
+                                     userRole={userRole}
+                                 />
+                         }
+                     </Tabs.TabPane>
+                 </Tabs>
+             )
+     }
+
+     if (currentUser.uuid == uuid) {
+         if (userRole == 2 || userRole == 1) {
+             return (
+                 <Tabs defaultActiveKey="1" type="card" size={"middle"}>
+                     <Tabs.TabPane tab="Hồ sơ" key="1">
+                         <Row>
+                             <Col span={15}>
+                                 {
+                                     role == 3 ?
+                                         <StudentInfoDescription user={detailUser}/> :
+                                         <LecturerInfoDescription user={detailUser}/>
+                                 }
+                                 }
+                             </Col>
+                         </Row>
+                     </Tabs.TabPane>
+                     <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
+                         {
+                             role == 3 ?
+                                 <UpdateStudentProfile
+                                     user={detailUser}
+                                     userRole={userRole}
+                                 /> :
+                                 <UpdateLecturerProfile
+                                     user={detailUser}
+                                     userRole={userRole}
+                                 />
+                         }
+                     </Tabs.TabPane>
+                     {
+                         userRole == 1 ?
+                             <Tabs.TabPane tab="Học phần phụ trách" key="3">
+                                 <EmployeeAssignCourses/>
+                             </Tabs.TabPane> : ''
+                     }
+                     <Tabs.TabPane tab="Học phần phụ trách" key="3">
+                         <EmployeeAssignCourses/>
+                     </Tabs.TabPane>
+                 </Tabs>
+             )
+         } else {
+             return (
+                 <Tabs defaultActiveKey="1" type="card" size={"middle"}>
+                     <Tabs.TabPane tab="Hồ sơ" key="1">
+                         <Row>
+                             <Col span={15}>
+                                 {
+                                     role == 3 ?
+                                         <StudentInfoDescription user={detailUser}/> :
+                                         <LecturerInfoDescription user={detailUser}/>
+                                 }
+                             </Col>
+                         </Row>
+                     </Tabs.TabPane>
+                     <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
+                         {
+                             role == 3 ?
+                                 <UpdateStudentProfile
+                                     user={detailUser}
+                                     userRole={userRole}
+                                 /> :
+                                 <UpdateLecturerProfile
+                                     user={detailUser}
+                                     userRole={userRole}
+                                 />
+                         }
+                     </Tabs.TabPane>
+
+                 </Tabs>
+             )
+         }
+     }*/
+}
+
 
 const DetailAccountPage = () => {
     const {uuid} = useParams();
@@ -406,10 +579,11 @@ const DetailAccountPage = () => {
     const [isShowAvaFile, setIsShowAvaFile] = useState(true);
 
 
+
     const props = {
         name: 'file',
         action: user ? userRole == 3 ?
-            `${axios.defaults.baseURL}/students/${user.uuid}/avatar`:
+            `${axios.defaults.baseURL}/students/${user.uuid}/avatar` :
             `${axios.defaults.baseURL}/employees/${user.uuid}/avatar` : ""
         ,
         headers: {
@@ -421,9 +595,9 @@ const DetailAccountPage = () => {
             }
             if (info.file.status === 'done') {
 
-                    dispatch(actions.getAUser({
-                        accountUuid: currentUser.uuid,
-                    }))
+                dispatch(actions.getAUser({
+                    accountUuid: currentUser.uuid,
+                }))
 
 
                 setIsShowAvaFile(false);
@@ -444,149 +618,9 @@ const DetailAccountPage = () => {
 
     useEffect(() => {
         dispatch(actions.getDetailUser({accountUuid: uuid}));
+
     }, [uuid])
 
-
-
-       /* if (userRole == 0) {
-            if (role == 1 || role == 2)
-                return (
-                    <Tabs defaultActiveKey="1" type="card" size={"middle"}>
-                        <Tabs.TabPane tab="Hồ sơ" key="1">
-                            <Row>
-                                <Col span={15}>
-                                    {
-                                        role == 3 ?
-                                            <StudentInfoDescription user={detailUser}/> :
-                                            <LecturerInfoDescription user={detailUser}/>
-                                    }
-                                </Col>
-                            </Row>
-                        </Tabs.TabPane>
-                        <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
-                            {
-                                role == 3 ?
-                                    <UpdateStudentProfile
-                                        user={detailUser}
-                                        userRole={userRole}
-                                    /> :
-                                    <UpdateLecturerProfile
-                                        user={detailUser}
-                                        userRole={userRole}
-                                    />
-                            }
-                        </Tabs.TabPane>
-                        {
-                            userRole == 1 ?
-                                <Tabs.TabPane tab="Học phần phụ trách" key="3">
-                                    <EmployeeAssignCourses/>
-                                </Tabs.TabPane> : ''
-                        }
-                    </Tabs>
-                )
-            else
-                return (
-                    <Tabs defaultActiveKey="1" type="card" size={"middle"}>
-                        <Tabs.TabPane tab="Hồ sơ" key="1">
-                            <Row>
-                                <Col span={15}>
-                                    {
-                                        role == 3 ?
-                                            <StudentInfoDescription user={detailUser}/> :
-                                            <LecturerInfoDescription user={detailUser}/>
-                                    }
-                                </Col>
-                            </Row>
-                        </Tabs.TabPane>
-                        <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
-                            {
-                                role == 3 ?
-                                    <UpdateStudentProfile
-                                        user={detailUser}
-                                        userRole={userRole}
-                                    /> :
-                                    <UpdateLecturerProfile
-                                        user={detailUser}
-                                        userRole={userRole}
-                                    />
-                            }
-                        </Tabs.TabPane>
-                    </Tabs>
-                )
-        }
-
-        if (currentUser.uuid == uuid) {
-            if (userRole == 2 || userRole == 1) {
-                return (
-                    <Tabs defaultActiveKey="1" type="card" size={"middle"}>
-                        <Tabs.TabPane tab="Hồ sơ" key="1">
-                            <Row>
-                                <Col span={15}>
-                                    {
-                                        role == 3 ?
-                                            <StudentInfoDescription user={detailUser}/> :
-                                            <LecturerInfoDescription user={detailUser}/>
-                                    }
-                                    }
-                                </Col>
-                            </Row>
-                        </Tabs.TabPane>
-                        <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
-                            {
-                                role == 3 ?
-                                    <UpdateStudentProfile
-                                        user={detailUser}
-                                        userRole={userRole}
-                                    /> :
-                                    <UpdateLecturerProfile
-                                        user={detailUser}
-                                        userRole={userRole}
-                                    />
-                            }
-                        </Tabs.TabPane>
-                        {
-                            userRole == 1 ?
-                                <Tabs.TabPane tab="Học phần phụ trách" key="3">
-                                    <EmployeeAssignCourses/>
-                                </Tabs.TabPane> : ''
-                        }
-                        <Tabs.TabPane tab="Học phần phụ trách" key="3">
-                            <EmployeeAssignCourses/>
-                        </Tabs.TabPane>
-                    </Tabs>
-                )
-            } else {
-                return (
-                    <Tabs defaultActiveKey="1" type="card" size={"middle"}>
-                        <Tabs.TabPane tab="Hồ sơ" key="1">
-                            <Row>
-                                <Col span={15}>
-                                    {
-                                        role == 3 ?
-                                            <StudentInfoDescription user={detailUser}/> :
-                                            <LecturerInfoDescription user={detailUser}/>
-                                    }
-                                </Col>
-                            </Row>
-                        </Tabs.TabPane>
-                        <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
-                            {
-                                role == 3 ?
-                                    <UpdateStudentProfile
-                                        user={detailUser}
-                                        userRole={userRole}
-                                    /> :
-                                    <UpdateLecturerProfile
-                                        user={detailUser}
-                                        userRole={userRole}
-                                    />
-                            }
-                        </Tabs.TabPane>
-
-                    </Tabs>
-                )
-            }
-        }*/
 
 
     return loadingDetailUser == false && detailUser ? (
@@ -600,7 +634,17 @@ const DetailAccountPage = () => {
                         currentUser.uuid == uuid ?
                             <Upload {...props} showUploadList={isShowAvaFile}>
                                 <Avatar
-                                    src={user.avatar.includes(':') ? user.avatar : `data:image/jpeg;base64, ${user.avatar}`}
+                                    src={
+                                        function () {
+                                            if(user) {
+                                                if(user.avatar) {
+                                                    return user.avatar.includes(':') ? user.avatar : `data:image/jpeg;base64, ${user.avatar}`
+                                                }
+                                                else return ''
+                                            } else return ''
+                                        }()
+                                    }
+
                                     size={100}
                                     style={{cursor: 'pointer'}}
                                 />
@@ -635,12 +679,13 @@ const DetailAccountPage = () => {
                         </Descriptions.Item>
                         <Descriptions.Item contentStyle={{color: "gray"}}>
                             <Icon
-                                component={() => <i className="fas fa-birthday-cake"></i>}/>&ensp;{handleBirthday(detailUser)}
+                                component={() => <i
+                                    className="fas fa-birthday-cake"></i>}/>&ensp;{handleBirthday(detailUser)}
                         </Descriptions.Item>
                         <Descriptions.Item contentStyle={{color: "gray"}}>
                             <Icon component={() => <i className="fas fa-venus-mars"></i>}/>&ensp;
                             {
-                                detailUser.gender == 1 ? "Nữ" : "Nam"
+                                detailUser.gender
                             }
                         </Descriptions.Item>
                     </Descriptions>
@@ -692,7 +737,13 @@ const DetailAccountPage = () => {
                             }
                         </Col>
                     </Row>
+<<<<<<< HEAD
                 )
+=======
+                )*/
+                <DetailActivities detailUser={detailUser} userRole={userRole} currentUser={currentUser}/>
+            }
+>>>>>>> 08bd9a06f84ee19526b687957608b42a4407e1be
 
             }*/}
             <DetailActivities detailUser={detailUser} userRole={userRole} currentUser={currentUser} uuid={uuid}/>

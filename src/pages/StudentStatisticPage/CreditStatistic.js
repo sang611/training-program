@@ -62,6 +62,7 @@ const CreditStatistic = ({courses, semes}) => {
             type: 'inner',
             offset: '-50%',
             content: '{value}',
+            autoRotate: false,
             style: {
                 textAlign: 'center',
                 fontSize: 14,
@@ -77,7 +78,7 @@ const CreditStatistic = ({courses, semes}) => {
                     textOverflow: 'ellipsis',
                 },
                 formatter: function formatter() {
-                    return 'Số tín chỉ';
+                    return "Số tín chỉ"
                 },
             },
         },

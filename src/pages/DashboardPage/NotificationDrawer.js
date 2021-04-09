@@ -1,9 +1,10 @@
-import {Button, Descriptions, Divider, Drawer, List, message, Space} from "antd";
+import {Button, Descriptions, Divider, Drawer, List, message, Space, Tag} from "antd";
 import Avatar from "antd/es/avatar/avatar";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions/notifications'
 import axios from "axios";
+import Text from "antd/lib/typography/Text";
 
 
 const NotificationDrawer = ({
@@ -74,11 +75,22 @@ const NotificationDrawer = ({
                                             showChildrenDrawer();
                                         }}
                                     >
-                                        {`${item.employee.fullname} (${item.employee.vnu_mail}) đã tạo yêu cầu chỉnh sửa đề cương`}
+                                        {
+                                            item.is_accepted == null ?
+                                            `${item.employee.fullname} (${item.employee.vnu_mail}) đã tạo yêu cầu chỉnh sửa đề cương` :
+                                             <Text type="secondary">{`${item.employee.fullname} (${item.employee.vnu_mail}) đã tạo yêu cầu chỉnh sửa đề cương`}</Text>
+                                        }
                                     </a>
                                 }
                                 description={
-                                    `Học phần ${item.outline.course.course_name_vi} (${item.outline.course.course_code})`
+                                    <>
+                                        <div>{`Học phần ${item.outline.course.course_name_vi} (${item.outline.course.course_code})`}</div>
+                                        <div>{
+                                            `${new Date(item.createdAt).getDate()}/${new Date(item.createdAt).getMonth()+1}/${new Date(item.createdAt).getFullYear()}
+                                            `
+                                        }</div>
+                                    </>
+
                                 }
                             />
                         </List.Item>
@@ -87,7 +99,16 @@ const NotificationDrawer = ({
                 {
                     choosedNotify ?
                         <Drawer
-                            title=""
+                            title={
+                                function () {
+                                    if(choosedNotify.is_accepted == true) {
+                                        return <Tag color="green">Đã chấp nhận</Tag>
+                                    }
+                                    if(choosedNotify.is_accepted == false) {
+                                        return <Tag color="red">Đã từ chối</Tag>
+                                    }
+                                }()
+                            }
                             width={480}
                             closable={true}
                             onClose={onChildrenDrawerClose}
@@ -106,8 +127,29 @@ const NotificationDrawer = ({
                                     label="Số tín chỉ">{choosedNotify.outline.course.credits}</Descriptions.Item>
 
                             </Descriptions>
+
                             <Divider/>
-                            <Descriptions title="Thông tin chỉnh sửa">
+                            <Descriptions title="Thông tin giảng viên" column={1}>
+                                <Descriptions.Item label="Họ tên">
+                                    {
+                                        choosedNotify.employee.fullname
+                                    }
+                                </Descriptions.Item>
+                                <Descriptions.Item label="Học hàm">
+                                    {choosedNotify.employee.academic_degree}
+                                </Descriptions.Item>
+                                <Descriptions.Item label="Học vị">
+                                    {choosedNotify.employee.academic_rank}
+                                </Descriptions.Item>
+                                <Descriptions.Item label="Email VNU">
+                                    {choosedNotify.employee.vnu_mail}
+                                </Descriptions.Item>
+                                <Descriptions.Item label="Email">
+                                    {choosedNotify.employee.email}
+                                </Descriptions.Item>
+                            </Descriptions>
+                            <Divider/>
+                            <Descriptions title="Thông tin chỉnh sửa" column={1}>
                                 <Descriptions.Item label="Nội dung">
                                     {
                                         choosedNotify ? choosedNotify.description : ''

@@ -1,8 +1,9 @@
 import * as actionsTypes from './actionTypes'
 
-export const getAllTrainingProgram = () => {
+export const getAllTrainingProgram = (payload) => {
     return {
-        type: actionsTypes.GET_ALL_TRAINING_PROGRAMS
+        type: actionsTypes.GET_ALL_TRAINING_PROGRAMS,
+        payload
     }
 }
 export const getAllTrainingProgramStart = () => {

@@ -108,5 +108,8 @@ const reducer = (state = initialState, action) => {
     }
 }
 
+/*
 export default (state, action) =>
-    reducer(action.type === actionTypes.ADD_ACCOUNT_RESET ? undefined : state, action);
+    reducer(action.type === actionTypes.ADD_ACCOUNT_RESET ? undefined : state, action);*/
+
+export default reducer;

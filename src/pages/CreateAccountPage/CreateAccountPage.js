@@ -22,18 +22,22 @@ const CreateAccountPage = () => {
     const dispatch = useDispatch();
     const accState = useSelector(state => state.accounts)
     const insState = useSelector(state => state.institutions)
+    const {majors} = useSelector(state => state.majors)
     const {trainingPrograms} = useSelector(state => state.trainingPrograms)
 
     useEffect(() => {
         dispatch(actions.getAllInstitution());
         dispatch(actions.getAllTrainingProgram());
+        dispatch(actions.getAllMajor());
     }, [])
 
     useEffect(() => {
         if (accState.error) {
             message.error("Đã có lỗi xảy ra")
         } else if (accState.error === false) {
-            typeAccount == 1 ? message.success("Tạo mới giảng viên thành công") : message.success("Tạo mới sinh viên thành công")
+            typeAccount == 1 ?
+                message.success("Tạo mới giảng viên thành công") :
+                message.success("Tạo mới sinh viên thành công")
         }
     }, [accState])
 
@@ -288,10 +292,28 @@ const CreateAccountPage = () => {
                             </Col>
                         </Row>
 
-                        <Form.Item label="Thuộc chương trình đào tạo:" name="trainingProgram">
+                        <Form.Item label="Ngành đào tạo:" name="majorUuid">
                             <Select
                                 showSearch
-                                style={{width: 200}}
+                                style={{width: '60%'}}
+                                placeholder="Ngành"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                            >
+                                {
+                                    majors.map((major, index) =>
+                                        <Select.Option value={major.uuid} key={index}>{major.vn_name}</Select.Option>
+                                    )
+                                }
+                            </Select>
+                        </Form.Item>
+
+                        <Form.Item label="Thuộc chương trình đào tạo:" name="trainingProgramUuid">
+                            <Select
+                                showSearch
+                                style={{width: '60%'}}
                                 placeholder="Chương trình đào tạo"
                                 optionFilterProp="children"
                                 filterOption={(input, option) =>
@@ -304,7 +326,6 @@ const CreateAccountPage = () => {
                                     )
                                 }
                             </Select>
-
                         </Form.Item>
                         <Form.Item label="Lớp môn học:" name="class">
                             <Input placeholder="Lớp môn học của sinh viên"
