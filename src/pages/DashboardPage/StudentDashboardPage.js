@@ -120,7 +120,16 @@ const StudentDashboardPage = () => {
                                 </Menu.Item>
 
                             </SubMenu>
-                            <SubMenu key="4" icon={<Avatar src={user.avatar}/>} title={" " + user.fullname}>
+                            <SubMenu key="4" icon={<Avatar src={
+                                function () {
+                                    if(user) {
+                                        if(user.avatar) {
+                                            return user.avatar.includes(':') ? user.avatar : `data:image/jpeg;base64, ${user.avatar}`
+                                        }
+                                        else return ''
+                                    } else return ''
+                                }()
+                            }/>} title={" " + user.fullname}>
                                 {
                                     userRole == 3 ?
                                         <Menu.Item

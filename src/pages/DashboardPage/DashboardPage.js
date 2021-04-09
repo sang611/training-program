@@ -217,7 +217,16 @@ const DashboardPage = () => {
                                         />
                                     </Badge>
                             </Menu.Item>
-                            <SubMenu key="4" icon={<Avatar src={user ? user.avatar : ''}/>} title={"    admin"}>
+                            <SubMenu key="4" icon={<Avatar src={
+                                function () {
+                                    if(user) {
+                                        if(user.avatar) {
+                                            return user.avatar.includes(':') ? user.avatar : `data:image/jpeg;base64, ${user.avatar}`
+                                        }
+                                        else return ''
+                                    } else return ''
+                                }()
+                            }/>} title={"    admin"}>
                                 <Menu.Item
                                     key="4-1"
                                     icon={<SolutionOutlined/>}

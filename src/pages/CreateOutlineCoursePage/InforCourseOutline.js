@@ -20,15 +20,15 @@ const DescriptionItem = ({title, content}) => (
     </>
 );
 const InforCourseOutline = ({courseUuid, course}) => {
-
+    const {course_name_vi, course_name_en, course_code, credits, institution} = course;
     return !course ? <Spin /> : <>
         <Row>
             <Col offset={1} span={20}>
-                <DescriptionItem title="Tên học phần (VI)" content={course.course_name_vi}/>
-                <DescriptionItem title="Tên học phần (EN)" content={course.course_name_en}/>
-                <DescriptionItem title="Mã học phần" content={course.course_code}/>
-                <DescriptionItem title="Số tín chỉ" content={course.credits}/>
-                <DescriptionItem title="Đơn vị phụ trách" content={course.institution.vn_name}/>
+                <DescriptionItem title="Tên học phần (VI)" content={course_name_vi}/>
+                <DescriptionItem title="Tên học phần (EN)" content={course_name_en}/>
+                <DescriptionItem title="Mã học phần" content={course_code}/>
+                <DescriptionItem title="Số tín chỉ" content={credits}/>
+                <DescriptionItem title="Đơn vị phụ trách" content={institution ? institution.vn_name : ''}/>
             </Col>
         </Row>
     </>

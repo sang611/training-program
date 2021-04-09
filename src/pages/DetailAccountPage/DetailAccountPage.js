@@ -737,13 +737,8 @@ const DetailAccountPage = () => {
                             }
                         </Col>
                     </Row>
-<<<<<<< HEAD
                 )
-=======
-                )*/
-                <DetailActivities detailUser={detailUser} userRole={userRole} currentUser={currentUser}/>
-            }
->>>>>>> 08bd9a06f84ee19526b687957608b42a4407e1be
+
 
             }*/}
             <DetailActivities detailUser={detailUser} userRole={userRole} currentUser={currentUser} uuid={uuid}/>

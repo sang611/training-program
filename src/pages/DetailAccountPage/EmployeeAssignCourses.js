@@ -115,7 +115,7 @@ const EmployeeAssignCourses = ({employee}) => {
                     dataIndex="institution"
                     key="institution"
                     render={
-                        (ins) => ins.vn_name
+                        (ins) => ins ? ins.vn_name : ''
                     }
                 />
                 {
