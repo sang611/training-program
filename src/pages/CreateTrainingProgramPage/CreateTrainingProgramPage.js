@@ -9,21 +9,35 @@ import {Option} from "antd/lib/mentions";
 import TextArea from "antd/lib/input/TextArea";
 import axios from "axios";
 import JoditEditor from "jodit-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import {CKEditor} from "@ckeditor/ckeditor5-react";
+import {useHistory, useParams} from "react-router-dom";
 
 const CreateTrainingProgramPage = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
+    const history = useHistory();
     const insState = useSelector(state => state.institutions)
+    const {majors} = useSelector(state => state.majors);
+
+    const [commonDestination, setCommonDestination] = useState("");
+    const [specificDestination, setSpecificDestination] = useState("");
+
     useEffect(() => {
         dispatch(actions.getAllInstitution());
+        dispatch(actions.getAllMajor());
     }, [])
+
 
     async function onCreateTrainingProgram(values) {
         try {
+            values.common_destination = commonDestination;
+            values.specific_destination = specificDestination;
             const response = await axios.post("/training-programs", values)
             console.log(response.status)
             if (response.status === 201) {
                 message.success("Tạo mới Chương trình đào tạo thành công")
+                history.push("/uet/training-programs")
             }
         } catch (e) {
             message.error("Đã có lỗi xảy ra")
@@ -41,6 +55,21 @@ const CreateTrainingProgramPage = () => {
                 <Title level={3}>1. Thông tin chương trình đào tạo</Title>
                 <Row>
                     <Col span={20} offset={1}>
+                        {/*<Row>
+                            <Col span={10}>
+                                <Form.Item label="Ngành đào tạo:" name="major">
+                                    <Select placeholder="Ngành đào tạo của chương trình">
+                                        {
+                                            majors.map((major, index) => {
+                                                return <Select.Option value={major.uuid} key={index}>{
+                                                    major.vn_name
+                                                }</Select.Option>
+                                            })
+                                        }
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+                        </Row>*/}
                         <Row>
                             <Col span={12}>
                                 <Form.Item label="Tên ngành đào tạo (VN):" name="vn_name">
@@ -115,19 +144,39 @@ const CreateTrainingProgramPage = () => {
                 <Row>
                     <Col span={20} offset={1}>
 
-                        <Space direction="vertical" style={{width: '100%'}}>
-                            <Form.Item label="Mục tiêu chung" name="common_destination">
 
-                                <TextArea placeholder={"Nhập nội dung"} rows={10} style={{whiteSpace: 'pre-wrap'}}/>
+                            {/*<Form.Item label="Mục tiêu chung" name="common_destination">
+                                <TextArea value={commonDestination} style={{display: 'none'}} rows={0}/>
+                            </Form.Item>*/}
+                            <CKEditor
+                                editor={ClassicEditor}
+                                config={{
+                                    placeholder: "Nội dung mục tiêu đào tạo chung",
+                                }}
 
-                            </Form.Item>
-                            <Form.Item label="Mục tiêu cụ thể" name="specific_destination">
-                                {/*<JoditEditor
-                                    tabIndex={1}
-                                    value={""}/>*/}
-                                <TextArea placeholder={"Nhập nội dung"} rows={10} style={{whiteSpace: 'pre-wrap'}}/>
-                            </Form.Item>
-                        </Space>
+                                onChange={(event, editor) => {
+                                    const data = editor.getData();
+                                    setCommonDestination(data)
+                                }}
+                            />
+                        <br/><br/>
+                           {/* <Form.Item label="Mục tiêu cụ thể" name="specific_destination">
+
+                                <TextArea value={specificDestination} style={{display: 'none'}}/>
+
+                            </Form.Item>*/}
+                            <CKEditor
+                                editor={ClassicEditor}
+                                config={{
+                                    placeholder: "Nội dung mục tiêu đào tạo cụ thể",
+                                }}
+
+                                onChange={(event, editor) => {
+                                    const data = editor.getData();
+                                    setSpecificDestination(data)
+                                }}
+                            />
+
 
 
                     </Col>

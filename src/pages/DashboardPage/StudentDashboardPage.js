@@ -32,6 +32,7 @@ import Avatar from "antd/es/avatar/avatar";
 import UpdateOutlinePage from "../UpdateOutlinePage";
 import {io} from "socket.io-client";
 import {useEffect, useRef} from "react";
+import axios from "axios";
 
 
 const StudentDashboardPage = () => {
@@ -39,7 +40,7 @@ const StudentDashboardPage = () => {
     const {currentUser, userRole} = useSelector(state => state.auth)
     const {user} = useSelector(state => state.accounts)
     let socket = useRef(null);
-    const URL = "http://localhost:9000";
+    const URL = axios.defaults.baseURL;
 
     useEffect(() => {
         socket.current = io(URL, {
@@ -47,7 +48,7 @@ const StudentDashboardPage = () => {
         });
 
         socket.current.on(user.uuid, (data) => {
-            if(data.is_accepted) {
+            if (data.is_accepted) {
                 notification.success({
                     message: data.message,
                 });
@@ -71,23 +72,27 @@ const StudentDashboardPage = () => {
             <Layout>
                 <Header style={{
                     position: 'fixed',
-                    zIndex: 10,
+                    zIndex: 100,
                     width: '100%',
                     backgroundColor: '#fff',
-                    boxShadow: '0 0 5px gray'
-                }}>
-                    <Row justify='space-between'>
-
+                    boxShadow: '0 0 5px gray',
+                    padding: 0,
+                    display: 'flex',
+                }}
+                >
                         <Image
+                            src="http://www.ballinamorecs.ie/wp-content/uploads/2014/07/elearning-logo.png"
+                            height='100%'
                             width={200}
-                            height={60}
-                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThvCz8muc0jZq-zVRyEqFKdKAzQnUBt_6BVQ&usqp=CAU"
                         />
 
                         <Menu
                             mode="horizontal"
                             defaultSelectedKeys={[localStorage.getItem("menu-active-public") || 1]}
                             onClick={onClickMenuItem}
+                            style={{
+                                marginLeft: 'auto'
+                            }}
                         >
                             <Menu.Item key="1" icon={<ApartmentOutlined/>}>
                                 <Link to="/uet/training-programs">
@@ -105,16 +110,16 @@ const StudentDashboardPage = () => {
                                     </Menu.Item> : <></>
 
                             }
-                            <SubMenu key="5" icon={<SnippetsOutlined />} title="Tài liệu">
+                            <SubMenu key="5" icon={<SnippetsOutlined/>} title="Tài liệu">
                                 <Menu.Item
                                     key="5-1"
-                                    icon={<FileOutlined />}
+                                    icon={<FileOutlined/>}
                                 >
                                     <Link to="/uet/documents/training-program">Tài liệu CTĐT</Link>
                                 </Menu.Item>
                                 <Menu.Item
                                     key="5-2"
-                                    icon={<AuditOutlined />}
+                                    icon={<AuditOutlined/>}
                                 >
                                     <Link to="/uet/documents/course">Tài liệu học phần</Link>
                                 </Menu.Item>
@@ -122,11 +127,10 @@ const StudentDashboardPage = () => {
                             </SubMenu>
                             <SubMenu key="4" icon={<Avatar src={
                                 function () {
-                                    if(user) {
-                                        if(user.avatar) {
+                                    if (user) {
+                                        if (user.avatar) {
                                             return user.avatar.includes(':') ? user.avatar : `data:image/jpeg;base64, ${user.avatar}`
-                                        }
-                                        else return ''
+                                        } else return ''
                                     } else return ''
                                 }()
                             }/>} title={" " + user.fullname}>
@@ -134,7 +138,7 @@ const StudentDashboardPage = () => {
                                     userRole == 3 ?
                                         <Menu.Item
                                             key="4-1"
-                                            icon={<PieChartOutlined />}
+                                            icon={<PieChartOutlined/>}
                                         >
                                             <Link to="/uet/statistic">Thống kê</Link>
                                         </Menu.Item> : ''
@@ -158,16 +162,13 @@ const StudentDashboardPage = () => {
                             </SubMenu>
                         </Menu>
 
-                    </Row>
-
-
                 </Header>
 
                 <Content className="site-layout" style={{padding: '0 50px', marginTop: 64, height: '100%'}}>
                     <Breadcrumb style={{margin: '16px 0'}}>
-                        <Breadcrumb.Item>Home</Breadcrumb.Item>
+                        {/*<Breadcrumb.Item>Home</Breadcrumb.Item>
                         <Breadcrumb.Item>List</Breadcrumb.Item>
-                        <Breadcrumb.Item>App</Breadcrumb.Item>
+                        <Breadcrumb.Item>App</Breadcrumb.Item>*/}
                     </Breadcrumb>
                     <div className="site-layout-background" style={{padding: 30, minHeight: '100vh'}}>
                         <Switch>
@@ -179,7 +180,8 @@ const StudentDashboardPage = () => {
 
                             <Route exact path="/uet/courses" component={ListCoursePage}/>
 
-                            <Route exact path="/uet/courses/:uuid/outlines/creating" component={CreateOutlineCoursePage}/>
+                            <Route exact path="/uet/courses/:uuid/outlines/creating"
+                                   component={CreateOutlineCoursePage}/>
                             <Route exact path="/uet/courses/:uuid/outlines/:outlineUuid" component={DetailOutlinePage}/>
                             <Route exact path="/uet/courses/:uuid/outlines" component={ListOutlinePage}/>
                             <Route exact path="/uet/courses/:uuid/outlines/:outlineUuid/updating"
@@ -187,7 +189,7 @@ const StudentDashboardPage = () => {
                             <Route path="/uet/:userUuid/planning" component={PrivatePlanningPage}/>
                             <Route path="/uet/user/:uuid" component={DetailAccountPage}/>
 
-                            <Route path="/uet/documents/:doc_of" component={DocumentPage} />
+                            <Route path="/uet/documents/:doc_of" component={DocumentPage}/>
                             <Route path="/uet/statistic" component={StudentStatisticPage}/>
                         </Switch>
                     </div>

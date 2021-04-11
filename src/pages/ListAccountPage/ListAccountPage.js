@@ -139,7 +139,20 @@ const ListAccountPage = () => {
                     >
                         <List.Item.Meta
                             avatar={
-                                <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                                <Avatar src={
+                                    function () {
+                                        if (item) {
+                                            if (item.avatar) {
+                                                return item.avatar.includes(':') ? item.avatar : `data:image/jpeg;base64, ${item.avatar}`
+                                            } else {
+                                                if(item.gender == "Nam")
+                                                    return "https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png"
+                                                else
+                                                    return "https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png"
+                                            }
+                                        } else return ''
+                                    }()
+                                }
                                         size={64}/>
                             }
                             title={item.fullname}

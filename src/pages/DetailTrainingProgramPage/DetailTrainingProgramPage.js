@@ -10,6 +10,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {EditOutlined, FilePdfOutlined} from "@ant-design/icons";
 import html2canvas from "html2canvas";
 import {jsPDF} from "jspdf";
+import DependencyCourseGraph from "../UpdateTrainingProgramPage/DependencyCourseGraph";
+import SummaryContentCourse from "./SummaryContentCourse";
 
 
 const DetailTrainingProgramPage = (props) => {
@@ -446,7 +448,8 @@ const DetailTrainingProgramPage = (props) => {
                     1. Một số thông tin về chương trình đào tạo
                 </Title>
                 <Row>
-                    <Col offset={1} span={20}>
+                    <Col offset={1} span={23}>
+
                         <DescriptionItem title="Tên ngành đào tạo (VI)" content={vn_name}/>
                         <DescriptionItem title="Tên ngành đào tạo (EN)" content={en_name}/>
                         <DescriptionItem title="Mã ngành đào tạo" content={training_program_code}/>
@@ -468,7 +471,9 @@ const DetailTrainingProgramPage = (props) => {
                 <Row>
                     <Col offset={1} span={20}>
                         <div id="common_destination">
-                            {common_destination}
+                            {
+                                common_destination ? Parser(common_destination) : ''
+                            }
                         </div>
                     </Col>
                 </Row><br/>
@@ -478,7 +483,9 @@ const DetailTrainingProgramPage = (props) => {
                 <Row>
                     <Col offset={1} span={20}>
                         <div id={"specific_destination"}>
-                            {specific_destination}
+                            {
+                                specific_destination ? Parser(specific_destination) : ''
+                            }
                         </div>
                     </Col>
                 </Row>
@@ -499,7 +506,9 @@ const DetailTrainingProgramPage = (props) => {
                 <TrainingCourse/><br/><br/>
                 <CourseDocument courses={courses}/><br/><br/>
                 <Lecturers courses={courses}/><br/><br/>
+                <DependencyCourseGraph trainingProgram={trainingProgram} /><br/><br/>
                 <CourseDocument courses={courses} semester={true}/><br/><br/>
+                <SummaryContentCourse trainingProgram={trainingProgram} />
                 <Row align="end">
                     <Button icon={<FilePdfOutlined/>} onClick={printDocument} loading={isExportingPdf}> Export
                         PDF </Button>

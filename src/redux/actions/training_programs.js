@@ -23,3 +23,27 @@ export const getAllTrainingProgramFail = (payload) => {
         payload
     }
 }
+
+export const getATrainingProgram = (payload) => {
+    return {
+        type: actionsTypes.GET_A_TRAINING_PROGRAMS,
+        payload
+    }
+}
+export const getATrainingProgramStart = () => {
+    return {
+        type: actionsTypes.GET_A_TRAINING_PROGRAMS_START
+    }
+}
+export const getATrainingProgramSuccess = (payload) => {
+    return {
+        type: actionsTypes.GET_A_TRAINING_PROGRAMS_SUCCESS,
+        payload: payload
+    }
+}
+export const getATrainingProgramFail = (payload) => {
+    return {
+        type: actionsTypes.GET_A_TRAINING_PROGRAMS_FAIL,
+        payload
+    }
+}

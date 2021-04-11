@@ -62,12 +62,17 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
     const [form] = Form.useForm();
     const [dataSource, setDataSource] = useState(trainingProgram.courses);
     const [editingKey, setEditingKey] = useState('');
-
+    const courseState = useSelector(state => state.courses)
     const dispatch = useDispatch();
+
     useEffect(() => {
         dispatch(actions.getAllCourse())
     }, [])
-    const courseState = useSelector(state => state.courses)
+
+    useEffect(() => {
+        if(trainingProgram)
+        setDataSource(trainingProgram.courses)
+    }, [trainingProgram])
 
     const isEditing = (record) => record.key === editingKey;
 
@@ -129,10 +134,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
                 message.success(res.data.message);
             })
             .then(() => {
-                const newData = [...dataSource];
-                setDataSource(
-                    newData.filter((c) => c.uuid !== courseUuid)
-                )
+                dispatch(actions.getATrainingProgram({id: trainingProgram.uuid}))
             })
             .catch((e) => message.error("Đã có lỗi xảy ra"));
     }

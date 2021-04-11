@@ -1,12 +1,12 @@
-import {useState, useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions/index'
-import {Button, Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Spin, Table, Tag} from "antd";
+import {Button, Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Table, Tag} from "antd";
 import {
     DeleteOutlined,
     EditOutlined,
     InfoCircleOutlined,
-    PlusCircleOutlined, PlusOutlined,
+    PlusOutlined,
     ReloadOutlined,
     SearchOutlined
 } from "@ant-design/icons";
@@ -106,12 +106,15 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
                         }
                     >
                         {
-                            insState.listInstitutions.map((ins, index) =>
+                            insState.listInstitutions
+                                .filter(ins => ins.parent_uuid != null)
+                                .map((ins, index) =>
                                 <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
                             )
                         }
 
                     </Select>
+
                 </Form.Item>
                 <Form.Item label="Học phần tiên quyết:" name="required_course">
                     <Select

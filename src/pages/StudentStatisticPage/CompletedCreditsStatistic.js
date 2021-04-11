@@ -102,7 +102,7 @@ const CompletedCreditsStatistic = ({trainingProgram, courses}) => {
                     textOverflow: 'ellipsis',
                 },
                 formatter: function formatter() {
-                    return 'Còn thiếu';
+                    return `${JSON.parse(trainingProgram.require_summary).total-BTotal_-LTotal_-BTTotal_} tín chỉ`
                 },
             },
         },

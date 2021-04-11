@@ -6,13 +6,27 @@ import {Card, Divider, message, Popconfirm} from "antd";
 import {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
 import * as actions from '../../redux/actions'
+import Modal from "antd/es/modal/Modal";
 
 const FileDownload = require('js-file-download');
 
-const DocumentCard = ({userRole, item, setPreviewDoc}) => {
+const DocumentCard = ({userRole, item}) => {
     const [editableTitle, setEditableTitle] = useState(item.name);
     const [editableDesc, setEditableDesc] = useState(item.description);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const dispatch = useDispatch();
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
 
     function onUpdateTitleDoc(val) {
         setEditableTitle(val)
@@ -89,9 +103,7 @@ const DocumentCard = ({userRole, item, setPreviewDoc}) => {
                         height='250px'
                         alt="Document"
                         src={`https://drive.google.com/thumbnail?authuser=0&sz=w320&id=${item.document_url}`}
-                        onClick={() => {
-                            setPreviewDoc(item);
-                        }}
+                        onClick={showModal}
                     />
                 </center>
 
@@ -120,6 +132,24 @@ const DocumentCard = ({userRole, item, setPreviewDoc}) => {
                     />
                 </div>
             </Card>
+            <Modal
+                visible={isModalVisible}
+                footer={null}
+                width='80%'
+                style={{top: 0}}
+                onCancel={() => {
+                    handleCancel();
+                }
+                }
+            >
+                <iframe
+                    src={`https://drive.google.com/file/d/${item.document_url}/preview`}
+                    style={{
+                        width: '100%',
+                        height: '92vh'
+                    }}
+                />
+            </Modal>
         </>
     )
 }

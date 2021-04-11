@@ -33,7 +33,6 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
     }, [courseType])
 
     const onFinish = values => {
-        console.log('Received values of form:', values);
         values.courses = values.courses ? values.courses.map((course) => {
             course.course_type = courseType;
             return course;
@@ -46,7 +45,7 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
         })
             .then((res) => {
                 addCourseForm.resetFields();
-                getNewCoursesAdded(
+                /*getNewCoursesAdded(
                     res.data.newCourses.map(course => {
                             course.training_program_course = {
                                 theory_time: course.theory_time,
@@ -55,7 +54,8 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                             }
                             return course;
                         }
-                    ))
+                    ))*/
+                dispatch(actions.getATrainingProgram({id: uuid}))
             })
             .then(() => {
                 onCloseDrawer();
@@ -255,7 +255,7 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                                                                         }))
                                                                         .map((ins, index) =>
                                                                         <Select.Option value={ins.uuid}
-                                                                                       key={index}>{ins.course_name_vi}</Select.Option>
+                                                                                       key={index}>{`${ins.course_name_vi} - ${ins.course_code}`}</Select.Option>
                                                                     )
                                                                 }
 

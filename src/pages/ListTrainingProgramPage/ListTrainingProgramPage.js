@@ -4,7 +4,7 @@ import axios from "axios";
 import {
     BuildOutlined,
     DeleteOutlined,
-    EditOutlined,
+    EditOutlined, InfoOutlined,
     InsertRowBelowOutlined,
     LockOutlined,
     PlusOutlined
@@ -69,6 +69,7 @@ const MatrixCourses = ({visibleCourseMatrix, setVisibleCourseMatrix, trainingLis
                 onOk={() => {
                     setVisibleCourseMatrix(false);
                 }}
+                footer={null}
             >
                 <Table
                     columns={columns}
@@ -153,6 +154,7 @@ const MatrixLoc = ({visibleLocMatrix, setVisibleLocMatrix, trainingList}) => {
                 onOk={() => {
                     setVisibleLocMatrix(false);
                 }}
+                footer={null}
             >
                 <Table
                     columns={columns}
@@ -280,6 +282,9 @@ const ListTrainingProgramPage = () => {
         axios.delete(`/training-programs/${uuid}`)
             .then(res => {
                 message.success("Đã xóa chương trình đào tạo")
+                dispatch(actions.getAllTrainingProgram({
+                    vnNameSearch
+                }));
             })
             .catch(e => {
                 message.error("Không thể xóa chương trình đào tạo")
@@ -328,7 +333,13 @@ const ListTrainingProgramPage = () => {
 
         return (
             <Card
-                extra={<Link to={`/uet/training-programs/${item.uuid}`}>Chi tiết</Link>}
+                //extra={<Link to={`/uet/training-programs/${item.uuid}`}>Chi tiết</Link>}
+                extra={
+                    <Link to={`/uet/training-programs/${item.uuid}`}>
+                        <Button type="primary" shape="circle" icon={<InfoOutlined /> } size="small"/>
+                    </Link>
+
+                }
                 actions={
                     userRole == 0 ? actionAdmin(item) : (userRole == 3 ? actionStudent(item, isFollow) : "")
                 }
@@ -336,6 +347,11 @@ const ListTrainingProgramPage = () => {
                 hoverable
             >
                 <Descriptions column={1}>
+                    <Descriptions.Item label="Ngành đào tạo">
+                        {
+                            item.vn_name ? item.vn_name : ''
+                        }
+                    </Descriptions.Item>
                     <Descriptions.Item label="Số học phần">
                         {
                             item.courses.length
@@ -346,6 +362,7 @@ const ListTrainingProgramPage = () => {
                             item.classes ? JSON.parse(item.classes).length : 0
                         }
                     </Descriptions.Item>
+
                 </Descriptions>
             </Card>
         )

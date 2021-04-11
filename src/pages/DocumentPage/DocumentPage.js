@@ -1,7 +1,7 @@
 import {useState, useEffect, useMemo} from "react";
 import {useHistory, useParams} from "react-router-dom";
 import Cookies from "universal-cookie";
-import {Button, Card, Form, Input, List, message} from "antd";
+import {Button, Card, Col, Form, Input, List, message, Row} from "antd";
 import {CloudDownloadOutlined, DeleteOutlined, EditOutlined, InboxOutlined, UploadOutlined} from "@ant-design/icons";
 import Modal from "antd/es/modal/Modal";
 import Dragger from "antd/es/upload/Dragger";
@@ -12,7 +12,7 @@ import Meta from "antd/lib/card/Meta";
 import Title from "antd/es/typography/Title";
 import Paragraph from "antd/lib/typography/Paragraph";
 import DocumentCard from "./DocumentCard";
-
+import Search from "antd/es/input/Search";
 
 
 function DocumentPage() {
@@ -26,20 +26,10 @@ function DocumentPage() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [uploadingDoc, setUploadingDoc] = useState(false);
 
-    const [previewDoc, setPreviewDoc] = useState(null);
-
-
     useEffect(() => {
         dispatch(actions.getAllDocuments({doc_of}));
-        setPreviewDoc(null);
     }, [doc_of])
 
-
-    useEffect(() => {
-       if(previewDoc) {
-           showModal();
-       }
-    }, [previewDoc])
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -136,19 +126,29 @@ function DocumentPage() {
         )
     }
 
+    const onSearch = (e) => {
+        dispatch(actions.getAllDocuments({doc_of: doc_of, title: e.target.value}));
+    }
 
     return (
         <>
-            <center>
-                <Title level={2}>{
-                    function (){
-                        if(doc_of === 'training-program') return "Tài liệu chương trình đào tạo"
-                        if(doc_of === 'course') return "Tài liệu học phần"
-                        if(doc_of === 'learning-outcome') return "Tài liệu chuẩn đầu ra"
-                        if(doc_of === 'involved') return "Các văn bản liên quan"
-                    }()
-                }</Title>
-            </center>
+
+
+            <Row>
+                <Col span={12}>
+                    <Title level={3}>{
+                        function () {
+                            if (doc_of === 'training-program') return "Tài liệu chương trình đào tạo"
+                            if (doc_of === 'course') return "Tài liệu học phần"
+                            if (doc_of === 'learning-outcome') return "Tài liệu chuẩn đầu ra"
+                            if (doc_of === 'involved') return "Các văn bản liên quan"
+                        }()
+                    }</Title>
+                </Col>
+                <Col span={12}>
+                    <Search placeholder="Tìm kiếm tài liệu" onChange={onSearch} enterButton />
+                </Col>
+            </Row>
             <br/>
             {
                 useMemo(() => {
@@ -166,7 +166,7 @@ function DocumentPage() {
                             dataSource={documents}
                             renderItem={item => (
                                 <List.Item>
-                                    <DocumentCard userRole={userRole} item={item} setPreviewDoc={setPreviewDoc}/>
+                                    <DocumentCard userRole={userRole} item={item}/>
                                 </List.Item>
                             )}
                         />
@@ -187,53 +187,32 @@ function DocumentPage() {
                     bottom: 32
                 }}
                 onClick={() => {
-                    setPreviewDoc(null);
                     showModal();
                 }}
             /> : ""}
-            {
-                previewDoc ?
-                    <Modal
-                        visible={isModalVisible}
-                        footer={null}
-                        width='80%'
-                        style={{top: 0}}
-                        onCancel={() => {
-                            handleCancel();
-                        }
-                        }
-                    >
-                        <iframe
-                            src={`https://drive.google.com/file/d/${previewDoc.document_url}/preview`}
-                            style={{
-                                width: '100%',
-                                height: '92vh'
-                            }}
-                        />
-                    </Modal>
-                    :
-                    <Modal
-                        title={"Thêm mới tài liệu"}
-                        visible={isModalVisible}
-                        confirmLoading={uploadingDoc}
-                        onOk={
-                            () => {
-                                form
-                                    .validateFields()
-                                    .then((values) => {
-                                        onUploadFile(values);
-                                    })
-                                    .catch((info) => {
-                                        console.log('Validate Failed:', info);
-                                    });
-                            }
-                        }
-                        onCancel={handleCancel}
 
-                    >
-                        <FormUploadFile/>
-                    </Modal>
-            }
+            <Modal
+                title={"Thêm mới tài liệu"}
+                visible={isModalVisible}
+                confirmLoading={uploadingDoc}
+                onOk={
+                    () => {
+                        form
+                            .validateFields()
+                            .then((values) => {
+                                onUploadFile(values);
+                            })
+                            .catch((info) => {
+                                console.log('Validate Failed:', info);
+                            });
+                    }
+                }
+                onCancel={handleCancel}
+
+            >
+                <FormUploadFile/>
+            </Modal>
+
 
         </>
     )

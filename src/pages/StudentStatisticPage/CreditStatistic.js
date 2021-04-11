@@ -57,7 +57,6 @@ const CreditStatistic = ({courses, semes}) => {
         angleField: 'value',
         colorField: 'type',
         radius: 1,
-        innerRadius: 0.6,
         label: {
             type: 'inner',
             offset: '-50%',
@@ -66,22 +65,10 @@ const CreditStatistic = ({courses, semes}) => {
             style: {
                 textAlign: 'center',
                 fontSize: 14,
+                fill: '#303030'
             },
         },
         interactions: [{ type: 'element-selected' }, { type: 'element-active' }],
-        statistic: {
-            title: false,
-            content: {
-                style: {
-                    whiteSpace: 'pre-wrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                },
-                formatter: function formatter() {
-                    return "Số tín chỉ"
-                },
-            },
-        },
     };
     return (
         <>

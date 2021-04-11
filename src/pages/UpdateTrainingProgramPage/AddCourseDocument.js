@@ -7,19 +7,45 @@ import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
 import {Option} from "antd/lib/mentions";
 import {CheckCircleOutlined, CheckOutlined} from "@ant-design/icons";
+import {course} from "../../constants/Items";
 
 const AddCourseDocument = ({trainingProgram, type}) => {
 
     const dispatch = useDispatch();
     const state = useSelector((state) => state.accounts);
 
-    const [dataSource, setDataSource] = useState(trainingProgram.courses);
     const [editing, setEditing] = useState([]);
 
+    useEffect(() => {
+        console.log("doc render")
+    }, [trainingProgram])
+
     const onUpdateDocument = (trainingProgramUuid, course) => {
-        axios.put(`/training-programs/${trainingProgramUuid}/courses/${course.courseUuid}`, course)
+        let apiUrl = `/training-programs/${trainingProgramUuid}/courses/${course.courseUuid}/documents`
+
+        axios.put(apiUrl, course)
             .then((res) => {
                 message.success("Thành công")
+            })
+            .catch(() => {
+                message.error("Đã có lỗi xảy ra")
+            })
+    }
+
+    const onAddLecturer = (trainingProgramUuid, course, lecturer) => {
+        let apiUrl = `/training-programs/${trainingProgramUuid}/courses/${course.courseUuid}/lecturers/adding`;
+        axios.put(apiUrl, lecturer)
+            .then((res) => {
+            })
+            .catch(() => {
+                message.error("Đã có lỗi xảy ra")
+            })
+    }
+
+    const onRemoveLecturer = (trainingProgramUuid, course, lecturer) => {
+        let apiUrl = `/training-programs/${trainingProgramUuid}/courses/${course.courseUuid}/lecturers/removing`;
+        axios.put(apiUrl, lecturer)
+            .then((res) => {
             })
             .catch(() => {
                 message.error("Đã có lỗi xảy ra")
@@ -73,7 +99,7 @@ const AddCourseDocument = ({trainingProgram, type}) => {
                             record.training_program_course.lecturers ?
                                 JSON.parse(record.training_program_course.lecturers).map(lec => lec.uuid) : []
                         }
-                        onChange={value => {
+                        /*onChange={value => {
                             setEditing([...editing, record.uuid]);
                             record.training_program_course.lecturers = JSON.stringify(
                                 value.map((val) => {
@@ -81,7 +107,17 @@ const AddCourseDocument = ({trainingProgram, type}) => {
                                     return lecturer;
                                 })
                             )
-                        }}
+                        }}*/
+                        onSelect={(value) => {
+                            let lecturer = state.accounts.accounts.find((acc) => acc.uuid === value)
+                            onAddLecturer(trainingProgram.uuid, record.training_program_course, {lecturer});
+                        }
+
+                        }
+                        onDeselect={(value => {
+                            let lecturer = state.accounts.accounts.find((acc) => acc.uuid === value)
+                            onRemoveLecturer(trainingProgram.uuid, record.training_program_course, {lecturer});
+                        })}
                     >
                         {
                             state.accounts.accounts ?
@@ -112,8 +148,9 @@ const AddCourseDocument = ({trainingProgram, type}) => {
                 </Button>
             }
         },
-
     ]
+
+    if (type == "lec") columns.pop()
 
     return (
         <>
@@ -122,7 +159,13 @@ const AddCourseDocument = ({trainingProgram, type}) => {
             </Title>
             <Table
                 columns={columns}
-                dataSource={dataSource}
+                dataSource={trainingProgram.courses.map(
+                    (course, index) => {
+                        course.key = course.uuid;
+                        course.stt = index + 1;
+                        return course
+                    }
+                )}
                 bordered
                 pagination={false}
             />

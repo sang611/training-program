@@ -1,20 +1,18 @@
 import Board from 'react-trello'
 import {useDispatch, useSelector} from "react-redux";
-import {useState, useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import * as actions from '../../redux/actions'
-import {Col, Input, message, Row, Select, Space, Tag} from "antd";
+import {Card, Col, Divider, Input, message, Row, Select, Space, Tag, Timeline} from "antd";
 import axios from "axios";
-import {useParams} from "react-router-dom";
-import Cookies from "universal-cookie/lib";
-import Search from "antd/lib/input/Search";
 import {CheckCircleOutlined, ExclamationCircleOutlined} from "@ant-design/icons";
+import Title from "antd/lib/typography/Title";
 
 const PrivatePlanningPage = () => {
 
     const dispatch = useDispatch();
     const [courses, setCourses] = useState([]);
     const {user} = useSelector(state => state.accounts)
-
+    const {training_program} = user;
     const [availableCourses, setAvailableCourse] = useState([]);
     const [plannedCourses, setPlannedCourse] = useState([]);
     const [completedCourse, setCompletedCourse] = useState([]);
@@ -28,11 +26,10 @@ const PrivatePlanningPage = () => {
     const [searchText, setSearchtext] = useState("");
     const [plannedValid, setPlannedValid] = useState(false);
     const [numCredits, setNumCredits] = useState(0);
-    const [semes, setSemes]=  useState(1);
+    const [semes, setSemes] = useState(1);
 
     const {currentUser, userRole} = useSelector(state => state.auth);
     const semesters = new Array(user.training_program.training_duration * 2).fill(undefined);
-
 
 
     useEffect(() => {
@@ -40,15 +37,15 @@ const PrivatePlanningPage = () => {
     }, [])
 
     useEffect(() => {
-        if(user)
-            setCourses(user.training_program.courses);
+            if (user)
+                setCourses(user.training_program.courses);
             setStudentCourse(user.courses)
         }, [user]
     )
 
 
     useEffect(() => {
-        if(studentCourse) {
+        if (studentCourse) {
             setCompletedCourse(
                 convertCourseToCard(
                     studentCourse.filter((course) => {
@@ -88,10 +85,10 @@ const PrivatePlanningPage = () => {
         }
 
 
-    }, [ semes, studentCourse])
+    }, [semes, studentCourse])
 
     useEffect(() => {
-        if(studentCourse) {
+        if (studentCourse) {
             setAvailableCourse(
                 convertCourseToCard(
                     courses.filter((course) => {
@@ -107,8 +104,8 @@ const PrivatePlanningPage = () => {
     }, [studentCourse, courses])
 
     useEffect(() => {
-        let totalCreditsPlanned = plannedCourses.reduce((a, b) => a+b.credits, 0)
-        if(totalCreditsPlanned <= 30 && totalCreditsPlanned >= 14) {
+        let totalCreditsPlanned = plannedCourses.reduce((a, b) => a + b.credits, 0)
+        if (totalCreditsPlanned <= 30 && totalCreditsPlanned >= 14) {
             setPlannedValid(true)
         } else {
 
@@ -117,7 +114,7 @@ const PrivatePlanningPage = () => {
         setNumCredits(totalCreditsPlanned);
     }, [plannedCourses])
 
-    function convertCourseToCard (courses) {
+    function convertCourseToCard(courses) {
         return courses.map((course) => {
             let cardCourse = {};
             cardCourse.id = course.uuid;
@@ -173,7 +170,7 @@ const PrivatePlanningPage = () => {
 
     const onCardMoveAcrossLanes = (fromLaneId, toLaneId, cardId, index) => {
 
-        if(fromLaneId !== toLaneId) {
+        if (fromLaneId !== toLaneId) {
 
             const data = {};
             data.studentUuid = user.uuid;
@@ -221,13 +218,13 @@ const PrivatePlanningPage = () => {
 
     useEffect(() => {
 
-            setCourses(
-                [...user.training_program.courses]
-                    .filter(course => {
-                        console.log(course.training_program_course.course_type)
-                        return typeCourse == "ALL" || course.training_program_course.course_type == typeCourse;
-                    })
-                    .filter(course => {
+        setCourses(
+            [...user.training_program.courses]
+                .filter(course => {
+                    console.log(course.training_program_course.course_type)
+                    return typeCourse == "ALL" || course.training_program_course.course_type == typeCourse;
+                })
+                .filter(course => {
                     let courseTypeSearch = course[typeSearch]
                         .toLowerCase()
                         .trim()
@@ -237,7 +234,7 @@ const PrivatePlanningPage = () => {
                         .includes(
                             searchText.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
                 })
-            )
+        )
 
     }, [typeSearch, typeCourse, searchText])
 
@@ -250,9 +247,9 @@ const PrivatePlanningPage = () => {
         <>
             <Row justify="space-between" style={{marginBottom: 30}}>
                 <Col span={15}>
-                    <Input.Group compact >
+                    <Input.Group compact>
                         <Select
-                            style={{ width: 100, }}
+                            style={{width: 100,}}
                             defaultValue="ALL"
                             onChange={(value => setTypeCourse(value))}
                         >
@@ -272,10 +269,10 @@ const PrivatePlanningPage = () => {
                         <Input
                             placeholder="Tìm kiếm học phần"
                             onChange={onSearch}
-                            style={{ width: 270, }}
+                            style={{width: 270,}}
                         />
                         <Select
-                            style={{ width: 150, }}
+                            style={{width: 150,}}
                             placeholder="Tìm kiếm theo"
                             defaultValue="course_name_vi"
                             onChange={(value => setTypeSearch(value))}
@@ -294,7 +291,7 @@ const PrivatePlanningPage = () => {
                 </Col>
                 <Col>
                     <Select
-                        style={{ width: 120 }}
+                        style={{width: 120}}
                         placeholder="Chọn kỳ học"
                         onChange={(value => setSemes(value))}
                         defaultValue={1}
@@ -310,25 +307,70 @@ const PrivatePlanningPage = () => {
                 </Col>
 
 
-
             </Row>
-            <Row justify="end">
-                {
-                    plannedValid ?
-                        <Tag icon={<CheckCircleOutlined />} color="success">{numCredits} tín chỉ</Tag> :
-                        <Tag color="warning" icon={<ExclamationCircleOutlined />}>{numCredits} tín chỉ (Số tín chỉ trong 1 kỳ phải nằm trong khoảng 14-30)</Tag>
-                }
+            <Row>
+                <Col span={20}>
+
+                    {
+                        plannedValid ?
+                            <Tag icon={<CheckCircleOutlined/>} color="success">{numCredits} tín chỉ</Tag> :
+                            <Tag color="warning" icon={<ExclamationCircleOutlined/>}>{numCredits} tín chỉ (Số tín chỉ
+                                trong 1 kỳ phải nằm trong khoảng 14-30)</Tag>
+                    }
+
+                </Col>
+            </Row>
+            <Row>
+                <Board
+                    data={dataStatusCourse}
+                    onCardMoveAcrossLanes={onCardMoveAcrossLanes}
+                    style={{
+                        backgroundImage: "url('https://images.wallpaperscraft.com/image/laptop_keyboard_glow_170138_3840x2400.jpg')",
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                    }}
+                />
+            </Row>
+            <Divider/>
+
+
+            <br/>
+            <Row>
+                <Col>
+                    <Card title={
+                        <Tag color="blue">
+                            <Title level={4} style={{margin: 0}}>
+                                {training_program.vn_name}
+                            </Title>
+                        </Tag>
+                    }
+                          bordered
+                          hoverable
+                    >
+                        <Timeline mode="left">
+                            {
+                                new Array(training_program.training_duration * 2).fill(undefined)
+                                    .map((semester, index) => {
+                                        return <Timeline.Item dot={<Tag color="#55acee">{`Kỳ ${index + 1}`}</Tag>}
+                                                              color="green">
+                                            {
+                                                training_program.courses.filter(course =>
+                                                    course.training_program_course.semester === index + 1
+                                                )
+                                                    .map(course => {
+                                                        return <p>{`${course.course_code} - ${course.course_name_vi} (${course.credits})`}</p>
+                                                    })
+                                            }
+                                        </Timeline.Item>
+                                    })
+                            }
+                        </Timeline>
+                    </Card>
+
+                </Col>
             </Row>
 
-            <Board
-                data={dataStatusCourse}
-                onCardMoveAcrossLanes={onCardMoveAcrossLanes}
-                style={{
-                    backgroundImage: "url('https://images.wallpaperscraft.com/image/laptop_keyboard_glow_170138_3840x2400.jpg')",
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
-                }}
-            />
+
         </>
     )
 }

@@ -40,6 +40,7 @@ import SubMenu from "antd/lib/menu/SubMenu";
 import {io} from "socket.io-client";
 import Avatar from "antd/es/avatar/avatar";
 import NotificationDrawer from "./NotificationDrawer";
+import axios from "axios";
 
 
 const DashboardPage = () => {
@@ -51,7 +52,7 @@ const DashboardPage = () => {
     const {notifications} = useSelector(state => state.notifications)
 
     let socket = useRef(null);
-    const URL = "http://localhost:9000";
+    const URL = axios.defaults.baseURL;
 
     useEffect(() => {
         socket.current = io(URL, {
@@ -96,8 +97,6 @@ const DashboardPage = () => {
     const onClose = () => {
         setVisible(false);
     };
-
-
 
 
     return (
@@ -176,7 +175,8 @@ const DashboardPage = () => {
                         <SubMenu key="sub4" icon={<TeamOutlined/>} title="Tài khoản" className="sub-menu">
                             <Menu.Item key="13" className="menu-item-child"><Link to="/uet/accounts">Danh
                                 sách</Link></Menu.Item>
-                            <Menu.Item key="14" className="menu-item-child"><Link to="/uet/accounts/creation">Tạo mới</Link></Menu.Item>
+                            <Menu.Item key="14" className="menu-item-child"><Link to="/uet/accounts/creation">Tạo
+                                mới</Link></Menu.Item>
                         </SubMenu>
                         <Menu.Item key="15" icon={<PartitionOutlined/>} className="sub-menu">
                             <Link to="/uet/majors">Ngành</Link>
@@ -200,30 +200,29 @@ const DashboardPage = () => {
                         }}
                     >
                         <Menu
-                            theme="light"
                             mode="horizontal"
                             style={{
                                 marginLeft: 'auto'
-                            }}>
+                            }}
+                        >
                             <Menu.Item key="1" onClick={showDrawer}>
 
-                                    <Badge count={
-                                        notifications
-                                            .filter(noti => noti.is_accepted == null)
-                                            .length
-                                    }>
-                                        <BellOutlined
-                                            style={{fontSize: '18px'}}
-                                        />
-                                    </Badge>
+                                <Badge count={
+                                    notifications
+                                        .filter(noti => noti.is_accepted == null)
+                                        .length
+                                }>
+                                    <BellOutlined
+                                        style={{fontSize: '18px'}}
+                                    />
+                                </Badge>
                             </Menu.Item>
                             <SubMenu key="4" icon={<Avatar src={
                                 function () {
-                                    if(user) {
-                                        if(user.avatar) {
+                                    if (user) {
+                                        if (user.avatar) {
                                             return user.avatar.includes(':') ? user.avatar : `data:image/jpeg;base64, ${user.avatar}`
-                                        }
-                                        else return ''
+                                        } else return ''
                                     } else return ''
                                 }()
                             }/>} title={"    admin"}>

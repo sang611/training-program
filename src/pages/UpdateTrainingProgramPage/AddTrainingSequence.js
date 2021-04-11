@@ -16,6 +16,10 @@ const AddTrainingSequence = ({trainingProgram}) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        setTrainingCourse(trainingProgram.courses)
+    }, [trainingProgram])
+
+    useEffect(() => {
 
         dispatch(actions.getAllCourse());
 
@@ -33,10 +37,10 @@ const AddTrainingSequence = ({trainingProgram}) => {
         )
     }, [courseSelected])
 
-    const onUpdatePlan = (trainingProgramUuid, course) => {
-        axios.put(`/training-programs/courses/${trainingProgramUuid}/planning`, {...course, trainingProgramUuid})
+    const onUpdatePlan = (trainingProgramUuid, coursesOfSemester, semester) => {
+        axios.put(`/training-programs/courses/${trainingProgramUuid}/planning`, {coursesOfSemester, trainingProgramUuid, semester})
             .then((res) => {
-                message.success("Thành công")
+                //message.success("Thành công")
             })
             .catch(() => {
                 message.error("Đã có lỗi xảy ra")
@@ -93,13 +97,15 @@ const AddTrainingSequence = ({trainingProgram}) => {
                                 record.coursesOfSemester = value
                             }}
                             onSelect={(value) => {
+                                onUpdatePlan(trainingProgram.uuid, value, record.semester)
                                 setCourseSelected([...courseSelected, value])
                             }}
                             onDeselect={(value) => {
+
+                                onDeleteCourseSemester(value)
                                 setCourseSelected(
                                     courseSelected.filter(course => course !== value)
                                 )
-                                onDeleteCourseSemester(value)
                             }}
                         >
                             {
@@ -120,19 +126,22 @@ const AddTrainingSequence = ({trainingProgram}) => {
                 )
             }
         },
-        {
+        /*{
             title: '',
             render: (_, record) => {
                 return <Button
-                    onClick={() => onUpdatePlan(trainingProgram.uuid, record)}
+                    onClick={() => {
+                        onUpdatePlan(trainingProgram.uuid, record)
+
+                        record.coursesOfSemester = null
+                    }}
                     disabled={record.coursesOfSemester == null}
                 >
-
                     Cập nhật
                 </Button>
             },
             width: 100
-        },
+        },*/
     ]
 
     return (

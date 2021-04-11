@@ -87,7 +87,11 @@ export {
     getAllTrainingProgram,
     getAllTrainingProgramFail,
     getAllTrainingProgramStart,
-    getAllTrainingProgramSuccess
+    getAllTrainingProgramSuccess,
+    getATrainingProgramFail,
+    getATrainingProgramSuccess,
+    getATrainingProgramStart,
+    getATrainingProgram
 } from './training_programs'
 
 export {

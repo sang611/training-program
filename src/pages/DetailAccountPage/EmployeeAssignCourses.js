@@ -147,7 +147,7 @@ const EmployeeAssignCourses = ({employee}) => {
             </Table>
             <br/><br/>
             {
-                userRole != 3 || currentUser.uuid === uuid ?
+                (userRole != 3 && currentUser.uuid === uuid || userRole == 0) ?
                     <Form
                         {...{
                             labelCol: {span: 5},

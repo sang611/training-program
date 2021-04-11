@@ -1,4 +1,4 @@
-import {Col, Divider, Row, Select, Space, Tag} from "antd";
+import {Card, Col, Divider, Row, Select, Space, Tag} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useMemo, useState} from 'react'
 import CreditStatistic from "./CreditStatistic";
@@ -54,7 +54,7 @@ const StudentStatisticPage = () => {
                                 </Select>
                             </Space>
 
-                            <Tag color="volcano">
+                            <Tag color="blue">
                                 <Title level={4} style={{margin: 0}}>
                                     {training_program.vn_name}
                                 </Title>
@@ -62,27 +62,33 @@ const StudentStatisticPage = () => {
                         </Row>
                         <Divider/>
                         <Row>
-                            <Col sm={{span: 24}} md={{span: 12}} lg={{span: 8}} xl={{span: 8}} xxl={{span: 8}}>
 
-                                <CreditStatistic
-                                    courses={courses}
-                                    semes={semes}
-                                />
+                            <Col sm={{span: 24}} md={{span: 12}} lg={{span: 8}} xl={{span: 8}} xxl={{span: 8}}>
+                                <Card title={<Tag color="red"><Title level={4}>Thống kê số tín chỉ theo tiến độ</Title></Tag>}>
+                                    <CreditStatistic
+                                        courses={courses}
+                                        semes={semes}
+                                    />
+                                </Card>
+                            </Col>
+                            <Col sm={{span: 24}} md={{span: 12}} lg={{span: 8}} xl={{span: 8}} xxl={{span: 8}}>
+                                <Card title={<Tag color="red"><Title level={4}>Thống kê số tín chỉ theo học phần</Title></Tag>}>
+                                    <CourseTypeByStatusStatistic
+                                        courses={courses}
+                                        trainingProgram={training_program}
+                                        semes={semes}
+                                    />
+                                </Card>
 
                             </Col>
                             <Col sm={{span: 24}} md={{span: 12}} lg={{span: 8}} xl={{span: 8}} xxl={{span: 8}}>
-                                <CourseTypeByStatusStatistic
-                                    courses={courses}
-                                    trainingProgram={training_program}
-                                    semes={semes}
-                                />
-                            </Col>
-                            <Col sm={{span: 24}} md={{span: 12}} lg={{span: 8}} xl={{span: 8}} xxl={{span: 8}}>
+                                <Card title={<Tag color="red"><Title level={4}>Thống kê số tín chỉ còn thiếu</Title></Tag>}>
+                                    <CompletedCreditsStatistic
+                                        courses={courses}
+                                        trainingProgram={training_program}
+                                    />
+                                </Card>
 
-                                            <CompletedCreditsStatistic
-                                                courses={courses}
-                                                trainingProgram={training_program}
-                                            />
 
                             </Col>
                         </Row>

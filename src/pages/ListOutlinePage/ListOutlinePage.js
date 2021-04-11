@@ -1,7 +1,14 @@
-import {Button, Card, List, Spin} from "antd";
-import {useEffect, useMemo, useState} from 'react'
+import {Button, Card, Descriptions, List, message, Popconfirm, Spin} from "antd";
+import React, {useEffect, useMemo, useState} from 'react'
 import axios from "axios";
-import {EditOutlined, EllipsisOutlined, PlusOutlined, SettingOutlined} from "@ant-design/icons";
+import {
+    DeleteOutlined,
+    EditOutlined,
+    EllipsisOutlined,
+    LockOutlined,
+    PlusOutlined,
+    SettingOutlined
+} from "@ant-design/icons";
 import {Link, useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
@@ -26,24 +33,73 @@ const ListOutlinePage = (props) => {
             })
     }, [])
 
+    const onDeleteOutline = (item) => {
+        axios.delete(`/outlines/${item.uuid}`)
+            .then(res => {
+                message.success("Đã xóa 1 đề cương");
+                setOutlines(
+                    outlines.filter(outline => outline.uuid != item.uuid)
+                )
+            })
+            .catch(e => {
+                message.error("Đã có lỗi xảy ra");
+            })
+    }
 
-    const OutlineItem = ({item}) => {
+    const actionAdmin = (item) => [
+        <Link to={`/uet/training-programs/updating/${item.uuid}`}>
+            <EditOutlined key="edit"/>
+        </Link>,
+
+        <Popconfirm
+            title="Xóa đề cương này?"
+            cancelText="Hủy"
+            okText="Xóa"
+            onConfirm={() => onDeleteOutline(item)}
+        >
+            <DeleteOutlined/>
+        </Popconfirm>,
+    ]
+
+    const actionModerator = (item) => [
+        <Link to={`/uet/training-programs/updating/${item.uuid}`}>
+            <EditOutlined key="edit"/>
+        </Link>,
+
+    ]
+
+
+    const OutlineItem = ({item, index}) => {
         return (
             <Card
                 extra={
                     <Link to={`/uet/courses/${course.uuid}/outlines/${item.uuid}`}>Chi tiết</Link>
                 }
-                actions={[
-                    <SettingOutlined key="setting" onClick={() => console.log("setting")}/>,
-                    <Link to={`/uet/courses/${course.uuid}/outlines/${item.uuid}/updating`}>
-                        <EditOutlined key="edit"/>
-                    </Link>,
-                    <EllipsisOutlined key="ellipsis"/>,
-                ]}
-                title={item.vn_name}
+                actions={function () {
+                    if(userRole === 0 ) {
+                        return actionAdmin(item)
+                    } else if (user.courses.map(course=>course.uuid).includes(uuid)) {
+                        return actionModerator(item)
+                    }
+                }()}
+                title={`Version ${outlines.length - index}`}
                 hoverable
             >
-                Card content
+                <Descriptions column={1}>
+                    <Descriptions.Item label="Tạo bởi">
+                        {
+                            function () {
+                              if(item.createdBy) {
+                                  return "GV. " + JSON.parse(item.createdBy).fullname
+                              } else {
+                                  return "Admin"
+                              }
+                            }()
+                        }
+                    </Descriptions.Item>
+
+
+                </Descriptions>
             </Card>
         )
     };
@@ -84,9 +140,9 @@ const ListOutlinePage = (props) => {
             <List
                 grid={userRole === 0 ? gridAdmin : gridNotAdmin}
                 dataSource={outlines}
-                renderItem={item => (
+                renderItem={(item, index) => (
                     <List.Item>
-                        <OutlineItem item={item}/>
+                        <OutlineItem item={item} index={index}/>
                     </List.Item>
                 )}
             />

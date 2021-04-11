@@ -26,7 +26,6 @@ const AddTrainingProgramClass = ({trainingProgram}) => {
     }
 
     function onAddClasses() {
-        console.log(classes)
         axios.put(`/training-programs/${trainingProgram.uuid}/classes`, {
             classes: JSON.stringify(classes)
         })
@@ -50,7 +49,7 @@ const AddTrainingProgramClass = ({trainingProgram}) => {
                 placeholder="Chọn các lớp theo CTĐT này"
                 onChange={handleChange}
                 defaultValue={
-                    JSON.parse(trainingProgram.classes)
+                    trainingProgram.classes ? JSON.parse(trainingProgram.classes) : false
                 }
             >
                 {
