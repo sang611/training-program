@@ -16,6 +16,11 @@ const DocumentCard = ({userRole, item}) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        setEditableDesc(item.description);
+        setEditableTitle(item.name);
+    }, [item])
+
     const showModal = () => {
         setIsModalVisible(true);
     };

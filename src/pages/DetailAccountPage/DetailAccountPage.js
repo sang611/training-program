@@ -1,6 +1,6 @@
 import {
     Avatar,
-    Button,
+    Button, Card,
     Col,
     DatePicker,
     Descriptions,
@@ -81,6 +81,7 @@ const UpdateStudentProfile = ({user, userRole}) => {
         <>
             <Row>
                 <Col span={12}>
+                    <Card title={<Title level={4}>Thông tin cá nhân</Title>}>
                     <Form
                         layout={'vertical'}
                         form={form}
@@ -190,6 +191,7 @@ const UpdateStudentProfile = ({user, userRole}) => {
                             <Button type="primary" htmlType="submit">Lưu</Button>
                         </Form.Item>
                     </Form>
+                    </Card>
                 </Col>
                 <Col span={10} offset={2}>
                     <UpdateLoginInfor
@@ -265,85 +267,99 @@ const UpdateLecturerProfile = ({user, userRole}) => {
     return (
         <Row>
             <Col span={12}>
-                <h2>Thông tin cá nhân</h2>
-                <Form
-                    layout={'vertical'}
-                    form={form}
-                    initialValues={{
-                        layout: 'vertical',
-                    }}
-                    onFinish={onUpdateLecturerInfor}
-                >
-                    <Form.Item label="Tên giảng viên:" name="fullname">
-                        <Input placeholder="Nhập tên giảng viên"
-                               addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
-                    </Form.Item>
-                    <Row>
-                        <Col span={12}>
-                            <Form.Item label="Ngày sinh:" name="birthday">
+                <Card title={<Title level={4}>Thông tin cá nhân</Title>}>
+                    <Form
+                        layout={'vertical'}
+                        form={form}
+                        initialValues={{
+                            layout: 'vertical',
+                        }}
+                        onFinish={onUpdateLecturerInfor}
+                    >
+                        <Form.Item label="Tên giảng viên:" name="fullname">
+                            <Input placeholder="Nhập tên giảng viên"
+                                   addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
+                        </Form.Item>
+                        <Row>
+                            <Col span={12}>
+                                <Form.Item label="Ngày sinh:" name="birthday">
+                                    {
+                                        user.birthday ?
+                                            <DatePicker
+                                                defaultValue={
+                                                    moment(user.birthday, 'YYYY/MM/DD')
+                                                }
+                                                format={['DD/MM/YYYY', 'DD/MM/YY']}/>
+                                            :
+                                            <DatePicker
+                                                placeholder="Chọn ngày sinh"
+                                                format={['DD/MM/YYYY', 'DD/MM/YY']}
+                                            />
+                                    }
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item label="Giới tính:" name="gender">
+                                    <Radio.Group name="radio-gender">
+                                        <Radio value={"Nam"}>Nam</Radio>
+                                        <Radio value={"Nữ"}>Nữ</Radio>
+                                    </Radio.Group>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+                        <Form.Item label="Email cá nhân:" name="email">
+                            <Input placeholder="Địa chỉ email" addonBefore={<MailTwoTone/>}/>
+                        </Form.Item>
+                        <Form.Item
+                            label="Email VNU"
+                            name="vnu_mail"
+                            rules={[
                                 {
-                                    user.birthday ?
-                                        <DatePicker
-                                            defaultValue={
-                                                moment(user.birthday, 'YYYY/MM/DD')
-                                            }
-                                            format={['DD/MM/YYYY', 'DD/MM/YY']}/>
-                                        :
-                                        <DatePicker
-                                            placeholder="Chọn ngày sinh"
-                                            format={['DD/MM/YYYY', 'DD/MM/YY']}
-                                        />
-                                }
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Giới tính:" name="gender">
-                                <Radio.Group name="radio-gender">
-                                    <Radio value={"Nam"}>Nam</Radio>
-                                    <Radio value={"Nữ"}>Nữ</Radio>
-                                </Radio.Group>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-
-                    <Form.Item label="Email cá nhân:" name="email">
-                        <Input placeholder="Địa chỉ email" rules={[{type: 'email'}]} addonBefore={<MailTwoTone/>}/>
-                    </Form.Item>
-                    <Form.Item label="Số điện thoại:" name="phone_number">
-                        <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
-                    </Form.Item>
-                    <Form.Item label="Học hàm:" name="academic_rank">
-                        <Input placeholder="Học hàm của giảng viên"
-                               addonBefore={<i className="fas fa-brain" style={{color: '#1890FF'}}/>}/>
-                    </Form.Item>
-                    <Form.Item label="Học vị:" name="academic_degree">
-                        <Input placeholder="Học vị của giảng viên"
-                               addonBefore={<i className="fas fa-medal" style={{color: '#1890FF'}}/>}/>
-                    </Form.Item>
-                    <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
-                        <Select
-                            showSearch
-                            style={{width: 200}}
-                            placeholder="Đơn vị chuyên môn"
-                            optionFilterProp="children"
-                            filterOption={(input, option) =>
-                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                            }
+                                    required: true,
+                                    message: 'VNU mail không được để trống!',
+                                },
+                            ]}
                         >
-                            {
-                                insState.listInstitutions.map((ins, index) =>
-                                    <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
-                                )
-                            }
+                            <Input addonBefore={<i className="far fa-envelope"/>}/>
+                        </Form.Item>
+                        <Form.Item label="Số điện thoại:" name="phone_number">
+                            <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
+                        </Form.Item>
+                        <Form.Item label="Học hàm:" name="academic_rank">
+                            <Input placeholder="Học hàm của giảng viên"
+                                   addonBefore={<i className="fas fa-brain" style={{color: '#1890FF'}}/>}/>
+                        </Form.Item>
+                        <Form.Item label="Học vị:" name="academic_degree">
+                            <Input placeholder="Học vị của giảng viên"
+                                   addonBefore={<i className="fas fa-medal" style={{color: '#1890FF'}}/>}/>
+                        </Form.Item>
+                        <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
+                            <Select
+                                showSearch
+                                style={{width: 200}}
+                                placeholder="Đơn vị chuyên môn"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                            >
+                                {
+                                    insState.listInstitutions.map((ins, index) =>
+                                        <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
+                                    )
+                                }
 
-                        </Select>
-                    </Form.Item>
+                            </Select>
+                        </Form.Item>
 
-                    <br/>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">Lưu</Button>
-                    </Form.Item>
-                </Form>
+                        <br/>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit">Lưu</Button>
+                        </Form.Item>
+                    </Form>
+                </Card>
+
             </Col>
             <Col span={10} offset={2}>
                 <UpdateLoginInfor
@@ -418,7 +434,7 @@ const UpdateAdminProfile = ({user, userRole}) => {
     return (
         <Row>
             <Col span={12}>
-                <h2>Thông tin cá nhân</h2>
+                <Card title={<Title level={4}>Thông tin cá nhân</Title>}>
                 <Form
                     layout={'vertical'}
                     form={form}
@@ -471,6 +487,7 @@ const UpdateAdminProfile = ({user, userRole}) => {
                         <Button type="primary" htmlType="submit">Lưu</Button>
                     </Form.Item>
                 </Form>
+                </Card>
             </Col>
             <Col span={10} offset={2}>
                 <UpdateLoginInfor

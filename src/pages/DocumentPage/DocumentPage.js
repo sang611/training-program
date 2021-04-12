@@ -154,7 +154,7 @@ function DocumentPage() {
                 useMemo(() => {
                     return (
                         <List
-                            grid={{
+                            grid={userRole == 0 ? {
                                 gutter: [50, 30],
                                 xs: 1,
                                 sm: 2,
@@ -162,7 +162,16 @@ function DocumentPage() {
                                 lg: 3,
                                 xl: 4,
                                 xxl: 4,
-                            }}
+                            } : {
+                                gutter: [50, 30],
+                                xs: 1,
+                                sm: 2,
+                                md: 3,
+                                lg: 4,
+                                xl: 5,
+                                xxl: 5,
+                            }
+                            }
                             dataSource={documents}
                             renderItem={item => (
                                 <List.Item>

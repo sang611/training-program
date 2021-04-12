@@ -27,7 +27,7 @@ const CreateInstitutionPage = (props) => {
             span: 5,
         },
         wrapperCol: {
-            span: 15,
+            span: 19,
         },
     };
 

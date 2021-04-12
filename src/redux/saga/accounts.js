@@ -7,10 +7,14 @@ import * as actionTypes from "../actions/actionTypes";
 
 export function* fetchAccountsSaga (action) {
     try {
-        const {typeAccount, fullnameSearch} = action.payload;
+        let {typeAccount, fullnameSearch, studentClass} = action.payload;
+        fullnameSearch = fullnameSearch || "";
+        studentClass = studentClass || "";
         yield put(actions.fetchAccountsStart());
 
-        let api = typeAccount === 'GV' ? `/employees/?fullname=${fullnameSearch}` : `/students/?fullname=${fullnameSearch}`;
+        let api = typeAccount === 'GV'
+            ? `/employees/?fullname=${fullnameSearch}`
+            : `/students/?fullname=${fullnameSearch}&class=${studentClass}`;
 
         const {data} = yield axios.get(api);
         yield put(actions.fetchAccountsSuccess(data));

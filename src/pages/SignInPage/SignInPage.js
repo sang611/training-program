@@ -110,96 +110,79 @@ function SignInPage(props) {
 
         <div className="login-container">
 
-            <div style={{
-                width: '70vw',
-                height: '80vh',
-                boxShadow: '0px 0px 15px'
-            }}>
-                <Row style={{height: '100%'}}>
-                    <Col span={14}>
-                        {/*<img
-                            src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
-                            alt="No image"
-                            className="signin-image"
-                        />*/}
-                        <div style={{
-                            backgroundImage: "url(https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-blue-tech-achievement-future-poster-background-image_190794.jpg)",
-                            backgroundPosition: 'center',
-                            backgroundSize: 'cover',
-                            height: '100%'
-                        }}>
+            <div className="login-card">
 
-                        </div>
-                    </Col>
-                    <Col span={10}>
-                        <div id="siginin-form-wrapper">
 
-                            <div id="signin-form">
-                                <Divider style={{marginTop: 0, marginBottom: 25}}>
-                                    <Title level={2}>Đăng nhập hệ thống</Title>
-                                </Divider>
-                                <Form
-                                    name="normal_login"
-                                    className="login-form"
-                                    initialValues={{
-                                        remember: true,
-                                    }}
-                                    onFinish={onFinish}
-                                >
-                                    <Form.Item
-                                        name="username"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Email không được để trống!',
-                                            },
-                                        ]}
-                                    >
-                                        <Input prefix={<UserOutlined className="site-form-item-icon"/>}
-                                               placeholder="Email"
-                                               size="large"
-                                               className="login-form-input"
-                                        />
-                                    </Form.Item><br/>
-                                    <Form.Item
-                                        name="password"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Mật khẩu không được để trống!',
-                                            },
-                                        ]}
-                                    >
-                                        <Input.Password
-                                            prefix={<LockOutlined className="site-form-item-icon"/>}
-                                            type="password"
-                                            placeholder="Mật khẩu"
-                                            size="large"
-                                            className="login-form-input"
-                                        />
-                                    </Form.Item>
-                                    <Form.Item>
-                                        <Form.Item name="rememberPassword" valuePropName="checked" noStyle>
-                                            <Checkbox>Ghi nhớ đăng nhập</Checkbox>
-                                        </Form.Item>
+                <div className="signin-image">
+                </div>
 
-                                        <a className="login-form-forgot" onClick={() => {
-                                            setVisible(true);
-                                        }}>
-                                            Quên mật khẩu
-                                        </a>
-                                    </Form.Item>
 
-                                    <Form.Item>
-                                        <Button type="primary" htmlType="submit" className="login-form-button">
-                                            Log in
-                                        </Button>
-                                    </Form.Item>
-                                </Form>
-                            </div>
-                        </div>
-                    </Col>
-                </Row>
+                <div id="siginin-form-wrapper">
+                    <div id="signin-form">
+                        <Divider style={{marginTop: 0, marginBottom: 25}}>
+                            <Title level={2}>Đăng nhập</Title>
+                        </Divider>
+                        <Form
+                            name="normal_login"
+                            className="login-form"
+                            initialValues={{
+                                remember: true,
+                            }}
+                            onFinish={onFinish}
+                        >
+                            <Form.Item
+                                name="username"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Email không được để trống!',
+                                    },
+                                ]}
+                            >
+                                <Input prefix={<UserOutlined className="site-form-item-icon"/>}
+                                       placeholder="Email"
+                                       size="large"
+                                       className="login-form-input"
+                                />
+                            </Form.Item><br/>
+                            <Form.Item
+                                name="password"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Mật khẩu không được để trống!',
+                                    },
+                                ]}
+                            >
+                                <Input.Password
+                                    prefix={<LockOutlined className="site-form-item-icon"/>}
+                                    type="password"
+                                    placeholder="Mật khẩu"
+                                    size="large"
+                                    className="login-form-input"
+                                />
+                            </Form.Item>
+                            <Form.Item>
+                                <Form.Item name="rememberPassword" valuePropName="checked" noStyle>
+                                    <Checkbox>Ghi nhớ đăng nhập</Checkbox>
+                                </Form.Item>
+
+                                <a className="login-form-forgot" onClick={() => {
+                                    setVisible(true);
+                                }}>
+                                    Quên mật khẩu
+                                </a>
+                            </Form.Item>
+
+                            <Form.Item>
+                                <Button type="primary" htmlType="submit" className="login-form-button">
+                                    Log in
+                                </Button>
+                            </Form.Item>
+                        </Form>
+                    </div>
+                </div>
+
             </div>
             <ForgotPasswordForm
                 visible={visible}

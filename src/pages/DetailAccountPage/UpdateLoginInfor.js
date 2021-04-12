@@ -1,6 +1,7 @@
-import {Button, Col, Form, Input, message} from "antd";
+import {Button, Card, Col, Form, Input, message} from "antd";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
+import Title from "antd/lib/typography/Title";
 
 const UpdateLoginInfor = ({user, userRole}) => {
     const [loginUpdateForm] = Form.useForm();
@@ -145,12 +146,12 @@ const UpdateLoginInfor = ({user, userRole}) => {
     return (
         <>
 
-                <center>
-                    <h2>Thông tin đăng nhập</h2>
-                </center><br/>
-            {
-                userRole == 0 ? UpdateUsernamePasswordForm : UpdateOnlyPassword
-            }
+            <Card title={<Title level={4}>Thông tin đăng nhập</Title>}>
+                {
+                    userRole == 0 ? UpdateUsernamePasswordForm : UpdateOnlyPassword
+                }
+            </Card>
+
 
         </>
     )

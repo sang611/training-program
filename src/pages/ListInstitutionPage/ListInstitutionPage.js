@@ -231,7 +231,10 @@ const ListInstitutionPage = () => {
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={null}
-                width='82vh'
+                width='85vh'
+                style={{
+                    top: '5vh'
+                }}
             >
                 <CreateInstitutionPage/>
             </Modal>
@@ -243,7 +246,7 @@ const ListInstitutionPage = () => {
                 size={"large"}
                 style={{
                     position: 'fixed',
-                    right: 52,
+                    right: 42,
                     bottom: 32
                 }}
                 onClick={showModal}

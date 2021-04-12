@@ -2,10 +2,12 @@ import Board from 'react-trello'
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from 'react'
 import * as actions from '../../redux/actions'
-import {Card, Col, Divider, Input, message, Row, Select, Space, Tag, Timeline} from "antd";
+import {Card, Col, Divider, Input, List, message, Popconfirm, Row, Select, Space, Tag, Timeline} from "antd";
 import axios from "axios";
-import {CheckCircleOutlined, ExclamationCircleOutlined} from "@ant-design/icons";
+import {CheckCircleOutlined, CopyOutlined, ExclamationCircleOutlined} from "@ant-design/icons";
 import Title from "antd/lib/typography/Title";
+import StudentCourseSequenceCard from "./StudentCourseSequenceCard";
+import Search from "antd/lib/input/Search";
 
 const PrivatePlanningPage = () => {
 
@@ -29,11 +31,13 @@ const PrivatePlanningPage = () => {
     const [semes, setSemes] = useState(1);
 
     const {currentUser, userRole} = useSelector(state => state.auth);
+    const {accounts} = useSelector(state => state.accounts);
     const semesters = new Array(user.training_program.training_duration * 2).fill(undefined);
 
 
     useEffect(() => {
         dispatch(actions.getAllCourse());
+        dispatch(actions.fetchAccounts({typeAccount: 'SV', studentClass: user.class}))
     }, [])
 
     useEffect(() => {
@@ -204,7 +208,14 @@ const PrivatePlanningPage = () => {
                                     return course
                                 })
                             )
+
+
                         }
+
+                        if (toLaneId == "working" || fromLaneId == "working")
+                            dispatch(actions.getAUser({
+                                accountUuid: user.accountUuid,
+                            }))
 
                     })
                     .catch((e) => {
@@ -241,6 +252,39 @@ const PrivatePlanningPage = () => {
     const onSearch = (value) => {
         value = value.target.value.trim().toLowerCase();
         setSearchtext(value)
+    }
+
+    function onCopyPlan() {
+        let courses = [];
+        new Array(user.training_program.training_duration * 2).fill(undefined)
+            .forEach((semester, index) => {
+
+                    let studentCourses = user.training_program.courses.map((course) => {
+                        if (course.training_program_course.semester === index + 1) {
+                            return {
+                                courseUuid: course.uuid,
+                                semester: index + 1
+                            }
+                        } else return null
+                    })
+                    courses = courses.concat(
+                        studentCourses.filter(course => course)
+                    )
+                }
+            )
+        axios.post('/students/course/copy-plan', {
+            studentUuid: user.uuid,
+            courses: courses
+        })
+            .then((res) => {
+                message.success("Đã copy thành công một kế hoạch học tập")
+                dispatch(actions.getAUser({
+                    accountUuid: user.accountUuid,
+                }))
+            })
+            .catch((e) => {
+                message.error(e.toString());
+            })
     }
 
     return (
@@ -336,7 +380,7 @@ const PrivatePlanningPage = () => {
 
             <br/>
             <Row>
-                <Col>
+                <Col span={10} offset={1}>
                     <Card title={
                         <Tag color="blue">
                             <Title level={4} style={{margin: 0}}>
@@ -344,6 +388,17 @@ const PrivatePlanningPage = () => {
                             </Title>
                         </Tag>
                     }
+                          actions={[
+                              <Popconfirm
+                                  title="Kế hoạch hiện tại sẽ được thay thế bằng kế hoạch này!"
+                                  onConfirm={onCopyPlan}
+                                  okText="Copy"
+                                  cancelText="Hủy"
+                              >
+                                  <CopyOutlined/>
+                              </Popconfirm>
+                              ,
+                          ]}
                           bordered
                           hoverable
                     >
@@ -358,7 +413,7 @@ const PrivatePlanningPage = () => {
                                                     course.training_program_course.semester === index + 1
                                                 )
                                                     .map(course => {
-                                                        return <p>{`${course.course_code} - ${course.course_name_vi} (${course.credits})`}</p>
+                                                        return <p>{`${course.course_code} - ${course.course_name_vi} (${course.credits} tín chỉ)`}</p>
                                                     })
                                             }
                                         </Timeline.Item>
@@ -368,7 +423,50 @@ const PrivatePlanningPage = () => {
                     </Card>
 
                 </Col>
+                <Col span={10} offset={2}>
+                    <StudentCourseSequenceCard student={user}/>
+                </Col>
             </Row>
+
+            <Divider/>
+            <Row justify="space-between">
+                <Col>
+                    <Title level={4}>Kế hoạch học tập của các sinh viên khác</Title>
+                </Col>
+                <Col span={8}>
+                    <Search placeholder="Tìm kiếm sinh viên"
+                            onSearch={(value) => {
+                                dispatch(actions.fetchAccounts({typeAccount: 'SV', studentClass: user.class, fullnameSearch: value}))
+                            }}
+                            enterButton
+                    />
+                </Col>
+            </Row>
+
+            <br/>
+
+            <List
+                grid={{
+                    gutter: 20,
+                    xs: 1,
+                    sm: 1,
+                    md: 2,
+                    lg: 2,
+                    xl: 3,
+                    xxl: 3,
+                }}
+                dataSource={
+                    accounts.accounts
+                        ? accounts.accounts.filter(acc => acc.uuid != user.uuid)
+                        : []
+                }
+
+                renderItem={student => (
+                    <List.Item>
+                        <StudentCourseSequenceCard student={student}/>
+                    </List.Item>
+                )}
+            />
 
 
         </>
