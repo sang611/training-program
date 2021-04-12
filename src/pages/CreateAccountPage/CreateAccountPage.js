@@ -162,19 +162,46 @@ const CreateAccountPage = () => {
                         }}
                         onFinish={onCreateAccount}
                     >
-                        <Form.Item label="Tên giảng viên:" name="full_name">
+                        <Form.Item
+                            label="Tên giảng viên:"
+                            name="full_name"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Tên giảng viên không được để trống'
+                                },
+                            ]}
+                        >
                             <Input placeholder="Nhập tên giảng viên"
                                    addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
                         <Row>
                             <Col span={12}>
-                                <Form.Item label="Ngày sinh:" name="birth_date">
+                                <Form.Item
+                                    label="Ngày sinh:"
+                                    name="birth_date"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Chọn 1 ngày sinh cho giảng viên'
+                                        },
+                                    ]}
+                                >
                                     <DatePicker defaultValue={moment('01/01/2021', 'DD/MM/YYYY')}
                                                 format={['DD/MM/YYYY', 'DD/MM/YY']}/>
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
-                                <Form.Item label="Giới tính:" name="gender">
+                                <Form.Item
+                                    label="Giới tính:"
+                                    name="gender"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Vui lòng chọn giới tính của giảng viên viên'
+                                        },
+                                    ]}
+                                >
                                     <Radio.Group name="radio-gender">
                                         <Radio value={"Nam"}>Nam</Radio>
                                         <Radio value={"Nữ"}>Nữ</Radio>
@@ -183,14 +210,25 @@ const CreateAccountPage = () => {
                             </Col>
                         </Row>
                         <Form.Item label="Học hàm:" name="academic_rank">
-                            <Input placeholder="Học hàm của giảng viên"
-                                   addonBefore={<i className="fas fa-brain" style={{color: '#1890FF'}}/>}/>
+                            <Input
+                                placeholder="Học hàm của giảng viên"
+                                addonBefore={<i className="fas fa-brain" style={{color: '#1890FF'}}/>}
+                            />
                         </Form.Item>
                         <Form.Item label="Học vị:" name="academic_degree">
                             <Input placeholder="Học vị của giảng viên"
                                    addonBefore={<i className="fas fa-medal" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
-                        <Form.Item label="Đơn vị chuyên môn:" name="institution">
+                        <Form.Item
+                            label="Đơn vị chuyên môn:"
+                            name="institution"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Chọn 1 đơn vị giảng viên làm việc'
+                                },
+                            ]}
+                        >
                             <Select
                                 showSearch
                                 style={{width: 200}}
@@ -264,17 +302,44 @@ const CreateAccountPage = () => {
                         }}
                         onFinish={onCreateAccount}
                     >
-                        <Form.Item label="Họ tên sinh viên:" name="fullname">
+                        <Form.Item
+                            label="Họ tên sinh viên:"
+                            name="fullname"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Tên sinh viên không được để trống'
+                                },
+                            ]}
+                        >
                             <Input placeholder="Nhập tên sinh viên"
                                    addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
-                        <Form.Item label="Mã sinh viên:" name="student_code">
+                        <Form.Item
+                            label="Mã sinh viên:"
+                            name="student_code"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Mã sinh viên không được để trống'
+                                },
+                            ]}
+                        >
                             <Input placeholder="Nhập mã sinh viên"
                                    addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
                         <Row>
                             <Col span={12}>
-                                <Form.Item label="Ngày sinh:" name="birthday">
+                                <Form.Item
+                                    label="Ngày sinh:"
+                                    name="birthday"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Chọn một ngày sinh cho sinh viên'
+                                        },
+                                    ]}
+                                >
                                     <DatePicker
                                         defaultValue={moment('01/01/2021', 'DD/MM/YYYY')}
                                         format={['DD/MM/YYYY', 'DD/MM/YY']}
@@ -283,7 +348,16 @@ const CreateAccountPage = () => {
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
-                                <Form.Item label="Giới tính:" name="gender">
+                                <Form.Item
+                                    label="Giới tính:"
+                                    name="gender"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Vui lòng chọn giới tính của sinh viên'
+                                        },
+                                    ]}
+                                >
                                     <Radio.Group name="radio-gender">
                                         <Radio value={"Nam"}>Nam</Radio>
                                         <Radio value={"Nữ"}>Nữ</Radio>
@@ -292,7 +366,16 @@ const CreateAccountPage = () => {
                             </Col>
                         </Row>
 
-                        <Form.Item label="Ngành đào tạo:" name="majorUuid">
+                        <Form.Item
+                            label="Ngành đào tạo:"
+                            name="majorUuid"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Chọn ngành đào tạo của sinh viên'
+                                },
+                            ]}
+                        >
                             <Select
                                 showSearch
                                 style={{width: '60%'}}
@@ -310,7 +393,16 @@ const CreateAccountPage = () => {
                             </Select>
                         </Form.Item>
 
-                        <Form.Item label="Thuộc chương trình đào tạo:" name="trainingProgramUuid">
+                        <Form.Item
+                            label="Thuộc chương trình đào tạo:"
+                            name="trainingProgramUuid"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Chọn 1 chương trình đào tạo sinh viên theo học'
+                                },
+                            ]}
+                        >
                             <Select
                                 showSearch
                                 style={{width: '60%'}}
@@ -327,9 +419,19 @@ const CreateAccountPage = () => {
                                 }
                             </Select>
                         </Form.Item>
-                        <Form.Item label="Lớp môn học:" name="class">
-                            <Input placeholder="Lớp môn học của sinh viên"
-                                   addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
+                        <Form.Item
+                            label="Lớp môn học:"
+                            name="class"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Lớp môn học của sinh viên không được để trống'
+                                },
+                            ]}
+                        >
+                            <Input
+                                placeholder="Lớp môn học của sinh viên"
+                                addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
                         {UsernamePasswordForm}
                         <br/>

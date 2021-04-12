@@ -1,9 +1,4 @@
 import {Col, Row, Spin} from "antd";
-import {useEffect, useState, useMemo} from 'react'
-import {useDispatch, useSelector} from "react-redux";
-import * as actions from '../../redux/actions'
-import {useParams} from "react-router";
-
 
 
 const DescriptionItem = ({title, content}) => (

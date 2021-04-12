@@ -369,7 +369,7 @@ const LecturerInfoDescription = ({user}) => user ? (
         }</Descriptions.Item>
         <Descriptions.Item label="Học hàm">{user.academic_rank}</Descriptions.Item>
         <Descriptions.Item label="Học vị">{user.academic_degree}</Descriptions.Item>
-        <Descriptions.Item label="Đơn vị chuyên môn">{user.institution.vn_name}</Descriptions.Item>
+        <Descriptions.Item label="Đơn vị chuyên môn">{user.institution ? user.institution.vn_name : ''}</Descriptions.Item>
         <Descriptions.Item label="Email VNU">
             {user.vnu_mail}
         </Descriptions.Item>

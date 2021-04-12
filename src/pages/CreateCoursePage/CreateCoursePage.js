@@ -116,7 +116,16 @@ const CreateCoursePage = ({onCancelModal}) => {
                         onFinish={onCreateCourse}
                     >
 
-                        <Form.Item label="Tên học phần (VN):" name="course_name_vi">
+                        <Form.Item
+                            label="Tên học phần (VN):"
+                            name="course_name_vi"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Tên học phần không được bỏ trống'
+                                },
+                            ]}
+                        >
                             <Input placeholder="Tên học phần bằng Tiếng Việt"
                                    addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
@@ -125,15 +134,42 @@ const CreateCoursePage = ({onCancelModal}) => {
                                    addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
 
-                        <Form.Item label="Mã học phần:" name="course_code">
+                        <Form.Item
+                            label="Mã học phần:"
+                            name="course_code"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Mã học phần không được bỏ trống'
+                                },
+                            ]}
+                        >
                             <Input placeholder="Nhập mã học phần"
                                    addonBefore={<i className="fas fa-code" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
 
-                        <Form.Item label="Số tín chỉ:" name="credits" >
+                        <Form.Item
+                            label="Số tín chỉ:"
+                            name="credits"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Nhập số tín chỉ của học phần'
+                                },
+                            ]}
+                        >
                             <InputNumber min={1} max={20} defaultValue={1}/>
                         </Form.Item>
-                        <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
+                        <Form.Item
+                            label="Đơn vị chuyên môn:"
+                            name="institutionUuid"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Chọn đơn vị phụ trách học phần'
+                                },
+                            ]}
+                        >
                             <Select
                                 showSearch
                                 style={{width: '100%'}}

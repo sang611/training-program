@@ -2,9 +2,29 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
 import * as actionTypes from '../../redux/actions/actionTypes'
-import {Avatar, Col, Descriptions, List, message, Pagination, Popconfirm, Row, Skeleton, Space, Tabs} from "antd";
+import {
+    Avatar,
+    Button,
+    Col,
+    Descriptions,
+    List,
+    message,
+    Pagination,
+    Popconfirm,
+    Row,
+    Skeleton,
+    Space,
+    Tabs
+} from "antd";
 import Search from "antd/lib/input/Search";
-import {AndroidOutlined, AppleOutlined, DesktopOutlined, MailOutlined, PhoneOutlined} from "@ant-design/icons";
+import {
+    AndroidOutlined,
+    AppleOutlined, DeleteRowOutlined,
+    DesktopOutlined,
+    InfoCircleOutlined,
+    MailOutlined,
+    PhoneOutlined
+} from "@ant-design/icons";
 import {Redirect, useHistory} from "react-router-dom";
 import InfiniteScroll from 'react-infinite-scroller';
 import axios from "axios";
@@ -46,10 +66,20 @@ const ListAccountPage = () => {
             userRole == 0 ?
                 [
                     <a
-                        key="list-loadmore-more"
-                        onClick={() => history.push(`/uet/user/${item.account.uuid}`)}>
-                        Chi tiết
+                        >
+
                     </a>,
+
+                    <Button
+                        type="primary"
+                        shape="round"
+                        size="small"
+                        icon={<InfoCircleOutlined />}
+                        key="list-load-detail"
+                        onClick={() => history.push(`/uet/user/${item.account.uuid}`)}
+                    >
+                        Chi tiết
+                    </Button>,
 
                     <Popconfirm
                         title="Xóa người dùng này?"
@@ -57,11 +87,15 @@ const ListAccountPage = () => {
                         okText="Xóa"
                         cancelText="Thoát"
                     >
-                        <a
-                            key="list-delete"
+                        <Button
+                            type="danger"
+                            shape="round"
+                            size="small"
+                            icon={<DeleteRowOutlined />}
+                            key="list-delete-item"
                         >
                             Xóa
-                        </a>
+                        </Button>
                     </Popconfirm>
 
                 ] :

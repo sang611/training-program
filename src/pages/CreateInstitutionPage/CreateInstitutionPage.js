@@ -34,8 +34,6 @@ const CreateInstitutionPage = (props) => {
 
     const onFinish = (values) => {
 
-        console.log(values)
-
         formData.set('vn_name', values.vn_name || "");
         formData.set('en_name', values.en_name || "");
         formData.set('abbreviation', values.abbreviation || "");
@@ -93,6 +91,7 @@ const CreateInstitutionPage = (props) => {
                 rules={[
                     {
                         required: true,
+                        message: 'Tên đơn vị không được để trống'
                     },
                 ]}
             >
@@ -109,6 +108,7 @@ const CreateInstitutionPage = (props) => {
                 rules={[
                     {
                         required: true,
+                        message: 'Tên đơn vị không được để trống'
                     },
                 ]}
             >
@@ -155,7 +155,7 @@ const CreateInstitutionPage = (props) => {
                 </Dragger>
             </Form.Item>
 
-            <Form.Item wrapperCol={{...layout.wrapperCol, offset: 4}}>
+            <Form.Item wrapperCol={{...layout.wrapperCol, offset: 5}}>
                 <Space>
                     {
                         props.isEdited ?

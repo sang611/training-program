@@ -1,7 +1,15 @@
-.login-container .signin-image{
+.login-container {
+   display: flex;
+   justify-content: center;
+   align-items: center;
    height: 100vh;
    width: 100%;
+   background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
 
+.login-container .signin-image{
+   height: 100%;
+   width: 100%;
 }
 
 

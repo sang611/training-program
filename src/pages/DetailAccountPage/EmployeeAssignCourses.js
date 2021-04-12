@@ -64,8 +64,11 @@ const EmployeeAssignCourses = ({employee}) => {
                 courseUuid: record.uuid,
                 isModerator: selected
             })
-                .then((r) => {
-                    message.success(r.data.message)
+                .then((res) => {
+                    if(selected)
+                        message.success(`Đã cấp quyền moderator cho ${employee.fullname} với môn học ${record.course_name_vi}`)
+                    else
+                        message.success(`Đã gỡ quyền moderator của ${employee.fullname} với môn học ${record.course_name_vi}`)
                 })
                 .catch((e) =>
                     message.error(e.response.data.message)

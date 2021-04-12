@@ -169,11 +169,11 @@ const DashboardPage = () => {
                         <SubMenu key="sub3" icon={<BankOutlined/>} title="Đơn vị chuyên môn" className="sub-menu">
                             <Menu.Item key="11" className="menu-item-child"><Link to="/uet/institutions">Danh
                                 sách</Link></Menu.Item>
-                            <Menu.Item key="12" className="menu-item-child"><Link to="/uet/institutions/creation">Tạo
-                                mới</Link></Menu.Item>
+                            {/*<Menu.Item key="12" className="menu-item-child"><Link to="/uet/institutions/creation">Tạo
+                                mới</Link></Menu.Item>*/}
                         </SubMenu>
                         <SubMenu key="sub4" icon={<TeamOutlined/>} title="Tài khoản" className="sub-menu">
-                            <Menu.Item key="13" className="menu-item-child"><Link to="/uet/accounts">Danh
+                            <Menu.Item key="12" className="menu-item-child"><Link to="/uet/accounts">Danh
                                 sách</Link></Menu.Item>
                             <Menu.Item key="14" className="menu-item-child"><Link to="/uet/accounts/creation">Tạo
                                 mới</Link></Menu.Item>
