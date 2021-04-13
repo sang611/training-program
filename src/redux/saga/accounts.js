@@ -64,7 +64,6 @@ export function* addAccountSaga (action) {
         const {values, typeAccount} = action.payload;
         console.log(action.payload)
         if(typeAccount == 1) {
-
             yield axios.post("/employees", values)
         } else if (typeAccount == 2) {
 

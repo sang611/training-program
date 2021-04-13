@@ -24,11 +24,12 @@ const StudentStatisticPage = () => {
             }))
         }, []
     )
-    return (
+
+    return  (
         <div>
             {
-                useMemo(() => (
-                    <>
+                useMemo(() =>  (
+                    training_program.courses.length > 0 || training_program.require_summary ? <>
                         <Row justify="space-between" align="middle">
                             <Space>
                                 <Title level={3}>
@@ -157,8 +158,8 @@ const StudentStatisticPage = () => {
 
                             </Col>
                         </Row>
-                    </>
-                ), [semes])
+                    </> : ''
+                ) , [semes])
             }
 
         </div>

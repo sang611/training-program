@@ -14,7 +14,8 @@ import moment from 'moment';
 
 const CreateAccountPage = () => {
     const {isValidToken} = useSelector(state => state.auth)
-    const [form] = Form.useForm();
+    const [formLec] = Form.useForm();
+    const [formStu] = Form.useForm();
     const [formLayout, setFormLayout] = useState('vertical');
     const [xslxFile, setXslxFile] = useState(null);
     const [isSendingForm, setIsSendinggForm] = useState(false);
@@ -41,9 +42,14 @@ const CreateAccountPage = () => {
         }
     }, [accState])
 
-    const onCreateAccount = async (values) => {
-        await dispatch(actions.addAccount({values, typeAccount}));
-        form.resetFields();
+    const onCreateAccountLecturer = async (values) => {
+        await dispatch(actions.addAccount({values, typeAccount: 1}));
+        formLec.resetFields();
+    };
+
+    const onCreateAccountStudent = async (values) => {
+        await dispatch(actions.addAccount({values, typeAccount: 2}));
+        formStu.resetFields();
     };
 
     const formItemLayout =
@@ -114,7 +120,7 @@ const CreateAccountPage = () => {
                     })
                     .then(() => {
                         setIsSendinggForm(false)
-                        form.resetFields();
+                        formLec.resetFields();
                     })
                     .catch((error) => {
                         setIsSendinggForm(false)
@@ -133,7 +139,7 @@ const CreateAccountPage = () => {
                     })
                     .then(() => {
                         setIsSendinggForm(false)
-                        form.resetFields();
+                        formStu.resetFields();
                     })
                     .catch((error) => {
                         setIsSendinggForm(false)
@@ -148,7 +154,7 @@ const CreateAccountPage = () => {
     }
 
     const addingLecturerForm = () => {
-        form.resetFields();
+        formLec.resetFields();
         return (
             <Row>
                 <Col span={12} offset={1}>
@@ -156,11 +162,11 @@ const CreateAccountPage = () => {
                     <Form
                         {...formItemLayout}
                         layout={formLayout}
-                        form={form}
+                        form={formLec}
                         initialValues={{
                             layout: formLayout,
                         }}
-                        onFinish={onCreateAccount}
+                        onFinish={onCreateAccountLecturer}
                     >
                         <Form.Item
                             label="Tên giảng viên:"
@@ -288,7 +294,7 @@ const CreateAccountPage = () => {
     }
 
     const addingStudentForm = () => {
-        form.resetFields();
+        formStu.resetFields();
         return (
             <Row>
                 <Col span={12} offset={1}>
@@ -296,11 +302,11 @@ const CreateAccountPage = () => {
                     <Form
                         {...formItemLayout}
                         layout={formLayout}
-                        form={form}
+                        form={formStu}
                         initialValues={{
                             layout: formLayout,
                         }}
-                        onFinish={onCreateAccount}
+                        onFinish={onCreateAccountStudent}
                     >
                         <Form.Item
                             label="Họ tên sinh viên:"
