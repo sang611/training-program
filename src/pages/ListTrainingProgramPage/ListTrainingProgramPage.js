@@ -17,6 +17,7 @@ import Icon from "@ant-design/icons/es";
 import Search from "antd/lib/input/Search";
 import Text from "antd/es/typography/Text";
 import Title from "antd/lib/typography/Title";
+import TrainingProgramItem from "./TrainingProgramItem";
 
 
 const MatrixCourses = ({visibleCourseMatrix, setVisibleCourseMatrix, trainingList}) => {
@@ -175,78 +176,7 @@ const MatrixLoc = ({visibleLocMatrix, setVisibleLocMatrix, trainingList}) => {
     )
 }
 
-const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, trainingItem}) => {
-    const history = useHistory();
 
-    const columns = [
-        {
-            title: "Mã học phần",
-            dataIndex: "course_code",
-            key: "course_code"
-        },
-        {
-            title: "Tên học phần",
-            children: [
-                {
-                    title: "Tên học phần (vi)",
-                    dataIndex: "course_name_vi",
-                    key: "course_name_vi"
-                },
-                {
-                    title: "Tên học phần (en)",
-                    dataIndex: "course_name_en",
-                    key: "course_name_en"
-                }
-            ]
-        },
-        {
-            title: "Số tín chỉ",
-            dataIndex: "credits",
-            key: "credits"
-        },
-        /*{
-            title: "Đề cương",
-            render: (_, record) => {
-                return (
-                    <a>
-                        <Tag
-                            icon={<InfoCircleOutlined/>}
-                            color="#87d068"
-                            onClick={() => history.push(`/uet/courses/${record.uuid}/outlines`)}>
-                            Đề cương
-                        </Tag>
-                    </a>
-                )
-            }
-        }*/
-    ]
-    return (
-        <>
-            <Modal
-                visible={visibleCourseList}
-                title={`Danh sách học phần - ${trainingItem ? trainingItem.vn_name : ""}`}
-                okText="OK"
-                className="modal-courses-training"
-                onCancel={() => {
-                    setVisibleCourseList(false);
-                }}
-                onOk={() => {
-                    setVisibleCourseList(false);
-                }}
-                footer={null}
-            >
-                <Table
-                    columns={columns}
-                    dataSource={trainingItem ? trainingItem.courses : []}
-                    bordered
-                    pagination={false}
-                />
-
-
-            </Modal>
-        </>
-    )
-}
 
 const ListTrainingProgramPage = () => {
     const history = useHistory();
@@ -257,7 +187,7 @@ const ListTrainingProgramPage = () => {
     const [visibleLocMatrix, setVisibleLocMatrix] = useState(false);
     const {user} = useSelector(state => state.accounts)
 
-    const [visibleCourseList, setVisibleCourseList] = useState(false);
+
     const [chosenTraining, setChosenTraining] = useState(null);
     const [vnNameSearch, setVnNameSearch] = useState("");
 
@@ -268,109 +198,12 @@ const ListTrainingProgramPage = () => {
         }));
     }, [vnNameSearch])
 
-    const onLock = async (uuid) => {
-        try {
-            const response = await axios.put(`/training-programs/${uuid}`, {lock_edit: 1})
-            console.log(response.status)
-            message.success("Đã khóa chương trình đào tạo");
-        } catch (e) {
-            message.error("Đã có lỗi xảy ra")
-        }
-    }
-
-    const onDeleteTrainingProgram = (uuid) => {
-        axios.delete(`/training-programs/${uuid}`)
-            .then(res => {
-                message.success("Đã xóa chương trình đào tạo")
-                dispatch(actions.getAllTrainingProgram({
-                    vnNameSearch
-                }));
-            })
-            .catch(e => {
-                message.error("Không thể xóa chương trình đào tạo")
-            })
-    }
 
 
-    const actionStudent = (item, isFollow) => {
-
-        return [
-            <Icon
-                component={() => <i className="fas fa-th-list"/>}
-                key="setting"
-                onClick={() => {
-                    setChosenTraining(item);
-                    setVisibleCourseList(true)
-                }}
-            />,
-        ]
-    }
-
-    const actionAdmin = (item) => [
-        <Link to={`/uet/training-programs/updating/${item.uuid}`}>
-            <EditOutlined key="edit"/>
-        </Link>,
-        <Popconfirm
-            title="Sau khi khóa sẽ không thể chỉnh sửa?"
-            cancelText="Hủy"
-            okText="Khóa"
-            onConfirm={() => onLock(item.uuid)}
-        >
-            <LockOutlined/>
-        </Popconfirm>,
-        <Popconfirm
-            title="Xóa CTĐT?"
-            cancelText="Hủy"
-            okText="Xóa"
-            onConfirm={() => onDeleteTrainingProgram(item.uuid)}
-        >
-            <DeleteOutlined/>
-        </Popconfirm>,
-        ,
-    ]
-
-    const TrainingItem = ({item, isFollow}) => {
-
-        return (
-            <Card
-                //extra={<Link to={`/uet/training-programs/${item.uuid}`}>Chi tiết</Link>}
-                extra={
-                    <Link to={`/uet/training-programs/${item.uuid}`}>
-                        <Button type="primary" shape="circle" icon={<InfoOutlined /> } size="small"/>
-                    </Link>
-
-                }
-                actions={
-                    userRole == 0 ? actionAdmin(item) : (userRole == 3 ? actionStudent(item, isFollow) : "")
-                }
-                title={item.vn_name}
-                hoverable
-            >
-                <Descriptions column={1}>
-                    <Descriptions.Item label="Ngành đào tạo">
-                        {
-                            item.vn_name ? item.vn_name : ''
-                        }
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Số học phần">
-                        {
-                            item.courses.length
-                        }
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Số lớp đang áp dụng">
-                        {
-                            item.classes ? JSON.parse(item.classes).length : 0
-                        }
-                    </Descriptions.Item>
-
-                </Descriptions>
-            </Card>
-        )
-    }
 
     const ButtonActions = (
         <>
-            <Button
+            {/*<Button
                 type="primary"
                 shape="circle"
                 icon={<BuildOutlined/>}
@@ -397,7 +230,7 @@ const ListTrainingProgramPage = () => {
                 onClick={() => {
                     setVisibleCourseMatrix(true);
                 }}
-            />
+            />*/}
             <Button
                 type="primary"
                 shape="circle"
@@ -455,7 +288,11 @@ const ListTrainingProgramPage = () => {
                                 dataSource={trainingPrograms}
                                 renderItem={item => {
                                     return <List.Item>
-                                        <TrainingItem item={item}/>
+                                        <TrainingProgramItem
+                                            item={item}
+                                            userRole={userRole}
+                                            vnNameSearch={vnNameSearch}
+                                        />
                                     </List.Item>
                                 }
 
@@ -464,21 +301,6 @@ const ListTrainingProgramPage = () => {
                         ) : <Spin />
                 }
 
-                <MatrixCourses
-                    visibleCourseMatrix={visibleCourseMatrix}
-                    setVisibleCourseMatrix={setVisibleCourseMatrix}
-                    trainingList={trainingPrograms}
-                />
-                <MatrixLoc
-                    visibleLocMatrix={visibleLocMatrix}
-                    setVisibleLocMatrix={setVisibleLocMatrix}
-                    trainingList={trainingPrograms}
-                />
-                <ListCourseOfTraining
-                    visibleCourseList={visibleCourseList}
-                    setVisibleCourseList={setVisibleCourseList}
-                    trainingItem={chosenTraining}
-                />
                 {userRole == 0 ? ButtonActions : ""}
             </> : <div>{errors.toString()}</div>
     )
