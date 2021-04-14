@@ -1,6 +1,6 @@
-import {useEffect, useState, useRef} from 'react';
+import {useEffect, useState, useRef, useMemo} from 'react';
 import Title from "antd/lib/typography/Title";
-import {Button, Col, DatePicker, Form, Input, InputNumber, message, Radio, Row, Select, Space} from "antd";
+import {Button, Cascader, Col, DatePicker, Form, Input, InputNumber, message, Radio, Row, Select, Space} from "antd";
 import moment from "moment";
 import {MailTwoTone, PhoneTwoTone} from "@ant-design/icons";
 import {useSelector, useDispatch} from "react-redux";
@@ -28,11 +28,26 @@ const CreateTrainingProgramPage = () => {
         dispatch(actions.getAllMajor());
     }, [])
 
+    /*function handleIns(listInstitution) {
+        listInstitution.forEach((ins => {
+            ins.label = ins.vn_name;
+            ins.value = ins.uuid;
+            if(ins.children)
+            handleIns(ins.children);
+        }))
+    }
+
+    useEffect(() => {
+        handleIns(insState.listInstitutions)
+    }, [insState.listInstitutions])
+*/
+
 
     async function onCreateTrainingProgram(values) {
         try {
             values.common_destination = commonDestination;
             values.specific_destination = specificDestination;
+
             const response = await axios.post("/training-programs", values)
             console.log(response.status)
             if (response.status === 201) {
@@ -45,7 +60,7 @@ const CreateTrainingProgramPage = () => {
 
     }
 
-    return (
+    return useMemo(() => (
         <>
             <Form
                 layout="vertical"
@@ -118,7 +133,7 @@ const CreateTrainingProgramPage = () => {
                                 </Form.Item>
                             </Col>
                         </Row>
-                        {/*<Form.Item label="Đơn vị chuyên môn:" name="institution">
+                        <Form.Item label="Đơn vị chuyên môn:" name="institution">
                             <Select
                                 showSearch
                                 style={{width: 200}}
@@ -129,13 +144,16 @@ const CreateTrainingProgramPage = () => {
                                 }
                             >
                                 {
-                                    insState.listInstitutions.map((ins, index) =>
+                                    insState.listInstitutions
+                                        .filter(ins => !ins.parent_uuid)
+                                        .map((ins, index) =>
                                         <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
                                     )
                                 }
 
                             </Select>
-                        </Form.Item>*/}
+
+                        </Form.Item>
 
                         <br/>
                     </Col>
@@ -144,38 +162,30 @@ const CreateTrainingProgramPage = () => {
                 <Row>
                     <Col span={20} offset={1}>
 
+                        <CKEditor
+                            editor={ClassicEditor}
+                            config={{
+                                placeholder: "Nội dung mục tiêu đào tạo chung",
+                            }}
 
-                            {/*<Form.Item label="Mục tiêu chung" name="common_destination">
-                                <TextArea value={commonDestination} style={{display: 'none'}} rows={0}/>
-                            </Form.Item>*/}
-                            <CKEditor
-                                editor={ClassicEditor}
-                                config={{
-                                    placeholder: "Nội dung mục tiêu đào tạo chung",
-                                }}
-
-                                onChange={(event, editor) => {
-                                    const data = editor.getData();
-                                    setCommonDestination(data)
-                                }}
-                            />
+                            onChange={(event, editor) => {
+                                const data = editor.getData();
+                                setCommonDestination(data)
+                            }}
+                        />
                         <br/><br/>
-                           {/* <Form.Item label="Mục tiêu cụ thể" name="specific_destination">
 
-                                <TextArea value={specificDestination} style={{display: 'none'}}/>
+                        <CKEditor
+                            editor={ClassicEditor}
+                            config={{
+                                placeholder: "Nội dung mục tiêu đào tạo cụ thể",
+                            }}
 
-                            </Form.Item>*/}
-                            <CKEditor
-                                editor={ClassicEditor}
-                                config={{
-                                    placeholder: "Nội dung mục tiêu đào tạo cụ thể",
-                                }}
-
-                                onChange={(event, editor) => {
-                                    const data = editor.getData();
-                                    setSpecificDestination(data)
-                                }}
-                            />
+                            onChange={(event, editor) => {
+                                const data = editor.getData();
+                                setSpecificDestination(data)
+                            }}
+                        />
 
 
 
@@ -200,7 +210,7 @@ const CreateTrainingProgramPage = () => {
                 </Form.Item>
             </Form>
         </>
-    )
+    ), [insState, majors])
 }
 
 export default CreateTrainingProgramPage;

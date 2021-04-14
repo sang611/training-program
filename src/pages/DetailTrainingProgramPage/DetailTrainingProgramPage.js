@@ -425,7 +425,8 @@ const DetailTrainingProgramPage = (props) => {
             common_destination,
             specific_destination,
             learning_outcomes,
-            courses
+            courses,
+            institution
         } = trainingProgram
 
         return loading ? <Spin/> : (
@@ -457,8 +458,9 @@ const DetailTrainingProgramPage = (props) => {
                         <DescriptionItem title="Thời gian đào tạo" content={training_duration + " năm"}/>
                         <DescriptionItem title="Tên văn bằng tốt nghiệp (VI)" content={graduation_diploma_vi}/>
                         <DescriptionItem title="Tên văn bằng tốt nghiệp (EN)" content={graduation_diploma_en}/>
-                        <DescriptionItem title="Đơn vị được giao nhiệm vụ đào tạo"
-                                         content={"Trường Đại học Công nghệ, ĐHQGHN"}/>
+                        <DescriptionItem title="Đơn vị được giao nhiệm vụ đào tạo" content={
+                            `${institution.vn_name}, Trường Đại học Công nghệ, ĐHQGHN`
+                        }/>
                     </Col>
                 </Row>
 

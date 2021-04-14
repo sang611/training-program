@@ -89,7 +89,10 @@ const ListLocs = ({trainingProgram}) => {
                 trainingUuid: trainingProgram.uuid,
                 locs: selectedRowKeys
             })
-                .then((res) => {message.success("Cập nhật CĐR thành công")})
+                .then((res) => {
+                    message.success("Cập nhật CĐR thành công");
+
+                })
                 .catch((e) => {message.error(e.response.data.message)})
         }
 
@@ -134,18 +137,18 @@ const ListLocs = ({trainingProgram}) => {
             </Col>
             <Col span={10}>
                 <Row>
-
                     <Col span={7}>
                         <Select
                             onChange={(val) => setTitle(val)}
                             size="large"
                             defaultValue={0}
+                            value={title}
                             style={{width: '100%'}}
                         >
-                            <Option key='all' value={0}>Tất cả</Option>
-                            <Option key='kien_thuc' value={1}>Kiến thức</Option>
-                            <Option key='ki_nang' value={2}>Kĩ năng</Option>
-                            <Option key='dao_duc' value={3}>Đạo đức</Option>
+                            <Option key='0' value={0}>Tất cả</Option>
+                            <Option key='1' value={1}>Kiến thức</Option>
+                            <Option key='2' value={2}>Kĩ năng</Option>
+                            <Option key='3' value={3}>Thái độ</Option>
                         </Select>
                     </Col>
                     <Col span={17}>
@@ -155,14 +158,11 @@ const ListLocs = ({trainingProgram}) => {
                                 setContent(e.target.value)
                                 setCurrentPage(1);
                             }}
+                            value={content}
                             style={{width: '100%'}}
                             size="large"/>
                     </Col>
-
-
                 </Row>
-
-
             </Col>
         </Row><br/>
         <Table
@@ -181,7 +181,7 @@ const ListLocs = ({trainingProgram}) => {
             visible={visibleDrawer}
             bodyStyle={{paddingBottom: 80}}
         >
-            <CreatePLO />
+            <CreatePLO onCloseDrawer={onCloseDrawer} setContent={setContent} setTitle={setTitle} />
         </Drawer>
 
     </>

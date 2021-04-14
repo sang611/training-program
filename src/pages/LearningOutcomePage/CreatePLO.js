@@ -5,7 +5,7 @@ import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import React from "react";
 import {useDispatch} from "react-redux";
 
-const CreatePLO = () => {
+const CreatePLO = ({onCloseDrawer, setContent, setTitle}) => {
     const dispatch = useDispatch();
     const [form] = Form.useForm();
     const onFinish = (values) => {
@@ -17,8 +17,10 @@ const CreatePLO = () => {
         axios.post("/learning-outcomes", data)
             .then((res) => {
                 message.success("CĐR được thêm thành công")
-
                 dispatch(actions.getAllLearningOutcomes({typeLoc: 1}))
+                if(onCloseDrawer) onCloseDrawer();
+                if(setContent) setContent("");
+                if(setTitle) setTitle(0)
             })
             .catch((e) => message.error("Đã có lỗi xảy ra"))
         form.resetFields();
@@ -52,7 +54,7 @@ const CreatePLO = () => {
                                         <Select placeholder="Nhóm">
                                             <Select.Option key={1} value={1}>Kiến thức</Select.Option>
                                             <Select.Option key={2} value={2}>Kỹ năng</Select.Option>
-                                            <Select.Option key={3} value={3}>Đạo đức</Select.Option>
+                                            <Select.Option key={3} value={3}>Thái độ</Select.Option>
                                         </Select>
                                     </Form.Item>
                                     <MinusCircleOutlined onClick={() => remove(name)} />
