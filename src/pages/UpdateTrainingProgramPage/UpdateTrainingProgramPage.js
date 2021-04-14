@@ -87,7 +87,8 @@ const UpdateTrainingProgramPage = (props) => {
                 common_destination,
                 specific_destination,
                 admission_method,
-                admission_scale
+                admission_scale,
+                institution
             } = trainingProgram;
 
             form.setFieldsValue({
@@ -101,7 +102,8 @@ const UpdateTrainingProgramPage = (props) => {
                 common_destination,
                 specific_destination,
                 admission_method,
-                admission_scale
+                admission_scale,
+                institution: institution.uuid
             })
         }
         console.log("re render")
@@ -192,25 +194,26 @@ const UpdateTrainingProgramPage = (props) => {
                                 </Col>
                             </Row>
 
-                            {/*<Form.Item label="Đơn vị chuyên môn:" name="institution">
-                            <Select
-                                showSearch
-                                style={{width: 200}}
-                                placeholder="Đơn vị chuyên môn"
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
-                            >
-                                {
-                                    insState.listInstitutions.map((ins, index) =>
-                                        <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
-                                    )
-                                }
+                            <Form.Item label="Đơn vị chuyên môn:" name="institution">
+                                <Select
+                                    showSearch
+                                    style={{width: '50%'}}
+                                    placeholder="Đơn vị chuyên môn"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    {
+                                        insState.listInstitutions
+                                            .filter(ins => !ins.parent_uuid)
+                                            .map((ins, index) =>
+                                                <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
+                                            )
+                                    }
 
-                            </Select>
-
-                        </Form.Item>*/}
+                                </Select>
+                        </Form.Item>
 
 
                         </Col>
@@ -302,7 +305,7 @@ const UpdateTrainingProgramPage = (props) => {
 
             </>
         ) : <Spin />
-    }, [trainingProgram])
+    }, [trainingProgram, insState])
 
 
 }

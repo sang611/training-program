@@ -47,7 +47,7 @@ const ListOutlinePage = (props) => {
     }
 
     const actionAdmin = (item) => [
-        <Link to={`/uet/training-programs/updating/${item.uuid}`}>
+        <Link to={`/uet/courses/${course.uuid}/outlines/${item.uuid}/updating`}>
             <EditOutlined key="edit"/>
         </Link>,
 
@@ -62,7 +62,7 @@ const ListOutlinePage = (props) => {
     ]
 
     const actionModerator = (item) => [
-        <Link to={`/uet/training-programs/updating/${item.uuid}`}>
+        <Link to={`/uet/courses/${course.uuid}/outlines/${item.uuid}/updating`}>
             <EditOutlined key="edit"/>
         </Link>,
 
@@ -70,6 +70,7 @@ const ListOutlinePage = (props) => {
 
 
     const OutlineItem = ({item, index}) => {
+        let createTime = new Date(item.createdAt)
         return (
             <Card
                 extra={
@@ -82,7 +83,7 @@ const ListOutlinePage = (props) => {
                         return actionModerator(item)
                     }
                 }()}
-                title={`Version ${outlines.length - index}`}
+                title={`${createTime.getDate()}/${createTime.getMonth()}/${createTime.getFullYear()}`}
                 hoverable
             >
                 <Descriptions column={1}>
@@ -97,8 +98,6 @@ const ListOutlinePage = (props) => {
                             }()
                         }
                     </Descriptions.Item>
-
-
                 </Descriptions>
             </Card>
         )

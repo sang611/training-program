@@ -71,57 +71,26 @@ const Lecturers = ({lecturers}) => {
 }
 
 const LOCs = ({locs}) => {
+    const levels = [1,2,3,4,5,6]
     const columns = [
         {
             title: 'Mục tiêu, nội dung',
             dataIndex: 'content',
             key: 'content',
         },
-        {
-            title: 'Bậc 1',
-            key: 'level1',
-            render: (_, record) => {
-                return (
-                    <>
-                        {record.outline_learning_outcome.level === 1 ? 'X' : ""}
-                    </>
+
+    ].concat(
+        levels.map(level => {
+            return {
+                title: `Bậc ${level}`,
+                key: `level ${level}`,
+                render: (_, record) => (
+                    record.outline_learning_outcome.level === level ? 'X' : ""
                 )
             }
-        },
-        {
-            title: 'Bậc 2',
-            key: 'level2',
-            render: (_, record) => {
-                return (
-                    <>
-                        {record.outline_learning_outcome.level === 2 ? 'X' : ""}
-                    </>
-                )
-            }
-        },
-        {
-            title: 'Bậc 3',
-            key: 'level3',
-            render: (_, record) => {
-                return (
-                    <>
-                        {record.outline_learning_outcome.level === 3 ? 'X' : ""}
-                    </>
-                )
-            }
-        },
-        {
-            title: 'Bậc 4',
-            key: 'level4',
-            render: (_, record) => {
-                return (
-                    <>
-                        {record.outline_learning_outcome.level === 4 ? 'X' : ""}
-                    </>
-                )
-            }
-        },
-    ];
+        })
+    )
+
     return (
         <>
             <Table

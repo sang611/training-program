@@ -35,6 +35,7 @@ const UpdateOutlinePage = () => {
 
     useEffect(() => {
         dispatch(actions.getACourse({courseUuid: uuid}))
+        dispatch(actions.getAllLearningOutcomes({typeLoc: 2, content: "", title: "", page: 1}))
     }, [])
 
     useEffect(() => {

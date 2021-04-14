@@ -3,9 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="b03111ef-773f-4dae-b9ce-907452fe58db" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/CreateAccountPage/CreateAccountPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateAccountPage/CreateAccountPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/StudentStatisticPage/StudentStatisticPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/StudentStatisticPage/StudentStatisticPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/redux/saga/accounts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/redux/saga/accounts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/CreateOutlineCoursePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/CreateOutlineCoursePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/LOCOfCourse.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/LOCOfCourse.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/CreateTrainingProgramPage/CreateTrainingProgramPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateTrainingProgramPage/CreateTrainingProgramPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/DetailOutlinePage/DetailOutlinePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DetailOutlinePage/DetailOutlinePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/DetailTrainingProgramPage/DetailTrainingProgramPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DetailTrainingProgramPage/DetailTrainingProgramPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/LearningOutcomePage/CreatePLO.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LearningOutcomePage/CreatePLO.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/ListOutlinePage/ListOutlinePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListOutlinePage/ListOutlinePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/UpdateOutlinePage/UpdateOutlinePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateOutlinePage/UpdateOutlinePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramLOC.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramLOC.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/UpdateTrainingProgramPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/UpdateTrainingProgramPage.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
