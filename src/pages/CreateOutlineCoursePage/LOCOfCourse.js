@@ -1,8 +1,6 @@
-import {useState, useEffect, useRef, useMemo} from 'react';
-import {Cascader, Col, Form, Input, InputNumber, Row, Table} from "antd";
-import * as actions from '../../redux/actions'
-import {useDispatch, useSelector} from "react-redux";
-import React, {createContext, useContext} from "react";
+import React, {useEffect, useState} from 'react';
+import {Col, InputNumber, Row, Table} from "antd";
+import {useSelector} from "react-redux";
 
 const CLO = ({setLoc, learning_outcomes}) => {
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -38,6 +36,7 @@ const CLO = ({setLoc, learning_outcomes}) => {
             title: 'Bậc',
             dataIndex: 'level',
             key: 'level',
+            width: 100,
             render: (text, record) => {
                 if(!learning_outcomes) {record.level=1}
                 else {
@@ -121,7 +120,7 @@ const LOCOfCourse = ({setLoc, learning_outcomes}) => {
     return (
         <>
             <Row>
-                <Col span={12}>
+                <Col span={20}>
                     <CLO setLoc={setLoc} learning_outcomes={learning_outcomes}/>
                 </Col>
             </Row>

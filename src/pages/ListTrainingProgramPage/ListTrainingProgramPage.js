@@ -280,7 +280,7 @@ const ListTrainingProgramPage = () => {
                                     gutter: 30,
                                     xs: 1,
                                     sm: 2,
-                                    md: 3,
+                                    md: 2,
                                     lg: 3,
                                     xl: userRole > 0 ? 4 : 3,
                                     xxl: 4,

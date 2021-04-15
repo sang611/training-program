@@ -103,7 +103,7 @@ const DashboardPage = () => {
         <>
             <Layout style={{minHeight: '100vh'}}>
                 <Sider
-                    breakpoint="lg"
+                    breakpoint="xl"
                     collapsedWidth="0"
                     onBreakpoint={broken => {
                         console.log(broken);

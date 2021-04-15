@@ -246,10 +246,38 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
     }))
 
     const onLock = async (uuid) => {
+        let course_outlines = [];
+        for(let course of item.courses) {
+            course_outlines.push({
+                courseUuid: course.uuid,
+                outlineUuid: course.outlines[0] ? course.outlines[0].uuid : null
+            })
+        }
         try {
-            const response = await axios.put(`/training-programs/${uuid}`, {lock_edit: 1})
-            console.log(response.status)
+            await axios.put(`/training-programs/${uuid}/lock`, {
+                course_outlines
+            })
             message.success("Đã khóa chương trình đào tạo");
+            dispatch(actions.getAllTrainingProgram({vnNameSearch: ""}));
+        } catch (e) {
+            message.error("Đã có lỗi xảy ra")
+        }
+    }
+
+    const onUnLock = async (uuid) => {
+        let course_outlines = [];
+        for(let course of item.courses) {
+            course_outlines.push({
+                courseUuid: course.uuid,
+                outlineUuid: course.outlines[0] ? course.outlines[0].uuid : null
+            })
+        }
+        try {
+            await axios.put(`/training-programs/${uuid}/unlock`, {
+                course_outlines
+            })
+            message.success("Đã mở khóa chương trình đào tạo");
+            dispatch(actions.getAllTrainingProgram({vnNameSearch: ""}));
         } catch (e) {
             message.error("Đã có lỗi xảy ra")
         }
@@ -276,17 +304,25 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
         <BuildOutlined onClick={() => setVisibleLocMatrix(true)}/>,
         <InsertRowBelowOutlined onClick={() => setVisibleCourseMatrix(true)}/>,
 
-        <Popconfirm
-            title="Sau khi khóa sẽ không thể chỉnh sửa?"
-            cancelText="Hủy"
-            okText="Khóa"
-            onConfirm={() => onLock(item.uuid)}
-        >
-            {
-                item.lock_edit ? <LockOutlined/> : <UnlockOutlined />
-            }
+            item.lock_edit ?
+                <Popconfirm
+                    title="Sau khi khóa sẽ không thể chỉnh sửa?"
+                    cancelText="Hủy"
+                    okText="Khóa"
+                    onConfirm={() => onLock(item.uuid)}
+                >
+                    <LockOutlined/>
+                </Popconfirm>
+                :
+                <Popconfirm
+                    title="Mở khóa chương trình đào tạo này?"
+                    cancelText="Hủy"
+                    okText="Mỏ khóa"
+                    onConfirm={() => onUnLock(item.uuid)}
+                >
+                    <LockOutlined/>
+                </Popconfirm>,
 
-        </Popconfirm>,
         <Popconfirm
             title="Xóa CTĐT?"
             cancelText="Hủy"
