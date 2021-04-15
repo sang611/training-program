@@ -33,6 +33,7 @@ import UpdateOutlinePage from "../UpdateOutlinePage";
 import {io} from "socket.io-client";
 import {useEffect, useRef} from "react";
 import axios from "axios";
+import ScrollToTop from "../../ScrollToTop";
 
 
 const StudentDashboardPage = () => {
@@ -134,7 +135,7 @@ const StudentDashboardPage = () => {
                                     } else return ''
                                 }()
                             }/>} title={" " + user.fullname}>
-                                {
+                                {/*{
                                     userRole == 3 ?
                                         <Menu.Item
                                             key="4-1"
@@ -142,7 +143,7 @@ const StudentDashboardPage = () => {
                                         >
                                             <Link to="/uet/statistic">Thống kê</Link>
                                         </Menu.Item> : ''
-                                }
+                                }*/}
                                 <Menu.Item
                                     key="4-2"
                                     icon={<SolutionOutlined/>}
@@ -171,6 +172,7 @@ const StudentDashboardPage = () => {
                         <Breadcrumb.Item>App</Breadcrumb.Item>*/}
                     </Breadcrumb>
                     <div className="site-layout-background" style={{padding: 30, minHeight: '100vh'}}>
+                        <ScrollToTop />
                         <Switch>
                             <Route path="/uet/institutions" component={ListInstitutionPage}/>
                             <Route path="/uet/accounts" component={ListAccountPage}/>

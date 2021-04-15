@@ -4,7 +4,7 @@ import {
     DesktopOutlined,
     FileOutlined,
     LogoutOutlined,
-    PartitionOutlined,
+    PartitionOutlined, PieChartOutlined,
     ReadOutlined,
     SolutionOutlined,
     TableOutlined,
@@ -41,6 +41,8 @@ import {io} from "socket.io-client";
 import Avatar from "antd/es/avatar/avatar";
 import NotificationDrawer from "./NotificationDrawer";
 import axios from "axios";
+import AdminStatisticPage from "../AdminStatisticPage";
+import ScrollToTop from "../../ScrollToTop";
 
 
 const DashboardPage = () => {
@@ -133,6 +135,9 @@ const DashboardPage = () => {
                         defaultSelectedKeys={[localStorage.getItem("menu-active")]}
                         mode="inline" onClick={onClickMenuItem}
                     >
+                        <Menu.Item key="1" className="sub-menu" icon={<PieChartOutlined />}>
+                            <Link to="/uet/statistic">Trang chủ</Link>
+                        </Menu.Item>
                         <SubMenu key="sub0" icon={<DesktopOutlined/>} title="Chương trình đào tạo" className="sub-menu">
                             <Menu.Item key="2" className="menu-item-child">
                                 <Link to="/uet/training-programs">Danh sách</Link>
@@ -249,6 +254,7 @@ const DashboardPage = () => {
                         </Breadcrumb>
 
                         <div className="site-layout-background" style={{padding: 24, minHeight: '100vh'}}>
+                            <ScrollToTop />
                             <Switch>
                                 <Route path="/uet/institutions/creation" component={CreateInstitutionPage}/>
                                 <Route path="/uet/institutions" component={ListInstitutionPage}/>
@@ -280,7 +286,7 @@ const DashboardPage = () => {
                                 <Route path="/uet/documents/:doc_of" component={DocumentPage}/>
 
                                 <Route path="/uet/majors" component={MajorPage}/>
-
+                                <Route path="/uet/statistic" component={AdminStatisticPage} />
                             </Switch>
                         </div>
                     </Content>

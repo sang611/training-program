@@ -67,7 +67,7 @@ const CourseTypeByStatusStatistic = ({courses, trainingProgram, semes}) => {
             ]
 
         )
-    }, [semes]);
+    }, [semes, courses]);
 
 
     var config = {

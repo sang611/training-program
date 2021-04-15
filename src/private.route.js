@@ -24,22 +24,17 @@ const PrivateRoute = ({component: Component, children, ...rest}) => {
                     jwt.verify(token, "training_program_2019_fc9f03e8", function (err, decoded) {
                         if (decoded) {
                             dispatch(actions.setCurrentUser(decoded));
-
                             dispatch(actions.getAUser({
                                 accountUuid: decoded.uuid,
                             }))
-
-
                         }
-
                     })
-
 
                 })
                 .catch((err) => {
                     dispatch(actions.setIsValidToken(false))
                 })
-                .then(() => setIsTokenValidated(true));
+                .finally(() => setIsTokenValidated(true));
         } else {
             setIsTokenValidated(true);
         }

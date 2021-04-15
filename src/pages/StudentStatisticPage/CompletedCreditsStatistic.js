@@ -59,7 +59,7 @@ const CompletedCreditsStatistic = ({trainingProgram, courses}) => {
         setBTotal_(b_);
         setLTotal_(l_);
         setBTTotal_(bt_);
-    }, [])
+    }, [courses])
 
     var data = [
         {

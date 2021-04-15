@@ -11,3 +11,20 @@ th {
   background-color: #303641 !important;
   color: #ffffffa6 !important;
 }
+
+figure.table table th,
+figure.table table tr,
+figure.table table td{
+  border: solid 1px black;
+
+}
+
+figure.table table td{
+  padding: 5px 10px;
+}
+
+figure.table table {
+  border-collapse: collapse;
+}
+
+

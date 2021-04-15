@@ -27,7 +27,7 @@ const AddTrainingProgramClass = ({trainingProgram}) => {
 
     function onAddClasses() {
         axios.put(`/training-programs/${trainingProgram.uuid}/classes`, {
-            classes: JSON.stringify(classes)
+            classes: classes
         })
             .then((res) => {
                 message.success(res.data.message)
@@ -42,24 +42,46 @@ const AddTrainingProgramClass = ({trainingProgram}) => {
             <Title level={4}>
                 Danh sách các lớp
             </Title>
-            <Select
-                mode="multiple"
-                allowClear
-                style={{ width: '50%' }}
-                placeholder="Chọn các lớp theo CTĐT này"
-                onChange={handleChange}
-                defaultValue={
-                    trainingProgram.classes ? JSON.parse(trainingProgram.classes) : false
-                }
-            >
-                {
-                    children.map((classCode, index) => {
-                        return (
-                            <Select.Option value={classCode} key={index}>{classCode}</Select.Option>
-                        )
-                })
-                }
-            </Select>
+            {
+                trainingProgram.classes ?
+                    <Select
+                        mode="multiple"
+                        allowClear
+                        style={{ width: '50%' }}
+                        placeholder="Chọn các lớp theo CTĐT này"
+                        onChange={handleChange}
+                        defaultValue={
+                            JSON.parse(trainingProgram.classes)
+                        }
+                    >
+                        {
+                            children.map((classCode, index) => {
+                                return (
+                                    <Select.Option value={classCode} key={index}>{classCode}</Select.Option>
+                                )
+                            })
+                        }
+                    </Select>
+                    :
+                    <Select
+                        mode="multiple"
+                        allowClear
+                        style={{ width: '50%' }}
+                        placeholder="Chọn các lớp theo CTĐT này"
+                        onChange={handleChange}
+                    >
+                        {
+                            children.map((classCode, index) => {
+                                return (
+                                    <Select.Option value={classCode} key={index}>{classCode}</Select.Option>
+                                )
+                            })
+                        }
+                    </Select>
+
+            }
+
+
 
             <Button type="primary" onClick={onAddClasses} disabled={disable}>
                 Thêm
