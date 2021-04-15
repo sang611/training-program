@@ -13,22 +13,12 @@ const StudentStatisticPage = () => {
     const {training_program, courses} = user;
     const [semes, setSemes] = useState(0);
 
-    const dispatch = useDispatch();
-    const {currentUser} = useSelector(state => state.auth)
-
     const semesters = new Array(user.training_program.training_duration * 2).fill(undefined);
-
-    useEffect(() => {
-            dispatch(actions.getAUser({
-                accountUuid: currentUser.uuid,
-            }))
-        }, []
-    )
 
     return  (
         <div>
             {
-                useMemo(() =>  (
+
                     training_program.courses.length > 0 || training_program.require_summary ? <>
                         <Row justify="space-between" align="middle">
                             <Space>
@@ -159,7 +149,7 @@ const StudentStatisticPage = () => {
                             </Col>
                         </Row>
                     </> : ''
-                ) , [semes])
+
             }
 
         </div>

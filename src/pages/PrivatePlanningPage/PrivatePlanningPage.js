@@ -8,6 +8,7 @@ import {CheckCircleOutlined, CopyOutlined, ExclamationCircleOutlined} from "@ant
 import Title from "antd/lib/typography/Title";
 import StudentCourseSequenceCard from "./StudentCourseSequenceCard";
 import Search from "antd/lib/input/Search";
+import StudentStatisticPage from "../StudentStatisticPage";
 
 const PrivatePlanningPage = () => {
 
@@ -30,9 +31,10 @@ const PrivatePlanningPage = () => {
     const [numCredits, setNumCredits] = useState(0);
     const [semes, setSemes] = useState(1);
 
-    const {currentUser, userRole} = useSelector(state => state.auth);
     const {accounts} = useSelector(state => state.accounts);
     const semesters = new Array(user.training_program.training_duration * 2).fill(undefined);
+
+    const [numMove, setNumMove] = useState(0);
 
 
     useEffect(() => {
@@ -212,7 +214,7 @@ const PrivatePlanningPage = () => {
 
                         }
 
-                        if (toLaneId == "working" || fromLaneId == "working")
+                        //if (toLaneId == "working" || fromLaneId == "working")
                             dispatch(actions.getAUser({
                                 accountUuid: user.accountUuid,
                             }))
@@ -375,10 +377,13 @@ const PrivatePlanningPage = () => {
                     }}
                 />
             </Row>
+
             <Divider/>
 
+            <StudentStatisticPage />
 
             <br/>
+
             <Row>
                 <Col span={10} offset={1}>
                     <Card title={

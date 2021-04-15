@@ -1,39 +1,17 @@
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
-import * as actionTypes from '../../redux/actions/actionTypes'
-import {
-    Avatar,
-    Button,
-    Col,
-    Descriptions,
-    List,
-    message,
-    Pagination,
-    Popconfirm,
-    Row,
-    Skeleton,
-    Space,
-    Tabs
-} from "antd";
+import {Avatar, Button, Col, Descriptions, List, message, Pagination, Popconfirm, Row, Tabs} from "antd";
 import Search from "antd/lib/input/Search";
-import {
-    AndroidOutlined,
-    AppleOutlined, DeleteRowOutlined,
-    DesktopOutlined,
-    InfoCircleOutlined,
-    MailOutlined,
-    PhoneOutlined
-} from "@ant-design/icons";
-import {Redirect, useHistory} from "react-router-dom";
-import InfiniteScroll from 'react-infinite-scroller';
+import {DeleteRowOutlined, DesktopOutlined, InfoCircleOutlined, MailOutlined, PhoneOutlined} from "@ant-design/icons";
+import {useHistory} from "react-router-dom";
 import axios from "axios";
 
 
 const ListAccountPage = () => {
     const dispatch = useDispatch();
     const history = useHistory();
-    const state = useSelector((state) => state.accounts);
+    const {accounts} = useSelector((state) => state.accounts);
 
     const {isValidToken, currentUser, userRole} = useSelector((state) => state.auth)
 
@@ -164,7 +142,7 @@ const ListAccountPage = () => {
             <List
                 className="demo-loadmore-list"
                 itemLayout="horizontal"
-                dataSource={state.accounts ? state.accounts.accounts : []}
+                dataSource={accounts}
                 size="large"
                 renderItem={(item) => (
                     <List.Item
@@ -217,7 +195,7 @@ const ListAccountPage = () => {
                     <Pagination
                         current={currentPage}
                         pageSize={10}
-                        total={state.accounts ? state.accounts.totalResults : ""}
+                        total={accounts.length}
                         onChange={(e) => {
                             setCurrentPage(e)
                         }}

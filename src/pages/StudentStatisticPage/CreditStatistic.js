@@ -30,7 +30,7 @@ const CreditStatistic = ({courses, semes}) => {
         setWorking(w);
         setImproved(i);
         setCompleted(c);
-    }, [semes])
+    }, [semes, courses])
 
 
     let data = [

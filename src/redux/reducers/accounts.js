@@ -28,15 +28,15 @@ const reducer = (state = initialState, action) => {
                 error: null,
                 isSearch: false,
                 isFilter: false,
-                accounts: action.payload
+                accounts: action.payload.accounts
             }
-        case actionTypes.FETCH_ACCOUNTS_FAIL: 
+        case actionTypes.FETCH_ACCOUNTS_FAIL:
             return {
                 ...state,
                 accounts: [],
                 error: action.error
             }
-        case actionTypes.ADD_ACCOUNT_START: 
+        case actionTypes.ADD_ACCOUNT_START:
             return {
                 ...state,
                 error: null
@@ -46,7 +46,7 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 error: false
             }
-        case actionTypes.ADD_ACCOUNT_FAIL: 
+        case actionTypes.ADD_ACCOUNT_FAIL:
             return {
                 ...state,
                 error: action.error

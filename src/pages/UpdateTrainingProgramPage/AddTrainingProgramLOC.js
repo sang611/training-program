@@ -183,7 +183,6 @@ const ListLocs = ({trainingProgram}) => {
         >
             <CreatePLO onCloseDrawer={onCloseDrawer} setContent={setContent} setTitle={setTitle} />
         </Drawer>
-
     </>
 }
 
