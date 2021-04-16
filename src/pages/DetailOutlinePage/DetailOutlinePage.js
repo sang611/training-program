@@ -2,12 +2,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {useState, useEffect} from 'react'
 import {useHistory, useParams} from "react-router-dom";
 import axios from "axios";
-import {Affix, Button, message, Spin, Table} from "antd";
+import {Affix, Button, message, Row, Space, Spin, Table} from "antd";
 import Title from "antd/lib/typography/Title";
 import InforCourseOutline from "../CreateOutlineCoursePage/InforCourseOutline";
 import Parser from 'html-react-parser';
 import TextArea from "antd/lib/input/TextArea";
-import {CheckOutlined, EditOutlined} from "@ant-design/icons";
+import {CheckOutlined, EditOutlined, FilePdfOutlined, FileWordOutlined} from "@ant-design/icons";
+import {exportToDoc, printDocument} from "../../utils/export";
 
 const Lecturers = ({lecturers}) => {
 
@@ -71,7 +72,7 @@ const Lecturers = ({lecturers}) => {
 }
 
 const LOCs = ({locs}) => {
-    const levels = [1,2,3,4,5,6]
+    const levels = [1, 2, 3, 4, 5, 6]
     const columns = [
         {
             title: 'Mục tiêu, nội dung',
@@ -86,7 +87,7 @@ const LOCs = ({locs}) => {
                 key: `level ${level}`,
                 render: (_, record) => (
                     <center>
-                        {record.outline_learning_outcome.level === level ? <CheckOutlined /> : ""}
+                        {record.outline_learning_outcome.level === level ? <CheckOutlined/> : ""}
                     </center>
 
                 )
@@ -148,67 +149,76 @@ const DetailOutlinePage = () => {
                     </Affix> : ''
             }
 
+            <div id="outline">
 
-            <br/>
-            <Title level={4}>
-                1. Thông tin về các giảng viên môn học
-            </Title>
-            <Lecturers lecturers={outline.lecturers}/> <br/>
 
-            <Title level={4}>
-                2. Thông tin chung về môn học
-            </Title>
-            <InforCourseOutline course={outline.course}/> <br/>
+                <br/>
+                <Title level={4}>
+                    1. Thông tin về các giảng viên môn học
+                </Title>
+                <Lecturers lecturers={outline.lecturers}/> <br/>
 
-            <Title level={4}>
-                3. Mục tiêu môn học
-            </Title>
-            {
-                outline.goal ? Parser(outline.goal) : ''
-            }
-            <Title level={4}>
-                4. Chuẩn đầu ra
-            </Title>
-            <LOCs locs={outline.learning_outcomes}/> <br/>
+                <Title level={4}>
+                    2. Thông tin chung về môn học
+                </Title>
+                <InforCourseOutline course={outline.course}/> <br/>
 
-            <Title level={4}>
-                5. Tóm tắt nội dung môn học
-            </Title>
+                <Title level={4}>
+                    3. Mục tiêu môn học
+                </Title>
+                {
+                    outline.goal ? Parser(outline.goal) : ''
+                }
+                <Title level={4}>
+                    4. Chuẩn đầu ra
+                </Title>
+                <LOCs locs={outline.learning_outcomes}/> <br/>
 
-            {outline.summary_content}
+                <Title level={4}>
+                    5. Tóm tắt nội dung môn học
+                </Title>
 
-            <Title level={4}>
-                6. Nội dung chi tiết
-            </Title>
-            {
-                outline.detail_content ? Parser(outline.detail_content) : ''
-            }
-            <Title level={4}>
-                7. Học liệu
-            </Title>
-            {
-                outline.documents ? Parser(outline.documents) : ''
-            }
+                {outline.summary_content}
 
-            <Title level={4}>
-                8. Hình thức tổ chức dạy học
-            </Title>
-            {
-                outline.teachingFormality ? Parser(outline.teachingFormality) : ''
-            }
-            <Title level={4}>
-                9. Chính sách đối với môn học và các yêu cầu khác của giảng viên
-            </Title>
-            {
-                outline.coursePolicy ? Parser(outline.coursePolicy) : ''
-            }
+                <Title level={4}>
+                    6. Nội dung chi tiết
+                </Title>
+                {
+                    outline.detail_content ? Parser(outline.detail_content) : ''
+                }
+                <Title level={4}>
+                    7. Học liệu
+                </Title>
+                {
+                    outline.documents ? Parser(outline.documents) : ''
+                }
 
-            <Title level={4}>
-                10. Phương pháp, hình thức kiểm tra, đánh giá kết quả học tập môn học
-            </Title>
-            {
-                outline.examFormality ? Parser(outline.examFormality) : ''
-            }
+                <Title level={4}>
+                    8. Hình thức tổ chức dạy học
+                </Title>
+                {
+                    outline.teachingFormality ? Parser(outline.teachingFormality) : ''
+                }
+                <Title level={4}>
+                    9. Chính sách đối với môn học và các yêu cầu khác của giảng viên
+                </Title>
+                {
+                    outline.coursePolicy ? Parser(outline.coursePolicy) : ''
+                }
+
+                <Title level={4}>
+                    10. Phương pháp, hình thức kiểm tra, đánh giá kết quả học tập môn học
+                </Title>
+                {
+                    outline.examFormality ? Parser(outline.examFormality) : ''
+                }
+            </div>
+            <Row align="end">
+                <Space>
+                    <Button icon={<FilePdfOutlined/>} onClick={() => printDocument('outline')}>Export PDF</Button>
+                    <Button icon={<FileWordOutlined/>} onClick={() => exportToDoc('outline')}>Export Word</Button>
+                </Space>
+            </Row>
 
         </>
     )

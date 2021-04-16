@@ -56,11 +56,6 @@ const DashboardPage = () => {
     const [activeKey, setActiveKey] = useState(history.location.pathname);
 
     useEffect(() => {
-        console.log(history)
-        setActiveKey(history.location.pathname)
-    }, [history])
-
-    useEffect(() => {
         return history.listen(location => {
             if (history.action === 'PUSH') {
                 setActiveKey(location.pathname)
@@ -145,8 +140,8 @@ const DashboardPage = () => {
                     <div className="logo" id="logo">
                         <Divider>
                             <Image
-                                width={100}
-                                src="https://image.winudf.com/v2/image/Y29tLm5ndXllbmhvcHF1YW5nLnVldG5ld3NfaWNvbl8xNTA5NzUxMzAyXzA1NQ/icon.png?w=170&fakeurl=1"
+                                width={150}
+                                src={process.env.PUBLIC_URL + '/image/dashboard-logo.png'}
                             />
                         </Divider>
                     </div>
@@ -187,9 +182,9 @@ const DashboardPage = () => {
                             {/*<Menu.Item key="9" className="menu-item-child">
                                         <Link to="/uet/learning-outcome-titles">Danh sách đầu mục</Link>
                                     </Menu.Item>*/}
-                            <Menu.Item key="/uet/documents/learning-outcome" className="menu-item-child">
+                            {/*<Menu.Item key="/uet/documents/learning-outcome" className="menu-item-child">
                                 <Link to="/uet/documents/learning-outcome">Tài liệu</Link>
-                            </Menu.Item>
+                            </Menu.Item>*/}
                         </SubMenu>
                         <SubMenu key="sub3" icon={<BankOutlined/>} title="Đơn vị chuyên môn" className="sub-menu">
                             <Menu.Item key="/uet/institutions" className="menu-item-child">

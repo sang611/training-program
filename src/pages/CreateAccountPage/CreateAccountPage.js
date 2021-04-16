@@ -425,20 +425,42 @@ const CreateAccountPage = () => {
                                 }
                             </Select>
                         </Form.Item>
-                        <Form.Item
-                            label="Lớp môn học:"
-                            name="class"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Lớp môn học của sinh viên không được để trống'
-                                },
-                            ]}
-                        >
-                            <Input
-                                placeholder="Lớp môn học của sinh viên"
-                                addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
-                        </Form.Item>
+                        <Row>
+                            <Col span={12}>
+                                <Form.Item
+                                    label="Lớp môn học:"
+                                    name="class"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Lớp môn học của sinh viên không được để trống'
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        placeholder="Lớp môn học của sinh viên"
+                                        addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    label="Khóa:"
+                                    name="grade"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Sinh viên thuộc khóa nào?'
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        placeholder="K60, K61, K62,..."
+                                        addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+
                         {UsernamePasswordForm}
                         <br/>
                         <Form.Item {...buttonItemLayout}>

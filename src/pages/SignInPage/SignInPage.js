@@ -62,6 +62,7 @@ function SignInPage(props) {
     const state = useSelector(state => state.auth);
     const [isAuth, setIsAuth] = useState(false);
 
+
     const onFinish = (values) => {
         setSignInfo(values);
         dispatch(actions.auth(values));
@@ -88,7 +89,7 @@ function SignInPage(props) {
                 message: 'Đăng nhập thành công',
                 description:
                     'Hệ thống quản lý Chương trình đào tạo',
-                placement: 'bottomLeft'
+                placement: 'bottomRight'
             });
         }
     }, [state.error, state.user])
@@ -106,7 +107,8 @@ function SignInPage(props) {
     };
 
 
-    return state.isValidToken ? <Redirect to="/uet/statistic"/> : (
+
+    return state.isValidToken ? <Redirect to={state.userRole == 0 ? '/uet/statistic' : '/uet/training-programs'}/> : (
 
         <div className="login-container">
 

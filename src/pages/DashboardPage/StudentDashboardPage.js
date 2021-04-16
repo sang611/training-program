@@ -1,4 +1,4 @@
-import {Breadcrumb, Image, Layout, Menu, notification, Row} from "antd";
+import {Breadcrumb, Image, Layout, Menu, notification} from "antd";
 import {Content, Header} from "antd/lib/layout/layout";
 import 'antd/dist/antd.css';
 import {Link, Route, Switch, useHistory} from "react-router-dom";
@@ -16,7 +16,6 @@ import {
     CompassOutlined,
     FileOutlined,
     LogoutOutlined,
-    PieChartOutlined,
     SnippetsOutlined,
     SolutionOutlined,
     TeamOutlined
@@ -31,7 +30,7 @@ import CreateOutlineCoursePage from "../CreateOutlineCoursePage";
 import Avatar from "antd/es/avatar/avatar";
 import UpdateOutlinePage from "../UpdateOutlinePage";
 import {io} from "socket.io-client";
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import ScrollToTop from "../../ScrollToTop";
 
@@ -42,6 +41,21 @@ const StudentDashboardPage = () => {
     const {user} = useSelector(state => state.accounts)
     let socket = useRef(null);
     const URL = axios.defaults.baseURL;
+    const history = useHistory();
+    const [activeKey, setActiveKey] = useState(history.location.pathname);
+
+    useEffect(() => {
+        return history.listen(location => {
+            if (history.action === 'PUSH') {
+                setActiveKey(location.pathname)
+            }
+
+            if (history.action === 'POP') {
+                setActiveKey(location.pathname)
+            }
+        })
+    }, [])
+
 
     useEffect(() => {
         socket.current = io(URL, {
@@ -89,23 +103,23 @@ const StudentDashboardPage = () => {
 
                         <Menu
                             mode="horizontal"
-                            defaultSelectedKeys={[localStorage.getItem("menu-active-public") || 1]}
+                            selectedKeys={activeKey}
                             onClick={onClickMenuItem}
                             style={{
                                 marginLeft: 'auto'
                             }}
                         >
-                            <Menu.Item key="1" icon={<ApartmentOutlined/>}>
+                            <Menu.Item key="/uet/training-programs" icon={<ApartmentOutlined/>}>
                                 <Link to="/uet/training-programs">
                                     Chương trình đào tạo
                                 </Link>
                             </Menu.Item>
-                            <Menu.Item key="2" icon={<TeamOutlined/>}>
+                            <Menu.Item key="/uet/accounts" icon={<TeamOutlined/>}>
                                 <Link to="/uet/accounts">Giảng viên</Link>
                             </Menu.Item>
                             {
                                 userRole == 3 ?
-                                    <Menu.Item key="3" icon={<CompassOutlined/>}>
+                                    <Menu.Item key={`/uet/${currentUser.uuid}/planning`} icon={<CompassOutlined/>}>
                                         <Link to={`/uet/${currentUser.uuid}/planning`}>Kế hoạch học
                                             tập</Link>
                                     </Menu.Item> : <></>
@@ -113,13 +127,13 @@ const StudentDashboardPage = () => {
                             }
                             <SubMenu key="5" icon={<SnippetsOutlined/>} title="Tài liệu">
                                 <Menu.Item
-                                    key="5-1"
+                                    key="/uet/documents/training-program"
                                     icon={<FileOutlined/>}
                                 >
                                     <Link to="/uet/documents/training-program">Tài liệu CTĐT</Link>
                                 </Menu.Item>
                                 <Menu.Item
-                                    key="5-2"
+                                    key="/uet/documents/course"
                                     icon={<AuditOutlined/>}
                                 >
                                     <Link to="/uet/documents/course">Tài liệu học phần</Link>
@@ -145,7 +159,7 @@ const StudentDashboardPage = () => {
                                         </Menu.Item> : ''
                                 }*/}
                                 <Menu.Item
-                                    key="4-2"
+                                    key={`/uet/user/${currentUser.uuid}`}
                                     icon={<SolutionOutlined/>}
                                 >
 

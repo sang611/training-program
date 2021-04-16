@@ -11,7 +11,7 @@ const ActivityChart = () => {
         axios.get("/accounts/activity/information")
             .then(res => {
                 setInfors(res.data.infors.map(infor => {
-                    infor.role = infor.role.toString();
+                    infor.role = infor.role == 1 || infor.role == 2 ? "Giảng viên" : "Sinh viên"
                     return infor;
                 }))
             })

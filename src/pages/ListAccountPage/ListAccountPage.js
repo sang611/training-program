@@ -106,7 +106,7 @@ const ListAccountPage = () => {
                                     tab={
                                         <span>
                                           <i className="fas fa-chalkboard-teacher"/>&ensp;
-                                          Giảng viên
+                                            Giảng viên
                                         </span>
                                     }
                                     key="GV"
@@ -116,7 +116,7 @@ const ListAccountPage = () => {
                                     tab={
                                         <span>
                                           <i className="fas fa-user-graduate"/>&ensp;
-                                          Sinh viên
+                                            Sinh viên
                                         </span>
                                     }
                                     key="SV"
@@ -182,12 +182,24 @@ const ListAccountPage = () => {
                                     <Descriptions.Item contentStyle={{color: "gray"}}>
                                         <PhoneOutlined/>&ensp;{item.phone_number}
                                     </Descriptions.Item>
-                                    <Descriptions.Item contentStyle={{color: "gray"}}>
-                                        <DesktopOutlined/>&ensp;{item.institution ? item.institution.vn_name : ''}
-                                    </Descriptions.Item>
-                                    <Descriptions.Item contentStyle={{color: "gray"}}>
-                                        <DesktopOutlined/>&ensp;{item.institution ? item.institution.parent.vn_name : ''}
-                                    </Descriptions.Item>
+                                    {
+                                        item.account.role < 3 ?
+                                            <>
+                                                <Descriptions.Item contentStyle={{color: "gray"}}>
+                                                    <DesktopOutlined/>&ensp;{item.institution ? item.institution.vn_name : ''}
+                                                </Descriptions.Item>
+                                                <Descriptions.Item contentStyle={{color: "gray"}}>
+                                                    <DesktopOutlined/>&ensp;{item.institution ? item.institution.parent.vn_name : ''}
+                                                </Descriptions.Item>
+                                            </> :
+                                            <>
+                                                <Descriptions.Item contentStyle={{color: "gray"}}>
+                                                    <i className="fas fa-house-user"/>&ensp;
+                                                    {`${item.grade} ${item.class}`}
+                                                </Descriptions.Item>
+                                            </>
+                                    }
+
                                 </Descriptions>
                             }
                         />

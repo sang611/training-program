@@ -147,7 +147,7 @@ const DetailTrainingProgramPage = (props) => {
                 <Row align="end">
                     <Space>
                         <Button icon={<FilePdfOutlined/>} onClick={printDocument} loading={isExportingPdf}>Export PDF</Button>
-                        <Button icon={<FileWordOutlined />} onClick={exportToDoc} loading={isExportingPdf}>Export Word</Button>
+                        <Button icon={<FileWordOutlined />} onClick={exportToDoc} >Export Word</Button>
                     </Space>
                 </Row>
             </>

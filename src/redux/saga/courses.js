@@ -9,7 +9,6 @@ import * as actionTypes from "../actions/actionTypes";
 export function* getAllCourse(action) {
     let course_name_vi = "", course_name_en = "", course_code="";
     if(action.payload){
-
         course_name_vi = action.payload.course_name_vi;
         course_name_en = action.payload.course_name_en;
         course_code = action.payload.course_code;

@@ -2,9 +2,9 @@ import {CloudDownloadOutlined, DeleteOutlined, EditOutlined} from "@ant-design/i
 import axios from "axios";
 import Meta from "antd/lib/card/Meta";
 import Paragraph from "antd/lib/typography/Paragraph";
-import {Card, Divider, message, Popconfirm} from "antd";
+import {Card, Divider, message, Popconfirm, Tooltip} from "antd";
 import {useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
 import Modal from "antd/es/modal/Modal";
 
@@ -15,6 +15,26 @@ const DocumentCard = ({userRole, item}) => {
     const [editableDesc, setEditableDesc] = useState(item.description);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const dispatch = useDispatch();
+
+    const {trainingPrograms} = useSelector(state => state.trainingPrograms)
+    const {courses} = useSelector(state => state.courses)
+
+    function getDocumentResourceName() {
+        let {resourceUuid, category} = item;
+        if(category === "training-program") {
+            let trainingItem = trainingPrograms.find(item => item.uuid === resourceUuid)
+            if(trainingItem) {
+                return trainingItem.vn_name
+            }
+
+        }
+        if(category === "course") {
+            let course = courses.find(item => item.uuid === resourceUuid)
+            if(course)
+                return course.course_name_vi
+        }
+        return ""
+    }
 
     useEffect(() => {
         setEditableDesc(item.description);
@@ -73,6 +93,11 @@ const DocumentCard = ({userRole, item}) => {
         <>
             <Card
                 hoverable
+                title={
+                    <Tooltip>
+                        {getDocumentResourceName()}
+                    </Tooltip>
+                }
                 bodyStyle={{
                     padding: '0'
                 }}

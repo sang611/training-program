@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from "react";
 import {useHistory, useParams} from "react-router-dom";
-import {Button, Col, Form, Input, List, message, Row} from "antd";
+import {Button, Col, Form, Input, List, message, Row, Select} from "antd";
 import {InboxOutlined, UploadOutlined} from "@ant-design/icons";
 import Modal from "antd/es/modal/Modal";
 import Dragger from "antd/es/upload/Dragger";
@@ -21,6 +21,22 @@ function DocumentPage() {
     const [formData, setFormData] = useState(new FormData());
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [uploadingDoc, setUploadingDoc] = useState(false);
+
+    const {trainingPrograms} = useSelector(state => state.trainingPrograms)
+    const {courses} = useSelector(state => state.courses)
+
+    useEffect(() => {
+        switch (doc_of) {
+            case "training-program":
+                dispatch(actions.getAllTrainingProgram());
+                break;
+            case "course":
+                dispatch(actions.getAllCourse());
+                break;
+            default:
+                break;
+        }
+    }, [])
 
     useEffect(() => {
         dispatch(actions.getAllDocuments({doc_of}));
@@ -52,10 +68,10 @@ function DocumentPage() {
     };
 
     const onUploadFile = (values) => {
-
         formData.set("name", values.title)
         formData.set("description", values.description || "")
         formData.set("category", doc_of);
+        formData.set("resourceUuid", values.resource)
         setUploadingDoc(true);
         axios.post("/documents", formData)
             .then((res) => {
@@ -74,6 +90,41 @@ function DocumentPage() {
                 setUploadingDoc(false);
                 handleOk();
             })
+    }
+
+    const ResourceInput = () => {
+        if(doc_of === "training-program") {
+            return (
+                    <Select
+                        placeholder={`Chọn 1 chương trình đào tạo`}
+                    >
+                        {
+                            trainingPrograms.map((item) => {
+                                return <Select.Option value={item.uuid} key={item.uuid}>{item.vn_name}</Select.Option>
+                            })
+                        }
+                    </Select>
+            )
+        }
+        if(doc_of === "course") {
+            return (
+                <Select
+                    placeholder={`Chọn 1 học phần`}
+                >
+                    {
+                        courses.map((item) => {
+                            return <Select.Option value={item.uuid} key={item.uuid}>{`${item.course_name_vi}-${item.course_code}`}</Select.Option>
+                        })
+                    }
+                </Select>
+            )
+        }
+
+    }
+
+    const RenderLabel = () => {
+        if(doc_of === "training-program") return "Chương trình đào tạo"
+        if(doc_of === "course") return "Học phần"
     }
 
     const FormUploadFile = () => {
@@ -98,10 +149,28 @@ function DocumentPage() {
                             },
                         ]}
                     >
-                        <Input/>
+                        <Input placeholder="Nhập tiêu đề tài liệu"/>
                     </Form.Item>
+                    {
+                        doc_of === "involved" ? '' :
+                            <Form.Item
+                                name="resource"
+                                label={RenderLabel()}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Chọn 1 chương trình đào tạo!',
+                                    },
+                                ]}
+                            >
+                                {
+                                    ResourceInput()
+                                }
+                            </Form.Item>
+                    }
+
                     <Form.Item name="description" label="Mô tả">
-                        <Input.TextArea/>
+                        <Input.TextArea placeholder="Mô tả ngắn gọn về tài liệu"/>
                     </Form.Item>
 
                     <Form.Item name="file" label="Upload tài liệu">
@@ -212,7 +281,7 @@ function DocumentPage() {
                     }
                 }
                 onCancel={handleCancel}
-
+                style={{top: '20px'}}
             >
                 <FormUploadFile/>
             </Modal>

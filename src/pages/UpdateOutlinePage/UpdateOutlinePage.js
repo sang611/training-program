@@ -90,6 +90,7 @@ const UpdateOutlinePage = () => {
                 }
                 else {
                     message.success(res.data.message)
+                    history.push(`/uet/courses/${uuid}/outlines`)
                 }
             })
             .catch((err) => message.error("Đã có lỗi xảy ra"))
