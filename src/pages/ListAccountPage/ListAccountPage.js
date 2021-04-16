@@ -4,18 +4,18 @@ import * as actions from '../../redux/actions'
 import {Avatar, Button, Col, Descriptions, List, message, Pagination, Popconfirm, Row, Tabs} from "antd";
 import Search from "antd/lib/input/Search";
 import {DeleteRowOutlined, DesktopOutlined, InfoCircleOutlined, MailOutlined, PhoneOutlined} from "@ant-design/icons";
-import {useHistory} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import axios from "axios";
 
 
 const ListAccountPage = () => {
     const dispatch = useDispatch();
     const history = useHistory();
+    const {index} = useParams();
     const {accounts} = useSelector((state) => state.accounts);
 
-    const {isValidToken, currentUser, userRole} = useSelector((state) => state.auth)
+    const {userRole} = useSelector((state) => state.auth)
 
-    const [isLoading, setIsLoading] = useState(false);
     const [typeAccount, setTypeAccount] = useState('GV');
     const [currentPage, setCurrentPage] = useState(1);
     const [searchText, setSearchText] = useState("");
@@ -23,6 +23,12 @@ const ListAccountPage = () => {
     useEffect(() => {
         dispatch(actions.fetchAccounts({typeAccount, fullnameSearch: searchText}))
     }, [typeAccount, searchText])
+
+
+    useEffect(() => {
+        setTypeAccount(index)
+    }, [index])
+
 
     const onDeleteAccount = (item) => {
         let apiUrl = "";
@@ -44,7 +50,7 @@ const ListAccountPage = () => {
             userRole == 0 ?
                 [
                     <a
-                        >
+                    >
 
                     </a>,
 
@@ -52,7 +58,7 @@ const ListAccountPage = () => {
                         type="primary"
                         shape="round"
                         size="small"
-                        icon={<InfoCircleOutlined />}
+                        icon={<InfoCircleOutlined/>}
                         key="list-load-detail"
                         onClick={() => history.push(`/uet/user/${item.account.uuid}`)}
                     >
@@ -69,7 +75,7 @@ const ListAccountPage = () => {
                             type="danger"
                             shape="round"
                             size="small"
-                            icon={<DeleteRowOutlined />}
+                            icon={<DeleteRowOutlined/>}
                             key="list-delete-item"
                         >
                             Xóa
@@ -95,13 +101,13 @@ const ListAccountPage = () => {
                 <Col span={8}>
                     {
                         userRole == 0 ?
-                            <Tabs defaultActiveKey="1" onTabClick={(e) => setTypeAccount(e)}>
+                            <Tabs defaultActiveKey={index} onTabClick={(e) => setTypeAccount(e)}>
                                 <Tabs.TabPane
                                     tab={
                                         <span>
-                                  <i className="fas fa-chalkboard-teacher"/>&ensp;
-                                            Giảng viên
-                                </span>
+                                          <i className="fas fa-chalkboard-teacher"/>&ensp;
+                                          Giảng viên
+                                        </span>
                                     }
                                     key="GV"
                                 >
@@ -109,9 +115,9 @@ const ListAccountPage = () => {
                                 <Tabs.TabPane
                                     tab={
                                         <span>
-                                  <i className="fas fa-user-graduate"/>&ensp;
-                                            Sinh viên
-                                </span>
+                                          <i className="fas fa-user-graduate"/>&ensp;
+                                          Sinh viên
+                                        </span>
                                     }
                                     key="SV"
                                 >
@@ -157,7 +163,7 @@ const ListAccountPage = () => {
                                             if (item.avatar) {
                                                 return item.avatar.includes(':') ? item.avatar : `data:image/jpeg;base64, ${item.avatar}`
                                             } else {
-                                                if(item.gender == "Nam")
+                                                if (item.gender == "Nam")
                                                     return "https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png"
                                                 else
                                                     return "https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png"

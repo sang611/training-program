@@ -4,9 +4,11 @@ import * as actions from "../../redux/actions";
 import Title from "antd/lib/typography/Title";
 import {Card, Col, Row} from "antd";
 import {ApartmentOutlined, BookOutlined} from "@ant-design/icons";
+import {useHistory} from "react-router-dom";
 
 function CourseStatistic() {
     const dispatch = useDispatch();
+    const history = useHistory();
     const {courses} = useSelector(state => state.courses)
     useEffect(() => {
         dispatch(actions.getAllCourse())
@@ -17,7 +19,11 @@ function CourseStatistic() {
             <Card bodyStyle={{backgroundColor: '#F6FFED'}}>
                 <Row gutter={[16, 16]}>
                     <Col span={24}>
-                        <Card bodyStyle={{backgroundColor: '#FF9600'}} className="statistic-info">
+                        <Card
+                            bodyStyle={{backgroundColor: '#FF9600'}}
+                            className="statistic-info"
+                            hoverable
+                        >
                             <center>
                                 <Title level={1}>
                                     {
@@ -30,7 +36,12 @@ function CourseStatistic() {
                         </Card>
                     </Col>
                     <Col span={24}>
-                        <Card bodyStyle={{backgroundColor: '#00A65A'}} className="statistic-info">
+                        <Card
+                            bodyStyle={{backgroundColor: '#00A65A'}}
+                            className="statistic-info"
+                            hoverable
+                            onClick={() => history.push("/uet/courses")}
+                        >
                             <center>
                                 <Title level={1}>
                                     {

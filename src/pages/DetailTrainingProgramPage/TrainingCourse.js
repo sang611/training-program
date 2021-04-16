@@ -30,13 +30,12 @@ const TrainingCourse = () => {
                 Tóm tắt yêu cầu chương trình đào tạo
             </Title>
             <Row>
-                <Col span={12}>
-                    <Descriptions column={1} contentStyle={{fontWeight: 'bold', fontSize: '18px'}} bordered>
-                        <Descriptions.Item label="Tổng số tín chỉ của chương trình đào tạo"
-                                           labelStyle={{fontWeight: 'bold'}}>
+                <Col span={12} offset={1}>
+                    <Descriptions column={1} labelStyle={{fontWeight: 'bold'}}>
+                        <Descriptions.Item label="Tổng số tín chỉ của chương trình đào tạo">
                             {requireSummary ? requireSummary.total : ''}
                         </Descriptions.Item>
-                        <Descriptions.Item label="Khối kiến thức chung">
+                        <Descriptions.Item label="Khối kiến thức chung" style={{textAlign: 'start !important'}}>
                             {requireSummary ? requireSummary.common : ''}
                         </Descriptions.Item>
                         <Descriptions.Item label="Khối kiến thức theo lĩnh vực">

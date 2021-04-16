@@ -12,7 +12,7 @@ import {course} from "../../constants/Items";
 const AddCourseDocument = ({trainingProgram, type}) => {
 
     const dispatch = useDispatch();
-    const state = useSelector((state) => state.accounts);
+    const {accounts} = useSelector((state) => state.accounts);
 
     const [editing, setEditing] = useState([]);
 
@@ -109,19 +109,19 @@ const AddCourseDocument = ({trainingProgram, type}) => {
                             )
                         }}*/
                         onSelect={(value) => {
-                            let lecturer = state.accounts.accounts.find((acc) => acc.uuid === value)
+                            let lecturer = accounts.find((acc) => acc.uuid === value)
                             onAddLecturer(trainingProgram.uuid, record.training_program_course, {lecturer});
                         }
 
                         }
                         onDeselect={(value => {
-                            let lecturer = state.accounts.accounts.find((acc) => acc.uuid === value)
+                            let lecturer = accounts.find((acc) => acc.uuid === value)
                             onRemoveLecturer(trainingProgram.uuid, record.training_program_course, {lecturer});
                         })}
                     >
                         {
-                            state.accounts.accounts ?
-                                state.accounts.accounts.map((employee, index) => {
+
+                                accounts.map((employee, index) => {
                                     return (
                                         <Select.Option value={employee.uuid} label={employee.fullname} key={index}>
                                             <div className="demo-option-label-item">
@@ -131,7 +131,7 @@ const AddCourseDocument = ({trainingProgram, type}) => {
 
                                     )
 
-                                }) : []
+                                })
                         }
                     </Select>
                 )

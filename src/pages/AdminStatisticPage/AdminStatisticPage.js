@@ -8,6 +8,8 @@ import './AdminStatisticPage.css'
 import TrainingProgramStatistic from "./TrainingProgramStatistic";
 import CourseStatistic from "./CourseStatistic";
 import UserStatistic from "./UserStatistic";
+import axios from "axios";
+import ActivityChart from "./ActivityChart";
 
 
 function AdminStatisticPage() {
@@ -20,6 +22,8 @@ function AdminStatisticPage() {
 
         dispatch(actions.fetchAccounts({typeAccount: 'GV'}))
         dispatch(actions.fetchAccounts({typeAccount: 'SV'}))
+
+
     }, [])
 
     return (
@@ -39,7 +43,10 @@ function AdminStatisticPage() {
                     </Row>
                     <br/>
                     <Row>
-                        ABC
+                        <Col span={24}>
+                            <ActivityChart />
+                        </Col>
+
                     </Row>
                 </Col>
 

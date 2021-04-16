@@ -1,5 +1,5 @@
 import Title from "antd/lib/typography/Title";
-import {Button, Col, Row, Spin} from "antd";
+import {Button, Col, Descriptions, Row, Spin} from "antd";
 import Parser from "html-react-parser";
 import DependencyCourseGraph from "./DependencyCourseGraph";
 import SummaryContentCourse from "./SummaryContentCourse";
@@ -58,17 +58,23 @@ const TrainingProgramIntroduce = () => {
                 </Title>
                 <Row>
                     <Col offset={1} span={23}>
+                        <Descriptions column={1} labelStyle={{fontWeight: 'bold'}}>
+                            <Descriptions.Item label="Tên ngành đào tạo (VI)" content={vn_name}>{vn_name}</Descriptions.Item>
+                            <Descriptions.Item label="Tên ngành đào tạo (EN)" content={en_name}>{en_name}</Descriptions.Item>
+                            <Descriptions.Item label="Mã ngành đào tạo" content={training_program_code}>{training_program_code}</Descriptions.Item>
+                            <Descriptions.Item label="Danh hiệu tốt nghiệp" content={graduation_title}>{graduation_title}</Descriptions.Item>
+                            <Descriptions.Item label="Thời gian đào tạo" content={training_duration + " năm"}>{training_duration + " năm"}</Descriptions.Item>
+                            <Descriptions.Item label="Tên văn bằng tốt nghiệp (VI)" content={graduation_diploma_vi}>{graduation_diploma_vi}</Descriptions.Item>
+                            <Descriptions.Item label="Tên văn bằng tốt nghiệp (EN)" content={graduation_diploma_en}>{graduation_diploma_en}</Descriptions.Item>
+                            <Descriptions.Item label="Đơn vị được giao nhiệm vụ đào tạo" content={
+                                institution ? `${institution.vn_name}, Trường Đại học Công nghệ, ĐHQGHN` : ''
+                            }>
+                                {
+                                    institution ? `${institution.vn_name}, Trường Đại học Công nghệ, ĐHQGHN` : ''
+                                }
+                            </Descriptions.Item>
+                        </Descriptions>
 
-                        <DescriptionItem title="Tên ngành đào tạo (VI)" content={vn_name}/>
-                        <DescriptionItem title="Tên ngành đào tạo (EN)" content={en_name}/>
-                        <DescriptionItem title="Mã ngành đào tạo" content={training_program_code}/>
-                        <DescriptionItem title="Danh hiệu tốt nghiệp" content={graduation_title}/>
-                        <DescriptionItem title="Thời gian đào tạo" content={training_duration + " năm"}/>
-                        <DescriptionItem title="Tên văn bằng tốt nghiệp (VI)" content={graduation_diploma_vi}/>
-                        <DescriptionItem title="Tên văn bằng tốt nghiệp (EN)" content={graduation_diploma_en}/>
-                        <DescriptionItem title="Đơn vị được giao nhiệm vụ đào tạo" content={
-                            institution ? `${institution.vn_name}, Trường Đại học Công nghệ, ĐHQGHN` : ''
-                        }/>
                     </Col>
                 </Row>
 

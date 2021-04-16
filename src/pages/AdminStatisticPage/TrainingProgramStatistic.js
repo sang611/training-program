@@ -5,10 +5,12 @@ import {useEffect} from "react";
 import * as actions from "../../redux/actions";
 import style from './AdminStatisticPage.css'
 import {AuditOutlined, LockOutlined} from "@ant-design/icons";
+import {useHistory} from "react-router-dom";
 
 
 function TrainingProgramStatistic() {
     const dispatch = useDispatch();
+    const history = useHistory();
     const {trainingPrograms, loadingAllTrainings, errors} = useSelector(state => state.trainingPrograms)
 
     const classes = [
@@ -70,7 +72,12 @@ function TrainingProgramStatistic() {
             <Card bodyStyle={{backgroundColor: '#E6F7FF'}} style={style.statisticInfo}>
                 <Row gutter={[16, 16]}>
                     <Col xs={{span: 24}} sm={{span: 12}} md={{span: 12}} xl={{span: 12}}>
-                        <Card bodyStyle={{backgroundColor: '#2db7f5'}} className="statistic-info">
+                        <Card
+                            bodyStyle={{backgroundColor: '#2db7f5'}}
+                            className="statistic-info"
+                            hoverable
+                            onClick={() => history.push("/uet/training-programs")}
+                        >
                             <center>
                                 <Title level={1}>
                                     {trainingPrograms.length}&nbsp;
@@ -81,7 +88,11 @@ function TrainingProgramStatistic() {
                         </Card>
                     </Col>
                     <Col xs={{span: 24}} sm={{span: 12}} md={{span: 12}} xl={{span: 12}}>
-                        <Card bodyStyle={{backgroundColor: '#108ee9'}}  className="statistic-info">
+                        <Card
+                            bodyStyle={{backgroundColor: '#108ee9'}}
+                            className="statistic-info"
+                            hoverable
+                        >
                             <center>
                                 <Title level={1}>
                                     {

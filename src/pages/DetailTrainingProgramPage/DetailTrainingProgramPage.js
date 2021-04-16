@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from "react-router";
-import {Affix, Button, Row, Spin} from "antd";
+import {Affix, Button, Row, Space, Spin} from "antd";
 import {useHistory} from "react-router-dom";
 import * as actions from "../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {EditOutlined, FilePdfOutlined} from "@ant-design/icons";
+import {EditOutlined, FilePdfOutlined, FileWordOutlined} from "@ant-design/icons";
 import html2canvas from "html2canvas";
 import {jsPDF} from "jspdf";
 import DependencyCourseGraph from "./DependencyCourseGraph";
@@ -23,31 +23,11 @@ const DetailTrainingProgramPage = (props) => {
 
     const {trainingProgram} = useSelector(state => state.trainingPrograms)
     const [isExportingPdf, setIsExportingPdf] = useState(false);
-    const {currentUser, userRole} = useSelector(state => state.auth);
+    const {userRole} = useSelector(state => state.auth);
 
     useEffect(() => {
         dispatch(actions.getATrainingProgram({id: uuid}));
     }, [])
-
-    const DescriptionItem = ({title, content}) => (
-        <>
-            <div style={{display: 'inline-flex'}}>
-                <b>
-                    <p>{title}:</p>
-                </b>
-
-                &nbsp;
-                {content}
-
-            </div>
-            <br/>
-        </>
-    );
-
-
-
-
-
 
 
     function printDocument() {
@@ -85,6 +65,46 @@ const DetailTrainingProgramPage = (props) => {
 
     }
 
+
+    function exportToDoc() {
+        var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
+
+        var footer = "</body></html>";
+
+        var html = header + document.getElementById('training_program').innerHTML + footer;
+
+        var blob = new Blob(['\ufeff', html], {
+            type: 'application/msword'
+        });
+
+        // Specify link url
+        var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+
+        // Specify file name
+        let filename = 'document.doc';
+
+        // Create download link element
+        var downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+
+        if (navigator.msSaveOrOpenBlob) {
+            navigator.msSaveOrOpenBlob(blob, filename);
+        } else {
+            // Create a link to the file
+            downloadLink.href = url;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+        }
+
+        document.body.removeChild(downloadLink);
+    }
+
+
     if (trainingProgram) {
         const {
             learning_outcomes,
@@ -94,7 +114,8 @@ const DetailTrainingProgramPage = (props) => {
         } = trainingProgram
 
         return (
-            <div id="training_program">
+            <>
+
                 {
                     (!lock_edit && userRole == 0) ? <Affix style={{float: 'right'}} offsetTop={100}>
                         <Button
@@ -106,29 +127,33 @@ const DetailTrainingProgramPage = (props) => {
                         />
                     </Affix> : ""
                 }
-                <TrainingProgramIntroduce />
-                <br/><br/>
-                <TrainingLOC learning_outcomes={learning_outcomes}/>
-                <br/><br/>
-                <TrainingCourse/>
-                <br/><br/>
-                <CourseDocumentAndSequence courses={courses}/>
-                <br/><br/>
-                <CourseLecturer courses={courses}/>
-                <br/><br/>
-                <DependencyCourseGraph trainingProgram={trainingProgram} />
-                <br/><br/>
-                <CourseDocumentAndSequence courses={courses} semester={true}/>
-                <br/><br/>
-                <SummaryContentCourse trainingProgram={trainingProgram} />
+                <div id="training_program">
+                    <TrainingProgramIntroduce/>
+                    <br/><br/>
+                    <TrainingLOC learning_outcomes={learning_outcomes}/>
+                    <br/><br/>
+                    <TrainingCourse/>
+                    <br/><br/>
+                    <CourseDocumentAndSequence courses={courses}/>
+                    <br/><br/>
+                    <CourseLecturer courses={courses}/>
+                    <br/><br/>
+                    <DependencyCourseGraph trainingProgram={trainingProgram}/>
+                    <br/><br/>
+                    <CourseDocumentAndSequence courses={courses} semester={true}/>
+                    <br/><br/>
+                    <SummaryContentCourse trainingProgram={trainingProgram}/>
+                </div>
                 <Row align="end">
-                    <Button icon={<FilePdfOutlined/>} onClick={printDocument} loading={isExportingPdf}> Export
-                        PDF </Button>
+                    <Space>
+                        <Button icon={<FilePdfOutlined/>} onClick={printDocument} loading={isExportingPdf}>Export PDF</Button>
+                        <Button icon={<FileWordOutlined />} onClick={exportToDoc} loading={isExportingPdf}>Export Word</Button>
+                    </Space>
                 </Row>
-            </div>
+            </>
         )
     } else {
-        return <Spin />;
+        return <Spin/>;
     }
 }
 

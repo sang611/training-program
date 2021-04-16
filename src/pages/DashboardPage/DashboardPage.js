@@ -15,7 +15,7 @@ import {useEffect, useRef, useState} from "react";
 import './DashboardPage.css'
 import * as actions from '../../redux/actions'
 import {useDispatch, useSelector} from "react-redux";
-import {Link, Route, Switch} from "react-router-dom";
+import {Link, Route, Switch, useHistory, useParams} from "react-router-dom";
 import CreateInstitutionPage from '../CreateInstitutionPage'
 import ListInstitutionPage from '../ListInstitutionPage'
 import CreateAccountPage from "../CreateAccountPage";
@@ -49,9 +49,29 @@ const DashboardPage = () => {
     const {Header, Content, Sider} = Layout;
     const {SubMenu} = Menu;
     const dispatch = useDispatch();
+    const history = useHistory();
     const {userRole, currentUser} = useSelector(state => state.auth)
     const {user} = useSelector(state => state.accounts)
     const {notifications} = useSelector(state => state.notifications)
+    const [activeKey, setActiveKey] = useState(history.location.pathname);
+
+    useEffect(() => {
+        console.log(history)
+        setActiveKey(history.location.pathname)
+    }, [history])
+
+    useEffect(() => {
+        return history.listen(location => {
+            if (history.action === 'PUSH') {
+                setActiveKey(location.pathname)
+            }
+
+            if (history.action === 'POP') {
+                setActiveKey(location.pathname)
+            }
+        })
+    }, [])
+
 
     let socket = useRef(null);
     const URL = axios.defaults.baseURL;
@@ -132,61 +152,64 @@ const DashboardPage = () => {
                     </div>
                     <Menu
                         theme="dark"
-                        defaultSelectedKeys={[localStorage.getItem("menu-active")]}
+                        selectedKeys={activeKey}
                         mode="inline" onClick={onClickMenuItem}
                     >
-                        <Menu.Item key="1" className="sub-menu" icon={<PieChartOutlined />}>
+                        <Menu.Item key="/uet/statistic" className="sub-menu" icon={<PieChartOutlined />}>
                             <Link to="/uet/statistic">Trang chủ</Link>
                         </Menu.Item>
                         <SubMenu key="sub0" icon={<DesktopOutlined/>} title="Chương trình đào tạo" className="sub-menu">
-                            <Menu.Item key="2" className="menu-item-child">
+                            <Menu.Item key="/uet/training-programs" className="menu-item-child">
                                 <Link to="/uet/training-programs">Danh sách</Link>
                             </Menu.Item>
-                            <Menu.Item key="4" className="menu-item-child">
+                            <Menu.Item key="/uet/documents/training-program" className="menu-item-child">
                                 <Link to="/uet/documents/training-program">Tài liệu</Link>
                             </Menu.Item>
                         </SubMenu>
                         {
                             <SubMenu key="sub1" icon={<ReadOutlined/>} title="Học phần" className="sub-menu">
-                                <Menu.Item key="5" className="menu-item-child">
+                                <Menu.Item key="/uet/courses" className="menu-item-child">
                                     <Link to="/uet/courses">Danh sách</Link>
                                 </Menu.Item>
                                 {/* <Menu.Item key="6" className="menu-item-child">
                                             <Link to="/uet/courses/creation">Tạo mới</Link>
                                         </Menu.Item>*/}
-                                <Menu.Item key="7" className="menu-item-child">
+                                <Menu.Item key="/uet/documents/course" className="menu-item-child">
                                     <Link to="/uet/documents/course">Tài liệu</Link>
                                 </Menu.Item>
                             </SubMenu>
                         }
 
                         <SubMenu key="sub2" icon={<TableOutlined/>} title="Chuẩn đầu ra" className="sub-menu">
-                            <Menu.Item key="8" className="menu-item-child">
+                            <Menu.Item key="/uet/learning-outcome" className="menu-item-child">
                                 <Link to="/uet/learning-outcomes">Danh sách CĐR</Link>
                             </Menu.Item>
                             {/*<Menu.Item key="9" className="menu-item-child">
                                         <Link to="/uet/learning-outcome-titles">Danh sách đầu mục</Link>
                                     </Menu.Item>*/}
-                            <Menu.Item key="10" className="menu-item-child">
+                            <Menu.Item key="/uet/documents/learning-outcome" className="menu-item-child">
                                 <Link to="/uet/documents/learning-outcome">Tài liệu</Link>
                             </Menu.Item>
                         </SubMenu>
                         <SubMenu key="sub3" icon={<BankOutlined/>} title="Đơn vị chuyên môn" className="sub-menu">
-                            <Menu.Item key="11" className="menu-item-child"><Link to="/uet/institutions">Danh
-                                sách</Link></Menu.Item>
+                            <Menu.Item key="/uet/institutions" className="menu-item-child">
+                                <Link to="/uet/institutions">
+                                    Danh sách
+                                </Link>
+                            </Menu.Item>
                             {/*<Menu.Item key="12" className="menu-item-child"><Link to="/uet/institutions/creation">Tạo
                                 mới</Link></Menu.Item>*/}
                         </SubMenu>
                         <SubMenu key="sub4" icon={<TeamOutlined/>} title="Tài khoản" className="sub-menu">
-                            <Menu.Item key="12" className="menu-item-child"><Link to="/uet/accounts">Danh
+                            <Menu.Item key="/uet/accounts/GV" className="menu-item-child"><Link to="/uet/accounts/GV">Danh
                                 sách</Link></Menu.Item>
-                            <Menu.Item key="14" className="menu-item-child"><Link to="/uet/accounts/creation">Tạo
+                            <Menu.Item key="/uet/accounts/creation" className="menu-item-child"><Link to="/uet/accounts/creation">Tạo
                                 mới</Link></Menu.Item>
                         </SubMenu>
-                        <Menu.Item key="15" icon={<PartitionOutlined/>} className="sub-menu">
+                        <Menu.Item key="/uet/majors" icon={<PartitionOutlined/>} className="sub-menu">
                             <Link to="/uet/majors">Ngành</Link>
                         </Menu.Item>
-                        <Menu.Item key="16" icon={<FileOutlined/>} className="sub-menu">
+                        <Menu.Item key="/uet/documents/involved" icon={<FileOutlined/>} className="sub-menu">
                             <Link to="/uet/documents/involved">Các văn bản liên quan</Link>
                         </Menu.Item>
                     </Menu>
@@ -260,7 +283,7 @@ const DashboardPage = () => {
                                 <Route path="/uet/institutions" component={ListInstitutionPage}/>
 
                                 <Route path="/uet/accounts/creation" component={CreateAccountPage}/>
-                                <Route path="/uet/accounts" component={ListAccountPage}/>
+                                <Route path="/uet/accounts/:index" component={ListAccountPage}/>
 
                                 <Route path="/uet/training-programs/creation" component={CreateTrainingProgramPage}/>
                                 <Route exact path="/uet/training-programs" component={ListTrainingProgramPage}/>

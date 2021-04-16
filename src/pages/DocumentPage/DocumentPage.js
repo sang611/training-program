@@ -1,22 +1,18 @@
-import {useState, useEffect, useMemo} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useHistory, useParams} from "react-router-dom";
-import Cookies from "universal-cookie";
-import {Button, Card, Col, Form, Input, List, message, Row} from "antd";
-import {CloudDownloadOutlined, DeleteOutlined, EditOutlined, InboxOutlined, UploadOutlined} from "@ant-design/icons";
+import {Button, Col, Form, Input, List, message, Row} from "antd";
+import {InboxOutlined, UploadOutlined} from "@ant-design/icons";
 import Modal from "antd/es/modal/Modal";
 import Dragger from "antd/es/upload/Dragger";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
 import axios from "axios";
-import Meta from "antd/lib/card/Meta";
 import Title from "antd/es/typography/Title";
-import Paragraph from "antd/lib/typography/Paragraph";
 import DocumentCard from "./DocumentCard";
 import Search from "antd/es/input/Search";
 
 
 function DocumentPage() {
-    const history = useHistory();
     const {doc_of} = useParams();
     const dispatch = useDispatch();
     const {documents, loading} = useSelector(state => state.documents);
@@ -53,7 +49,6 @@ function DocumentPage() {
             formData.set("file", file);
             return false;
         }
-
     };
 
     const onUploadFile = (values) => {
@@ -146,7 +141,7 @@ function DocumentPage() {
                     }</Title>
                 </Col>
                 <Col span={12}>
-                    <Search placeholder="Tìm kiếm tài liệu" onChange={onSearch} enterButton />
+                    <Search placeholder="Tìm kiếm tài liệu" onChange={onSearch} enterButton/>
                 </Col>
             </Row>
             <br/>

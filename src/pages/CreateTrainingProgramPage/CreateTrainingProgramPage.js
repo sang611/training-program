@@ -60,7 +60,7 @@ const CreateTrainingProgramPage = () => {
 
     }
 
-    return useMemo(() => (
+    return (
         <>
             <Form
                 layout="vertical"
@@ -147,8 +147,8 @@ const CreateTrainingProgramPage = () => {
                                     insState.listInstitutions
                                         .filter(ins => !ins.parent_uuid)
                                         .map((ins, index) =>
-                                        <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
-                                    )
+                                            <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
+                                        )
                                 }
 
                             </Select>
@@ -188,13 +188,11 @@ const CreateTrainingProgramPage = () => {
                         />
 
 
-
                     </Col>
                 </Row>
                 <Title level={3}>3. Thông tin tuyển sinh</Title>
                 <Row>
                     <Col span={12} offset={1}>
-
                         <Form.Item label="Hình thức tuyển sinh" name="admission_method">
                             <Input placeholder="Hình thức tuyển sinh của CTĐT"
                                    addonBefore={<i className="fas fa-file-signature" style={{color: '#1890FF'}}/>}/>
@@ -210,7 +208,7 @@ const CreateTrainingProgramPage = () => {
                 </Form.Item>
             </Form>
         </>
-    ), [insState, majors])
+    )
 }
 
 export default CreateTrainingProgramPage;

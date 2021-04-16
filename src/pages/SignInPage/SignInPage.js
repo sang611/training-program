@@ -106,7 +106,7 @@ function SignInPage(props) {
     };
 
 
-    return state.isValidToken ? <Redirect to="/uet/training-programs"/> : (
+    return state.isValidToken ? <Redirect to="/uet/statistic"/> : (
 
         <div className="login-container">
 

@@ -1,8 +1,6 @@
 import * as actions from "../actions/index";
 import {put} from "redux-saga/effects";
 import axios from "../../my.axios";
-import {logoutSaga} from "./auth";
-import {message} from "antd";
 import * as actionTypes from "../actions/actionTypes";
 
 export function* createInstitution(action) {

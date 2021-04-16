@@ -3,9 +3,11 @@ import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
 import Title from "antd/lib/typography/Title";
 import {Card, Col, Row} from "antd";
+import {useHistory} from "react-router-dom";
 
 function CourseStatistic() {
     const dispatch = useDispatch();
+    const history = useHistory();
     const {accounts} = useSelector((state) => state.accounts);
 
     const [totalLec, setTotalLec] = useState(0);
@@ -41,7 +43,12 @@ function CourseStatistic() {
             <Card bodyStyle={{backgroundColor: '#FFF1F0'}}>
                 <Row gutter={[16, 16]}>
                     <Col span={24}>
-                        <Card bodyStyle={{backgroundColor: '#F56954'}} className="statistic-info">
+                        <Card
+                            bodyStyle={{backgroundColor: '#F56954'}}
+                            className="statistic-info"
+                            hoverable
+                            onClick={() => history.push("/uet/accounts/GV")}
+                        >
                             <center>
                                 <Title level={1}>
                                     {
@@ -54,7 +61,12 @@ function CourseStatistic() {
                         </Card>
                     </Col>
                     <Col span={24}>
-                        <Card bodyStyle={{backgroundColor: '#E95258'}} className="statistic-info">
+                        <Card
+                            bodyStyle={{backgroundColor: '#E95258'}}
+                            className="statistic-info"
+                            hoverable
+                            onClick={() => history.push("/uet/accounts/SV")}
+                        >
                             <center>
                                 <Title level={1}>
                                     {
