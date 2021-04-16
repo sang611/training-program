@@ -88,7 +88,7 @@ const StudentStatisticPage = () => {
                         <Divider/>
                         <Row>
                             <Col sm={24} md={{span: 11}}>
-                                <Title level={4}>Danh sách học phần đang học</Title>
+                                <Title level={4}>Danh sách học phần dự định </Title>
                                 <ListCourseStatic
                                     dataSource={
                                         courses.filter((course) => {

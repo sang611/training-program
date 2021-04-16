@@ -304,20 +304,20 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
         <BuildOutlined onClick={() => setVisibleLocMatrix(true)}/>,
         <InsertRowBelowOutlined onClick={() => setVisibleCourseMatrix(true)}/>,
 
-            item.lock_edit ?
+            !item.lock_edit ?
                 <Popconfirm
                     title="Sau khi khóa sẽ không thể chỉnh sửa?"
                     cancelText="Hủy"
                     okText="Khóa"
                     onConfirm={() => onLock(item.uuid)}
                 >
-                    <LockOutlined/>
+                    <UnlockOutlined/>
                 </Popconfirm>
                 :
                 <Popconfirm
                     title="Mở khóa chương trình đào tạo này?"
                     cancelText="Hủy"
-                    okText="Mỏ khóa"
+                    okText="Mở khóa"
                     onConfirm={() => onUnLock(item.uuid)}
                 >
                     <LockOutlined/>
@@ -377,7 +377,7 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
                     </Descriptions.Item>
                     <Descriptions.Item label="Trạng thái">
                         {
-                            item.lock_edit ? "Đã khóa" : "Chưa khóa"
+                            item.lock_edit ? "Đã khóa" : "Mở"
                         }
                     </Descriptions.Item>
 

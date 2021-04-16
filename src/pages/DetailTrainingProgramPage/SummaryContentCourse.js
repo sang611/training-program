@@ -2,6 +2,19 @@ import Title from "antd/lib/typography/Title";
 import {Col, Descriptions, Row} from "antd";
 
 const SummaryContentCourse = ({trainingProgram}) => {
+
+    function getLockedOutlineContent(course) {
+        let outline;
+        if(trainingProgram.lock_edit) {
+           outline = course.outlines ? course.outlines.find(outline => outline.uuid === course.training_program_course.outlineUuid) : null;
+        }
+        else {
+           outline = course.outlines[0] ? course.outlines[0] : null
+        }
+
+        return outline ? outline.summary_content : ''
+    }
+
     return (
         <>
             <Title level={4}>
@@ -37,8 +50,7 @@ const SummaryContentCourse = ({trainingProgram}) => {
                                         }</Descriptions.Item>
                                         <Descriptions.Item label="Nội dung học phần">
                                             {
-
-                                                course.outlines[0] ? course.outlines[0].summary_content || "" : ""
+                                                getLockedOutlineContent(course)
                                             }
                                         </Descriptions.Item>
                                     </Descriptions>

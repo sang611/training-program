@@ -28,7 +28,7 @@ const CreateOutlineCoursePage = () => {
     const [examFormality, setExamFormality] = useState("");
 
     const dispatch = useDispatch();
-    const {loadingACourse, course} = useSelector(state => state.courses)
+    const {loadingACourse, course, error} = useSelector(state => state.courses)
 
     useEffect(() => {
         dispatch(actions.getACourse({courseUuid: uuid}))
@@ -57,7 +57,7 @@ const CreateOutlineCoursePage = () => {
     }
 
 
-    return loadingACourse === false ? (
+    return loadingACourse === false && !error ? (
         <>
             <Title level={2}>
                 {`Tạo đề cương học phần ${course.course_name_vi} - ${course.course_code}`}

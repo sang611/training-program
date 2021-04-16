@@ -7,7 +7,7 @@ import * as actions from '../../redux/actions'
 const {Option} = Select;
 const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
 
-    const state = useSelector((state) => state.accounts);
+    const {accounts} = useSelector((state) => state.accounts);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -20,7 +20,7 @@ const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
 
      function handleChange(lecturerIds) {
         const lecturers = lecturerIds.map((id) => {
-            return state.accounts.accounts.find((acc) => acc.uuid === id)
+            return accounts.find((acc) => acc.uuid === id)
         })
 
          setLecturers(lecturers)
@@ -38,7 +38,7 @@ const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
             }
         >
             {
-                state.accounts.accounts ? state.accounts.accounts.map((employee, index) => {
+                accounts.map((employee, index) => {
                     return (
 
                             <Option value={employee.uuid} label={employee.fullname} key={index}>
@@ -48,11 +48,9 @@ const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
 
                                 </div>
                             </Option>
-
-
                     )
 
-                }) : []
+                })
             }
 
         </Select>

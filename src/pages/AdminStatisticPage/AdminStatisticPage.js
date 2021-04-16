@@ -25,15 +25,15 @@ function AdminStatisticPage() {
     return (
         <>
             <Row gutter={[20, 20]}>
-                <Col span={12}>
+                <Col xs={{span: 24}} sm={{span: 24}} md={{span: 24}} xl={{span: 12}}>
                     <TrainingProgramStatistic/>
                 </Col>
-                <Col span={12}>
+                <Col xs={{span: 24}} sm={{span: 24}} md={{span: 24}} xl={{span: 12}}>
                     <Row gutter={[20, 20]}>
-                        <Col span={12}>
+                        <Col xs={{span: 24}} sm={{span: 12}} md={{span: 12}} xl={{span: 12}}>
                             <CourseStatistic/>
                         </Col>
-                        <Col span={12}>
+                        <Col xs={{span: 24}} sm={{span: 12}} md={{span: 12}} xl={{span: 12}}>
                             <UserStatistic/>
                         </Col>
                     </Row>

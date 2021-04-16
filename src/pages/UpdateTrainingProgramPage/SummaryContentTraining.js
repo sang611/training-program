@@ -52,6 +52,9 @@ const SummaryContentTraining = ({trainingProgram}) => {
 
     return (
         <>
+            <Title level={3}>
+                PHẦN III: NỘI DUNG CHƯƠNG TRÌNH ĐÀO TẠO
+            </Title>
             <Title level={4}>
                 Tóm tắt yêu cầu chương trình đào tạo
             </Title>

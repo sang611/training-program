@@ -35,6 +35,7 @@ function TrainingProgramStatistic() {
         {
             title: "Tổng tín chỉ",
             render: (_, item) => {
+                if(item.require_summary)
                 return JSON.parse(item.require_summary).total
             }
         }
@@ -55,7 +56,7 @@ function TrainingProgramStatistic() {
             render: (_, cl) => {
                 for (let trainingItem of trainingPrograms) {
 
-                    if (JSON.parse(trainingItem.classes).includes(cl.name) == true) {
+                    if (trainingItem.classes && JSON.parse(trainingItem.classes).includes(cl.name) == true) {
                         return trainingItem.vn_name;
                     }
                 }
@@ -68,7 +69,7 @@ function TrainingProgramStatistic() {
         <>
             <Card bodyStyle={{backgroundColor: '#E6F7FF'}} style={style.statisticInfo}>
                 <Row gutter={[16, 16]}>
-                    <Col span={12}>
+                    <Col xs={{span: 24}} sm={{span: 12}} md={{span: 12}} xl={{span: 12}}>
                         <Card bodyStyle={{backgroundColor: '#2db7f5'}} className="statistic-info">
                             <center>
                                 <Title level={1}>
@@ -79,7 +80,7 @@ function TrainingProgramStatistic() {
                             </center>
                         </Card>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={{span: 24}} sm={{span: 12}} md={{span: 12}} xl={{span: 12}}>
                         <Card bodyStyle={{backgroundColor: '#108ee9'}}  className="statistic-info">
                             <center>
                                 <Title level={1}>

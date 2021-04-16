@@ -47,7 +47,7 @@ const CreditStatistic = ({courses, semes}) => {
             value: repeated,
         },
         {
-            type: 'Đang học',
+            type: 'Dự định',
             value: working,
         },
     ];

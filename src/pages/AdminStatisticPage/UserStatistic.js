@@ -38,7 +38,7 @@ function CourseStatistic() {
 
     return (
         <>
-            <Card bodyStyle={{backgroundColor: '#F9F0FF'}}>
+            <Card bodyStyle={{backgroundColor: '#FFF1F0'}}>
                 <Row gutter={[16, 16]}>
                     <Col span={24}>
                         <Card bodyStyle={{backgroundColor: '#F56954'}} className="statistic-info">

@@ -7,7 +7,7 @@ import Title from "antd/lib/typography/Title";
 import InforCourseOutline from "../CreateOutlineCoursePage/InforCourseOutline";
 import Parser from 'html-react-parser';
 import TextArea from "antd/lib/input/TextArea";
-import {EditOutlined} from "@ant-design/icons";
+import {CheckOutlined, EditOutlined} from "@ant-design/icons";
 
 const Lecturers = ({lecturers}) => {
 
@@ -85,7 +85,10 @@ const LOCs = ({locs}) => {
                 title: `Bậc ${level}`,
                 key: `level ${level}`,
                 render: (_, record) => (
-                    record.outline_learning_outcome.level === level ? 'X' : ""
+                    <center>
+                        {record.outline_learning_outcome.level === level ? <CheckOutlined /> : ""}
+                    </center>
+
                 )
             }
         })

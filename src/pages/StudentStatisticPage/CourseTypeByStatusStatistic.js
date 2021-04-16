@@ -56,7 +56,7 @@ const CourseTypeByStatusStatistic = ({courses, trainingProgram, semes}) => {
         let improvedCourse = generateCreditsByStatus('Cải thiện', courseTypes)
         let completeddCourse = generateCreditsByStatus('Hoàn thành', courseTypes)
         let repeatedCourse = generateCreditsByStatus('Học lại', courseTypes)
-        let workingCourse = generateCreditsByStatus('Đang học', courseTypes)
+        let workingCourse = generateCreditsByStatus('Dự định', courseTypes)
 
         setDataCreditsByStatus(
             [

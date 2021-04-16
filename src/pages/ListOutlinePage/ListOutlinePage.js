@@ -1,14 +1,7 @@
-import {Button, Card, Descriptions, List, message, Popconfirm, Spin} from "antd";
-import React, {useEffect, useMemo, useState} from 'react'
+import {Button, Card, Descriptions, List, message, Popconfirm, Spin, Tag} from "antd";
+import React, {useEffect, useState} from 'react'
 import axios from "axios";
-import {
-    DeleteOutlined,
-    EditOutlined,
-    EllipsisOutlined,
-    LockOutlined,
-    PlusOutlined,
-    SettingOutlined
-} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, EnterOutlined, InfoOutlined, PlusOutlined} from "@ant-design/icons";
 import {Link, useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
@@ -74,7 +67,9 @@ const ListOutlinePage = (props) => {
         return (
             <Card
                 extra={
-                    <Link to={`/uet/courses/${course.uuid}/outlines/${item.uuid}`}>Chi tiết</Link>
+                        <Link to={`/uet/courses/${course.uuid}/outlines/${item.uuid}`}>
+                            <Button type="primary" shape="circle" icon={<InfoOutlined/>} size="small" />
+                        </Link>
                 }
                 actions={function () {
                     if(userRole === 0 ) {
@@ -87,21 +82,18 @@ const ListOutlinePage = (props) => {
                 hoverable
             >
                 <Descriptions column={1}>
-                    <Descriptions.Item label="Tạo bởi">
-                        {
-                            function () {
-                              if(item.createdBy) {
-                                  return "GV. " + JSON.parse(item.createdBy).fullname
-                              } else {
-                                  return "Admin"
-                              }
-                            }()
-                        }
+                    <Descriptions.Item label="Thời gian tạo">
+                        <Tag color="volcano">
+                            {
+                                `${createTime.getHours()}:${createTime.getMinutes()} ${createTime.getDate()}/${createTime.getMonth()}/${createTime.getFullYear()}`
+                            }
+                        </Tag>
+
                     </Descriptions.Item>
                 </Descriptions>
             </Card>
         )
-    };
+    }
 
     const gridAdmin = {
             gutter: 16,

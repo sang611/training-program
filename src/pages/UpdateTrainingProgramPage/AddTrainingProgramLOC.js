@@ -191,6 +191,9 @@ const AddTrainingProgramLOC = ({trainingProgram}) => {
 
     return (
         <>
+            <Title level={3}>
+                Phần II. Chuẩn đầu ra của CTĐT
+            </Title>
             <ListLocs trainingProgram={trainingProgram}/>
 
         </>

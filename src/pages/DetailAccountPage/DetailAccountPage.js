@@ -653,7 +653,7 @@ const DetailAccountPage = () => {
             }}>
                 <Space>
                     {
-                        currentUser.uuid == uuid || userRole == 0 ?
+                        currentUser.uuid == uuid  ?
                             <Upload {...props} showUploadList={isShowAvaFile}>
                                 <Avatar
                                     src={
