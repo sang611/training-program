@@ -15,6 +15,8 @@ export function* fetchAccountsSaga(action) {
         fullnameSearch = fullnameSearch || "";
         studentClass = studentClass || "";
 
+        if(studentClass === "Tất cả") studentClass = ""
+
         let vnu_mail = "";
 
         if(hasNumber(fullnameSearch) || fullnameSearch.includes("@")) {

@@ -20,11 +20,12 @@ const ListAccountPage = () => {
     const [typeAccount, setTypeAccount] = useState(query.get('type') || "GV");
     const [currentPage, setCurrentPage] = useState(1);
     const [searchText, setSearchText] = useState("");
-    const [className, setClassname] = useState("");
+    const [className, setClassname] = useState("Tất cả");
 
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [data, setData] = useState([]);
+    const [resetFetch, setResetFetch] = useState(false);
 
     useEffect(() => {
         dispatch(actions.fetchAccounts({
@@ -33,6 +34,7 @@ const ListAccountPage = () => {
             page: currentPage,
             studentClass: className
         }))
+        setResetFetch(true)
     }, [currentPage])
 
     useEffect(() => {
@@ -43,12 +45,15 @@ const ListAccountPage = () => {
 
 
     useEffect(() => {
-        setData(data.concat(
-            accounts.filter(acc => {
-                return !data.map(d => d.uuid).includes(acc.uuid)
-            })
-        ));
-        setLoadingMore(false);
+        if(resetFetch) {
+            setData(data.concat(
+                accounts.filter(acc => {
+                    return !data.map(d => d.uuid).includes(acc.uuid)
+                })
+            ));
+            setLoadingMore(false);
+        }
+
     }, [accounts])
 
     const onDeleteAccount = (item) => {
@@ -162,10 +167,13 @@ const ListAccountPage = () => {
                                         size="large"
                                         placeholder="Lớp"
                                         style={{width: '100%'}}
-                                        onChange={(value => setClassname(value) )}
+                                        onChange={(value => {
+                                            setClassname(value)
+                                        })}
+                                        value={className}
                                     >
                                         {
-                                            [
+                                            [   "Tất cả",
                                                 "A-E", "C-A-C", "C-A-CLC1", "C-A-CLC2", "C-A-CLC3", "C-B",
                                                 "C-C", "C-CLC", "C-D", "C-E", "C-F", "C-G", "C-H", "C-K",
                                                 "C-L", "C-J", "N", "T", "Đ-A-CLC", "Đ-B", "K", "E", "V", "H",
