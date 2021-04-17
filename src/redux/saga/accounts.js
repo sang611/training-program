@@ -5,35 +5,50 @@ import * as items from '../../constants/Items';
 import axios from "axios";
 import * as actionTypes from "../actions/actionTypes";
 
-export function* fetchAccountsSaga (action) {
+function hasNumber(myString) {
+    return /\d/.test(myString);
+}
+
+export function* fetchAccountsSaga(action) {
     try {
-        let {typeAccount, fullnameSearch, studentClass} = action.payload;
+        let {typeAccount, fullnameSearch, studentClass, page} = action.payload;
         fullnameSearch = fullnameSearch || "";
         studentClass = studentClass || "";
+
+        let vnu_mail = "";
+
+        if(hasNumber(fullnameSearch) || fullnameSearch.includes("@")) {
+            vnu_mail = fullnameSearch;
+            fullnameSearch = "";
+        }
+
         yield put(actions.fetchAccountsStart());
 
-        let api = typeAccount === 'GV'
-            ? `/employees/?fullname=${fullnameSearch}`
-            : `/students/?fullname=${fullnameSearch}&class=${studentClass}`;
+        let api;
+        if (typeAccount === 'GV') {
+            api = `/employees?fullname=${fullnameSearch}&vnu_mail=${vnu_mail}&page=${page || 1}`;
+        }
+        else if (typeAccount === "SV") {
+            api = `/students?fullname=${fullnameSearch}&vnu_mail=${vnu_mail}&class=${studentClass}&page=${page || 1}`;
+        }
 
-        const {data} = yield axios.get(api);
+        const {data} = api ? yield axios.get(api) : [];
         yield put(actions.fetchAccountsSuccess(data));
-    } catch(error) {
+    } catch (error) {
         console.log(error)
         yield put(actions.fetchAccountsFail(error));
     }
 }
 
-export function* searchAccountsSaga (action) {
-    if(action.searchValue.trim() === '') {
+export function* searchAccountsSaga(action) {
+    if (action.searchValue.trim() === '') {
         yield put(actions.fetchAccountsSuccess(action.accounts));
-    }
-    else {
+    } else {
         const tempAccounts = [];
-        for(var i=0;i<action.accounts.length;i++) {
+        for (var i = 0; i < action.accounts.length; i++) {
             let tempString = action.accounts[i].fullName;
             let n = yield tempString.toUpperCase().search(action.searchValue.toUpperCase());
-            if(n>=0) {
+            if (n >= 0) {
                 yield tempAccounts.push(action.accounts[i]);
             }
         }
@@ -41,15 +56,14 @@ export function* searchAccountsSaga (action) {
     }
 }
 
-export function* filterAccountsSaga (action) {
-    if(action.role === 'All') {
+export function* filterAccountsSaga(action) {
+    if (action.role === 'All') {
         yield put(actions.fetchAccountsSuccess(action.accounts));
-    }
-    else {
+    } else {
         const tempAccounts = [];
-        for(var i=0;i<action.accounts.length;i++) {
+        for (var i = 0; i < action.accounts.length; i++) {
             let tempRole = action.accounts[i].role;
-            if(tempRole === action.role) {
+            if (tempRole === action.role) {
                 yield tempAccounts.push(action.accounts[i]);
             }
         }
@@ -58,12 +72,12 @@ export function* filterAccountsSaga (action) {
 }
 
 
-export function* addAccountSaga (action) {
+export function* addAccountSaga(action) {
     yield put(actions.addAccountStart());
     try {
         const {values, typeAccount} = action.payload;
         console.log(action.payload)
-        if(typeAccount == 1) {
+        if (typeAccount == 1) {
             yield axios.post("/employees", values)
         } else if (typeAccount == 2) {
 

@@ -16,8 +16,6 @@ function AdminStatisticPage() {
 
     const dispatch = useDispatch();
 
-    const {accounts} = useSelector((state) => state.accounts);
-
     useEffect(() => {
 
         dispatch(actions.fetchAccounts({typeAccount: 'GV'}))

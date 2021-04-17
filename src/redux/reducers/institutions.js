@@ -5,7 +5,7 @@ const initialState = {
     loading: false,
     getAllSuccess: false,
     listInstitutions: [],
-    isCreating: null,
+    isCreating: false,
     createSuccess: null
 }
 

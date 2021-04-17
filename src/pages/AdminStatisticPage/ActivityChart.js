@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Line} from "@ant-design/charts";
-import {Card, Spin} from "antd";
+import {Card, Spin, Tag} from "antd";
+import Title from "antd/lib/typography/Title";
 
 const ActivityChart = () => {
 
@@ -28,14 +29,17 @@ const ActivityChart = () => {
         yField: 'login_total',
         seriesField: 'role',
         color: ['#1979C9', '#D62A0D'],
+        smooth: true
     };
     return infors ? (
         <>
-            <Card>
+            <Card title={
+                "Biểu đồ mức độ hoạt động của người dùng"
+            }>
                 <Line {...config} />
             </Card>
         </>
-    ) : <Spin />
+    ) : <Spin/>
 
         ;
 }

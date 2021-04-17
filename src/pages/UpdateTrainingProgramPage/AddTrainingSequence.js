@@ -111,10 +111,12 @@ const AddTrainingSequence = ({trainingProgram}) => {
                             {
                                 trainingCourses
                                     .map((course, index) => {
-
                                            return (<Select.Option
                                                 value={course.uuid}
                                                 key={index}
+                                                disabled={
+                                                    course.training_program_course.semester
+                                                }
                                             >
                                                 {`${course.course_code} - ${course.course_name_vi}`}
                                             </Select.Option>

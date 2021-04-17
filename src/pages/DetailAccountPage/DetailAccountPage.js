@@ -655,22 +655,42 @@ const DetailAccountPage = () => {
                     {
                         currentUser.uuid == uuid  ?
                             <Upload {...props} showUploadList={isShowAvaFile}>
-                                <Avatar
-                                    src={
-                                        function () {
-                                            if (user) {
-                                                if (user.avatar) {
-                                                    return user.avatar.includes(':') ? user.avatar : `data:image/jpeg;base64, ${user.avatar}`
-                                                } else return ''
-                                            } else return ''
-                                        }()
-                                    }
-
-                                    size={100}
-                                    style={{cursor: 'pointer'}}
+                                <Avatar src={
+                                    function () {
+                                        if (user) {
+                                            if (user.avatar) {
+                                                return user.avatar.includes(':') ? user.avatar : `data:image/jpeg;base64, ${user.avatar}`
+                                            } else {
+                                                if (user.gender === "Nam")
+                                                    return "https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png"
+                                                else
+                                                    return "https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png"
+                                            }
+                                        } else return ''
+                                    }()
+                                }
+                                        size={100}
+                                        style={{cursor: 'pointer'}}
                                 />
+
                             </Upload> :
-                            <Avatar src={detailUser.avatar} size={100}/>
+                            <Avatar
+                                src={
+                                    function () {
+                                        if (detailUser) {
+                                            if (detailUser.avatar) {
+                                                return detailUser.avatar.includes(':') ? detailUser.avatar : `data:image/jpeg;base64, ${detailUser.avatar}`
+                                            } else {
+                                                if (detailUser.gender === "Nam")
+                                                    return "https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png"
+                                                else
+                                                    return "https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png"
+                                            }
+                                        } else return ''
+                                    }()
+                                }
+                                size={100}
+                            />
                     }
 
                     <Title level={4}>

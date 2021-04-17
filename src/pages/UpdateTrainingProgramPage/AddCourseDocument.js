@@ -12,7 +12,7 @@ import {course} from "../../constants/Items";
 const AddCourseDocument = ({trainingProgram, type}) => {
 
     const dispatch = useDispatch();
-    const {accounts} = useSelector((state) => state.accounts);
+    const {accounts} = useSelector(state => state.accounts);
 
     const [editing, setEditing] = useState([]);
 
@@ -123,7 +123,11 @@ const AddCourseDocument = ({trainingProgram, type}) => {
 
                                 accounts.map((employee, index) => {
                                     return (
-                                        <Select.Option value={employee.uuid} label={employee.fullname} key={index}>
+                                        <Select.Option
+                                            value={employee.uuid}
+                                            label={employee.fullname}
+                                            key={index}
+                                        >
                                             <div className="demo-option-label-item">
                                                 {`${employee.fullname} (${employee.vnu_mail})`}
                                             </div>

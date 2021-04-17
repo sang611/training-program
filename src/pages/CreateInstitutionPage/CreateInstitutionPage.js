@@ -13,14 +13,15 @@ const CreateInstitutionPage = (props) => {
     const {isEdited, institution, parentIns} = props;
     const dispatch = useDispatch();
     const [formData, setFormData] = useState(new FormData());
-    const state = useSelector((state) => state.institutions)
+    const {createSuccess, isCreating} = useSelector((state) => state.institutions)
+    const [editing, setEditing] = useState(false);
     const {isValidToken} = useSelector(state => state.auth)
 
     useEffect(() => {
-        if (state.createSuccess) {
+        if (createSuccess) {
             message.success("Đã thêm một đơn vị mới");
         }
-    }, [state])
+    }, [createSuccess])
 
     const layout = {
         labelCol: {
@@ -44,12 +45,15 @@ const CreateInstitutionPage = (props) => {
         }
         if(isEdited) {
             let {uuid} = props.institution;
+            setEditing(true)
             axios.put(`/institutions/${uuid}`, formData)
                 .then(() => {
                     message.success("Cập nhật đơn vị thành công");
                     props.editSuccess(true);
+                    dispatch(actions.getAllInstitution())
                 })
-                .catch((e) => message.error("Đã có lỗi xảy ra"));
+                .catch((e) => message.error("Đã có lỗi xảy ra"))
+                .finally(() => setEditing(false))
         } else {
             dispatch(actions.createInstitution(formData))
         }
@@ -160,12 +164,12 @@ const CreateInstitutionPage = (props) => {
                     {
                         props.isEdited ?
                             <Button onClick={props.onCloseDrawer}>
-                                Cancel
+                                Hủy
                             </Button> : ""
                     }
 
-                    <Button type="primary" htmlType="submit">
-                        Submit
+                    <Button type="primary" htmlType="submit" loading={isEdited ? editing : isCreating}>
+                        Lưu
                     </Button>
                 </Space>
 

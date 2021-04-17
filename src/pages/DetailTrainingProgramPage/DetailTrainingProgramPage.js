@@ -47,15 +47,15 @@ const DetailTrainingProgramPage = (props) => {
                 var heightLeft = imgHeight;
 
                 var doc = new jsPDF('p', 'mm');
-                var position = 0;
+                var x = 0, y = 0;
 
-                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                doc.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
                 heightLeft -= pageHeight;
 
                 while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
+                    y = heightLeft - imgHeight;
                     doc.addPage();
-                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    doc.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
                     heightLeft -= pageHeight;
                 }
                 doc.save('file.pdf');
@@ -127,7 +127,7 @@ const DetailTrainingProgramPage = (props) => {
                         />
                     </Affix> : ""
                 }
-                <div id="training_program">
+                <div id="training_program" style={{padding: '20px'}}>
                     <TrainingProgramIntroduce/>
                     <br/><br/>
                     <TrainingLOC learning_outcomes={learning_outcomes}/>

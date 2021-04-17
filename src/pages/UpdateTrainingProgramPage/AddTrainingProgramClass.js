@@ -40,7 +40,7 @@ const AddTrainingProgramClass = ({trainingProgram}) => {
     return (
         <>
             <Title level={4}>
-                Danh sách các lớp
+                Danh sách các lớp áp dụng
             </Title>
             {
                 trainingProgram.classes ?

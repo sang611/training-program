@@ -2,6 +2,8 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     accounts: [],
+    loadingAll: null,
+    totalAccounts: 0,
     updatedAccounts: [],
     filteredAccounts: [],
     isSearch: false,
@@ -21,6 +23,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.FETCH_ACCOUNTS_START:
             return {
                 ...state,
+                loadingAll: true
             }
         case actionTypes.FETCH_ACCOUNTS_SUCCESS:
             return {
@@ -28,13 +31,16 @@ const reducer = (state = initialState, action) => {
                 error: null,
                 isSearch: false,
                 isFilter: false,
-                accounts: action.payload.accounts
+                accounts: action.payload.accounts,
+                totalAccounts: action.payload.totalResults,
+                loadingAll: false
             }
         case actionTypes.FETCH_ACCOUNTS_FAIL:
             return {
                 ...state,
                 accounts: [],
-                error: action.error
+                error: action.error,
+                loadingAll: false
             }
         case actionTypes.ADD_ACCOUNT_START:
             return {

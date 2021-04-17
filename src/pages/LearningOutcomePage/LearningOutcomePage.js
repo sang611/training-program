@@ -55,10 +55,16 @@ const ListLocs = ({typeLoc, currentPage, onPaginateLOC, showModal}) => {
             width: '200px',
             render: (_, record) =>
                 <Space size="middle">
-                    <Button type="primary" onClick={() => showModal(record)}>Chỉnh sửa</Button>
+                    <Button
+                        type="primary"
+                        onClick={() => showModal(record)}
+                        icon={<i className="far fa-edit"/>}
+                    >
+                        &nbsp;Chỉnh sửa
+                    </Button>
                     <Popconfirm title="Xóa CĐR này?" onConfirm={() => onDeleteLOC(record.uuid)}>
-                        <Button danger type="primary">
-                            Xóa
+                        <Button danger type="primary" icon={<i className="far fa-trash-alt"/>}>
+                            &nbsp;Xóa
                         </Button>
                     </Popconfirm>
                 </Space>

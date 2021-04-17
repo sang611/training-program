@@ -36,21 +36,24 @@ const UpdateTrainingProgramPage = (props) => {
        return trainingProgram ?  (
             <>
                 <Tabs defaultActiveKey="1" tabPosition="right">
-                    <Tabs.TabPane tab="Giới thiệu chung" key="1" forceRender={true}>
+                    <Tabs.TabPane tab="Giới thiệu chung" key={1} forceRender={true}>
                         <UpdateTrainingProgramIntroduce />
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab="Chuẩn đầu ra" key="2" forceRender={true}>
+                    <Tabs.TabPane tab="Chuẩn đầu ra" key={2} forceRender={true}>
                         <AddTrainingProgramLOC trainingProgram={trainingProgram}/>
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab="Nội dung" key="3" forceRender={true}>
+                    <Tabs.TabPane tab="Khung chương trình" key={4}>
                         <SummaryContentTraining trainingProgram={trainingProgram}/><br/><br/>
                         <AddTrainingProgramFrame trainingProgram={trainingProgram}/><br/><br/>
-
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab="Danh mục tài liệu" key={5}>
                         <AddCourseDocument trainingProgram={trainingProgram} type={"doc"}/><br/><br/>
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab="Đội ngũ cán bộ" key={6}>
                         <AddCourseDocument trainingProgram={trainingProgram} type={"lec"}/><br/><br/>
-
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab="Trình tự đào tạo" key={7}>
                         <AddTrainingSequence trainingProgram={trainingProgram} /><br/><br/>
-
                         <AddTrainingProgramClass trainingProgram={trainingProgram} /><br/><br/>
                     </Tabs.TabPane>
                 </Tabs>

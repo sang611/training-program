@@ -8,7 +8,7 @@ import {useHistory} from "react-router-dom";
 function CourseStatistic() {
     const dispatch = useDispatch();
     const history = useHistory();
-    const {accounts} = useSelector((state) => state.accounts);
+    const {accounts, totalAccounts} = useSelector((state) => state.accounts);
 
     const [totalLec, setTotalLec] = useState(0);
     const [totalStu, setTotalStu] = useState(0);
@@ -23,16 +23,12 @@ function CourseStatistic() {
         if(accounts.length > 0) {
             if(accounts[0].account.role == 3) {
                 setTotalStu(
-                    accounts
-                        .filter(({account}) => account.role == 3)
-                        .length
+                    totalAccounts
                 )
             }
             else {
                 setTotalLec(
-                    accounts
-                        .filter(({account}) => account.role == 1 || account.role == 2)
-                        .length
+                    totalAccounts
                 )
             }
         }
@@ -47,7 +43,7 @@ function CourseStatistic() {
                             bodyStyle={{backgroundColor: '#F56954'}}
                             className="statistic-info"
                             hoverable
-                            onClick={() => history.push("/uet/accounts/GV")}
+                            onClick={() => history.push("/uet/accounts")}
                         >
                             <center>
                                 <Title level={1}>
@@ -65,7 +61,7 @@ function CourseStatistic() {
                             bodyStyle={{backgroundColor: '#E95258'}}
                             className="statistic-info"
                             hoverable
-                            onClick={() => history.push("/uet/accounts/SV")}
+                            onClick={() => history.push("/uet/accounts/?type=SV")}
                         >
                             <center>
                                 <Title level={1}>

@@ -196,10 +196,12 @@ const DashboardPage = () => {
                                 mới</Link></Menu.Item>*/}
                         </SubMenu>
                         <SubMenu key="sub4" icon={<TeamOutlined/>} title="Tài khoản" className="sub-menu">
-                            <Menu.Item key="/uet/accounts/GV" className="menu-item-child"><Link to="/uet/accounts/GV">Danh
-                                sách</Link></Menu.Item>
-                            <Menu.Item key="/uet/accounts/creation" className="menu-item-child"><Link to="/uet/accounts/creation">Tạo
-                                mới</Link></Menu.Item>
+                            <Menu.Item key="/uet/accounts" className="menu-item-child">
+                                <Link to="/uet/accounts">Danh sách</Link>
+                            </Menu.Item>
+                            <Menu.Item key="/uet/creation/accounts" className="menu-item-child">
+                                <Link to="/uet/creation/accounts">Tạo mới</Link>
+                            </Menu.Item>
                         </SubMenu>
                         <Menu.Item key="/uet/majors" icon={<PartitionOutlined/>} className="sub-menu">
                             <Link to="/uet/majors">Ngành</Link>
@@ -277,8 +279,8 @@ const DashboardPage = () => {
                                 <Route path="/uet/institutions/creation" component={CreateInstitutionPage}/>
                                 <Route path="/uet/institutions" component={ListInstitutionPage}/>
 
-                                <Route path="/uet/accounts/creation" component={CreateAccountPage}/>
-                                <Route path="/uet/accounts/:index" component={ListAccountPage}/>
+                                <Route exact path="/uet/creation/accounts" component={CreateAccountPage}/>
+                                <Route exact path="/uet/accounts" component={ListAccountPage}/>
 
                                 <Route path="/uet/training-programs/creation" component={CreateTrainingProgramPage}/>
                                 <Route exact path="/uet/training-programs" component={ListTrainingProgramPage}/>

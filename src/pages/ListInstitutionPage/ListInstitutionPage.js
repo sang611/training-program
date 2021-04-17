@@ -105,7 +105,6 @@ const ListInstitutionPage = () => {
             dispatch(actions.getAllInstitution());
             onCloseDrawerCreate();
             handleCancel();
-
         }
 
         setEditSuccess(false)

@@ -1,8 +1,8 @@
-import {CloudDownloadOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import {CloudDownloadOutlined, DeleteOutlined, EditOutlined, LoadingOutlined} from "@ant-design/icons";
 import axios from "axios";
 import Meta from "antd/lib/card/Meta";
 import Paragraph from "antd/lib/typography/Paragraph";
-import {Card, Divider, message, Popconfirm, Tooltip} from "antd";
+import {Card, Divider, message, Popconfirm, Tag, Tooltip} from "antd";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
@@ -19,18 +19,20 @@ const DocumentCard = ({userRole, item}) => {
     const {trainingPrograms} = useSelector(state => state.trainingPrograms)
     const {courses} = useSelector(state => state.courses)
 
+    const [downloading, setDownloading] = useState(false);
+
     function getDocumentResourceName() {
         let {resourceUuid, category} = item;
-        if(category === "training-program") {
+        if (category === "training-program") {
             let trainingItem = trainingPrograms.find(item => item.uuid === resourceUuid)
-            if(trainingItem) {
+            if (trainingItem) {
                 return trainingItem.vn_name
             }
 
         }
-        if(category === "course") {
+        if (category === "course") {
             let course = courses.find(item => item.uuid === resourceUuid)
-            if(course)
+            if (course)
                 return course.course_name_vi
         }
         return ""
@@ -88,6 +90,20 @@ const DocumentCard = ({userRole, item}) => {
             })
     }
 
+    function onDownloadFile() {
+        setDownloading(true);
+        axios.get(`/documents/downloadOneFile/${item.document_url}`, {responseType: 'blob'})
+            .then(res => {
+                FileDownload(res.data, 'document.pdf');
+                setDownloading(false)
+            })
+            .catch((e) => {
+                message.error(e.toString())
+                setDownloading(false)
+            })
+
+    }
+
 
     return (
         <>
@@ -95,37 +111,36 @@ const DocumentCard = ({userRole, item}) => {
                 hoverable
                 title={
                     <Tooltip>
-                        {getDocumentResourceName()}
+                        <Tag color="#108ee9">
+
+                            {getDocumentResourceName()}
+
+
+                        </Tag>
                     </Tooltip>
                 }
                 bodyStyle={{
                     padding: '0'
                 }}
                 actions={userRole == 0 ? [
-                    <CloudDownloadOutlined key="download" onClick={() => {
-                        axios.get(`/documents/downloadOneFile/${item.document_url}`, {responseType: 'blob'})
-                            .then(res => {
-                                FileDownload(res.data, 'tmp.pdf');
-                            })
-                    }}/>,
-                    //<EditOutlined key="edit"/>,
+                    !downloading
+                        ? <CloudDownloadOutlined key="download" onClick={onDownloadFile}/>
+                        : <LoadingOutlined key="downloading"/>,
                     <Popconfirm
                         title="Bạn muốn xóa tài liệu này?"
-                        onConfirm={()=>onConfirmDelete(item.uuid, item.category)}
+                        onConfirm={() => onConfirmDelete(item.uuid, item.category)}
                         okText="Xóa"
                         cancelText="Hủy"
                     >
                         <DeleteOutlined key="delete"/>
                     </Popconfirm>
 
-                ] : [
-                    <CloudDownloadOutlined key="download" onClick={() => {
-                        axios.get(`/documents/downloadOneFile/${item.document_url}`, {responseType: 'blob'})
-                            .then(res => {
-                                FileDownload(res.data, 'tmp.pdf');
-                            })
-                    }}/>
-                ]}
+                ] : (
+                    !downloading
+                        ? [<CloudDownloadOutlined key="download" onClick={onDownloadFile}/>]
+                        : [<LoadingOutlined key="downloading"/>]
+
+                )}
             >
                 <center>
                     <img
@@ -153,7 +168,7 @@ const DocumentCard = ({userRole, item}) => {
                         description={
                             userRole == 0 ?
                                 <Paragraph
-                                    editable={{onChange: (e) =>  onUpdateDescDoc(e)}}
+                                    editable={{onChange: (e) => onUpdateDescDoc(e)}}
                                     style={{margin: 0}}
                                 >{editableDesc}</Paragraph>
                                 : (item.description || "")

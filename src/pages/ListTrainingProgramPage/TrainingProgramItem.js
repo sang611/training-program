@@ -86,7 +86,12 @@ const MatrixLearningOutcomes = ({trainingItem, levelLocs}) => {
 
                 render: (_, loc) => {
 
-                    let outline = course.outlines[0];
+                    let outline;
+                    if (trainingItem.lock_edit) {
+                        outline = course.outlines ? course.outlines.find(outline => outline.uuid === course.training_program_course.outlineUuid) : null;
+                    } else {
+                        outline = course.outlines[0] ? course.outlines[0] : null
+                    }
                     if (outline) {
                         let locsOfCourse = outline.learning_outcomes;
 
@@ -224,7 +229,7 @@ const MatrixCourses = ({trainingItem}) => {
                 dataSource={
                     trainingItem.courses.map((course, index) => {
                         course.key = course.uuid;
-                        course.stt = index+1;
+                        course.stt = index + 1;
                         return course;
                     })
                 }
@@ -247,7 +252,7 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
 
     const onLock = async (uuid) => {
         let course_outlines = [];
-        for(let course of item.courses) {
+        for (let course of item.courses) {
             course_outlines.push({
                 courseUuid: course.uuid,
                 outlineUuid: course.outlines[0] ? course.outlines[0].uuid : null
@@ -266,7 +271,7 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
 
     const onUnLock = async (uuid) => {
         let course_outlines = [];
-        for(let course of item.courses) {
+        for (let course of item.courses) {
             course_outlines.push({
                 courseUuid: course.uuid,
                 outlineUuid: course.outlines[0] ? course.outlines[0].uuid : null
@@ -296,13 +301,14 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
             })
     }
 
-    const actionAdmin = [
-        <Link to={`/uet/training-programs/updating/${item.uuid}`}>
-            <EditOutlined key="edit"/>
-        </Link>,
+    const actionAdmin = !item.lock_edit ?
+        [
+            <Link to={`/uet/training-programs/updating/${item.uuid}`}>
+                <EditOutlined key="edit"/>
+            </Link>,
 
-        <BuildOutlined onClick={() => setVisibleLocMatrix(true)}/>,
-        <InsertRowBelowOutlined onClick={() => setVisibleCourseMatrix(true)}/>,
+            <BuildOutlined onClick={() => setVisibleLocMatrix(true)}/>,
+            <InsertRowBelowOutlined onClick={() => setVisibleCourseMatrix(true)}/>,
 
             !item.lock_edit ?
                 <Popconfirm
@@ -323,16 +329,41 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
                     <LockOutlined/>
                 </Popconfirm>,
 
-        <Popconfirm
-            title="Xóa CTĐT?"
-            cancelText="Hủy"
-            okText="Xóa"
-            onConfirm={() => onDeleteTrainingProgram(item.uuid)}
-        >
-            <DeleteOutlined/>
-        </Popconfirm>,
-        ,
-    ];
+            <Popconfirm
+                title="Xóa CTĐT?"
+                cancelText="Hủy"
+                okText="Xóa"
+                onConfirm={() => onDeleteTrainingProgram(item.uuid)}
+            >
+                <DeleteOutlined/>
+            </Popconfirm>,
+            ,
+        ] :
+        [
+            <BuildOutlined onClick={() => setVisibleLocMatrix(true)}/>,
+            <InsertRowBelowOutlined onClick={() => setVisibleCourseMatrix(true)}/>,
+
+            !item.lock_edit ?
+                <Popconfirm
+                    title="Sau khi khóa sẽ không thể chỉnh sửa?"
+                    cancelText="Hủy"
+                    okText="Khóa"
+                    onConfirm={() => onLock(item.uuid)}
+                >
+                    <UnlockOutlined/>
+                </Popconfirm>
+                :
+                <Popconfirm
+                    title="Mở khóa chương trình đào tạo này?"
+                    cancelText="Hủy"
+                    okText="Mở khóa"
+                    onConfirm={() => onUnLock(item.uuid)}
+                >
+                    <LockOutlined/>
+                </Popconfirm>,
+
+        ]
+
 
     const actionStudent = [
         <Icon
@@ -419,7 +450,7 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
                 }}
                 footer={null}
             >
-                <MatrixCourses trainingItem={item} />
+                <MatrixCourses trainingItem={item}/>
             </Modal>
         </>
     )
