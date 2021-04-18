@@ -14,6 +14,7 @@ import TrainingLOC from "./TrainingLOC";
 import TrainingCourse from "./TrainingCourse";
 import CourseDocumentAndSequence from "./CourseDocumentAndSequence";
 import CourseLecturer from "./CourseLecturer";
+import Title from "antd/lib/typography/Title";
 
 
 const DetailTrainingProgramPage = (props) => {
@@ -21,13 +22,13 @@ const DetailTrainingProgramPage = (props) => {
     let history = useHistory();
     const dispatch = useDispatch();
 
-    const {trainingProgram} = useSelector(state => state.trainingPrograms)
+    const {trainingProgram, loadingATraining, errorLoadA} = useSelector(state => state.trainingPrograms)
     const [isExportingPdf, setIsExportingPdf] = useState(false);
     const {userRole} = useSelector(state => state.auth);
 
     useEffect(() => {
         dispatch(actions.getATrainingProgram({id: uuid}));
-    }, [])
+    }, [uuid])
 
 
     function printDocument() {
@@ -104,57 +105,68 @@ const DetailTrainingProgramPage = (props) => {
         document.body.removeChild(downloadLink);
     }
 
-
-    if (trainingProgram) {
-        const {
-            learning_outcomes,
-            courses,
-            lock_edit,
-            uuid
-        } = trainingProgram
-
-        return (
-            <>
-
-                {
-                    (!lock_edit && userRole == 0) ? <Affix style={{float: 'right'}} offsetTop={100}>
-                        <Button
-                            type="primary"
-                            shape="circle"
-                            icon={<EditOutlined/>}
-                            style={{float: 'right'}}
-                            onClick={() => history.push(`/uet/training-programs/updating/${uuid}`)}
-                        />
-                    </Affix> : ""
-                }
-                <div id="training_program" style={{padding: '20px'}}>
-                    <TrainingProgramIntroduce/>
-                    <br/><br/>
-                    <TrainingLOC learning_outcomes={learning_outcomes}/>
-                    <br/><br/>
-                    <TrainingCourse/>
-                    <br/><br/>
-                    <CourseDocumentAndSequence courses={courses}/>
-                    <br/><br/>
-                    <CourseLecturer courses={courses}/>
-                    <br/><br/>
-                    <DependencyCourseGraph trainingProgram={trainingProgram}/>
-                    <br/><br/>
-                    <CourseDocumentAndSequence courses={courses} semester={true}/>
-                    <br/><br/>
-                    <SummaryContentCourse trainingProgram={trainingProgram}/>
-                </div>
-                <Row align="end">
-                    <Space>
-                        <Button icon={<FilePdfOutlined/>} onClick={printDocument} loading={isExportingPdf}>Export PDF</Button>
-                        <Button icon={<FileWordOutlined />} onClick={exportToDoc} >Export Word</Button>
-                    </Space>
-                </Row>
-            </>
-        )
-    } else {
-        return <Spin/>;
+    if(loadingATraining) {
+        return <Spin />
     }
+
+    else {
+        if (!errorLoadA && trainingProgram) {
+            const {
+                learning_outcomes,
+                courses,
+                lock_edit,
+                uuid
+            } = trainingProgram
+
+            return (
+                <>
+                    {
+                        (!lock_edit && userRole == 0) ? <Affix style={{float: 'right'}} offsetTop={100}>
+                            <Button
+                                type="primary"
+                                shape="circle"
+                                icon={<EditOutlined/>}
+                                style={{float: 'right'}}
+                                onClick={() => history.push(`/uet/training-programs/updating/${uuid}`)}
+                            />
+                        </Affix> : ""
+                    }
+                    <div id="training_program" style={{padding: '20px'}}>
+                        <TrainingProgramIntroduce/>
+                        <br/><br/>
+                        <TrainingLOC learning_outcomes={learning_outcomes}/>
+                        <br/><br/>
+                        <TrainingCourse />
+                        <br/><br/>
+                        <CourseDocumentAndSequence courses={courses}/>
+                        <br/><br/>
+                        <CourseLecturer courses={courses}/>
+                        <br/><br/>
+                        <DependencyCourseGraph />
+                        <br/><br/>
+                        <CourseDocumentAndSequence courses={courses} semester={true} />
+                        <br/><br/>
+                        <SummaryContentCourse />
+                    </div>
+                    <Row align="end">
+                        <Space>
+                            <Button icon={<FilePdfOutlined/>} onClick={printDocument} loading={isExportingPdf}>Export
+                                PDF</Button>
+                            <Button icon={<FileWordOutlined/>} onClick={exportToDoc}>Export Word</Button>
+                        </Space>
+                    </Row>
+                </>
+            )
+        } else {
+            if (errorLoadA)
+                return errorLoadA
+            if (!trainingProgram) return <Spin/>
+        }
+    }
+
+
+
+
 }
 
 export default DetailTrainingProgramPage

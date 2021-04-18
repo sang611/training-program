@@ -31,7 +31,7 @@ const UpdateOutlinePage = () => {
     const [descriptionEdit, setDescriptionEdit] = useState(null);
 
     const dispatch = useDispatch();
-    const {course} = useSelector(state => state.courses)
+    const {course, loadingACourse} = useSelector(state => state.courses)
 
     useEffect(() => {
         dispatch(actions.getACourse({courseUuid: uuid}))
@@ -39,11 +39,9 @@ const UpdateOutlinePage = () => {
     }, [])
 
     useEffect(() => {
-        axios
-            .get(`/outlines/${uuid}/${outlineUuid}`)
+        axios.get(`/outlines/${uuid}/${outlineUuid}`)
             .then((res) => {
                 setOutline(res.data.outline)
-
             })
             .catch(error => {
                 message.error("Đã có lỗi xảy ra")
@@ -96,8 +94,8 @@ const UpdateOutlinePage = () => {
             .catch((err) => message.error("Đã có lỗi xảy ra"))
     }
 
-    return loading === true ? <Spin/> : (
-        <>
+    return loading || loadingACourse ? <Spin/> : (
+       course && outline ? <>
             <Title level={4}>
                 1. Giảng viên phụ trách môn học
             </Title>
@@ -202,7 +200,7 @@ const UpdateOutlinePage = () => {
                 <Button onClick={() => history.push(`/uet/courses/${uuid}/outlines`)}>Thoát</Button>
                 <Button type="primary" onClick={onSubmitOutline}>Lưu</Button>
             </Row>
-        </>
+        </> : <Title>500</Title>
     )
 }
 

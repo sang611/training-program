@@ -1,8 +1,9 @@
 import Title from "antd/lib/typography/Title";
 import {Col, Descriptions, Row} from "antd";
+import {useSelector} from "react-redux";
 
-const SummaryContentCourse = ({trainingProgram}) => {
-
+const SummaryContentCourse = () => {
+    const {trainingProgram} = useSelector(state => state.trainingPrograms)
     function getLockedOutlineContent(course) {
         let outline;
         if(trainingProgram.lock_edit) {

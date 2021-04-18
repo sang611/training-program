@@ -99,6 +99,8 @@ const DashboardPage = () => {
         } else {
             document.querySelector("#layout-content").style.marginLeft = '260px';
             document.getElementById("header-nav").style.width = 'calc(100% - 260px)'
+            //document.getElementById("nav-sider").style.overflowY = 'auto';
+
         }
     };
 
@@ -132,8 +134,8 @@ const DashboardPage = () => {
                     width={'260px'}
                     style={{
                         position: 'fixed',
-                        height: '100%',
-                        overflow: 'auto',
+                        height: '100vh',
+                        overflowY: 'auto'
                     }}
                     id="nav-sider"
                 >

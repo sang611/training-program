@@ -2,7 +2,7 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     response: {},
-    loading: false,
+    loading: null,
     getAllSuccess: false,
     listInstitutions: [],
     isCreating: false,

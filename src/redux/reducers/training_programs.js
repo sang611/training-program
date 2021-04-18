@@ -34,7 +34,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.GET_A_TRAINING_PROGRAMS_START:
             return {
                 ...state,
-                loadingATraining: true
+                loadingATraining: true,
             }
         case actionTypes.GET_A_TRAINING_PROGRAMS_SUCCESS:
             return {

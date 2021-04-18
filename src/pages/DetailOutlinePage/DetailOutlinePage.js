@@ -112,6 +112,7 @@ const DetailOutlinePage = () => {
     const history = useHistory();
     const {outlineUuid, uuid} = useParams();
     const [outline, setOutline] = useState(null);
+    const [fetchError, setFetchError] = useState(null);
     const {userRole} = useSelector(state => state.auth)
     const {user} = useSelector(state => state.accounts);
 
@@ -122,7 +123,10 @@ const DetailOutlinePage = () => {
             .then((res) => {
                 setOutline(res.data.outline)
             })
-            .catch(error => message.error("Đã có lỗi xảy ra"))
+            .catch(error => {
+                setFetchError(error)
+                message.error(error.response.data.message)
+            })
 
     }, [])
 
@@ -131,7 +135,7 @@ const DetailOutlinePage = () => {
             return !!(user.courses.find((course) => uuid == course.uuid).employee_course.isModerator)
         return false
     }
-
+    if(fetchError) return <Title>404 Not Found</Title>
     return !outline ? <Spin/> : (
         <>
             {

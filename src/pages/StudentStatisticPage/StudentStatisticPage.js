@@ -1,4 +1,4 @@
-import {Card, Col, Divider, Row, Select, Space, Tag} from "antd";
+import {Card, Col, Divider, Row, Select, Space, Spin, Tag} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useMemo, useState} from 'react'
 import CreditStatistic from "./CreditStatistic";
@@ -12,10 +12,17 @@ const StudentStatisticPage = () => {
     const {user} = useSelector(state => state.accounts)
     const {training_program, courses} = user;
     const [semes, setSemes] = useState(0);
+    const dispatch = useDispatch();
 
     const semesters = new Array(user.training_program.training_duration * 2).fill(undefined);
 
-    return  (
+    useEffect(() => {
+        dispatch(actions.getAUser({
+            accountUuid: user.accountUuid,
+        }))
+    }, [])
+
+    return !user ? <Spin /> :  (
         <div>
             {
 

@@ -15,7 +15,7 @@ const CourseTypeByStatusStatistic = ({courses, trainingProgram, semes}) => {
             if(statusCourse == "Cải thiện") st = "improved";
             if(statusCourse == "Hoàn thành") st = "completed";
             if(statusCourse == "Học lại") st = "repeated";
-            if(statusCourse == "Đang học") st = "working";
+            if(statusCourse == "Dự định") st = "working";
             return (course.student_course[st] > 0 && (semes == 0 || course.student_course.semester == semes))
         })
 

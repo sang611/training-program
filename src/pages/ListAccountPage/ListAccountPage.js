@@ -65,8 +65,11 @@ const ListAccountPage = () => {
         }
         axios.delete(apiUrl)
             .then((res) => {
-                message.success(res.data.message)
-                dispatch(actions.fetchAccounts({typeAccount, fullnameSearch: searchText}))
+                message.success(`Đã xóa thành công tài khoản người dùng ${item.fullname}`)
+                //dispatch(actions.fetchAccounts({typeAccount, fullnameSearch: searchText, page: 1}))
+                setData(
+                    data.filter(u => u.uuid !== item.uuid)
+                )
             })
             .catch((e) => message.error(e.response.data.message))
     }

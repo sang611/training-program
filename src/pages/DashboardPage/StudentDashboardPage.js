@@ -15,7 +15,7 @@ import {
     AuditOutlined,
     CompassOutlined,
     FileOutlined,
-    LogoutOutlined,
+    LogoutOutlined, PieChartOutlined,
     SnippetsOutlined,
     SolutionOutlined,
     TeamOutlined
@@ -120,10 +120,18 @@ const StudentDashboardPage = () => {
                             {
                                 userRole == 3 ?
                                     <Menu.Item key={`/uet/${currentUser.uuid}/planning`} icon={<CompassOutlined/>}>
-                                        <Link to={`/uet/${currentUser.uuid}/planning`}>Kế hoạch học
-                                            tập</Link>
+                                        <Link to={`/uet/${currentUser.uuid}/planning`}>Tiến độ học tập</Link>
                                     </Menu.Item> : <></>
 
+                            }
+                            {
+                                userRole == 3 ?
+                                    <Menu.Item
+                                        key="4-1"
+                                        icon={<PieChartOutlined/>}
+                                    >
+                                        <Link to="/uet/statistic">Thống kê</Link>
+                                    </Menu.Item> : ''
                             }
                             <SubMenu key="5" icon={<SnippetsOutlined/>} title="Tài liệu">
                                 <Menu.Item
@@ -149,15 +157,7 @@ const StudentDashboardPage = () => {
                                     } else return ''
                                 }()
                             }/>} title={" " + user.fullname}>
-                                {/*{
-                                    userRole == 3 ?
-                                        <Menu.Item
-                                            key="4-1"
-                                            icon={<PieChartOutlined/>}
-                                        >
-                                            <Link to="/uet/statistic">Thống kê</Link>
-                                        </Menu.Item> : ''
-                                }*/}
+
                                 <Menu.Item
                                     key={`/uet/user/${currentUser.uuid}`}
                                     icon={<SolutionOutlined/>}

@@ -62,9 +62,8 @@ const NotificationDrawer = ({
                     dataSource={
                         notifications
                     }
-                    renderItem={item => (
+                    renderItem={item => item.outline ? (
                         <List.Item
-
                         >
                             <List.Item.Meta
                                 avatar={<Avatar src={item.employee.avatar} size={50}/>}
@@ -94,7 +93,7 @@ const NotificationDrawer = ({
                                 }
                             />
                         </List.Item>
-                    )}
+                    ) : ''}
                 />
                 {
                     choosedNotify ?

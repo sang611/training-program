@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {Table, Input, InputNumber, Popconfirm, Form, Typography, Select, Button, Drawer, message, Space} from 'antd';
 import * as actions from "../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -17,7 +17,7 @@ const EditableCell = ({
                           ...restProps
                       }) => {
     const courseState = useSelector(state => state.courses)
-    const inputNode = inputType === 'number' ? <InputNumber /> :
+    const inputNode = inputType === 'number' ? <InputNumber/> :
         <Select
             showSearch
             placeholder="Tên học phần"
@@ -60,7 +60,9 @@ const EditableCell = ({
 
 const AddTrainingProgramFrame = ({trainingProgram}) => {
     const [form] = Form.useForm();
-    const [dataSource, setDataSource] = useState(trainingProgram.courses);
+    const [dataSource, setDataSource] = useState([]);
+
+    console.log(dataSource)
     const [editingKey, setEditingKey] = useState('');
     const courseState = useSelector(state => state.courses)
     const dispatch = useDispatch();
@@ -69,11 +71,25 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
         dispatch(actions.getAllCourse())
     }, [])
 
-    useEffect(() => {
-        if(trainingProgram)
-        setDataSource(trainingProgram.courses)
-    }, [trainingProgram])
 
+    useEffect(() => {
+        if (trainingProgram) {
+            let course_c = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'C');
+            let course_lv = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'LV');
+            let course_kn = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'KN');
+            let course_nn = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'NN');
+            let course_n = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'N');
+            setDataSource(
+                [{course_name_vi: 'Khối kiến thức chung'}]
+                    .concat(course_c).concat([{course_name_vi: 'Khối kiến thức theo lĩnh vực'}])
+                    .concat(course_lv).concat([{course_name_vi: 'Khối kiến thức theo khối ngành'}])
+                    .concat(course_kn).concat([{course_name_vi: 'Khối kiến thức theo nhóm ngành'}])
+                    .concat(course_nn).concat([{course_name_vi: 'Khối kiến thức ngành'}])
+                    .concat(course_n)
+            )
+        }
+
+    }, [trainingProgram])
     const isEditing = (record) => record.key === editingKey;
 
     const edit = (record) => {
@@ -92,7 +108,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
             const row = await form.validateFields();
             const courseSelected = courseState.response.data.courses.filter((course) => course.uuid === row.course_name_vi)[0] || {}
 
-            if(courseSelected) {
+            if (courseSelected) {
                 courseSelected.key = courseSelected.uuid
             }
 
@@ -157,48 +173,62 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
             title: 'Tên học phần (vi)',
             dataIndex: 'course_name_vi',
             editable: true,
+            render: (_, course) => {
+                if (course.uuid) return course.course_name_vi
+                else return <b>{course.course_name_vi}</b>
+            }
         },
         {
             title: 'Số tín chỉ',
             dataIndex: 'credits',
         },
         {
-            title: 'Số giờ lý thuyết',
-            dataIndex: ['training_program_course', 'theory_time'],
-            editable: true,
-        },
-        {
-            title: 'Số giờ bài tập',
-            dataIndex: ['training_program_course', 'exercise_time'],
-            editable: true,
+            title: "Số giờ tín chỉ",
+            children: [
+                {
+                    title: 'Số giờ lý thuyết',
+                    dataIndex: ['training_program_course', 'theory_time'],
+                    editable: true,
+                },
+                {
+                    title: 'Số giờ bài tập',
+                    dataIndex: ['training_program_course', 'exercise_time'],
+                    editable: true,
 
-        },
-        {
-            title: 'Số giờ thực hành',
-            dataIndex: ['training_program_course', 'practice_time'],
-            editable: true,
+                },
+                {
+                    title: 'Số giờ thực hành',
+                    dataIndex: ['training_program_course', 'practice_time'],
+                    editable: true,
 
+                },
+            ]
         },
+
         {
             title: 'Học phần tiên quyết',
             editable: false,
             render: (_, record) => {
-
+                if (record.required_course) {
                     const requiredCourse = JSON.parse(record.required_course);
-                     return requiredCourse ? requiredCourse.map((course, index) => {
+                    return requiredCourse ? requiredCourse.map((course, index) => {
                         return <div>{course.course_code}</div>
                     }) : ''
-
                 }
+
+            }
 
         },
         {
             title: 'Thao tác',
             dataIndex: 'operation',
             render: (_, record) => {
-                const editable = isEditing(record);
-                return editable ? (
-                    <span>
+                if (record.uuid) {
+
+
+                    const editable = isEditing(record);
+                    return editable ? (
+                        <span>
             <a
                 onClick={() => {
                     console.log(record)
@@ -214,23 +244,25 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
               <a>Thoát</a>
             </Popconfirm>
           </span>
-                ) : (
-                    <>
-                        <Space>
-                            <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-                                Sửa
-                            </Typography.Link>
-                            <Popconfirm title="Học phần sẽ được xóa khỏi CTĐT?" onConfirm={() => onDeleteCourse(record.uuid)}>
-                                <Typography.Link>
-                                    Xóa
+                    ) : (
+                        <>
+                            <Space>
+                                <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+                                    Sửa
                                 </Typography.Link>
-                            </Popconfirm>
-                        </Space>
+                                <Popconfirm title="Học phần sẽ được xóa khỏi CTĐT?"
+                                            onConfirm={() => onDeleteCourse(record.uuid)}>
+                                    <Typography.Link>
+                                        Xóa
+                                    </Typography.Link>
+                                </Popconfirm>
+                            </Space>
 
-                    </>
+                        </>
 
-                );
-            },
+                    );
+                }
+            }
         },
     ];
     const mergedColumns = columns.map((col) => {
@@ -260,7 +292,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
     return trainingProgram ? (
         <>
             <Title level={4}>
-                 Khung chương trình đào tạo &nbsp;
+                Khung chương trình đào tạo &nbsp;
                 {/*<Switch
                     checkedChildren="Thêm bằng file"
                     unCheckedChildren="Thêm "
@@ -280,14 +312,32 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
                     }}
                     bordered
                     dataSource={dataSource ? dataSource.map((data, index) => {
-                        data.key=data.uuid;
-                        data.stt = index+1;
+                        data.key = data.uuid;
+                        if (data.uuid) {
+
+
+                            if (data.training_program_course.knowledge_type === 'C') {
+                                data.stt = index
+                            }
+                            if (data.training_program_course.knowledge_type === 'LV') {
+                                data.stt = index - 1
+                            }
+                            if (data.training_program_course.knowledge_type === 'KN') {
+                                data.stt = index - 2
+                            }
+                            if (data.training_program_course.knowledge_type === 'NN') {
+                                data.stt = index - 3
+                            }
+                            if (data.training_program_course.knowledge_type === 'N') {
+                                data.stt = index - 4
+                            }
+                        }
                         return data;
                     }) : []}
                     pagination={false}
                     columns={mergedColumns}
                     rowClassName="editable-row"
-                    footer={()=><Button type="primary" onClick={showDrawer}>Thêm học phần</Button>}
+                    footer={() => <Button type="primary" onClick={showDrawer}>Thêm học phần</Button>}
                 />
             </Form>
             <Drawer

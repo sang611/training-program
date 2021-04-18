@@ -2,12 +2,13 @@ import {useEffect, useRef, useState} from "react";
 import {DagreGraph} from "@ant-design/charts";
 import Title from "antd/lib/typography/Title";
 import {Card, Col, Row} from "antd";
+import {useSelector} from "react-redux";
 
-const DependencyCourseGraph = ({trainingProgram}) => {
+const DependencyCourseGraph = () => {
 
     const [edges, setEdges] = useState([]);
     const [sourceData, setSourceData] = useState({});
-
+    const {trainingProgram} = useSelector(state => state.trainingPrograms)
 
 
     useEffect(() => {

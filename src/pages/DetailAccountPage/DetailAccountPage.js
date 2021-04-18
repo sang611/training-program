@@ -1,6 +1,6 @@
 import {
     Avatar,
-    Button, Card,
+    Button, Card, Cascader,
     Col,
     DatePicker,
     Descriptions,
@@ -82,115 +82,118 @@ const UpdateStudentProfile = ({user, userRole}) => {
             <Row>
                 <Col span={12}>
                     <Card title={<Title level={4}>Thông tin cá nhân</Title>}>
-                    <Form
-                        layout={'vertical'}
-                        form={form}
-                        initialValues={{
-                            layout: 'vertical',
-                        }}
-                        onFinish={onUpdateStudentInfor}
-                    >
-                        <Form.Item label="Họ tên sinh viên:" name="fullname">
-                            <Input placeholder="Nhập tên sinh viên"
-                                   addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
-                        </Form.Item>
-                        <Form.Item label="Mã sinh viên:" name="student_code">
-                            <Input placeholder="Nhập mã sinh viên"
-                                   addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
-                        </Form.Item>
-                        <Row>
-                            <Col span={12}>
-                                <Form.Item label="Ngày sinh:" name="birthday">
-                                    {
-                                        user.birthday ?
-                                            <DatePicker
-                                                defaultValue={
-                                                    moment(user.birthday, 'YYYY/MM/DD')
-                                                }
-                                                format={['DD/MM/YYYY', 'DD/MM/YY']}/>
-                                            :
-                                            <DatePicker
-                                                placeholder="Chọn ngày sinh"
-                                                format={['DD/MM/YYYY', 'DD/MM/YY']}
-                                            />
+                        <Form
+                            layout={'vertical'}
+                            form={form}
+                            initialValues={{
+                                layout: 'vertical',
+                            }}
+                            onFinish={onUpdateStudentInfor}
+                        >
+                            <Form.Item label="Họ tên sinh viên:" name="fullname">
+                                <Input placeholder="Nhập tên sinh viên"
+                                       addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
+                            </Form.Item>
+                            <Form.Item label="Mã sinh viên:" name="student_code">
+                                <Input placeholder="Nhập mã sinh viên"
+                                       addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
+                            </Form.Item>
+                            <Row>
+                                <Col span={12}>
+                                    <Form.Item label="Ngày sinh:" name="birthday">
+                                        {
+                                            user.birthday ?
+                                                <DatePicker
+                                                    defaultValue={
+                                                        moment(user.birthday, 'YYYY/MM/DD')
+                                                    }
+                                                    format={['DD/MM/YYYY', 'DD/MM/YY']}/>
+                                                :
+                                                <DatePicker
+                                                    placeholder="Chọn ngày sinh"
+                                                    format={['DD/MM/YYYY', 'DD/MM/YY']}
+                                                />
+                                        }
+
+                                    </Form.Item>
+                                </Col>
+                                <Col span={12}>
+                                    <Form.Item label="Giới tính:" name="gender">
+                                        <Radio.Group name="radio-gender" defaultValue={user.gender}>
+                                            <Radio value={"Nam"}>Nam</Radio>
+                                            <Radio value={"Nữ"}>Nữ</Radio>
+                                        </Radio.Group>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                            <Form.Item label="Địa chỉ:" name="address">
+                                <Input placeholder="Nhập địa chỉ"
+                                       addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
+                            </Form.Item>
+
+                            <Form.Item label="Email cá nhân:" name="email">
+                                <Input placeholder="Địa chỉ email" rules={[{type: 'email'}]}
+                                       addonBefore={<MailTwoTone/>}/>
+                            </Form.Item>
+                            <Form.Item label="Email VNU:" name="vnu_mail">
+                                <Input placeholder="Địa chỉ email vnu" rules={[{type: 'email'}]}
+                                       addonBefore={<MailTwoTone/>}/>
+                            </Form.Item>
+                            <Form.Item label="Số điện thoại:" name="phone_number">
+                                <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
+                            </Form.Item>
+
+
+                            <Form.Item label="Ngành đào tạo:" name="majorUuid">
+
+                                <Select
+                                    showSearch
+                                    style={{width: '100%'}}
+                                    placeholder="Ngành"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                                     }
+                                >
+                                    {
+                                        majors.map((major, index) =>
+                                            <Select.Option value={major.uuid}
+                                                           key={index}>{major.vn_name}</Select.Option>
+                                        )
+                                    }
+                                </Select>
+                            </Form.Item>
 
-                                </Form.Item>
-                            </Col>
-                            <Col span={12}>
-                                <Form.Item label="Giới tính:" name="gender">
-                                    <Radio.Group name="radio-gender" defaultValue={user.gender}>
-                                        <Radio value={"Nam"}>Nam</Radio>
-                                        <Radio value={"Nữ"}>Nữ</Radio>
-                                    </Radio.Group>
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                        <Form.Item label="Địa chỉ:" name="address">
-                            <Input placeholder="Nhập địa chỉ"
-                                   addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
-                        </Form.Item>
+                            <Form.Item label="Thuộc chương trình đào tạo:" name="trainingProgramUuid">
+                                <Select
+                                    showSearch
+                                    style={{width: '100%'}}
+                                    placeholder="Chương trình đào tạo"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    {
+                                        trainingPrograms.map((trains, index) =>
+                                            <Select.Option value={trains.uuid}
+                                                           key={index}>{trains.vn_name}</Select.Option>
+                                        )
+                                    }
+                                </Select>
 
-                        <Form.Item label="Email cá nhân:" name="email">
-                            <Input placeholder="Địa chỉ email" rules={[{type: 'email'}]} addonBefore={<MailTwoTone/>}/>
-                        </Form.Item>
-                        <Form.Item label="Email VNU:" name="vnu_mail">
-                            <Input placeholder="Địa chỉ email vnu" rules={[{type: 'email'}]}
-                                   addonBefore={<MailTwoTone/>}/>
-                        </Form.Item>
-                        <Form.Item label="Số điện thoại:" name="phone_number">
-                            <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
-                        </Form.Item>
+                            </Form.Item>
 
+                            <Form.Item label="Lớp môn học:" name="class">
+                                <Input placeholder="Lớp môn học của sinh viên"
+                                       addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
+                            </Form.Item>
 
-                        <Form.Item label="Ngành đào tạo:" name="majorUuid">
-
-                            <Select
-                                showSearch
-                                style={{width: '100%'}}
-                                placeholder="Ngành"
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
-                            >
-                                {
-                                    majors.map((major, index) =>
-                                        <Select.Option value={major.uuid} key={index}>{major.vn_name}</Select.Option>
-                                    )
-                                }
-                            </Select>
-                        </Form.Item>
-
-                        <Form.Item label="Thuộc chương trình đào tạo:" name="trainingProgramUuid">
-                            <Select
-                                showSearch
-                                style={{width: '100%'}}
-                                placeholder="Chương trình đào tạo"
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
-                            >
-                                {
-                                    trainingPrograms.map((trains, index) =>
-                                        <Select.Option value={trains.uuid} key={index}>{trains.vn_name}</Select.Option>
-                                    )
-                                }
-                            </Select>
-
-                        </Form.Item>
-
-                        <Form.Item label="Lớp môn học:" name="class">
-                            <Input placeholder="Lớp môn học của sinh viên"
-                                   addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
-                        </Form.Item>
-
-                        <br/>
-                        <Form.Item>
-                            <Button type="primary" htmlType="submit">Lưu</Button>
-                        </Form.Item>
-                    </Form>
+                            <br/>
+                            <Form.Item>
+                                <Button type="primary" htmlType="submit">Lưu</Button>
+                            </Form.Item>
+                        </Form>
                     </Card>
                 </Col>
                 <Col span={10} offset={2}>
@@ -232,7 +235,8 @@ const StudentInfoDescription = ({user}) => user ? (
 const UpdateLecturerProfile = ({user, userRole}) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-    const insState = useSelector(state => state.institutions)
+    const {listInstitutions, loading} = useSelector(state => state.institutions)
+    const [institutions, setInstitutions] = useState([]);
     const {uuid} = useParams();
 
     useEffect(() => {
@@ -240,23 +244,45 @@ const UpdateLecturerProfile = ({user, userRole}) => {
     }, [])
 
     useEffect(() => {
-        console.log(user)
+        handleInstitutionData(listInstitutions)
+        setInstitutions(listInstitutions)
+    }, [listInstitutions])
+
+    function handleInstitutionData(institutions) {
+
+        for (let ins of institutions) {
+            ins.value = ins.uuid;
+            ins.label = ins.vn_name;
+            if (ins.children && ins.children.length > 0) {
+                handleInstitutionData(ins.children)
+            }
+        }
+    }
+
+    useEffect(() => {
+        let parentInstitution = user.institution ? listInstitutions.find(ins => ins.uuid === user.institution.parent_uuid) : ''
+
         form.setFieldsValue({
             fullname: user.fullname,
             student_code: user.student_code,
             gender: user.gender,
+            birthday: moment(user.birthday, 'YYYY/MM/DD'),
             email: user.email,
             vnu_mail: user.vnu_mail,
             phone_number: user.phone_number,
             academic_rank: user.academic_rank,
             academic_degree: user.academic_degree,
-            institutionUuid: user.institution ? user.institution.uuid : ''
+            institutionUuid: [parentInstitution ? parentInstitution.uuid : '', user.institution ? user.institution.uuid : '']
         });
-    }, [])
+    }, [listInstitutions])
 
 
     const onUpdateLecturerInfor = (values) => {
-        axios.put(`/employees/${user.uuid}`, values)
+
+        axios.put(`/employees/${user.uuid}`, {
+            ...values,
+            institutionUuid: values.institutionUuid[1]
+        })
             .then((res) => {
                 message.success(res.data.message)
                 dispatch(actions.getDetailUser({accountUuid: uuid}));
@@ -286,9 +312,6 @@ const UpdateLecturerProfile = ({user, userRole}) => {
                                     {
                                         user.birthday ?
                                             <DatePicker
-                                                defaultValue={
-                                                    moment(user.birthday, 'YYYY/MM/DD')
-                                                }
                                                 format={['DD/MM/YYYY', 'DD/MM/YY']}/>
                                             :
                                             <DatePicker
@@ -335,7 +358,7 @@ const UpdateLecturerProfile = ({user, userRole}) => {
                                    addonBefore={<i className="fas fa-medal" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
                         <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
-                            <Select
+                            {/*<Select
                                 showSearch
                                 style={{width: 200}}
                                 placeholder="Đơn vị chuyên môn"
@@ -345,12 +368,23 @@ const UpdateLecturerProfile = ({user, userRole}) => {
                                 }
                             >
                                 {
-                                    insState.listInstitutions.map((ins, index) =>
+                                    listInstitutions
+                                        .filter(ins => ins.parent_uuid)
+                                        .map((ins, index) =>
                                         <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
                                     )
                                 }
 
-                            </Select>
+                            </Select>*/}
+
+                            <Cascader
+                                style={{width: '100%'}}
+                                options={
+                                    institutions.filter((ins) => !ins.parent_uuid)
+                                }
+                                placeholder="Chọn đơn vị chuyên môn"
+                            />
+
                         </Form.Item>
 
                         <br/>
@@ -385,7 +419,8 @@ const LecturerInfoDescription = ({user}) => user ? (
         }</Descriptions.Item>
         <Descriptions.Item label="Học hàm">{user.academic_rank}</Descriptions.Item>
         <Descriptions.Item label="Học vị">{user.academic_degree}</Descriptions.Item>
-        <Descriptions.Item label="Đơn vị chuyên môn">{user.institution ? user.institution.vn_name : ''}</Descriptions.Item>
+        <Descriptions.Item
+            label="Đơn vị chuyên môn">{user.institution ? user.institution.vn_name : ''}</Descriptions.Item>
         <Descriptions.Item label="Email VNU">
             {user.vnu_mail}
         </Descriptions.Item>
@@ -435,58 +470,58 @@ const UpdateAdminProfile = ({user, userRole}) => {
         <Row>
             <Col span={12}>
                 <Card title={<Title level={4}>Thông tin cá nhân</Title>}>
-                <Form
-                    layout={'vertical'}
-                    form={form}
-                    initialValues={{
-                        layout: 'vertical',
-                    }}
-                    onFinish={onUpdateLecturerInfor}
-                >
-                    <Form.Item label="Họ tên:" name="fullname">
-                        <Input placeholder="Nhập họ tên"
-                               addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
-                    </Form.Item>
-                    <Row>
-                        <Col span={12}>
-                            <Form.Item label="Ngày sinh:" name="birthday">
-                                {
-                                    user.birthday ?
-                                        <DatePicker
-                                            defaultValue={
-                                                moment(user.birthday, 'YYYY/MM/DD')
-                                            }
-                                            format={['DD/MM/YYYY', 'DD/MM/YY']}/>
-                                        :
-                                        <DatePicker
-                                            placeholder="Chọn ngày sinh"
-                                            format={['DD/MM/YYYY', 'DD/MM/YY']}
-                                        />
-                                }
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Giới tính:" name="gender">
-                                <Radio.Group name="radio-gender">
-                                    <Radio value={"Nam"}>Nam</Radio>
-                                    <Radio value={"Nữ"}>Nữ</Radio>
-                                </Radio.Group>
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                    <Form
+                        layout={'vertical'}
+                        form={form}
+                        initialValues={{
+                            layout: 'vertical',
+                        }}
+                        onFinish={onUpdateLecturerInfor}
+                    >
+                        <Form.Item label="Họ tên:" name="fullname">
+                            <Input placeholder="Nhập họ tên"
+                                   addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
+                        </Form.Item>
+                        <Row>
+                            <Col span={12}>
+                                <Form.Item label="Ngày sinh:" name="birthday">
+                                    {
+                                        user.birthday ?
+                                            <DatePicker
+                                                defaultValue={
+                                                    moment(user.birthday, 'YYYY/MM/DD')
+                                                }
+                                                format={['DD/MM/YYYY', 'DD/MM/YY']}/>
+                                            :
+                                            <DatePicker
+                                                placeholder="Chọn ngày sinh"
+                                                format={['DD/MM/YYYY', 'DD/MM/YY']}
+                                            />
+                                    }
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item label="Giới tính:" name="gender">
+                                    <Radio.Group name="radio-gender">
+                                        <Radio value={"Nam"}>Nam</Radio>
+                                        <Radio value={"Nữ"}>Nữ</Radio>
+                                    </Radio.Group>
+                                </Form.Item>
+                            </Col>
+                        </Row>
 
-                    <Form.Item label="Email cá nhân:" name="email">
-                        <Input placeholder="Địa chỉ email" rules={[{type: 'email'}]} addonBefore={<MailTwoTone/>}/>
-                    </Form.Item>
-                    <Form.Item label="Số điện thoại:" name="phone_number">
-                        <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
-                    </Form.Item>
+                        <Form.Item label="Email cá nhân:" name="email">
+                            <Input placeholder="Địa chỉ email" rules={[{type: 'email'}]} addonBefore={<MailTwoTone/>}/>
+                        </Form.Item>
+                        <Form.Item label="Số điện thoại:" name="phone_number">
+                            <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
+                        </Form.Item>
 
-                    <br/>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">Lưu</Button>
-                    </Form.Item>
-                </Form>
+                        <br/>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit">Lưu</Button>
+                        </Form.Item>
+                    </Form>
                 </Card>
             </Col>
             <Col span={10} offset={2}>
@@ -522,8 +557,6 @@ const AdminInfoDescription = ({user}) => user ? (
 ) : ''
 
 
-
-
 const DetailActivities = ({detailUser, currentUser, userRole}) => {
     let role = detailUser.account.role;
     const {uuid} = useParams();
@@ -536,13 +569,13 @@ const DetailActivities = ({detailUser, currentUser, userRole}) => {
                         <Col span={24}>
                             {
                                 function () {
-                                    if(role == 3) {
+                                    if (role == 3) {
                                         return <StudentInfoDescription user={detailUser}/>
                                     }
-                                    if(role == 1 || role == 2) {
+                                    if (role == 1 || role == 2) {
                                         return <LecturerInfoDescription user={detailUser}/>
                                     }
-                                    if(role == 0) {
+                                    if (role == 0) {
                                         return <AdminInfoDescription user={detailUser}/>
                                     }
                                 }()
@@ -653,7 +686,7 @@ const DetailAccountPage = () => {
             }}>
                 <Space>
                     {
-                        currentUser.uuid == uuid  ?
+                        currentUser.uuid == uuid ?
                             <Upload {...props} showUploadList={isShowAvaFile}>
                                 <Avatar src={
                                     function () {

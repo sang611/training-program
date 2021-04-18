@@ -90,7 +90,6 @@ const PrivatePlanningPage = () => {
             )
         }
 
-
     }, [semes, studentCourse])
 
     useEffect(() => {
@@ -105,8 +104,7 @@ const PrivatePlanningPage = () => {
                 )
             )
         }
-
-
+        
     }, [studentCourse, courses])
 
     useEffect(() => {
@@ -215,9 +213,9 @@ const PrivatePlanningPage = () => {
                         }
 
                         //if (toLaneId == "working" || fromLaneId == "working")
-                            dispatch(actions.getAUser({
+                           /* dispatch(actions.getAUser({
                                 accountUuid: user.accountUuid,
-                            }))
+                            }))*/
 
                     })
                     .catch((e) => {
@@ -380,18 +378,14 @@ const PrivatePlanningPage = () => {
 
             <Divider/>
 
-            <StudentStatisticPage />
-
-            <br/>
-
             <Row>
                 <Col span={10} offset={1}>
                     <Card title={
-                        <Tag color="blue">
+
                             <Title level={4} style={{margin: 0}}>
-                                {training_program.vn_name}
+                                {`Trình tự đào tạo dự kiến ${training_program.vn_name}`}
                             </Title>
-                        </Tag>
+
                     }
                           actions={[
                               <Popconfirm

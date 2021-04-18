@@ -7,13 +7,13 @@ const DescriptionItem = ({title, content}) => (
             <b>
                 <p>{title}:</p>
             </b>
-
             &ensp;
             {content}
         </div>
         <br/>
     </>
 );
+
 const InforCourseOutline = ({courseUuid, course}) => {
     const {course_name_vi, course_name_en, course_code, credits, institution} = course;
     return !course ? <Spin /> : <>

@@ -23,13 +23,9 @@ const DescriptionItem = ({title, content}) => (
     </>
 );
 const TrainingProgramIntroduce = () => {
-    const {uuid} = useParams();
-    const dispatch = useDispatch();
+
     const {trainingProgram, loadingATraining, errorLoadA} = useSelector(state => state.trainingPrograms)
 
-    useEffect(() => {
-        dispatch(actions.getATrainingProgram({id: uuid}));
-    }, [])
 
     if (trainingProgram) {
         const {

@@ -35,7 +35,7 @@ const UpdateTrainingProgramPage = (props) => {
 
        return trainingProgram ?  (
             <>
-                <Tabs defaultActiveKey="1" tabPosition="right">
+                <Tabs defaultActiveKey="1" tabPosition="top">
                     <Tabs.TabPane tab="Giới thiệu chung" key={1} forceRender={true}>
                         <UpdateTrainingProgramIntroduce />
                     </Tabs.TabPane>

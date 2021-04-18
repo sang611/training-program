@@ -15,14 +15,14 @@ const StudentCourseSequenceCard = ({student}) => {
         new Array(student.training_program.training_duration * 2).fill(undefined)
             .forEach((semester, index) => {
 
-                     let studentCourses = student.courses.map((course) => {
-                            if (course.student_course.semester === index + 1) {
-                                return {
-                                    courseUuid: course.uuid,
-                                    semester: index + 1
-                                }
-                            } else return null
-                        })
+                    let studentCourses = student.courses.map((course) => {
+                        if (course.student_course.semester === index + 1) {
+                            return {
+                                courseUuid: course.uuid,
+                                semester: index + 1
+                            }
+                        } else return null
+                    })
                     courses = courses.concat(
                         studentCourses.filter(course => course)
                     )
@@ -47,15 +47,15 @@ const StudentCourseSequenceCard = ({student}) => {
         <>
             <Card
                 title={
-                    <Tag color="blue">
-                        <Title level={4} style={{margin: 0}}>
-                            {
-                                student.accountUuid != user.accountUuid ? student.fullname : "Kế hoạch học tập cá nhân"
-                            }
-                        </Title>
-                    </Tag>
+
+                    <Title level={4} style={{margin: 0}}>
+                        {
+                            student.accountUuid != user.accountUuid ? student.fullname : "Kế hoạch học tập cá nhân"
+                        }
+                    </Title>
+
                 }
-                actions={student.accountUuid != user.accountUuid ?[
+                actions={student.accountUuid != user.accountUuid ? [
                     <Popconfirm
                         title="Kế hoạch hiện tại sẽ được thay thế bằng kế hoạch này!"
                         onConfirm={onCopyPlan}

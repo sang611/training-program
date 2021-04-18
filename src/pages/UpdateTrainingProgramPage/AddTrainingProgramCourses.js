@@ -15,6 +15,7 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
     const [form] = Form.useForm();
     const [addCourseForm] = Form.useForm();
     const [courseType, setCourseType] = useState("B");
+    const [knowledgeType, setKnowledgeType] = useState("C");
     const [requiredCredits, setRequiredCredits] = useState(0);
 
     let {uuid} = useParams();
@@ -41,7 +42,8 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
             courses: values.courses,
             trainingUuid: uuid,
             require_credits: requiredCredits,
-            course_type: courseType
+            course_type: courseType,
+            knowledge_type: knowledgeType
         })
             .then((res) => {
                 addCourseForm.resetFields();
@@ -177,13 +179,43 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
             <Space >
                 <Space align="baseline">
                     <h4>
+                        Khối kiến thức:
+                    </h4>
+                    <Select
+                        showSearch
+                        placeholder="Khối kiến thức"
+                        optionFilterProp="children"
+                        style={{width: '150px'}}
+                        filterOption={(input, option) =>
+                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
+                        value={knowledgeType}
+                        onChange={(val) => {
+                            setKnowledgeType(val)
+                        }}
+                    >
+                        <Select.Option value="C"
+                                       key={1}>Chung</Select.Option>
+                        <Select.Option value="LV"
+                                       key={2}>Lĩnh vực</Select.Option>
+                        <Select.Option value="KN"
+                                       key={3}>Khối ngành</Select.Option>
+                        <Select.Option value="NN"
+                                       key={4}>Nhóm ngành</Select.Option>
+                        <Select.Option value="N"
+                                       key={4}>Ngành</Select.Option>
+                    </Select>
+                </Space>
+                <Space align="baseline">
+                    <h4>
                         Loại học phần:
                     </h4>
                     <Select
                         showSearch
-                        defaultValue={courseType}
+                        value={courseType}
                         placeholder="Loại học phần"
                         optionFilterProp="children"
+                        style={{width: '150px'}}
                         filterOption={(input, option) =>
                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
@@ -201,6 +233,8 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                                        key={4}>Tiếng anh cơ sở</Select.Option>
                     </Select>
                 </Space>
+
+
 
                 {
                    courseType == 'L' || courseType == 'BT' ? <Space align="baseline">

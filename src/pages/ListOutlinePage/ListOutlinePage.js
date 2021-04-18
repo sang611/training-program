@@ -78,14 +78,14 @@ const ListOutlinePage = (props) => {
                         return actionModerator(item)
                     }
                 }()}
-                title={`${createTime.getDate()}/${createTime.getMonth()}/${createTime.getFullYear()}`}
+                title={`${createTime.getDate()}/${createTime.getMonth()+1}/${createTime.getFullYear()}`}
                 hoverable
             >
                 <Descriptions column={1}>
                     <Descriptions.Item label="Thời gian tạo">
                         <Tag color="volcano">
                             {
-                                `${createTime.getHours()}:${createTime.getMinutes()} ${createTime.getDate()}/${createTime.getMonth()}/${createTime.getFullYear()}`
+                                `${createTime.getHours()}:${createTime.getMinutes()} ${createTime.getDate()}/${createTime.getMonth()+1}/${createTime.getFullYear()}`
                             }
                         </Tag>
 

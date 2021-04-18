@@ -216,7 +216,7 @@ const LearningOutcomePage = () => {
                                 <Option key='all' value={0}>Tất cả</Option>
                                 <Option key='kien_thuc' value={1}>Kiến thức</Option>
                                 <Option key='ki_nang' value={2}>Kĩ năng</Option>
-                                <Option key='dao_duc' value={3}>Đạo đức</Option>
+                                <Option key='dao_duc' value={3}>Thái độ</Option>
                             </Select>
                         </Col>
                         <Col span={18}>
