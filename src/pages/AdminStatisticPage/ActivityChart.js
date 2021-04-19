@@ -29,7 +29,7 @@ const ActivityChart = () => {
         yField: 'login_total',
         seriesField: 'role',
         color: ['#1979C9', '#D62A0D'],
-        smooth: true
+        smooth: false
     };
     return infors ? (
         <>

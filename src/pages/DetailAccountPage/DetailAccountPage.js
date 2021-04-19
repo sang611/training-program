@@ -281,7 +281,10 @@ const UpdateLecturerProfile = ({user, userRole}) => {
 
         axios.put(`/employees/${user.uuid}`, {
             ...values,
-            institutionUuid: values.institutionUuid[1]
+            institutionUuid:
+                values.institutionUuid.length === 2
+                ? values.institutionUuid[1]
+                : values.institutionUuid[0]
         })
             .then((res) => {
                 message.success(res.data.message)

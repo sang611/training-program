@@ -2,25 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b03111ef-773f-4dae-b9ce-907452fe58db" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pages/AdminStatisticPage/AdminStatisticPage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/AdminStatisticPage/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/TrainingProgramItem.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-
-      <change beforePath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/ListTrainingProgramPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/ListTrainingProgramPage.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/ListTrainingProgramPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListTrainingProgramPage/ListTrainingProgramPage.js" afterDir="false" />
-
-      <change beforePath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/CreateOutlineCoursePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/CreateOutlineCoursePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/LOCOfCourse.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateOutlineCoursePage/LOCOfCourse.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/CreateTrainingProgramPage/CreateTrainingProgramPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateTrainingProgramPage/CreateTrainingProgramPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/DetailOutlinePage/DetailOutlinePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DetailOutlinePage/DetailOutlinePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/DetailTrainingProgramPage/DetailTrainingProgramPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DetailTrainingProgramPage/DetailTrainingProgramPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/LearningOutcomePage/CreatePLO.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/LearningOutcomePage/CreatePLO.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/ListOutlinePage/ListOutlinePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListOutlinePage/ListOutlinePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/UpdateOutlinePage/UpdateOutlinePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateOutlinePage/UpdateOutlinePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramLOC.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramLOC.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/UpdateTrainingProgramPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/UpdateTrainingProgramPage.js" afterDir="false" />
-
+      <change beforePath="$PROJECT_DIR$/src/pages/AdminStatisticPage/ActivityChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/AdminStatisticPage/ActivityChart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/CreateAccountPage/AddingLecturerForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateAccountPage/AddingLecturerForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/CreateCoursePage/CreateCoursePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateCoursePage/CreateCoursePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/DetailAccountPage/DetailAccountPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DetailAccountPage/DetailAccountPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/DetailTrainingProgramPage/TrainingCourse.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/DetailTrainingProgramPage/TrainingCourse.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/ListCoursePage/ListCoursePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/ListCoursePage/ListCoursePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramCourses.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramCourses.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramFrame.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/UpdateTrainingProgramPage/AddTrainingProgramFrame.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +53,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
-    <property name="ts.external.directory.path" value="D:\Users\thinhnp5\AppData\Local\JetBrains\WebStorm 2020.3.3\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2020.3\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
@@ -75,10 +65,11 @@
       <recent name="D:\Web\KLTN\training-scheme-frontend-ant\src\pages" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Web\KLTN\training-scheme-frontend-ant\public" />
+      <recent name="D:\Web\KLTN\training-scheme-frontend-ant\public\image" />
+      <recent name="D:\Web\KLTN\training-scheme-frontend-ant\src\pages\UpdateTrainingProgramPage" />
       <recent name="D:\Web\KLTN\training-scheme-frontend-ant\src\pages\DetailTrainingProgramPage" />
       <recent name="D:\Web\KLTN\training-scheme-frontend-ant\src\pages\DetailAccountPage" />
-      <recent name="D:\Web\KLTN\training-scheme-frontend-ant\public\font" />
-      <recent name="D:\Web\KLTN\training-scheme-frontend-ant\src\pages\ListTrainingProgramPage" />
     </key>
   </component>
   <component name="RunManager">
@@ -142,6 +133,9 @@
       <workItem from="1617326000159" duration="14720000" />
       <workItem from="1617888853960" duration="40466000" />
       <workItem from="1618060491414" duration="22766000" />
+      <workItem from="1618491935543" duration="61108000" />
+      <workItem from="1618762986876" duration="6734000" />
+      <workItem from="1618842558496" duration="5703000" />
     </task>
     <servers />
   </component>

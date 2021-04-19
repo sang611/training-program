@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions/index'
-import {Button, Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Table, Tag} from "antd";
+import {Button, Cascader, Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Table, Tag} from "antd";
 import {
     DeleteOutlined,
     EditOutlined,
@@ -19,18 +19,40 @@ const {Column, ColumnGroup} = Table;
 const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
     const [form] = Form.useForm();
     const courseState = useSelector(state => state.courses)
+    const {listInstitutions} = useSelector(state => state.institutions)
+    const [institutions, setInstitutions] = useState([]);
     if (updatedCourse) {
         const required_course = (JSON.parse(updatedCourse.required_course) || []).map(course => course.uuid);
-        form.setFieldsValue(updatedCourse);
+        let parentInstitution = listInstitutions.find(ins => ins.uuid === updatedCourse.institution.parent_uuid)
+        form.setFieldsValue(
+            {
+                ...updatedCourse,
+                institutionUuid: [parentInstitution ? parentInstitution.uuid : updatedCourse.institution.uuid, updatedCourse.institution ? updatedCourse.institution.uuid : '']});
         form.setFieldsValue({
             required_course: required_course
         });
+
+
     }
 
-    const insState = useSelector(state => state.institutions)
     useEffect(() => {
         dispatch(actions.getAllInstitution());
     }, [])
+
+    useEffect(() => {
+        handleInstitutionData(listInstitutions)
+        setInstitutions(listInstitutions)
+    }, [listInstitutions])
+
+    function handleInstitutionData(institutions) {
+        for (let ins of institutions) {
+            ins.value = ins.uuid;
+            ins.label = ins.vn_name;
+            if (ins.children && ins.children.length > 0) {
+                handleInstitutionData(ins.children)
+            }
+        }
+    }
 
 
     return (
@@ -53,7 +75,12 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
                                 return courseState.courses.find(course => course.uuid === id);
                             })
                         )
-                        axios.put(`/courses/${updatedCourse.uuid}`, values)
+                        axios.put(`/courses/${updatedCourse.uuid}`,
+                            {
+                                ...values,
+                                institutionUuid: values.institutionUuid.length === 2 ? values.institutionUuid[1] : values.institutionUuid[0]
+                            }
+                        )
                             .then((res) => message.success("Cập nhật thành công"))
                             .catch(() => "Không thể cập nhật")
 
@@ -96,7 +123,7 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
                 </Form.Item>
 
                 <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
-                    <Select
+                    {/*<Select
                         showSearch
                         style={{width: '100%'}}
                         placeholder="Đơn vị chuyên môn phụ trách học phần"
@@ -106,14 +133,21 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
                         }
                     >
                         {
-                            insState.listInstitutions
+                            listInstitutions
                                 .filter(ins => ins.parent_uuid != null)
                                 .map((ins, index) =>
                                 <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
                             )
                         }
 
-                    </Select>
+                    </Select>*/}
+
+                    <Cascader
+                        style={{width: '100%'}}
+                        options={
+                            institutions.filter((ins) => !ins.parent_uuid)
+                        }
+                    />
 
                 </Form.Item>
                 <Form.Item label="Học phần tiên quyết:" name="required_course">

@@ -28,6 +28,16 @@ const AddingLecturerForm = () => {
         setInstitutions(listInstitutions)
     }, [listInstitutions])
 
+    function handleInstitutionData(institutions) {
+        for (let ins of institutions) {
+            ins.value = ins.uuid;
+            ins.label = ins.vn_name;
+            if (ins.children && ins.children.length > 0) {
+                handleInstitutionData(ins.children)
+            }
+        }
+    }
+
     useEffect(() => {
         if (accState.error) {
             message.error("Đã có lỗi xảy ra")
@@ -59,22 +69,13 @@ const AddingLecturerForm = () => {
             : null;
 
     const onCreateAccountLecturer = async (values) => {
-        values.institution = values.institution[1]
+        values.institution = values.institution.length === 2 ? values.institution[1] : values.institution[0]
         await dispatch(actions.addAccount({values, typeAccount: 1}));
         formLec.resetFields();
     };
 
 
-    function handleInstitutionData(institutions) {
 
-        for (let ins of institutions) {
-            ins.value = ins.uuid;
-            ins.label = ins.vn_name;
-            if (ins.children && ins.children.length > 0) {
-                handleInstitutionData(ins.children)
-            }
-        }
-    }
 
     const propsDragger = {
         name: 'file',

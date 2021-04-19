@@ -74,17 +74,21 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
 
     useEffect(() => {
         if (trainingProgram) {
+            let requireSummary = {};
+            if(trainingProgram.require_summary) {
+                requireSummary = JSON.parse(trainingProgram.require_summary)
+            }
             let course_c = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'C');
             let course_lv = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'LV');
             let course_kn = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'KN');
             let course_nn = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'NN');
             let course_n = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'N');
             setDataSource(
-                [{course_name_vi: 'Khối kiến thức chung'}]
-                    .concat(course_c).concat([{course_name_vi: 'Khối kiến thức theo lĩnh vực'}])
-                    .concat(course_lv).concat([{course_name_vi: 'Khối kiến thức theo khối ngành'}])
-                    .concat(course_kn).concat([{course_name_vi: 'Khối kiến thức theo nhóm ngành'}])
-                    .concat(course_nn).concat([{course_name_vi: 'Khối kiến thức ngành'}])
+                [{course_name_vi: 'Khối kiến thức chung', credits: requireSummary.common}]
+                    .concat(course_c).concat([{course_name_vi: 'Khối kiến thức theo lĩnh vực', credits: requireSummary.field}])
+                    .concat(course_lv).concat([{course_name_vi: 'Khối kiến thức theo khối ngành', credits: requireSummary.major_unit}])
+                    .concat(course_kn).concat([{course_name_vi: 'Khối kiến thức theo nhóm ngành', credits: requireSummary.major_group}])
+                    .concat(course_nn).concat([{course_name_vi: 'Khối kiến thức ngành', credits: requireSummary.major}])
                     .concat(course_n)
             )
         }
@@ -181,6 +185,10 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
         {
             title: 'Số tín chỉ',
             dataIndex: 'credits',
+            render: (_, course) => {
+                if(course.uuid) return course.credits;
+                else return <b>{course.credits}</b>
+            }
         },
         {
             title: "Số giờ tín chỉ",
@@ -199,6 +207,12 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
                 {
                     title: 'Số giờ thực hành',
                     dataIndex: ['training_program_course', 'practice_time'],
+                    editable: true,
+
+                },
+                {
+                    title: 'Số giờ tự học',
+                    dataIndex: ['training_program_course', 'self_time'],
                     editable: true,
 
                 },
@@ -314,7 +328,6 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
                     dataSource={dataSource ? dataSource.map((data, index) => {
                         data.key = data.uuid;
                         if (data.uuid) {
-
 
                             if (data.training_program_course.knowledge_type === 'C') {
                                 data.stt = index

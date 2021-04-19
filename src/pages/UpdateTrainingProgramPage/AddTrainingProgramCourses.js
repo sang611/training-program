@@ -296,7 +296,7 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                                                             </Select>
                                                         </Form.Item>
                                                     </Col>
-                                                    <Col span={4}>
+                                                    <Col span={3}>
                                                         <Form.Item
                                                             {...field}
                                                             name={[field.name, 'theory_time']}
@@ -306,12 +306,12 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                                                             <InputNumber
                                                                 min={1}
                                                                 max={100}
-                                                                placeholder="Số giờ lý thuyết"
+                                                                placeholder="Lý thuyết"
                                                                 style={{width: '100%'}}
                                                             />
                                                         </Form.Item>
                                                     </Col>
-                                                    <Col span={4}>
+                                                    <Col span={3}>
                                                         <Form.Item
                                                             {...field}
                                                             name={[field.name, 'exercise_time']}
@@ -321,12 +321,12 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                                                             <InputNumber
                                                                 min={1}
                                                                 max={100}
-                                                                placeholder="Số giờ bài tập"
+                                                                placeholder="Bài tập"
                                                                 style={{width: '100%'}}
                                                             />
                                                         </Form.Item>
                                                     </Col>
-                                                    <Col span={4}>
+                                                    <Col span={3}>
                                                         <Form.Item
                                                             {...field}
                                                             name={[field.name, 'practice_time']}
@@ -336,7 +336,22 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                                                             <InputNumber
                                                                 min={1}
                                                                 max={100}
-                                                                placeholder="Số giờ thực hành"
+                                                                placeholder="Thực hành"
+                                                                style={{width: '100%'}}
+                                                            />
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={3}>
+                                                        <Form.Item
+                                                            {...field}
+                                                            name={[field.name, 'self_time']}
+                                                            fieldKey={[field.fieldKey, 'self_time']}
+                                                            rules={[{required: true, message: 'Nhập số giờ tự học'}]}
+                                                        >
+                                                            <InputNumber
+                                                                min={1}
+                                                                max={100}
+                                                                placeholder="Tự học"
                                                                 style={{width: '100%'}}
                                                             />
                                                         </Form.Item>

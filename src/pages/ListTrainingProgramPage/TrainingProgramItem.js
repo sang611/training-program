@@ -124,15 +124,13 @@ const MatrixLearningOutcomes = ({trainingItem, levelLocs}) => {
             title: 'CĐR/HP',
             dataIndex: 'content',
             fixed: 'left',
-            width: 200
+            width: 280
         }
     ].concat(
         trainingItem.courses.map(course => {
             return {
                 title: course.course_name_vi,
-
                 render: (_, loc) => {
-
                     let outline;
                     if (trainingItem.lock_edit) {
                         outline = course.outlines ? course.outlines.find(outline => outline.uuid === course.training_program_course.outlineUuid) : null;
@@ -174,7 +172,7 @@ const MatrixLearningOutcomes = ({trainingItem, levelLocs}) => {
                         title: 'Tổng môn',
                         dataIndex: 'num_of_course',
                         fixed: 'right',
-                        width: 100,
+                        width: 80,
                         render: (_, loc) => {
                             let num = levelLocs.find(levelLoc => levelLoc.locUuid === loc.uuid).levels.length;
                             return num > 0 ? num : ''
@@ -184,7 +182,7 @@ const MatrixLearningOutcomes = ({trainingItem, levelLocs}) => {
                         title: 'Tổng điểm',
                         dataIndex: 'sum_of_level',
                         fixed: 'right',
-                        width: 100,
+                        width: 80,
                         render: (_, loc) => {
                             let summary = levelLocs
                                 .find(levelLoc => levelLoc.locUuid === loc.uuid)
@@ -197,7 +195,7 @@ const MatrixLearningOutcomes = ({trainingItem, levelLocs}) => {
                         title: 'Trung bình',
                         dataIndex: 'average_level',
                         fixed: 'right',
-                        width: 100,
+                        width: 80,
                         render: (_, loc) => {
                             let summary = levelLocs
                                 .find(levelLoc => levelLoc.locUuid === loc.uuid)

@@ -1,27 +1,42 @@
-import {Button, Col, Form, Input, InputNumber, message, Row, Select} from "antd";
+import {Button, Cascader, Col, Form, Input, InputNumber, message, Row, Select} from "antd";
 import {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
 import axios from "axios";
-import Title from "antd/lib/typography/Title";
 import {Redirect} from "react-router-dom";
-import Dragger from "antd/lib/upload/Dragger";
-import {InboxOutlined} from "@ant-design/icons";
 
 const CreateCoursePage = ({onCancelModal}) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
-    const insState = useSelector(state => state.institutions)
+    const {listInstitutions} = useSelector(state => state.institutions)
+    const [institutions, setInstitutions] = useState([]);
     const courseState = useSelector(state => state.courses)
     const {isValidToken} = useSelector(state => state.auth)
     const [xslxFile, setXslxFile] = useState(null);
     const [isSendingForm, setIsSendinggForm] = useState(false);
+
     useEffect(() => {
         dispatch(actions.getAllInstitution());
         dispatch(actions.getAllCourse());
     }, [])
 
+    useEffect(() => {
+        handleInstitutionData(listInstitutions)
+        setInstitutions(listInstitutions)
+    }, [listInstitutions])
+
+    function handleInstitutionData(institutions) {
+        for (let ins of institutions) {
+            ins.value = ins.uuid;
+            ins.label = ins.vn_name;
+            if (ins.children && ins.children.length > 0) {
+                handleInstitutionData(ins.children)
+            }
+        }
+    }
+
     async function onCreateCourse(values) {
+        console.log(values)
         if(values.required_course) {
             values.required_course = JSON.stringify( values.required_course.map(courseUuid => {
                     return courseState.courses.find(c => c.uuid === courseUuid)
@@ -29,6 +44,10 @@ const CreateCoursePage = ({onCancelModal}) => {
             )
         }
         try {
+            values.institutionUuid
+                = values.institutionUuid.length === 2
+                ? values.institutionUuid[1]
+                : values.institutionUuid[0]
             const response = await axios.post("/courses", values)
             message.success(response.data.message);
             form.resetFields();
@@ -36,12 +55,10 @@ const CreateCoursePage = ({onCancelModal}) => {
             onCancelModal();
 
         } catch (e) {
-
-            if (e.response.status === 401) {
-                dispatch(actions.authLogout())
-            } else {
+            if(e.response)
                 message.error(e.response.data.message);
-            }
+            else
+                message.error(e);
         }
 
     }
@@ -158,7 +175,7 @@ const CreateCoursePage = ({onCancelModal}) => {
                                 },
                             ]}
                         >
-                            <InputNumber min={1} max={20} defaultValue={1}/>
+                            <InputNumber min={0} max={20} defaultValue={0}/>
                         </Form.Item>
                         <Form.Item
                             label="Đơn vị chuyên môn:"
@@ -170,7 +187,7 @@ const CreateCoursePage = ({onCancelModal}) => {
                                 },
                             ]}
                         >
-                            <Select
+                            {/*<Select
                                 showSearch
                                 style={{width: '100%'}}
                                 placeholder="Đơn vị chuyên môn phụ trách học phần"
@@ -180,12 +197,20 @@ const CreateCoursePage = ({onCancelModal}) => {
                                 }
                             >
                                 {
-                                    insState.listInstitutions.map((ins, index) =>
+                                    listInstitutions.map((ins, index) =>
                                         <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
                                     )
+
                                 }
 
-                            </Select>
+                            </Select>*/}
+                            <Cascader
+                                style={{width: '100%'}}
+                                options={
+                                    institutions.filter((ins) => !ins.parent_uuid)
+                                }
+                                placeholder="Chọn đơn vị chuyên môn"
+                            />
                         </Form.Item>
                         <Form.Item label="Học phần tiên quyết:" name="required_course">
                             <Select
