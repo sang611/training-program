@@ -2,16 +2,11 @@ import Title from "antd/lib/typography/Title";
 import {Button, message, Select} from "antd";
 import {useState} from 'react'
 import axios from "axios";
+import {classCodes} from '../../constants/index'
 
 const AddTrainingProgramClass = ({trainingProgram}) => {
     const [classes, setClasses] = useState(null);
     const [disable, setDisable] = useState(true);
-    const children = [
-        "A-E", "C-A-C", "C-A-CLC1", "C-A-CLC2", "C-A-CLC3", "C-B",
-        "C-C", "C-CLC", "C-D", "C-E", "C-F", "C-G", "C-H", "C-K",
-        "C-L", "C-J", "N", "T", "Đ-A-CLC", "Đ-B", "K", "E", "V", "H",
-        "M1", "M2", "M3", "M4", "XD-GT"
-    ];
 
     function handleChange(value) {
         setClasses(value)
@@ -53,11 +48,14 @@ const AddTrainingProgramClass = ({trainingProgram}) => {
                         defaultValue={
                             JSON.parse(trainingProgram.classes)
                         }
+                        filterOption={(input, option) =>
+                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
                     >
                         {
-                            children.map((classCode, index) => {
+                            classCodes.map((classCode, index) => {
                                 return (
-                                    <Select.Option value={classCode} key={index}>{classCode}</Select.Option>
+                                    <Select.Option value={classCode} key={index}>{classCode.split('-').join('')}</Select.Option>
                                 )
                             })
                         }
@@ -71,7 +69,7 @@ const AddTrainingProgramClass = ({trainingProgram}) => {
                         onChange={handleChange}
                     >
                         {
-                            children.map((classCode, index) => {
+                            classCodes.map((classCode, index) => {
                                 return (
                                     <Select.Option value={classCode} key={index}>{classCode}</Select.Option>
                                 )

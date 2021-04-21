@@ -45,7 +45,7 @@ const UpdateTrainingProgramIntroduce = () => {
                 specific_destination,
                 admission_method,
                 admission_scale,
-                institution: institution ? institution.uuid : ''
+                institutionUuid: institution ? institution.uuid : ''
             })
 
             setCommonDestination(common_destination);
@@ -132,7 +132,7 @@ const UpdateTrainingProgramIntroduce = () => {
                             </Col>
                         </Row>
 
-                        <Form.Item label="Đơn vị chuyên môn:" name="institution">
+                        <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
                             <Select
                                 showSearch
                                 style={{width: '50%'}}

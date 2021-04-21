@@ -1,6 +1,6 @@
 import {useEffect, useMemo, useState} from "react";
 import {useHistory, useParams} from "react-router-dom";
-import {Button, Col, Form, Input, List, message, Row, Select} from "antd";
+import {Button, Col, Form, Input, List, message, Row, Select, Spin} from "antd";
 import {InboxOutlined, UploadOutlined} from "@ant-design/icons";
 import Modal from "antd/es/modal/Modal";
 import Dragger from "antd/es/upload/Dragger";
@@ -194,10 +194,9 @@ function DocumentPage() {
         dispatch(actions.getAllDocuments({doc_of: doc_of, title: e.target.value}));
     }
 
+
     return (
         <>
-
-
             <Row>
                 <Col span={12}>
                     <Title level={3}>{
@@ -216,7 +215,7 @@ function DocumentPage() {
             <br/>
             {
                 useMemo(() => {
-                    return (
+                    return loading ? <Spin /> : (
                         <List
                             grid={userRole == 0 ? {
                                 gutter: [50, 30],

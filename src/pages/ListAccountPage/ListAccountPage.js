@@ -8,6 +8,7 @@ import {useHistory, useLocation} from "react-router-dom";
 import axios from "axios";
 import InfiniteScroll from 'react-infinite-scroller';
 import './ListAccountPage.css'
+import {classCodes} from '../../constants/index'
 
 const ListAccountPage = () => {
     const dispatch = useDispatch();
@@ -177,11 +178,7 @@ const ListAccountPage = () => {
                                     >
                                         {
                                             [   "Tất cả",
-                                                "A-E", "C-A-C", "C-A-CLC1", "C-A-CLC2", "C-A-CLC3", "C-B",
-                                                "C-C", "C-CLC", "C-D", "C-E", "C-F", "C-G", "C-H", "C-K",
-                                                "C-L", "C-J", "N", "T", "Đ-A-CLC", "Đ-B", "K", "E", "V", "H",
-                                                "M1", "M2", "M3", "M4", "XD-GT"
-                                            ].map(cl => (
+                                            ].concat(classCodes).map(cl => (
                                                 <Select.Option value={cl} key={cl}>{cl}</Select.Option>
                                             ))
                                         }
@@ -257,12 +254,13 @@ const ListAccountPage = () => {
                                             <Descriptions.Item contentStyle={{color: "gray"}}>
                                                 <MailOutlined/>&ensp;{item.vnu_mail}
                                             </Descriptions.Item>
-                                            <Descriptions.Item contentStyle={{color: "gray"}}>
-                                                <PhoneOutlined/>&ensp;{item.phone_number}
-                                            </Descriptions.Item>
+
                                             {
                                                 item.account.role < 3 ?
                                                     <>
+                                                        <Descriptions.Item contentStyle={{color: "gray"}}>
+                                                            <PhoneOutlined/>&ensp;{item.phone_number}
+                                                        </Descriptions.Item>
                                                         <Descriptions.Item contentStyle={{color: "gray"}}>
                                                             <DesktopOutlined/>&ensp;{item.institution ? item.institution.vn_name : ''}
                                                         </Descriptions.Item>
@@ -273,7 +271,10 @@ const ListAccountPage = () => {
                                                     <>
                                                         <Descriptions.Item contentStyle={{color: "gray"}}>
                                                             <i className="fas fa-house-user"/>&ensp;
-                                                            {`${item.grade} ${item.class}`}
+                                                            {`${item.grade} - ${item.class}`}
+                                                        </Descriptions.Item>
+                                                        <Descriptions.Item contentStyle={{color: "gray"}}>
+                                                            <DesktopOutlined/>&ensp;{item.training_program.institution ? item.training_program.institution.vn_name : ''}
                                                         </Descriptions.Item>
                                                     </>
                                             }

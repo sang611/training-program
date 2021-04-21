@@ -94,7 +94,12 @@ const DocumentCard = ({userRole, item}) => {
         setDownloading(true);
         axios.get(`/documents/downloadOneFile/${item.document_url}`, {responseType: 'blob'})
             .then(res => {
-                FileDownload(res.data, 'document.pdf');
+                if(res.headers['content-type'] === 'application/pdf') {
+                    FileDownload(res.data, 'document.pdf');
+                }
+                else if(res.headers['content-type'] === 'application/msword') {
+                    FileDownload(res.data, 'document.doc');
+                }
                 setDownloading(false)
             })
             .catch((e) => {

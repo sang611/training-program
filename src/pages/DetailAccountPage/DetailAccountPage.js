@@ -220,8 +220,21 @@ const StudentInfoDescription = ({user}) => user ? (
             handleBirthday(user)
         }</Descriptions.Item>
         <Descriptions.Item label="Mã sinh viên">{user.student_code}</Descriptions.Item>
-        <Descriptions.Item label="Ngành">{user.major ? user.major.vn_name : ''}</Descriptions.Item>
-        <Descriptions.Item label="Lớp">{user.class}</Descriptions.Item>
+        <Descriptions.Item label="Khoa">
+            {
+                user.training_program.institution
+                    ? user.training_program.institution.vn_name
+                    : ''
+            }
+        </Descriptions.Item>
+        <Descriptions.Item label="Ngành">
+            {
+                user.major
+                    ? user.major.vn_name
+                    : ''
+            }
+        </Descriptions.Item>
+        <Descriptions.Item label="Lớp">{`${user.grade} - ${user.class}`}</Descriptions.Item>
         <Descriptions.Item label="Email VNU">
             {user.vnu_mail}
         </Descriptions.Item>

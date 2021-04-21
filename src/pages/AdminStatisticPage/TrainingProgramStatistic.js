@@ -102,7 +102,7 @@ function TrainingProgramStatistic() {
                                     }&nbsp;
                                     <LockOutlined />
                                 </Title>
-                                <Title level={3}>CHƯƠNG TRÌNH ĐÀO TẠO ĐÃ KHÓA</Title>
+                                <Title level={3}>CTĐT ĐÃ BAN HÀNH</Title>
                             </center>
                         </Card>
                     </Col>
@@ -128,8 +128,9 @@ function TrainingProgramStatistic() {
                             columns={classColumns}
                             dataSource={
                                 classes.map((cl, index) => {
+
                                     return {
-                                        name: cl,
+                                        name: cl.split('-').join(''),
                                         key: index,
                                         stt: index + 1
                                     }
