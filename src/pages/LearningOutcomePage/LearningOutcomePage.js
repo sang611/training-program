@@ -94,6 +94,7 @@ const ListLocs = ({typeLoc, currentPage, onPaginateLOC, showModal}) => {
             dataSource={
                 state.locs.map((loc, index) => {
                     loc.stt = index + 1;
+                    loc.key = loc.uuid;
                     return loc;
                 })
             }

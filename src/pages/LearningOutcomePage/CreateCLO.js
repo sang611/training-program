@@ -1,5 +1,5 @@
 import {useDispatch} from "react-redux";
-import {Button, Form, Input, message, Select, Space} from "antd";
+import {Button, Col, Form, Input, message, Pagination, Row, Select, Space} from "antd";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import * as actions from "../../redux/actions";
@@ -11,27 +11,16 @@ const CreateCLO = () => {
     const [form] = Form.useForm();
     const [locs, setLocs] = useState([]);
     const [plos, setPlos] = useState([]);
+    const [searchContent, setSearchContent] = useState("");
+    const [totalLocs, setTotalLocs]=  useState(0);
+    const [page, setPage] = useState(1);
     useEffect(() => {
-        axios.get("/learning-outcomes/1")
-            .then((res) => setLocs(res.data.learningOutcomes))
-    }, [])
-
-    const formItemLayoutWithOutLabel = {
-        wrapperCol: {
-            xs: {span: 24, offset: 0},
-            sm: {span: 20, offset: 0},
-        },
-    };
-    const formItemLayout = {
-        labelCol: {
-            xs: {span: 24},
-            sm: {span: 4},
-        },
-        wrapperCol: {
-            xs: {span: 24},
-            sm: {span: 20},
-        },
-    };
+        axios.get(`/learning-outcomes/1/?content=${searchContent}&page=${page}`)
+            .then((res) => {
+                setLocs(res.data.learningOutcomes)
+                setTotalLocs(res.data.totalResults)
+            })
+    }, [searchContent, page])
 
     const onFinish = (values) => {
         const data = {
@@ -50,6 +39,12 @@ const CreateCLO = () => {
 
     function handleChange(value) {
         setPlos(value);
+        setPage(1);
+        setSearchContent("")
+    }
+
+    function onSearch(value) {
+        setSearchContent(value);
     }
 
     return (
@@ -61,6 +56,23 @@ const CreateCLO = () => {
                 style={{width: '100%'}}
                 placeholder="Chọn các CĐR CTĐT có liên quan"
                 onChange={handleChange}
+                onSearch={onSearch}
+                filterOption={false}
+                dropdownRender={(menu) => (
+                    <>
+                        {menu}
+                        <br/>
+                        <Row justify="space-around">
+                            <Pagination
+                                total={totalLocs}
+                                current={page}
+                                onChange={(page) => setPage(page)}
+                            />
+                        </Row>
+
+                    </>
+
+                )}
             >
                 {
                     locs.map((loc) => {
@@ -71,7 +83,12 @@ const CreateCLO = () => {
                 }
 
             </Select><br/><br/>
-            <Form form={form} name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
+            <Form
+                form={form}
+                name="dynamic_form_nest_item"
+                onFinish={onFinish}
+                autoComplete="off"
+            >
                 <Form.List
                     name="locs"
                     rules={[{required: true, message: 'Tạo ít nhất 1 nội dung CĐR'}]}

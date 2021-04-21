@@ -143,10 +143,12 @@ const MatrixLearningOutcomes = ({trainingItem, levelLocs}) => {
                         let clos = loc.clos.map(clo => clo.uuid);
 
                         let point = 0;
+                        let num = 0;
 
                         locsOfCourse.forEach(locOfCourse => {
                             if (clos.includes(locOfCourse.uuid)) {
                                 point += locOfCourse.outline_learning_outcome.level;
+                                num ++;
                             }
                         })
 
@@ -157,7 +159,7 @@ const MatrixLearningOutcomes = ({trainingItem, levelLocs}) => {
                                 levelLoc.levels.push({course: course.uuid, point})
                             }
 
-                            return point;
+                            return point/num;
                         }
 
                         return "";

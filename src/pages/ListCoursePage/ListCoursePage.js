@@ -18,9 +18,18 @@ const {Column, ColumnGroup} = Table;
 
 const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
     const [form] = Form.useForm();
-    const courseState = useSelector(state => state.courses)
+    //const courseState = useSelector(state => state.courses)
+    const [courses, setCourses] = useState([]);
     const {listInstitutions} = useSelector(state => state.institutions)
     const [institutions, setInstitutions] = useState([]);
+
+    useEffect(() => {
+        axios.get('/courses')
+            .then((res) => {
+                setCourses(res.data.courses)
+            })
+    }, [])
+
     if (updatedCourse) {
         const required_course = (JSON.parse(updatedCourse.required_course) || []).map(course => course.uuid);
         let parentInstitution = listInstitutions.find(ins => ins.uuid === updatedCourse.institution.parent_uuid)
@@ -72,7 +81,7 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
                         console.log(values)
                         values.required_course = JSON.stringify(
                             values.required_course.map(id => {
-                                return courseState.courses.find(course => course.uuid === id);
+                                return courses.find(course => course.uuid === id);
                             })
                         )
                         axios.put(`/courses/${updatedCourse.uuid}`,
@@ -163,8 +172,8 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
                         }
                     >
                         {
-                            courseState.courses.map((course, index) =>
-                                <Select.Option value={course.uuid} key={index}>{course.course_name_vi}</Select.Option>
+                            courses.map((course, index) =>
+                                <Select.Option value={course.uuid} key={index}>{`${course.course_name_vi} (${course.course_code})`}</Select.Option>
                             )
                         }
 

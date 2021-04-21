@@ -10,14 +10,19 @@ const CreateCoursePage = ({onCancelModal}) => {
     const dispatch = useDispatch();
     const {listInstitutions} = useSelector(state => state.institutions)
     const [institutions, setInstitutions] = useState([]);
-    const courseState = useSelector(state => state.courses)
+    //const courseState = useSelector(state => state.courses)
+    const [courses, setCourses] = useState([]);
     const {isValidToken} = useSelector(state => state.auth)
     const [xslxFile, setXslxFile] = useState(null);
     const [isSendingForm, setIsSendinggForm] = useState(false);
 
     useEffect(() => {
         dispatch(actions.getAllInstitution());
-        dispatch(actions.getAllCourse());
+
+        axios.get('/courses')
+            .then((res) => {
+                setCourses(res.data.courses)
+            })
     }, [])
 
     useEffect(() => {
@@ -36,10 +41,9 @@ const CreateCoursePage = ({onCancelModal}) => {
     }
 
     async function onCreateCourse(values) {
-        console.log(values)
         if(values.required_course) {
             values.required_course = JSON.stringify( values.required_course.map(courseUuid => {
-                    return courseState.courses.find(c => c.uuid === courseUuid)
+                    return courses.find(c => c.uuid === courseUuid)
                 })
             )
         }
@@ -225,8 +229,8 @@ const CreateCoursePage = ({onCancelModal}) => {
                                 }
                             >
                                 {
-                                    courseState.courses.map((course, index) =>
-                                        <Select.Option value={course.uuid} key={index}>{course.course_name_vi}</Select.Option>
+                                    courses.map((course, index) =>
+                                        <Select.Option value={course.uuid} key={index}>{`${course.course_name_vi} (${course.course_code})`}</Select.Option>
                                     )
                                 }
 
