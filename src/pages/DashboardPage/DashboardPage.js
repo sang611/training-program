@@ -83,6 +83,7 @@ const DashboardPage = () => {
             dispatch(actions.getAllNotification());
         })
 
+        return () => socket.current.disconnect()
     }, [])
 
     useEffect(() => {

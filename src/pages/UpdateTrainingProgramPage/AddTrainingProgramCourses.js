@@ -41,7 +41,6 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
         axios.post("/training-programs/courses", {
             courses: values.courses,
             trainingUuid: uuid,
-            require_credits: requiredCredits,
             course_type: courseType,
             knowledge_type: knowledgeType
         })
@@ -236,7 +235,7 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
 
 
 
-                {
+                {/*{
                    courseType == 'L' || courseType == 'BT' ? <Space align="baseline">
                         <h4>
                             Số tín chỉ yêu cầu:
@@ -250,7 +249,7 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                             }}
                         />
                     </Space> : ''
-                }
+                }*/}
             </Space>
             <br/><br/>
             <Row>
@@ -301,7 +300,7 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                                                             {...field}
                                                             name={[field.name, 'theory_time']}
                                                             fieldKey={[field.fieldKey, 'theory_time']}
-                                                            rules={[{required: true, message: 'Nhập số giờ lý thuyết'}]}
+                                                            //rules={[{required: true, message: 'Nhập số giờ lý thuyết'}]}
                                                         >
                                                             <InputNumber
                                                                 min={1}
@@ -316,7 +315,7 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                                                             {...field}
                                                             name={[field.name, 'exercise_time']}
                                                             fieldKey={[field.fieldKey, 'exercise_time']}
-                                                            rules={[{required: true, message: 'Nhập số giờ bài tập'}]}
+                                                            //rules={[{required: true, message: 'Nhập số giờ bài tập'}]}
                                                         >
                                                             <InputNumber
                                                                 min={1}
@@ -331,7 +330,7 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                                                             {...field}
                                                             name={[field.name, 'practice_time']}
                                                             fieldKey={[field.fieldKey, 'practice_time']}
-                                                            rules={[{required: true, message: 'Nhập số giờ thực hành'}]}
+                                                            //rules={[{required: true, message: 'Nhập số giờ thực hành'}]}
                                                         >
                                                             <InputNumber
                                                                 min={1}
@@ -346,7 +345,7 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                                                             {...field}
                                                             name={[field.name, 'self_time']}
                                                             fieldKey={[field.fieldKey, 'self_time']}
-                                                            rules={[{required: true, message: 'Nhập số giờ tự học'}]}
+                                                            //rules={[{required: true, message: 'Nhập số giờ tự học'}]}
                                                         >
                                                             <InputNumber
                                                                 min={1}

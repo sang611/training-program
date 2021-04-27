@@ -17,7 +17,7 @@ const EditableCell = ({
                           ...restProps
                       }) => {
     const courseState = useSelector(state => state.courses)
-    const inputNode = inputType === 'number' ? <InputNumber/> :
+    const inputNode = inputType === 'number' ? <InputNumber min={0} max={200} defaultValue={0}/> :
         <Select
             showSearch
             placeholder="Tên học phần"
@@ -42,12 +42,12 @@ const EditableCell = ({
                     style={{
                         margin: 0,
                     }}
-                    rules={[
+                    /*rules={[
                         {
                             required: true,
-                            message: `Please Input ${title}!`,
+                            message: `Nhập ${title}!`,
                         },
-                    ]}
+                    ]}*/
                 >
                     {inputNode}
                 </Form.Item>
@@ -75,7 +75,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
     useEffect(() => {
         if (trainingProgram) {
             let requireSummary = {};
-            if(trainingProgram.require_summary) {
+            if (trainingProgram.require_summary) {
                 requireSummary = JSON.parse(trainingProgram.require_summary)
             }
             let course_c = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'C');
@@ -85,15 +85,25 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
             let course_n = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'N');
             setDataSource(
                 [{course_name_vi: 'Khối kiến thức chung', credits: requireSummary.common}]
-                    .concat(course_c).concat([{course_name_vi: 'Khối kiến thức theo lĩnh vực', credits: requireSummary.field}])
-                    .concat(course_lv).concat([{course_name_vi: 'Khối kiến thức theo khối ngành', credits: requireSummary.major_unit}])
-                    .concat(course_kn).concat([{course_name_vi: 'Khối kiến thức theo nhóm ngành', credits: requireSummary.major_group}])
+                    .concat(course_c).concat([{
+                    course_name_vi: 'Khối kiến thức theo lĩnh vực',
+                    credits: requireSummary.field
+                }])
+                    .concat(course_lv).concat([{
+                    course_name_vi: 'Khối kiến thức theo khối ngành',
+                    credits: requireSummary.major_unit
+                }])
+                    .concat(course_kn).concat([{
+                    course_name_vi: 'Khối kiến thức theo nhóm ngành',
+                    credits: requireSummary.major_group
+                }])
                     .concat(course_nn).concat([{course_name_vi: 'Khối kiến thức ngành', credits: requireSummary.major}])
                     .concat(course_n)
             )
         }
 
     }, [trainingProgram])
+
     const isEditing = (record) => record.key === editingKey;
 
     const edit = (record) => {
@@ -186,37 +196,32 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
             title: 'Số tín chỉ',
             dataIndex: 'credits',
             render: (_, course) => {
-                if(course.uuid) return course.credits;
+                if (course.uuid) return course.credits;
                 else return <b>{course.credits}</b>
             }
         },
+
         {
-            title: "Số giờ tín chỉ",
-            children: [
-                {
-                    title: 'Số giờ lý thuyết',
-                    dataIndex: ['training_program_course', 'theory_time'],
-                    editable: true,
-                },
-                {
-                    title: 'Số giờ bài tập',
-                    dataIndex: ['training_program_course', 'exercise_time'],
-                    editable: true,
+            title: 'Số giờ lý thuyết',
+            dataIndex: ['training_program_course', 'theory_time'],
+            editable: true,
+        },
+        {
+            title: 'Số giờ bài tập',
+            dataIndex: ['training_program_course', 'exercise_time'],
+            editable: true,
 
-                },
-                {
-                    title: 'Số giờ thực hành',
-                    dataIndex: ['training_program_course', 'practice_time'],
-                    editable: true,
+        },
+        {
+            title: 'Số giờ thực hành',
+            dataIndex: ['training_program_course', 'practice_time'],
+            editable: true,
 
-                },
-                {
-                    title: 'Số giờ tự học',
-                    dataIndex: ['training_program_course', 'self_time'],
-                    editable: true,
-
-                },
-            ]
+        },
+        {
+            title: 'Số giờ tự học',
+            dataIndex: ['training_program_course', 'self_time'],
+            editable: true,
         },
 
         {
@@ -279,11 +284,11 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
             }
         },
     ];
+
     const mergedColumns = columns.map((col) => {
         if (!col.editable) {
             return col;
         }
-
         return {
             ...col,
             onCell: (record) => ({

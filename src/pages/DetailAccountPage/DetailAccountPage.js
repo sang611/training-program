@@ -279,13 +279,14 @@ const UpdateLecturerProfile = ({user, userRole}) => {
             fullname: user.fullname,
             student_code: user.student_code,
             gender: user.gender,
-            birthday: moment(user.birthday, 'YYYY/MM/DD'),
+            birthday: moment(user.birthday || '2021-01-01', 'YYYY/MM/DD'),
             email: user.email,
             vnu_mail: user.vnu_mail,
             phone_number: user.phone_number,
             academic_rank: user.academic_rank,
             academic_degree: user.academic_degree,
-            institutionUuid: [parentInstitution ? parentInstitution.uuid : '', user.institution ? user.institution.uuid : '']
+            institutionUuid: parentInstitution ? [parentInstitution.uuid, user.institution.uuid] : [user.institution.uuid],
+            note: user.note
         });
     }, [listInstitutions])
 
@@ -318,7 +319,16 @@ const UpdateLecturerProfile = ({user, userRole}) => {
                         }}
                         onFinish={onUpdateLecturerInfor}
                     >
-                        <Form.Item label="Tên giảng viên:" name="fullname">
+                        <Form.Item
+                            label="Tên giảng viên:"
+                            name="fullname"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Họ tên không được để trống!',
+                                },
+                            ]}
+                        >
                             <Input placeholder="Nhập tên giảng viên"
                                    addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
                         </Form.Item>
@@ -338,7 +348,16 @@ const UpdateLecturerProfile = ({user, userRole}) => {
                                 </Form.Item>
                             </Col>
                             <Col span={12}>
-                                <Form.Item label="Giới tính:" name="gender">
+                                <Form.Item
+                                    label="Giới tính:"
+                                    name="gender"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Chọn một giới tính!',
+                                        },
+                                    ]}
+                                >
                                     <Radio.Group name="radio-gender">
                                         <Radio value={"Nam"}>Nam</Radio>
                                         <Radio value={"Nữ"}>Nữ</Radio>
@@ -365,33 +384,23 @@ const UpdateLecturerProfile = ({user, userRole}) => {
                         <Form.Item label="Số điện thoại:" name="phone_number">
                             <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
                         </Form.Item>
-                        <Form.Item label="Học hàm:" name="academic_rank">
-                            <Input placeholder="Học hàm của giảng viên"
-                                   addonBefore={<i className="fas fa-brain" style={{color: '#1890FF'}}/>}/>
-                        </Form.Item>
-                        <Form.Item label="Học vị:" name="academic_degree">
-                            <Input placeholder="Học vị của giảng viên"
-                                   addonBefore={<i className="fas fa-medal" style={{color: '#1890FF'}}/>}/>
-                        </Form.Item>
-                        <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
-                            {/*<Select
-                                showSearch
-                                style={{width: 200}}
-                                placeholder="Đơn vị chuyên môn"
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
-                            >
-                                {
-                                    listInstitutions
-                                        .filter(ins => ins.parent_uuid)
-                                        .map((ins, index) =>
-                                        <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
-                                    )
-                                }
+                        <Row>
+                            <Col span={12}>
+                                <Form.Item label="Học hàm:" name="academic_rank">
+                                    <Input placeholder="Học hàm của giảng viên"
+                                           addonBefore={<i className="fas fa-brain" style={{color: '#1890FF'}}/>}/>
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item label="Học vị:" name="academic_degree">
+                                    <Input placeholder="Học vị của giảng viên"
+                                           addonBefore={<i className="fas fa-medal" style={{color: '#1890FF'}}/>}/>
+                                </Form.Item>
+                            </Col>
+                        </Row>
 
-                            </Select>*/}
+
+                        <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
 
                             <Cascader
                                 style={{width: '100%'}}
@@ -399,8 +408,24 @@ const UpdateLecturerProfile = ({user, userRole}) => {
                                     institutions.filter((ins) => !ins.parent_uuid)
                                 }
                                 placeholder="Chọn đơn vị chuyên môn"
+                                changeOnSelect
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Chọn 1 đơn vị chuyên môn!',
+                                    },
+                                ]}
                             />
-
+                        </Form.Item>
+                        <Form.Item
+                            label="Ghi chú, chức vụ:"
+                            name="note"
+                        >
+                            <Input
+                                placeholder="Chức vụ, ghi chú"
+                                addonBefore={<i className="fas fa-quote-right"
+                                                style={{color: '#1890FF'}}/>}
+                            />
                         </Form.Item>
 
                         <br/>
@@ -765,7 +790,7 @@ const DetailAccountPage = () => {
                             }
                         </Descriptions.Item>
                         <Descriptions.Item contentStyle={{color: "gray"}}>
-                            <MailOutlined/>&ensp;{detailUser.email}
+                            <MailOutlined/>&ensp;{detailUser.vnu_mail}
                         </Descriptions.Item>
                         <Descriptions.Item contentStyle={{color: "gray"}}>
                             <Icon component={() => <i className="fas fa-birthday-cake"/>}/>&ensp;

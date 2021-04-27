@@ -5,12 +5,11 @@ import axios from "axios";
 
 /* eslint-disable no-template-curly-in-string */
 const validateMessages = {
-    required: '${label} phải là 1 số!',
     types: {
-        number: '${label} không phải là 1 số!',
+        number: 'Giá trị phải là 1 số!',
     },
     number: {
-        range: '${label} phải nằm trong khoảng ${min} and ${max}',
+        range: 'Giá trị phải nằm trong khoảng ${min} and ${max}',
     },
 };
 /* eslint-enable no-template-curly-in-string */
@@ -25,9 +24,12 @@ const SummaryContentTraining = ({trainingProgram}) => {
 
 
     const onFinish = (values) => {
-        console.log(values);
+        const {major_unit_L, major_group_L, major_L, major_BT} = values;
+        console.log(values)
         axios.put(`/training-programs/${trainingProgram.uuid}`, {
-            require_summary: JSON.stringify(values)
+            require_summary: JSON.stringify(values),
+            require_L: (major_unit_L || 0) + (major_group_L || 0) + (major_L || 0),
+            require_BT: (major_BT || 0)
         })
             .then(res => {
                 message.success(res.data.message);
@@ -46,9 +48,11 @@ const SummaryContentTraining = ({trainingProgram}) => {
         {
             type: 'number',
             min: 0,
-            max: 200,
+            max: 1000,
         },
     ]
+
+    const majorBlockStyle = {fontWeight: 'bold'}, courseTypeStyle={fontStyle: 'italic', marginLeft: '40px'}
 
     return (
         <>
@@ -71,42 +75,99 @@ const SummaryContentTraining = ({trainingProgram}) => {
                     rules={rules}
                     colon={false}
                 >
-                    <InputNumber />
+                    <InputNumber min={0} max={1000}/>
                 </Form.Item>
                 <Form.Item
                     name="common"
-                    label="Khối kiến thức chung"
+                    label={<span style={majorBlockStyle}>Khối kiến thức chung</span>}
                     rules={rules}
                 >
-                    <InputNumber/>
+                    <InputNumber min={0} max={1000}/>
                 </Form.Item>
                 <Form.Item
                     name="field"
-                    label="Khối kiến thức theo lĩnh vực"
+                    label={<span style={majorBlockStyle}>Khối kiến thức theo lĩnh vực</span>}
                     rules={rules}
                 >
-                    <InputNumber />
+                    <InputNumber min={0} max={1000}/>
                 </Form.Item>
                 <Form.Item
                     name="major_unit"
-                    label="Khối kiến thức theo khối ngành"
+                    label={<span style={majorBlockStyle}>Khối kiến thức theo khối ngành</span>}
                     rules={rules}
                 >
-                    <InputNumber />
+                    <InputNumber min={0} max={1000}/>
+                </Form.Item>
+                <Form.Item
+                    name="major_unit_B"
+                    label={<span style={courseTypeStyle}>Các học phần bắt buộc</span>}
+                    rules={rules}
+                >
+                    <InputNumber min={0} max={1000}/>
+                </Form.Item>
+                <Form.Item
+                    name="major_unit_L"
+                    label={<span style={courseTypeStyle}>Các học phần tự chọn</span>}
+                    rules={rules}
+                >
+                    <InputNumber min={0} max={1000}/>
                 </Form.Item>
                 <Form.Item
                     name="major_group"
-                    label="Khối kiến thức theo nhóm ngành"
+                    label={<span style={majorBlockStyle}>Khối kiến thức theo nhóm ngành</span>}
                     rules={rules}
                 >
-                    <InputNumber />
+                    <InputNumber min={0} max={1000}/>
+                </Form.Item>
+                <Form.Item
+                    name="major_group_B"
+                    label={<span style={courseTypeStyle}>Các học phần bắt buộc</span>}
+                    rules={rules}
+                >
+                    <InputNumber min={0} max={1000}/>
+                </Form.Item>
+                <Form.Item
+                    name="major_group_L"
+                    label={<span style={courseTypeStyle}>Các học phần tự chọn</span>}
+                    rules={rules}
+                >
+                    <InputNumber min={0} max={1000}/>
                 </Form.Item>
                 <Form.Item
                     name="major"
-                    label="Khối kiến thức ngành"
+                    label={<span style={majorBlockStyle}>Khối kiến thức ngành</span>}
                     rules={rules}
                 >
-                    <InputNumber />
+                    <InputNumber min={0} max={1000}/>
+                </Form.Item>
+
+                <Form.Item
+                    name="major_B"
+                    label={<span style={courseTypeStyle}>Các học phần bắt buộc</span>}
+                    rules={rules}
+                >
+                    <InputNumber min={0} max={1000}/>
+                </Form.Item>
+                <Form.Item
+                    name="major_L"
+                    label={<span style={courseTypeStyle}>Các học phần tự chọn</span>}
+                    rules={rules}
+                >
+                    <InputNumber min={0} max={1000}/>
+                </Form.Item>
+                <Form.Item
+                    name="major_BT"
+                    label={<span style={courseTypeStyle}>Các học phần bổ trợ</span>}
+                    rules={rules}
+                >
+                    <InputNumber min={0} max={1000}/>
+                </Form.Item>
+                <Form.Item
+                    name="major_KLTN"
+                    label={<span style={courseTypeStyle}>Khóa luận tốt nghiệp/Các học phần thay thế</span>}
+                    rules={rules}
+                >
+                    <InputNumber min={0} max={1000}/>
                 </Form.Item>
 
                 <Form.Item>

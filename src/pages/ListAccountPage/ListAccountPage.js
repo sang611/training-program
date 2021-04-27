@@ -259,13 +259,13 @@ const ListAccountPage = () => {
                                                 item.account.role < 3 ?
                                                     <>
                                                         <Descriptions.Item contentStyle={{color: "gray"}}>
-                                                            <PhoneOutlined/>&ensp;{item.phone_number}
+                                                            <DesktopOutlined/>&ensp;{item.institution.vn_name}
                                                         </Descriptions.Item>
                                                         <Descriptions.Item contentStyle={{color: "gray"}}>
-                                                            <DesktopOutlined/>&ensp;{item.institution ? item.institution.vn_name : ''}
+                                                            <i className="fab fa-medapps"/>&ensp;{`${item.academic_degree || ''} ${item.academic_rank || ''}`}
                                                         </Descriptions.Item>
                                                         <Descriptions.Item contentStyle={{color: "gray"}}>
-                                                            <DesktopOutlined/>&ensp;{item.institution ? item.institution.parent.vn_name : ''}
+                                                            <i className="fas fa-layer-group"/>&ensp;{item.note}
                                                         </Descriptions.Item>
                                                     </> :
                                                     <>

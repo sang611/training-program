@@ -131,7 +131,7 @@ const StudentDashboardPage = () => {
                                         icon={<PieChartOutlined/>}
                                     >
                                         <Link to="/uet/statistic">Thống kê</Link>
-                                    </Menu.Item> : ''
+                                    </Menu.Item> : <></>
                             }
                             <SubMenu key="5" icon={<SnippetsOutlined/>} title="Tài liệu">
                                 <Menu.Item

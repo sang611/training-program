@@ -4,7 +4,7 @@ import {Button, Cascader, Col, DatePicker, Form, Input, message, Radio, Row} fro
 import Title from "antd/lib/typography/Title";
 import moment from "moment";
 import Dragger from "antd/lib/upload/Dragger";
-import {InboxOutlined} from "@ant-design/icons";
+import {InboxOutlined, MailTwoTone} from "@ant-design/icons";
 import * as actions from "../../redux/actions";
 import axios from "axios";
 
@@ -73,8 +73,6 @@ const AddingLecturerForm = () => {
         await dispatch(actions.addAccount({values, typeAccount: 1}));
         formLec.resetFields();
     };
-
-
 
 
     const propsDragger = {
@@ -179,8 +177,8 @@ const AddingLecturerForm = () => {
                     onFinish={onCreateAccountLecturer}
                 >
                     <Form.Item
-                        label="Tên giảng viên:"
-                        name="full_name"
+                        label="Họ tên giảng viên:"
+                        name="fullname"
                         rules={[
                             {
                                 required: true,
@@ -192,7 +190,7 @@ const AddingLecturerForm = () => {
                                addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
                     </Form.Item>
                     <Row>
-                        <Col span={12}>
+                        {/*<Col span={12}>
                             <Form.Item
                                 label="Ngày sinh:"
                                 name="birth_date"
@@ -206,7 +204,7 @@ const AddingLecturerForm = () => {
                                 <DatePicker defaultValue={moment('01/01/2021', 'DD/MM/YYYY')}
                                             format={['DD/MM/YYYY', 'DD/MM/YY']}/>
                             </Form.Item>
-                        </Col>
+                        </Col>*/}
                         <Col span={12}>
                             <Form.Item
                                 label="Giới tính:"
@@ -214,7 +212,7 @@ const AddingLecturerForm = () => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Vui lòng chọn giới tính của giảng viên viên'
+                                        message: 'Vui lòng chọn giới tính của giảng viên'
                                     },
                                 ]}
                             >
@@ -225,16 +223,24 @@ const AddingLecturerForm = () => {
                             </Form.Item>
                         </Col>
                     </Row>
-                    <Form.Item label="Học hàm:" name="academic_rank">
-                        <Input
-                            placeholder="Học hàm của giảng viên"
-                            addonBefore={<i className="fas fa-brain" style={{color: '#1890FF'}}/>}
-                        />
-                    </Form.Item>
-                    <Form.Item label="Học vị:" name="academic_degree">
-                        <Input placeholder="Học vị của giảng viên"
-                               addonBefore={<i className="fas fa-medal" style={{color: '#1890FF'}}/>}/>
-                    </Form.Item>
+                    <Row>
+                        <Col span={12}>
+                            <Form.Item label="Học hàm:" name="academic_rank">
+                                <Input
+                                    placeholder="Học hàm của giảng viên"
+                                    addonBefore={<i className="fas fa-brain" style={{color: '#1890FF'}}/>}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item label="Học vị:" name="academic_degree">
+                                <Input placeholder="Học vị của giảng viên"
+                                       addonBefore={<i className="fas fa-medal" style={{color: '#1890FF'}}/>}/>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+
                     <Form.Item
                         label="Đơn vị chuyên môn:"
                         name="institution"
@@ -245,32 +251,27 @@ const AddingLecturerForm = () => {
                             },
                         ]}
                     >
-                        {/*<Select
-                                showSearch
-                                style={{width: 200}}
-                                placeholder="Đơn vị chuyên môn"
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
-                            >
-                                {
-                                    listInstitutions
-                                        .filter(ins => ins.parent_uuid)
-                                        .map((ins, index) =>
-                                        <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
-                                    )
-                                }
-
-                            </Select>*/}
                         <Cascader
                             style={{width: '100%'}}
                             options={
                                 institutions.filter((ins) => !ins.parent_uuid)
                             }
                             placeholder="Chọn đơn vị chuyên môn"
+                            changeOnSelect
                         />
                     </Form.Item>
+
+                    <Form.Item
+                        label="Ghi chú, chức vụ:"
+                        name="note"
+                    >
+                        <Input
+                            placeholder="Chức vụ, ghi chú"
+                            addonBefore={<i className="fas fa-quote-right"
+                                            style={{color: '#1890FF'}}/>}
+                        />
+                    </Form.Item>
+
                     {UsernamePasswordForm}
                     <br/>
                     <Form.Item {...buttonItemLayout}>
