@@ -25,10 +25,12 @@ const AddingStudentForm = () => {
     }, [])
 
     useEffect(() => {
-        if (accState.error) {
-            message.error("Đã có lỗi xảy ra")
-        } else if (accState.error === false) {
+        if(accState.addAccountType === 2) {
+            if (accState.error) {
+                message.error("Đã có lỗi xảy ra")
+            } else if (accState.error === false) {
                 message.success("Tạo mới sinh viên thành công")
+            }
         }
     }, [accState])
 

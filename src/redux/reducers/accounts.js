@@ -16,6 +16,8 @@ const initialState = {
     detailUser: null,
     loadingDetailUser: null,
     errorDetailUser: null,
+
+    addAccountType: 0
 }
 
 const reducer = (state = initialState, action) => {
@@ -50,7 +52,8 @@ const reducer = (state = initialState, action) => {
         case actionTypes.ADD_ACCOUNT_SUCCESS:
             return {
                 ...state,
-                error: false
+                error: false,
+                addAccountType: action.typeAccount
             }
         case actionTypes.ADD_ACCOUNT_FAIL:
             return {

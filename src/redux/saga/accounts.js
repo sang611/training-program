@@ -82,11 +82,10 @@ export function* addAccountSaga(action) {
         if (typeAccount == 1) {
             yield axios.post("/employees", values)
         } else if (typeAccount == 2) {
-
             yield axios.post("/students", values)
         }
 
-        yield put(actions.addAccountSuccess());
+        yield put(actions.addAccountSuccess({typeAccount}));
     } catch (error) {
         yield put(actions.addAccountFail(error));
     }
