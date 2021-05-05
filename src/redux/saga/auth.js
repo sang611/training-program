@@ -9,7 +9,7 @@ import jwt from "jsonwebtoken";
 const cookies = new Cookies();
 
 export function* authUserSaga(action) {
-
+    console.log(action)
     yield put(actions.authStart());
     const authData = {
         username: action.username,
@@ -17,9 +17,12 @@ export function* authUserSaga(action) {
         rememberPassword: action.rememberPassword,
         returnSecureToken: true,
     };
+
+    const apiUrl = action.uetLogin ? "/accounts/loginWithLDAP" : "/accounts/login";
+
     try {
         const {data} = yield axios.post(
-            "/accounts/login",
+            apiUrl,
             authData
         );
         let {account, token} = data;

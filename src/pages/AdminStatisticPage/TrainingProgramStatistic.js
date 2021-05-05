@@ -6,6 +6,7 @@ import * as actions from "../../redux/actions";
 import style from './AdminStatisticPage.css'
 import {AuditOutlined, LockOutlined} from "@ant-design/icons";
 import {useHistory} from "react-router-dom";
+import {classCodes} from "../../constants";
 
 
 function TrainingProgramStatistic() {
@@ -13,12 +14,6 @@ function TrainingProgramStatistic() {
     const history = useHistory();
     const {trainingPrograms, loadingAllTrainings, errors} = useSelector(state => state.trainingPrograms)
 
-    const classes = [
-        "A-E", "C-A-C", "C-A-CLC1", "C-A-CLC2", "C-A-CLC3", "C-B",
-        "C-C", "C-CLC", "C-D", "C-E", "C-F", "C-G", "C-H", "C-K",
-        "C-L", "C-J", "N", "T", "Đ-A-CLC", "Đ-B", "K", "E", "V", "H",
-        "M1", "M2", "M3", "M4", "XD-GT"
-    ];
 
     useEffect(() => {
         dispatch(actions.getAllTrainingProgram());
@@ -127,10 +122,10 @@ function TrainingProgramStatistic() {
                         <Table
                             columns={classColumns}
                             dataSource={
-                                classes.map((cl, index) => {
+                                classCodes.map((cl, index) => {
 
                                     return {
-                                        name: cl.split('-').join(''),
+                                        name: cl,
                                         key: index,
                                         stt: index + 1
                                     }
@@ -141,7 +136,6 @@ function TrainingProgramStatistic() {
                             style={{width: '100%'}}
                         />
                     </Col>
-
                 </Row>
             </Card>
         </>

@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {Button, Carousel, Checkbox, Col, Divider, Form, Image, Input, message, Modal, notification, Row} from "antd";
+import React, {useEffect, useState} from 'react';
+import {Button, Checkbox, Divider, Form, Input, message, Modal, notification} from "antd";
 import './SignInPage.css'
 import Title from "antd/lib/typography/Title";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
@@ -7,7 +7,6 @@ import axios from "axios";
 import * as actions from '../../redux/actions/index'
 import {useDispatch, useSelector} from "react-redux";
 import {Redirect} from "react-router-dom";
-import Cookies from "universal-cookie";
 
 
 const ForgotPasswordForm = ({visible, onCreate, onCancel}) => {
@@ -57,14 +56,12 @@ const ForgotPasswordForm = ({visible, onCreate, onCancel}) => {
 };
 
 function SignInPage(props) {
-    const [signInfor, setSignInfo] = useState({});
+
     const dispatch = useDispatch();
     const state = useSelector(state => state.auth);
-    const [isAuth, setIsAuth] = useState(false);
 
 
     const onFinish = (values) => {
-        setSignInfo(values);
         dispatch(actions.auth(values));
     };
 
@@ -107,17 +104,14 @@ function SignInPage(props) {
     };
 
 
-
     return state.isValidToken ? <Redirect to={state.userRole == 0 ? '/uet/statistic' : '/uet/training-programs'}/> : (
 
         <div className="login-container">
 
             <div className="login-card">
 
-
                 <div className="signin-image">
                 </div>
-
 
                 <div id="siginin-form-wrapper">
                     <div id="signin-form">
@@ -165,8 +159,8 @@ function SignInPage(props) {
                                 />
                             </Form.Item>
                             <Form.Item>
-                                <Form.Item name="rememberPassword" valuePropName="checked" noStyle>
-                                    <Checkbox>Ghi nhớ đăng nhập</Checkbox>
+                                <Form.Item name="uetLogin" valuePropName="checked" noStyle>
+                                    <Checkbox>Sử dụng tài khoản UET</Checkbox>
                                 </Form.Item>
 
                                 <a className="login-form-forgot" onClick={() => {

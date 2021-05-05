@@ -243,7 +243,7 @@ function DocumentPage() {
                             )}
                         />
                     )
-                }, [documents])
+                }, [documents, loading])
 
             }
 

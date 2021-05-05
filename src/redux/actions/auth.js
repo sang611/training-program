@@ -23,12 +23,13 @@ export const authFail = (error) => {
     }
 }
 
-export const auth = ({username, password, rememberPassword}) => {
+export const auth = ({username, password, rememberPassword, uetLogin}) => {
     return {
         type: actionTypes.AUTH_USER,
         username: username,
         password: password,
-        rememberPassword: rememberPassword
+        rememberPassword: rememberPassword,
+        uetLogin
     }
 }
 

@@ -66,6 +66,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
     const [editingKey, setEditingKey] = useState('');
     const courseState = useSelector(state => state.courses)
     const dispatch = useDispatch();
+    let index_course = 1;
 
     useEffect(() => {
         dispatch(actions.getAllCourse())
@@ -80,25 +81,59 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
             }
             let course_c = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'C');
             let course_lv = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'LV');
-            let course_kn = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'KN');
-            let course_nn = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'NN');
-            let course_n = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'N');
+            let course_kn_B = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'KN' && course.training_program_course.course_type === 'B');
+            let course_kn_L = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'KN' && course.training_program_course.course_type === 'L');
+
+            //let course_nn = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'NN');
+            let course_nn_B = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'NN' && course.training_program_course.course_type === 'B');
+            let course_nn_L = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'NN' && course.training_program_course.course_type === 'L');
+
+            //let course_n = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'N');
+            let course_n_B = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'N' && course.training_program_course.course_type === 'B');
+            let course_n_L = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'N' && course.training_program_course.course_type === 'L');
+            let course_n_BT = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'N' && course.training_program_course.course_type === 'BT');
+            let course_n_KLTN = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'N' && course.training_program_course.course_type === 'KLTN');
             setDataSource(
-                [{course_name_vi: 'Khối kiến thức chung', credits: requireSummary.common}]
-                    .concat(course_c).concat([{
-                    course_name_vi: 'Khối kiến thức theo lĩnh vực',
-                    credits: requireSummary.field
-                }])
-                    .concat(course_lv).concat([{
-                    course_name_vi: 'Khối kiến thức theo khối ngành',
-                    credits: requireSummary.major_unit
-                }])
-                    .concat(course_kn).concat([{
-                    course_name_vi: 'Khối kiến thức theo nhóm ngành',
-                    credits: requireSummary.major_group
-                }])
-                    .concat(course_nn).concat([{course_name_vi: 'Khối kiến thức ngành', credits: requireSummary.major}])
-                    .concat(course_n)
+                [{course_name_vi: 'Khối kiến thức chung', credits: requireSummary.common, h: 1}]
+                    .concat(course_c)
+
+                    .concat([{
+                        course_name_vi: 'Khối kiến thức theo lĩnh vực',
+                        credits: requireSummary.field,
+                        h: 1
+                    }])
+                    .concat(course_lv)
+                    .concat([{
+                        course_name_vi: 'Khối kiến thức theo khối ngành',
+                        credits: requireSummary.major_unit,
+                        h: 1
+                    }])
+                    .concat([{course_name_vi: 'Các học phần bắt buộc', credits: requireSummary.major_unit_B, h: 2}])
+                    .concat(course_kn_B)
+                    .concat([{course_name_vi: 'Các học phần tự chọn', credits: requireSummary.major_unit_L, h: 2}])
+                    .concat(course_kn_L)
+                    .concat([{
+                        course_name_vi: 'Khối kiến thức theo nhóm ngành',
+                        credits: requireSummary.major_group,
+                        h: 1
+                    }])
+                    .concat([{course_name_vi: 'Các học phần bắt buộc', credits: requireSummary.major_group_B, h: 2}])
+                    .concat(course_nn_B)
+                    .concat([{course_name_vi: 'Các học phần tự chọn', credits: requireSummary.major_group_L, h: 2}])
+                    .concat(course_nn_L)
+                    .concat([{
+                        course_name_vi: 'Khối kiến thức ngành',
+                        credits: requireSummary.major,
+                        h: 1
+                    }])
+                    .concat([{course_name_vi: 'Các học phần bắt buộc', credits: requireSummary.major_B, h: 2}])
+                    .concat(course_n_B)
+                    .concat([{course_name_vi: 'Các học phần tự chọn', credits: requireSummary.major_L, h: 2}])
+                    .concat(course_n_L)
+                    .concat([{course_name_vi: 'Các học phần bổ trợ', credits: requireSummary.major_BT, h: 2}])
+                    .concat(course_n_BT)
+                    .concat([{course_name_vi: 'KLTN/Các học phần thay thế', credits: requireSummary.major_KLTN, h: 2}])
+                    .concat(course_n_KLTN)
             )
         }
 
@@ -188,8 +223,21 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
             dataIndex: 'course_name_vi',
             editable: true,
             render: (_, course) => {
-                if (course.uuid) return course.course_name_vi
-                else return <b>{course.course_name_vi}</b>
+                if (course.uuid) {
+                    return (
+                        <>
+                            <div>{course.course_name_vi}</div>
+                            <div>
+                                <i>{course.course_name_en}</i>
+                            </div>
+                        </>
+                    )
+                } else {
+                    if(course.h===1)
+                        return <b>{course.course_name_vi}</b>
+                    else if(course.h===2)
+                        return <span style={{fontWeight: 500}}><i>{course.course_name_vi}</i></span>
+                }
             }
         },
         {
@@ -333,22 +381,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
                     dataSource={dataSource ? dataSource.map((data, index) => {
                         data.key = data.uuid;
                         if (data.uuid) {
-
-                            if (data.training_program_course.knowledge_type === 'C') {
-                                data.stt = index
-                            }
-                            if (data.training_program_course.knowledge_type === 'LV') {
-                                data.stt = index - 1
-                            }
-                            if (data.training_program_course.knowledge_type === 'KN') {
-                                data.stt = index - 2
-                            }
-                            if (data.training_program_course.knowledge_type === 'NN') {
-                                data.stt = index - 3
-                            }
-                            if (data.training_program_course.knowledge_type === 'N') {
-                                data.stt = index - 4
-                            }
+                            data.stt = index_course ++;
                         }
                         return data;
                     }) : []}

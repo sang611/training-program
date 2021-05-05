@@ -24,6 +24,7 @@ const TrainingCourse = () => {
     })*/
 
     const [data, setData] = useState([]);
+    let index_course = 1;
 
     useEffect(() => {
         if (trainingProgram) {
@@ -192,22 +193,7 @@ const TrainingCourse = () => {
                 data.map((course, index) => {
                     course.key = course.uuid;
                     if (course.uuid) {
-
-                        if (course.training_program_course.knowledge_type === 'C') {
-                            course.stt = index
-                        }
-                        if (course.training_program_course.knowledge_type === 'LV') {
-                            course.stt = index - 1
-                        }
-                        if (course.training_program_course.knowledge_type === 'KN') {
-                            course.stt = index - 2
-                        }
-                        if (course.training_program_course.knowledge_type === 'NN') {
-                            course.stt = index - 3
-                        }
-                        if (course.training_program_course.knowledge_type === 'N') {
-                            course.stt = index - 4
-                        }
+                        course.stt = index_course ++;
                     }
                     return course
                 })

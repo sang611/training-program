@@ -12,12 +12,22 @@ const AddTrainingSequence = ({trainingProgram}) => {
     const [dataSource, setDataSource] = useState([]);
     const [courseSelected, setCourseSelected] = useState([]);
     const [trainingCourses, setTrainingCourse] = useState(trainingProgram.courses);
+    const [deleteIndex, setDeleteIndex] = useState(null);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         setTrainingCourse(trainingProgram.courses)
     }, [trainingProgram])
+
+    useEffect(() => {
+        if(deleteIndex) {
+            console.log(deleteIndex, trainingCourses)
+            trainingProgram.courses.find((course) => course.uuid === deleteIndex).training_program_course.semester = undefined;
+            setTrainingCourse(trainingProgram.courses)
+        }
+
+    }, [deleteIndex])
 
     useEffect(() => {
 
@@ -38,7 +48,11 @@ const AddTrainingSequence = ({trainingProgram}) => {
     }, [courseSelected])
 
     const onUpdatePlan = (trainingProgramUuid, coursesOfSemester, semester) => {
-        axios.put(`/training-programs/courses/${trainingProgramUuid}/planning`, {coursesOfSemester, trainingProgramUuid, semester})
+        axios.put(`/training-programs/courses/${trainingProgramUuid}/planning`, {
+            coursesOfSemester,
+            trainingProgramUuid,
+            semester
+        })
             .then((res) => {
                 //message.success("Thành công")
             })
@@ -51,14 +65,13 @@ const AddTrainingSequence = ({trainingProgram}) => {
 
     const onDeleteCourseSemester = (courseUuid) => {
         axios.put(`/training-programs/${trainingProgram.uuid}/courses/${courseUuid}`, {semester: null})
-            .then((res) => {
 
-            })
             .then(() => {
                 const newData = [...dataSource];
                 setDataSource(
                     newData.filter((c) => c.uuid !== courseUuid)
                 )
+                setDeleteIndex(courseUuid)
             })
             .catch((e) => message.error("Đã có lỗi xảy ra"));
     }
@@ -111,16 +124,20 @@ const AddTrainingSequence = ({trainingProgram}) => {
                             {
                                 trainingCourses
                                     .map((course, index) => {
-                                           return (<Select.Option
-                                                value={course.uuid}
-                                                key={index}
-                                                disabled={
-                                                    course.training_program_course.semester
-                                                }
-                                            >
-                                                {`${course.course_code} - ${course.course_name_vi}`}
-                                            </Select.Option>
-                                        )}
+                                            return (<Select.Option
+                                                    value={course.uuid}
+                                                    key={index}
+                                                    /*disabled={
+                                                        course.training_program_course.semester
+                                                    }*/
+                                                    style={
+                                                        course.training_program_course.semester ? {color: '#ddd'} : {}
+                                                    }
+                                                >
+                                                    {`${course.course_code} - ${course.course_name_vi}`}
+                                                </Select.Option>
+                                            )
+                                        }
                                     )
                             }
                         </Select>
