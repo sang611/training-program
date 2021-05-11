@@ -17,7 +17,16 @@ export function* getAllLearningOutcomes(action) {
 
     try {
         const response =
-            yield axios.get(`/learning-outcomes/${typeLoc}/?content=${content}&page=${page}&title=${title}`);
+            yield axios.get(
+                `/learning-outcomes/${typeLoc}`,
+                {
+                    params: {
+                        content,
+                        page,
+                        title
+                    }
+                }
+            );
         yield put(actions.getAllLearningOutcomesSuccess(response));
     } catch (error) {
         yield put(actions.getAllLearningOutcomesFail(error.response));

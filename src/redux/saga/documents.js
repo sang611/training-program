@@ -7,7 +7,14 @@ export function* getAllDocument(action) {
     let {doc_of, title} = action.payload;
     let titleSearch = title ? title : '';
     try {
-        const response = yield axios.get(`/documents/${doc_of}?name=${titleSearch}`);
+        const response = yield axios.get(
+            `/documents/${doc_of}`,
+            {
+                params: {
+                    name: titleSearch
+                }
+            }
+        );
         yield put(actions.getAllDocumentSuccess(response));
     } catch (error) {
         yield put(actions.getAllDocumentFail(error.response));

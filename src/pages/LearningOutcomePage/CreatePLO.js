@@ -4,6 +4,7 @@ import * as actions from "../../redux/actions";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import React from "react";
 import {useDispatch} from "react-redux";
+import {locTypes} from "../../constants";
 
 const CreatePLO = ({onCloseDrawer, setContent, setTitle}) => {
     const dispatch = useDispatch();
@@ -52,9 +53,9 @@ const CreatePLO = ({onCloseDrawer, setContent, setTitle}) => {
                                         rules={[{ required: true, message: '' }]}
                                     >
                                         <Select placeholder="Nhóm">
-                                            <Select.Option key={1} value={1}>Kiến thức</Select.Option>
-                                            <Select.Option key={2} value={2}>Kỹ năng</Select.Option>
-                                            <Select.Option key={3} value={3}>Thái độ</Select.Option>
+                                            {
+                                                locTypes.map(type => <Select.Option key={type.value} value={type.value}>{type.content}</Select.Option>)
+                                            }
                                         </Select>
                                     </Form.Item>
                                     <MinusCircleOutlined onClick={() => remove(name)} />

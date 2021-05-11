@@ -5,6 +5,7 @@ import axios from "axios";
 import * as actions from "../../redux/actions";
 import {Option} from "antd/lib/mentions";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
+import {locTypes} from "../../constants";
 
 const CreateCLO = () => {
     const dispatch = useDispatch();
@@ -112,9 +113,9 @@ const CreateCLO = () => {
                                         rules={[{ required: true, message: '' }]}
                                     >
                                         <Select placeholder="Nhóm">
-                                            <Select.Option key={1} value={1}>Kiến thức</Select.Option>
-                                            <Select.Option key={2} value={2}>Kỹ năng</Select.Option>
-                                            <Select.Option key={3} value={3}>Đạo đức</Select.Option>
+                                            {
+                                                locTypes.map(type => <Select.Option key={type.value} value={type.value}>{type.content}</Select.Option>)
+                                            }
                                         </Select>
                                     </Form.Item>
                                     <MinusCircleOutlined onClick={() => remove(name)} />

@@ -2,19 +2,18 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
 import Title from "antd/lib/typography/Title";
-import {Card, Col, Row} from "antd";
+import {Card, Col, Row, Skeleton} from "antd";
 import {useHistory} from "react-router-dom";
 
 function CourseStatistic() {
     const dispatch = useDispatch();
     const history = useHistory();
-    const {accounts, totalAccounts} = useSelector((state) => state.accounts);
+    const {accounts, totalAccounts, loadingAll} = useSelector((state) => state.accounts);
 
     const [totalLec, setTotalLec] = useState(0);
     const [totalStu, setTotalStu] = useState(0);
 
     useEffect(() => {
-
         dispatch(actions.fetchAccounts({typeAccount: 'GV'}))
         dispatch(actions.fetchAccounts({typeAccount: 'SV'}))
     }, [])
@@ -33,6 +32,8 @@ function CourseStatistic() {
             }
         }
     }, [accounts])
+
+    if(loadingAll) return <Skeleton active/>
 
     return (
         <>

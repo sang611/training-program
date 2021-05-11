@@ -2,17 +2,19 @@ import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
 import Title from "antd/lib/typography/Title";
-import {Card, Col, Row} from "antd";
+import {Card, Col, Row, Skeleton} from "antd";
 import {ApartmentOutlined, BookOutlined} from "@ant-design/icons";
 import {useHistory} from "react-router-dom";
 
 function CourseStatistic() {
     const dispatch = useDispatch();
     const history = useHistory();
-    const {courses} = useSelector(state => state.courses)
+    const {courses, loading} = useSelector(state => state.courses)
     useEffect(() => {
         dispatch(actions.getAllCourse())
     }, [])
+
+    if(loading) return <Skeleton active/>
 
     return (
         <>

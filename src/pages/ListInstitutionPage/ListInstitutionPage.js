@@ -1,13 +1,31 @@
-import {Button, Descriptions, Drawer, Image, message, Modal, Popconfirm, Row, Space, Spin, Table, Tag} from 'antd';
+import {
+    Button,
+    Descriptions,
+    Drawer,
+    Image,
+    Input,
+    message,
+    Modal,
+    Popconfirm,
+    Row,
+    Space,
+    Spin,
+    Table,
+    Tag
+} from 'antd';
 import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions/institutions'
 import axios from "axios";
-import {AppstoreAddOutlined, DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
+import {
+    AppstoreAddOutlined,
+    DeleteOutlined,
+    EditOutlined,
+    InfoCircleOutlined,
+    PlusOutlined, ReloadOutlined,
+    SearchOutlined
+} from "@ant-design/icons";
 import CreateInstitutionPage from "../CreateInstitutionPage";
-import { io } from "socket.io-client";
-
-
 
 const ListInstitutionPage = () => {
     const [visible, setVisible] = useState(false);
@@ -20,6 +38,31 @@ const ListInstitutionPage = () => {
     const [isEdited, setIsEdited] = useState(false);
     const [editSuccess, setEditSuccess] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const initialSearchObj = {
+        vn_name: "",
+        en_name: "",
+        abbreviation: ""
+    }
+
+    const [searchObj, setSearchObj] = useState(initialSearchObj)
+
+    useEffect(() => {
+        dispatch(actions.getAllInstitution(searchObj));
+    }, [searchObj])
+
+    useEffect(() => {
+        if(createSuccess) {
+            dispatch(actions.getAllInstitution());
+            onCloseDrawerCreate();
+            handleCancel();
+        }
+
+        setEditSuccess(false)
+        onClose();
+
+    }, [editSuccess, createSuccess])
+
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -44,17 +87,41 @@ const ListInstitutionPage = () => {
             })
     };
 
+    const getColumnSearchProps = (dataIndex) => (
+        {
+            filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
+                <div style={{padding: 8}}>
+                    <Input
+                        placeholder={`Tìm kiếm`}
+                        className="search_input_ins"
+                        value={searchObj[dataIndex]}
+                        onChange={e => {
+                            setSearchObj({
+                                ...searchObj,
+                                [dataIndex]: e.target.value
+                            })
+                        }}
+                        style={{width: dataIndex === "abbreviation" ? 140 : 300}}
+                    />
+                </div>
+            ),
+            filterIcon: filtered => <SearchOutlined style={{color: filtered ? '#1890ff' : undefined}}/>,
+        }
+    )
+
 
     const columns = [
         {
             title: 'Tên (VN)',
             dataIndex: 'vn_name',
             key: 'vn_name',
+            ...getColumnSearchProps('vn_name')
         },
         {
             title: 'Tên (EN)',
             dataIndex: 'en_name',
             key: 'en_name',
+            ...getColumnSearchProps('en_name')
         },
         {
             title: 'Tên (ABV)',
@@ -65,6 +132,7 @@ const ListInstitutionPage = () => {
                     {abv !== "undefined" ? abv.toUpperCase() : ""}
                 </Tag>
             ),
+            ...getColumnSearchProps('abbreviation')
         },
         {
             title: 'Action',
@@ -96,28 +164,7 @@ const ListInstitutionPage = () => {
         },
     ];
 
-    useEffect(() => {
-        dispatch(actions.getAllInstitution());
-    }, [])
 
-    useEffect(() => {
-        if(createSuccess) {
-            dispatch(actions.getAllInstitution());
-            onCloseDrawerCreate();
-            handleCancel();
-        }
-
-        setEditSuccess(false)
-        onClose();
-
-    }, [editSuccess, createSuccess])
-
-    useEffect(() => {
-        listInstitutions.map((ins, index) => {
-            ins.stt = index + 1;
-            return ins;
-        })
-    }, [listInstitutions])
 
     const showDrawer = (record) => {
         setIsEdited(false);
@@ -130,7 +177,6 @@ const ListInstitutionPage = () => {
         setVisibleDrawerCreate(true);
     }
 
-
     const onClose = () => {
         setVisible(false)
     };
@@ -138,6 +184,8 @@ const ListInstitutionPage = () => {
     const onCloseDrawerCreate = () => {
         setVisibleDrawerCreate(false);
     }
+
+
 
     const detailComponent = () => {
         return (
@@ -178,13 +226,24 @@ const ListInstitutionPage = () => {
         )
     }
 
-    return loading ? <Spin size="large"/> : (
+    return (
         <>
             <Table
                 columns={columns}
+                loading={loading}
                 dataSource={
                     listInstitutions
-                        .filter(ins => ins.parent_uuid === null)
+                        .filter(ins => {
+                            let flag = true;
+                            listInstitutions.forEach(_ins => {
+                                _ins.children.forEach(childIns => {
+                                    if (childIns.uuid === ins.uuid) {
+                                        flag = false;
+                                    }
+                                })
+                            })
+                            return flag;
+                        })
                         .map(ins => {
                             ins.key = ins.uuid;
                             return ins;
@@ -246,9 +305,24 @@ const ListInstitutionPage = () => {
                 style={{
                     position: 'fixed',
                     right: 42,
-                    bottom: 32
+                    bottom: 22
                 }}
                 onClick={showModal}
+            />
+            <Button
+                type="primary"
+                shape="circle"
+                icon={<ReloadOutlined />}
+                size={"large"}
+                style={{
+                    position: 'fixed',
+                    right: 42,
+                    bottom: 72
+                }}
+                onClick={() => {
+                    setSearchObj(initialSearchObj);
+
+                }}
             />
         </>
 

@@ -94,13 +94,12 @@ const DashboardPage = () => {
         if (collapsed) {
             setTimeout(() => {
                 document.getElementById("header-nav").style.width = '100%'
-                document.getElementById("nav-sider").style.overflow = '';
+                document.getElementById("nav-sider").style.overflowY = '';
                 document.querySelector("#layout-content").style.marginLeft = '0px';
             }, 100)
         } else {
-            document.querySelector("#layout-content").style.marginLeft = '260px';
             document.getElementById("header-nav").style.width = 'calc(100% - 260px)'
-            //document.getElementById("nav-sider").style.overflowY = 'auto';
+            document.querySelector("#layout-content").style.marginLeft = '260px';
 
         }
     };
@@ -141,13 +140,14 @@ const DashboardPage = () => {
                     id="nav-sider"
                 >
                     <div className="logo" id="logo">
-                        <Divider>
+                        <center>
                             <Image
                                 width={150}
-                                src={process.env.PUBLIC_URL + '/image/dashboard-logo.png'}
+                                src={process.env.PUBLIC_URL + '/image/training-course.png'}
+                                preview={false}
                             />
-                        </Divider>
-                    </div>
+                        </center>
+                    </div><br/>
                     <Menu
                         theme="dark"
                         selectedKeys={activeKey}

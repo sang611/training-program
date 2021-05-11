@@ -53,7 +53,7 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 error: false,
-                addAccountType: action.typeAccount
+                addAccountType: action.payload.typeAccount
             }
         case actionTypes.ADD_ACCOUNT_FAIL:
             return {

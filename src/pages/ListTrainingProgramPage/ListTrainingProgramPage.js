@@ -185,10 +185,7 @@ const ListTrainingProgramPage = () => {
     const {trainingPrograms, loadingAllTrainings, errors} = useSelector(state => state.trainingPrograms)
     const [visibleCourseMatrix, setVisibleCourseMatrix] = useState(false);
     const [visibleLocMatrix, setVisibleLocMatrix] = useState(false);
-    const {user} = useSelector(state => state.accounts)
 
-
-    const [chosenTraining, setChosenTraining] = useState(null);
     const [vnNameSearch, setVnNameSearch] = useState("");
 
 
@@ -253,15 +250,7 @@ const ListTrainingProgramPage = () => {
     return  (
         !errors ?
             <>
-                <Row align="middle">
-                    <Col span={14}>
-                        <Title level={4}>
-                            <Text underline type="danger">
-                                Chương trình đào tạo Đại học Công nghệ
-                            </Text>
-                        </Title>
-
-                    </Col>
+                <Row align="middle" justify="end">
                     <Col span={10}>
                         <Search
                             placeholder="Tìm kiếm chương trình đào tạo"
@@ -271,7 +260,13 @@ const ListTrainingProgramPage = () => {
                         />
                     </Col>
                 </Row>
-                <Divider />
+                <Divider orientation="left">
+                    <Text type="danger">
+                        <i>
+                            {`${trainingPrograms.length} chương trình đào tạo`}
+                        </i>
+                    </Text>
+                </Divider>
                 {
                     loadingAllTrainings == false ?
                         (

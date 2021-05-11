@@ -214,6 +214,7 @@ const CreateCoursePage = ({onCancelModal}) => {
                                     institutions.filter((ins) => !ins.parent_uuid)
                                 }
                                 placeholder="Chọn đơn vị chuyên môn"
+                                changeOnSelect
                             />
                         </Form.Item>
                         <Form.Item label="Học phần tiên quyết:" name="required_course">

@@ -181,13 +181,8 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                         Khối kiến thức:
                     </h4>
                     <Select
-                        showSearch
                         placeholder="Khối kiến thức"
-                        optionFilterProp="children"
                         style={{width: '150px'}}
-                        filterOption={(input, option) =>
-                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
                         value={knowledgeType}
                         onChange={(val) => {
                             setKnowledgeType(val)
@@ -210,11 +205,10 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                         Loại học phần:
                     </h4>
                     <Select
-                        showSearch
                         value={courseType}
                         placeholder="Loại học phần"
                         optionFilterProp="children"
-                        style={{width: '150px'}}
+                        style={{width: '200px'}}
                         filterOption={(input, option) =>
                             option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                         }
@@ -228,8 +222,8 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                                        key={2}>Tự chọn</Select.Option>
                         <Select.Option value="BT"
                                        key={3}>Bổ trợ</Select.Option>
-                        <Select.Option value="TACS"
-                                       key={4}>Tiếng anh cơ sở</Select.Option>
+                        <Select.Option value="KLTN"
+                                       key={4}>Khóa luận tốt nghiệp</Select.Option>
                     </Select>
                 </Space>
 

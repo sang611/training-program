@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from "react-router";
-import {Affix, Button, Row, Space, Spin} from "antd";
+import {Affix, Button, Row, Skeleton, Space, Spin} from "antd";
 import {useHistory} from "react-router-dom";
 import * as actions from "../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -106,7 +106,11 @@ const DetailTrainingProgramPage = (props) => {
     }
 
     if(loadingATraining) {
-        return <Spin />
+        return <>
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+        </>
     }
 
     else {

@@ -200,9 +200,9 @@ const LearningOutcomePage = () => {
 
             <Row justify="space-between">
                 <Col>
-                    <Radio.Group value={typeLoc} onChange={(e) => setTypeLoc(e.target.value)}>
-                        <Radio value={1}>Chương trình đào tạo</Radio>
-                        <Radio value={2}>Học phần</Radio>
+                    <Radio.Group value={typeLoc} onChange={(e) => setTypeLoc(e.target.value)} buttonStyle="solid">
+                        <Radio.Button value={1}>Chương trình đào tạo</Radio.Button>
+                        <Radio.Button value={2}>Học phần</Radio.Button>
                     </Radio.Group>
                 </Col>
                 <Col span={10}>
@@ -221,7 +221,7 @@ const LearningOutcomePage = () => {
                             </Select>
                         </Col>
                         <Col span={18}>
-                            <Input placeholder="Tìm kiếm" onChange={onSearch} style={{width: '100%'}} size="large"/>
+                            <Input placeholder="Tìm kiếm theo nội dung" onChange={onSearch} style={{width: '100%'}} size="large"/>
                         </Col>
 
 

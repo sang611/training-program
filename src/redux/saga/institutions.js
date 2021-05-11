@@ -11,7 +11,7 @@ export function* createInstitution(action) {
         const response = yield axios.post("/institutions", action.payload)
         yield put(actions.createSuccess(response));
     } catch (error) {
-        if(error.response.status === 401 || error.response.status === 500) {
+        if (error.response.status === 401 || error.response.status === 500) {
             yield put(actions.createFail(error.response));
         }
     }
@@ -22,8 +22,16 @@ export function* createInstitution(action) {
 export function* getAllInstitution(action) {
     yield put(actions.getAllInstitutionStart());
 
+    let params = action.payload ?
+                action.payload :
+                {
+                    vn_name: "",
+                    en_name: "",
+                    abbreviation: ""
+                }
+
     try {
-        const response = yield axios.get("/institutions");
+        const response = yield axios.get("/institutions", {params: params});
         yield put(actions.getAllInstitutionSuccess(response.data.institutions));
     } catch (error) {
         yield put(actions.getAllInstitutionFail());

@@ -33,9 +33,10 @@ export const addAccountStart = () => {
     }
 }
 
-export const addAccountSuccess = () => {
+export const addAccountSuccess = (payload) => {
     return {
         type: actionTypes.ADD_ACCOUNT_SUCCESS,
+        payload: payload
     }
 }
 

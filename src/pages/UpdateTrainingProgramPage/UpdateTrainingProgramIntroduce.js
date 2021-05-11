@@ -1,5 +1,5 @@
 import Title from "antd/lib/typography/Title";
-import {Button, Col, Form, Input, InputNumber, message, Row, Select} from "antd";
+import {Button, Col, Form, Input, InputNumber, message, Row, Select, Space} from "antd";
 import Text from "antd/lib/typography/Text";
 import {CKEditor} from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
@@ -7,6 +7,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
+import {trainingTypes} from "../../constants";
 
 const UpdateTrainingProgramIntroduce = () => {
     let {uuid} = useParams();
@@ -30,7 +31,9 @@ const UpdateTrainingProgramIntroduce = () => {
                 specific_destination,
                 admission_method,
                 admission_scale,
-                institution
+                institution,
+                type,
+                version
             } = trainingProgram;
 
             form.setFieldsValue({
@@ -45,6 +48,8 @@ const UpdateTrainingProgramIntroduce = () => {
                 specific_destination,
                 admission_method,
                 admission_scale,
+                type,
+                version,
                 institutionUuid: institution ? institution.uuid : ''
             })
 
@@ -57,8 +62,6 @@ const UpdateTrainingProgramIntroduce = () => {
         try {
             values.common_destination = commonDestination;
             values.specific_destination = specificDestination;
-
-            console.log(values);
 
             const response = await axios.put(`/training-programs/${uuid}`, values)
             console.log(response.status)
@@ -80,7 +83,7 @@ const UpdateTrainingProgramIntroduce = () => {
                 </Title>
                 <Title level={4}>1. Thông tin chương trình đào tạo</Title>
                 <Row>
-                    <Col span={15} offset={1}>
+                    <Col span={20} offset={1}>
                         <Row>
                             <Col span={12}>
                                 <Form.Item label="Tên ngành đào tạo (VN):" name="vn_name">
@@ -108,11 +111,17 @@ const UpdateTrainingProgramIntroduce = () => {
                                                            style={{color: '#1890FF'}}/>}/>
                                 </Form.Item>
 
-                                <Form.Item label="Thời gian đào tạo:" name="training_duration">
-                                    {
-                                        <InputNumber min={1} max={10} />
-                                    }
-                                </Form.Item>
+                                <Space size="large">
+                                    <Form.Item label="Thời gian đào tạo:" name="training_duration">
+                                        {
+                                            <InputNumber min={1} max={10} stringMode/>
+                                        }
+                                    </Form.Item>
+                                    <Form.Item label="Năm áp dụng:" name="version">
+                                        <InputNumber min={2000} max={3000} stringMode/>
+                                    </Form.Item>
+                                </Space>
+
                             </Col>
                         </Row>
                         <Row>
@@ -132,28 +141,53 @@ const UpdateTrainingProgramIntroduce = () => {
                             </Col>
                         </Row>
 
-                        <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
-                            <Select
-                                showSearch
-                                style={{width: '50%'}}
-                                placeholder="Đơn vị chuyên môn"
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
-                            >
-                                {
-                                    insState.listInstitutions
-                                        .filter(ins => !ins.parent_uuid)
-                                        .map((ins, index) =>
-                                            <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
-                                        )
-                                }
+                        <Row>
+                            <Col span={12}>
+                                <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
+                                    <Select
+                                        showSearch
+                                        style={{width: '100%'}}
+                                        placeholder="Đơn vị chuyên môn"
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) =>
+                                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }
+                                    >
+                                        {
+                                            insState.listInstitutions
+                                                .filter(ins => !ins.parent_uuid)
+                                                .map((ins, index) =>
+                                                    <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
+                                                )
+                                        }
 
-                            </Select>
-                        </Form.Item>
+                                    </Select>
+                                </Form.Item>
+                            </Col>
 
-
+                        </Row>
+                        <Row>
+                            <Col span={12}>
+                                <Form.Item label="Loại chương trình đào tạo:" name="type">
+                                    <Select
+                                        showSearch
+                                        style={{width: '100%'}}
+                                        placeholder="Loại chương trình đào tạo"
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) =>
+                                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }
+                                    >
+                                        {
+                                            trainingTypes
+                                                .map((type, index) =>
+                                                    <Select.Option value={type} key={index}>{type}</Select.Option>
+                                                )
+                                        }
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+                        </Row>
                     </Col>
                 </Row>
                 <br/>

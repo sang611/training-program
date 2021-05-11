@@ -40,14 +40,29 @@ const TrainingProgramIntroduce = () => {
             admission_scale,
             common_destination,
             specific_destination,
-            learning_outcomes,
-            courses,
-            institution
+            institution,
+            type
         } = trainingProgram
         return (
             <>
-                <Title level={3}>
-                    PHẦN I: GIỚI THIỆU CHUNG VỀ CHƯƠNG TRÌNH ĐÀO TẠO
+
+                    <Title level={3}>
+                        {
+                            `Chương trình đào tạo ${type.toLowerCase()} trình độ đại học`.toUpperCase()
+                        }
+                    </Title>
+                    <Descriptions column={1}>
+                        <Descriptions.Item label={<Title level={5}>NGÀNH</Title>} style={{paddingBottom: 0}}>
+                            <Title level={5}>{vn_name.toUpperCase()}</Title>
+                        </Descriptions.Item>
+                        <Descriptions.Item label={<Title level={5}>MÃ SỐ</Title>}>
+                            {<Title level={5}>{training_program_code}</Title>}
+                        </Descriptions.Item>
+                    </Descriptions>
+
+                <br/><br/>
+                <Title level={4}>
+                    PHẦN I. GIỚI THIỆU CHUNG VỀ CHƯƠNG TRÌNH ĐÀO TẠO
                 </Title>
                 <Title level={4}>
                     1. Một số thông tin về chương trình đào tạo

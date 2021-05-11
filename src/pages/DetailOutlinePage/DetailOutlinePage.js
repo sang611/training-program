@@ -87,7 +87,7 @@ const LOCs = ({locs}) => {
                 key: `level ${level}`,
                 render: (_, record) => (
                     <center>
-                        {record.outline_learning_outcome.level === level ? <CheckOutlined/> : ""}
+                        {record.outline_learning_outcome.level === level ? "X" : ""}
                     </center>
 
                 )

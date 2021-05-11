@@ -13,22 +13,26 @@ import {
 import axios from "axios";
 import {useHistory} from "react-router-dom";
 import CreateCoursePage from "../CreateCoursePage";
+import {searchAccounts} from "../../redux/actions/index";
+import SearchFormCourse from "./SearchFormCourse";
 
 const {Column, ColumnGroup} = Table;
 
 const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
     const [form] = Form.useForm();
-    //const courseState = useSelector(state => state.courses)
-    const [courses, setCourses] = useState([]);
+    const {courses} = useSelector(state => state.courses)
+    // const [courses, setCourses] = useState([]);
     const {listInstitutions} = useSelector(state => state.institutions)
     const [institutions, setInstitutions] = useState([]);
 
+/*
     useEffect(() => {
         axios.get('/courses')
             .then((res) => {
                 setCourses(res.data.courses)
             })
     }, [])
+*/
 
     if (updatedCourse) {
         const required_course = (JSON.parse(updatedCourse.required_course) || []).map(course => course.uuid);
@@ -132,30 +136,12 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
                 </Form.Item>
 
                 <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
-                    {/*<Select
-                        showSearch
-                        style={{width: '100%'}}
-                        placeholder="Đơn vị chuyên môn phụ trách học phần"
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
-                    >
-                        {
-                            listInstitutions
-                                .filter(ins => ins.parent_uuid != null)
-                                .map((ins, index) =>
-                                <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
-                            )
-                        }
-
-                    </Select>*/}
-
                     <Cascader
                         style={{width: '100%'}}
                         options={
                             institutions.filter((ins) => !ins.parent_uuid)
                         }
+                        changeOnSelect
                     />
 
                 </Form.Item>
@@ -193,9 +179,10 @@ const ListCoursePage = () => {
     const [isModalCreateVisible, setIsModalCreateVisible] = useState(false);
     const history = useHistory();
 
-    useEffect(() => {
-        dispatch(actions.getAllCourse())
-    }, [])
+
+ /*   useEffect(() => {
+        dispatch(actions.getAllCourse({params: searchObj}))
+    }, [searchObj])*/
 
     useEffect(() => {
         if (courseState.response.data) {
@@ -220,13 +207,12 @@ const ListCoursePage = () => {
             })
     }
 
-    const getColumnSearchProps = (dataIndex) => (
+/*    const getColumnSearchProps = (dataIndex) => (
         {
             filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
                 <div style={{padding: 8}}>
                     <Input
                         placeholder={`Tìm kiếm`}
-                        value={selectedKeys[0]}
                         onChange={e => {
                             onSearchCourse(dataIndex, e.target.value)
                         }}
@@ -236,15 +222,11 @@ const ListCoursePage = () => {
             ),
             filterIcon: filtered => <SearchOutlined style={{color: filtered ? '#1890ff' : undefined}}/>,
         }
-    )
+    )*/
 
-    const onSearchCourse = (dataIndex, searchText) => {
-        dispatch(actions.getAllCourse(
-            {
-                [dataIndex]: searchText
-            }
-        ))
-    }
+    /*const onSearchCourse = (dataIndex, searchText) => {
+        setSearchObj({...searchObj, [dataIndex]: searchText})
+    }*/
 
     const showModalCreate = () => {
         setIsModalCreateVisible(true);
@@ -260,24 +242,8 @@ const ListCoursePage = () => {
 
     return (
         <>
-            <Space>
-                <Button
-                    type="primary"
-                    icon={<ReloadOutlined/>}
-                    shape="circle"
-                    onClick={
-                        () => dispatch(actions.getAllCourse())
-                    }
-                />
-                <Button
-                    type="primary"
-                    danger
-                    icon={<PlusOutlined/>}
-                    shape="circle"
-                    onClick={showModalCreate}
-                />
-            </Space>
-            <br/><br/>
+            <SearchFormCourse />
+
             <Modal
                 title="Thêm mới học phần"
                 visible={isModalCreateVisible}
@@ -293,25 +259,34 @@ const ListCoursePage = () => {
                 dataSource={dataSource}
                 loading={courseState.loading}
                 bordered
+                footer={() => (
+                    <Button
+                        type="primary"
+                        danger
+                        icon={<PlusOutlined/>}
+                        shape="circle"
+                        onClick={showModalCreate}
+                    />
+                )}
             >
                 <Column
                     title="Mã học phần"
                     dataIndex="course_code"
                     key="course_code"
-                    {...getColumnSearchProps('course_code')}
+
                 />
                 <ColumnGroup title="Tên học phần">
                     <Column
                         title="Tiếng Việt"
                         dataIndex="course_name_vi"
                         key="course_name_vi"
-                        {...getColumnSearchProps('course_name_vi')}
+
                     />
                     <Column
                         title="Tiếng Anh"
                         dataIndex="course_name_en"
                         key="course_name_en"
-                        {...getColumnSearchProps('course_name_en')}
+                        /*{...getColumnSearchProps('course_name_en')}*/
                     />
                 </ColumnGroup>
 

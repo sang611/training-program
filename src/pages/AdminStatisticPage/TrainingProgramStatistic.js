@@ -1,4 +1,4 @@
-import {Card, Col, Row, Table} from "antd";
+import {Card, Col, Row, Skeleton, Spin, Table} from "antd";
 import Title from "antd/lib/typography/Title";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
@@ -61,6 +61,7 @@ function TrainingProgramStatistic() {
         }
     ]
 
+    if(loadingAllTrainings) return <Skeleton active/>
 
     return (
         <>

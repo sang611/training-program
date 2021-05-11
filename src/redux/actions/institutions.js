@@ -29,9 +29,10 @@ export const createFail = (response) => {
     }
 }
 
-export const getAllInstitution = () => {
+export const getAllInstitution = (payload) => {
     return {
-        type: actionTypes.INSTITUTION_GET_ALl
+        type: actionTypes.INSTITUTION_GET_ALl,
+        payload: payload
     }
 }
 export const getAllInstitutionStart = () => {

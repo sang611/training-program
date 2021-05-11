@@ -15,11 +15,12 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import {CKEditor} from "@ckeditor/ckeditor5-react";
 import Text from "antd/lib/typography/Text";
 import UpdateTrainingProgramIntroduce from "./UpdateTrainingProgramIntroduce";
+import {Skeleton} from "antd/es";
 
 const UpdateTrainingProgramPage = (props) => {
     const dispatch = useDispatch();
     let {uuid} = useParams();
-    const {trainingProgram} = useSelector(state => state.trainingPrograms)
+    const {trainingProgram, loadingATraining} = useSelector(state => state.trainingPrograms)
 
 
 
@@ -28,10 +29,11 @@ const UpdateTrainingProgramPage = (props) => {
         dispatch(actions.getAllInstitution());
     }, [])
 
-
-
-
-
+    if(loadingATraining) return <>
+        <Skeleton active />
+        <Skeleton active />
+        <Skeleton active />
+    </>
 
        return trainingProgram ?  (
             <>
@@ -60,8 +62,6 @@ const UpdateTrainingProgramPage = (props) => {
 
             </>
         ) : <Spin />
-
-
 
 }
 

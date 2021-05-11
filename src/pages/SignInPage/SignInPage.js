@@ -103,7 +103,6 @@ function SignInPage(props) {
         setVisible(false);
     };
 
-
     return state.isValidToken ? <Redirect to={state.userRole == 0 ? '/uet/statistic' : '/uet/training-programs'}/> : (
 
         <div className="login-container">
@@ -116,7 +115,7 @@ function SignInPage(props) {
                 <div id="siginin-form-wrapper">
                     <div id="signin-form">
                         <Divider style={{marginTop: 0, marginBottom: 25}}>
-                            <Title level={2}>Đăng nhập</Title>
+                            <Title level={2}>Đăng nhập hệ thống</Title>
                         </Divider>
                         <Form
                             name="normal_login"
@@ -171,8 +170,13 @@ function SignInPage(props) {
                             </Form.Item>
 
                             <Form.Item>
-                                <Button type="primary" htmlType="submit" className="login-form-button">
-                                    Log in
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    className="login-form-button"
+                                    loading={state.loading}
+                                >
+                                    Đăng nhập
                                 </Button>
                             </Form.Item>
                         </Form>

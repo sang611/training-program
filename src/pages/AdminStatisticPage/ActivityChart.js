@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Line} from "@ant-design/charts";
-import {Card, Spin, Tag} from "antd";
+import {Card, Skeleton, Spin, Tag} from "antd";
 import Title from "antd/lib/typography/Title";
 
 const ActivityChart = () => {
@@ -39,9 +39,9 @@ const ActivityChart = () => {
                 <Line {...config} />
             </Card>
         </>
-    ) : <Spin/>
+    ) : <Skeleton active/>
 
-        ;
+
 }
 export default ActivityChart
 

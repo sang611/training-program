@@ -224,7 +224,7 @@ const MatrixLearningOutcomes = ({trainingItem, levelLocs}) => {
                         return loc;
                     })
                 }
-                scroll={{x: 1500, y: 2500}}
+                scroll={{x: 1600, y: 2000}}
             />
         </>
     }, [])
@@ -441,6 +441,11 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
                     <Descriptions.Item label="Ngành đào tạo">
                         {
                             item.vn_name ? item.vn_name : ''
+                        }
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Loại">
+                        {
+                            item.type ? item.type : ''
                         }
                     </Descriptions.Item>
                     <Descriptions.Item label="Số học phần">
