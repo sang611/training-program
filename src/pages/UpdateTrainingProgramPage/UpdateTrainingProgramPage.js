@@ -37,24 +37,28 @@ const UpdateTrainingProgramPage = (props) => {
 
        return trainingProgram ?  (
             <>
-                <Tabs defaultActiveKey="1" tabPosition="top">
+                <Tabs
+                    defaultActiveKey={localStorage.getItem('activeKeyTabTrainingCourse')}
+                    tabPosition="top"
+                    onChange={(key) => localStorage.setItem('activeKeyTabTrainingCourse', key) }
+                >
                     <Tabs.TabPane tab="Giới thiệu chung" key={1} forceRender={true}>
                         <UpdateTrainingProgramIntroduce />
                     </Tabs.TabPane>
                     <Tabs.TabPane tab="Chuẩn đầu ra" key={2} forceRender={true}>
                         <AddTrainingProgramLOC trainingProgram={trainingProgram}/>
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab="Khung chương trình" key={4}>
+                    <Tabs.TabPane tab="Khung chương trình" key={3}>
                         <SummaryContentTraining trainingProgram={trainingProgram}/><br/><br/>
                         <AddTrainingProgramFrame trainingProgram={trainingProgram}/><br/><br/>
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab="Danh mục tài liệu" key={5}>
+                    <Tabs.TabPane tab="Danh mục tài liệu" key={4}>
                         <AddCourseDocument trainingProgram={trainingProgram} type={"doc"}/><br/><br/>
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab="Đội ngũ cán bộ" key={6}>
+                    <Tabs.TabPane tab="Đội ngũ cán bộ" key={5}>
                         <AddCourseDocument trainingProgram={trainingProgram} type={"lec"}/><br/><br/>
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab="Trình tự đào tạo" key={7}>
+                    <Tabs.TabPane tab="Trình tự đào tạo" key={6}>
                         <AddTrainingSequence trainingProgram={trainingProgram} /><br/><br/>
                         <AddTrainingProgramClass trainingProgram={trainingProgram} /><br/><br/>
                     </Tabs.TabPane>
