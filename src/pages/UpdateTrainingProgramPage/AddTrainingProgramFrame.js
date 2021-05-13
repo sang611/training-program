@@ -199,7 +199,10 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
                 message.success(res.data.message);
             })
             .then(() => {
-                dispatch(actions.getATrainingProgram({id: trainingProgram.uuid}))
+                //dispatch(actions.getATrainingProgram({id: trainingProgram.uuid})
+                setDataSource(
+                    dataSource.filter((data) => data.uuid !== courseUuid)
+                )
             })
             .catch((e) => message.error("Đã có lỗi xảy ra"));
     }

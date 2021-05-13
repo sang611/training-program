@@ -7,6 +7,7 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
 import Modal from "antd/es/modal/Modal";
+import {useHistory} from "react-router-dom";
 
 const FileDownload = require('js-file-download');
 
@@ -15,6 +16,7 @@ const DocumentCard = ({userRole, item}) => {
     const [editableDesc, setEditableDesc] = useState(item.description);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const {trainingPrograms} = useSelector(state => state.trainingPrograms)
     const {courses} = useSelector(state => state.courses)
@@ -109,18 +111,21 @@ const DocumentCard = ({userRole, item}) => {
 
     }
 
+    function onRouteToResource() {
+        if(item.category === 'training-program') {
+            history.push(`/uet/training-programs/${item.resourceUuid}`);
+        }
+    }
+
 
     return (
         <>
             <Card
                 hoverable
                 title={
-                    <Tooltip>
-                        <Tag color="#108ee9">
-
+                    <Tooltip title={getDocumentResourceName()}>
+                        <Tag color="#108ee9" onClick={onRouteToResource}>
                             {getDocumentResourceName()}
-
-
                         </Tag>
                     </Tooltip>
                 }
