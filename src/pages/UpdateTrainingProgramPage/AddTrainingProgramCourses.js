@@ -8,15 +8,17 @@ import {useParams} from "react-router";
 import Title from "antd/lib/typography/Title";
 import Dragger from "antd/lib/upload/Dragger";
 
-const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingProgram}) => {
+const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingProgram, coursesOfTraining}) => {
     const dispatch = useDispatch();
-    const courseState = useSelector(state => state.courses)
+    const {courses} = useSelector(state => state.courses)
     const [uploadFile, setUploadFile] = useState(false);
     const [form] = Form.useForm();
     const [addCourseForm] = Form.useForm();
     const [courseType, setCourseType] = useState("B");
     const [knowledgeType, setKnowledgeType] = useState("C");
     const [requiredCredits, setRequiredCredits] = useState(0);
+
+
 
     let {uuid} = useParams();
 
@@ -273,9 +275,9 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                                                                 }
                                                             >
                                                                 {
-                                                                    courseState.response.data.courses
+                                                                    courses
                                                                         .filter((course => {
-                                                                            return !trainingProgram.courses
+                                                                            return !coursesOfTraining
                                                                                 .map(c => c.uuid)
                                                                                 .includes(course.uuid)
 

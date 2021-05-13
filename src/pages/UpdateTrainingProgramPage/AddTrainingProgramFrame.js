@@ -62,9 +62,9 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
     const [form] = Form.useForm();
     const [dataSource, setDataSource] = useState([]);
 
-    console.log(dataSource)
     const [editingKey, setEditingKey] = useState('');
-    const courseState = useSelector(state => state.courses)
+    const {courses} = useSelector(state => state.courses)
+    const [coursesOfTraining, setCoursesOfTraining] = useState(trainingProgram.courses)
     const dispatch = useDispatch();
     let index_course = 1;
 
@@ -155,7 +155,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
     const save = async (key) => {
         try {
             const row = await form.validateFields();
-            const courseSelected = courseState.response.data.courses.filter((course) => course.uuid === row.course_name_vi)[0] || {}
+            const courseSelected = courses.filter((course) => course.uuid === row.course_name_vi)[0] || {}
 
             if (courseSelected) {
                 courseSelected.key = courseSelected.uuid
@@ -202,6 +202,10 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
                 //dispatch(actions.getATrainingProgram({id: trainingProgram.uuid})
                 setDataSource(
                     dataSource.filter((data) => data.uuid !== courseUuid)
+                )
+
+                setCoursesOfTraining(
+                    coursesOfTraining.filter(course => course.uuid !== courseUuid)
                 )
             })
             .catch((e) => message.error("Đã có lỗi xảy ra"));
@@ -405,6 +409,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
                     onCloseDrawer={onCloseDrawer}
                     getNewCoursesAdded={getNewCoursesAdded}
                     trainingProgram={trainingProgram}
+                    coursesOfTraining={coursesOfTraining}
                 />
             </Drawer>
         </>
