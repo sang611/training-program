@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Button, Form, Input, message, Select, Space} from "antd";
+import {Button, Col, Form, Input, message, Row, Select, Space} from "antd";
 import * as actions from "../../redux/actions";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import React from "react";
@@ -37,29 +37,39 @@ const CreatePLO = ({onCloseDrawer, setContent, setTitle}) => {
                     {(fields, { add, remove }, {errors}) => (
                         <>
                             {fields.map(({ key, name, fieldKey, ...restField }) => (
-                                <Space key={key} align="start">
-                                    <Form.Item
-                                        {...restField}
-                                        name={[name, 'content']}
-                                        fieldKey={[fieldKey, 'content']}
-                                        rules={[{ required: true, message: 'Nhập nội dung chuẩn đầu ra' }]}
-                                    >
-                                        <Input.TextArea placeholder="Mô tả" cols={100}/>
-                                    </Form.Item>
-                                    <Form.Item
-                                        {...restField}
-                                        name={[name, 'title']}
-                                        fieldKey={[fieldKey, 'title']}
-                                        rules={[{ required: true, message: '' }]}
-                                    >
-                                        <Select placeholder="Nhóm">
-                                            {
-                                                locTypes.map(type => <Select.Option key={type.value} value={type.value}>{type.content}</Select.Option>)
-                                            }
-                                        </Select>
-                                    </Form.Item>
-                                    <MinusCircleOutlined onClick={() => remove(name)} />
-                                </Space>
+                                <Row>
+                                    <Col span={19}>
+                                        <Form.Item
+                                            {...restField}
+                                            name={[name, 'content']}
+                                            fieldKey={[fieldKey, 'content']}
+                                            rules={[{ required: true, message: 'Nhập nội dung chuẩn đầu ra' }]}
+                                        >
+                                            <Input.TextArea placeholder="Mô tả" cols={90}/>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={4}>
+                                        <Form.Item
+                                            {...restField}
+                                            name={[name, 'title']}
+                                            fieldKey={[fieldKey, 'title']}
+                                            rules={[{ required: true, message: '' }]}
+                                        >
+                                            <Select placeholder="Nhóm">
+                                                {
+                                                    locTypes.map(type => <Select.Option key={type.value} value={type.value}>{type.content}</Select.Option>)
+                                                }
+                                            </Select>
+                                        </Form.Item>
+                                    </Col>
+                                    <Col span={1}>
+                                        <center>
+                                            <MinusCircleOutlined onClick={() => remove(name)} />
+                                        </center>
+
+                                    </Col>
+
+                                </Row>
                             ))}
                             <Form.Item>
                                 <Button

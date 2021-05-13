@@ -81,7 +81,10 @@ const UpdateStudentProfile = ({user, userRole}) => {
         <>
             <Row>
                 <Col span={12}>
-                    <Card title={<Title level={4}>Thông tin cá nhân</Title>}>
+                    <Card
+                        title={<Title level={4}>Thông tin cá nhân</Title>}
+                        hoverable
+                    >
                         <Form
                             layout={'vertical'}
                             form={form}

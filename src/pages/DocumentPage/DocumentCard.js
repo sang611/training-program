@@ -15,6 +15,7 @@ const DocumentCard = ({userRole, item}) => {
     const [editableTitle, setEditableTitle] = useState(item.name);
     const [editableDesc, setEditableDesc] = useState(item.description);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const {loading} = useSelector(state => state.documents);
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -122,6 +123,7 @@ const DocumentCard = ({userRole, item}) => {
         <>
             <Card
                 hoverable
+                loading={loading}
                 title={
                     <Tooltip title={getDocumentResourceName()}>
                         <Tag color="#108ee9" onClick={onRouteToResource}>

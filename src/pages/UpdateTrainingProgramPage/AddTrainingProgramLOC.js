@@ -76,6 +76,13 @@ const ListLocs = ({trainingProgram}) => {
         },
         onSelectAll: (selected, selectedRows, changeRows) => {
             console.log(selected, selectedRows, changeRows);
+            selectedRows = selectedRows.filter(loc => !!loc);
+            if(selected) {
+                setChoosedLocs([...choosedLocs, ...selectedRows.map(loc => loc.uuid)])
+            }
+            else {
+                setChoosedLocs([])
+            }
         },
 
         selectedRowKeys: selectedRowKeys

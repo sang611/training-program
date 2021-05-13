@@ -71,10 +71,10 @@ const UpdateLoginInfor = ({user, userRole}) => {
         </Form>
     )
 
-    const onUpdatePassword = ({old_password, re_old_password, new_password}) => {
-        if(re_old_password !== old_password) {
+    const onUpdatePassword = ({old_password, re_new_password, new_password}) => {
+        if(re_new_password !== new_password) {
             setValidateRePassword('error');
-            setWarningRePassword('Mật khẩu cũ không khớp')
+            setWarningRePassword('Xác nhận mật khẩu mới không thành công!')
         }
         else {
             axios.put(`accounts/${user.accountUuid}/new-password`, {
@@ -114,19 +114,22 @@ const UpdateLoginInfor = ({user, userRole}) => {
             >
                 <Input.Password />
             </Form.Item>
-            <Form.Item
-                label="Nhập lại mật khẩu cũ"
-                name="re_old_password"
-                rules={[{ required: true, message: 'Nhập lại mật khẩu cũ!' }]}
-                validateStatus={validateRePassword}
-                help={warningRePassword}
-            >
-                <Input.Password />
-            </Form.Item>
+
             <Form.Item
                 label="Mật khẩu mới"
                 name="new_password"
                 rules={[{ required: true, message: 'Mật khẩu mới không được để trống!' }]}
+            >
+                <Input.Password />
+            </Form.Item>
+
+            <Form.Item
+                label="Xác nhận mật khẩu mới"
+                name="re_new_password"
+                rules={[{ required: true, message: 'Nhập lại mật khẩu mới!' }]}
+                validateStatus={validateRePassword}
+                help={warningRePassword}
+                hasFeedback
             >
                 <Input.Password />
             </Form.Item>
@@ -146,7 +149,11 @@ const UpdateLoginInfor = ({user, userRole}) => {
     return (
         <>
 
-            <Card title={<Title level={4}>Thông tin đăng nhập</Title>}>
+            <Card
+                title={<Title level={4} style={{color: '#fff'}}>Thông tin đăng nhập</Title>}
+                headStyle={{backgroundColor: '#306C93', }}
+                bodyStyle={{backgroundColor: '#eaf0f4'}}
+            >
                 {
                     userRole == 0 ? UpdateUsernamePasswordForm : UpdateOnlyPassword
                 }
