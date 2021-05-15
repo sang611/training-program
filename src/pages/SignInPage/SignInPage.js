@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Checkbox, Divider, Form, Input, message, Modal, notification} from "antd";
+import {Button, Checkbox, Divider, Form, Input, message, Modal, notification, Switch} from "antd";
 import './SignInPage.css'
 import Title from "antd/lib/typography/Title";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
@@ -121,7 +121,7 @@ function SignInPage(props) {
                             name="normal_login"
                             className="login-form"
                             initialValues={{
-                                remember: true,
+                                uetLogin: true,
                             }}
                             onFinish={onFinish}
                         >
@@ -159,7 +159,12 @@ function SignInPage(props) {
                             </Form.Item>
                             <Form.Item>
                                 <Form.Item name="uetLogin" valuePropName="checked" noStyle>
-                                    <Checkbox>Sử dụng tài khoản UET</Checkbox>
+                                    {/*<Checkbox>Sử dụng tài khoản UET</Checkbox>*/}
+                                    <Switch
+                                        defaultChecked
+                                        checkedChildren="Tài khoản UET"
+                                        unCheckedChildren="Tài khoản hệ thống"
+                                    />
                                 </Form.Item>
 
                                 <a className="login-form-forgot" onClick={() => {

@@ -16,12 +16,15 @@ const CreateInstitutionPage = (props) => {
     const {createSuccess, isCreating} = useSelector((state) => state.institutions)
     const [editing, setEditing] = useState(false);
     const {isValidToken} = useSelector(state => state.auth)
+    const [form] = Form.useForm();
 
     useEffect(() => {
         if (createSuccess) {
             message.success("Đã thêm một đơn vị mới");
+            form.resetFields();
         }
-    }, [createSuccess])
+    }, [createSuccess, form])
+
 
     const layout = {
         labelCol: {
@@ -75,7 +78,7 @@ const CreateInstitutionPage = (props) => {
         },
     };
 
-    const [form] = Form.useForm();
+
     useEffect(() => {
         if(isEdited) {
             form.setFieldsValue(institution)

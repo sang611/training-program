@@ -14,7 +14,8 @@ const reducer = (state = initialState, action) => {
         case actionTypes.INSTITUTION_CREATE_START:
             return {
                 ...state,
-                isCreating: true
+                isCreating: true,
+                createSuccess: false
             }
         case actionTypes.INSTITUTION_CREATE_SUCCESS:
             return {
