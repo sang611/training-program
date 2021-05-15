@@ -16,13 +16,16 @@ const CreateCoursePage = ({onCancelModal}) => {
     const [xslxFile, setXslxFile] = useState(null);
     const [isSendingForm, setIsSendinggForm] = useState(false);
 
-    useEffect(() => {
-        dispatch(actions.getAllInstitution());
-
+    const getAllCourse = () => {
         axios.get('/courses')
             .then((res) => {
                 setCourses(res.data.courses)
             })
+    }
+
+    useEffect(() => {
+        dispatch(actions.getAllInstitution());
+        getAllCourse();
     }, [])
 
     useEffect(() => {
@@ -56,6 +59,7 @@ const CreateCoursePage = ({onCancelModal}) => {
             message.success(response.data.message);
             form.resetFields();
             dispatch(actions.getAllCourse());
+            getAllCourse();
             onCancelModal();
 
         } catch (e) {
@@ -225,8 +229,11 @@ const CreateCoursePage = ({onCancelModal}) => {
                                 style={{width: '100%'}}
                                 placeholder="Chọn học phần tiên quyết"
                                 optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                filterOption={(input, option) => {
+                                    console.log(input, option.children.toLowerCase().indexOf(input.toLowerCase()))
+                                    return option.children.toLowerCase().indexOf(input.toLowerCase().toString(16)) >= 0
+                                }
+
                                 }
                             >
                                 {

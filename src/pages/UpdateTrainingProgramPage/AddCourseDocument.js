@@ -5,9 +5,6 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
-import {Option} from "antd/lib/mentions";
-import {CheckCircleOutlined, CheckOutlined} from "@ant-design/icons";
-import {course} from "../../constants/Items";
 
 const AddCourseDocument = ({trainingProgram, type}) => {
 

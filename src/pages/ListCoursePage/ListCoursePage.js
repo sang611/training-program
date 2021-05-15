@@ -20,19 +20,17 @@ const {Column, ColumnGroup} = Table;
 
 const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
     const [form] = Form.useForm();
-    const {courses} = useSelector(state => state.courses)
-    // const [courses, setCourses] = useState([]);
+    //const {courses} = useSelector(state => state.courses)
+    const [courses, setCourses] = useState([]);
     const {listInstitutions} = useSelector(state => state.institutions)
     const [institutions, setInstitutions] = useState([]);
 
-/*
     useEffect(() => {
         axios.get('/courses')
             .then((res) => {
                 setCourses(res.data.courses)
             })
     }, [])
-*/
 
     if (updatedCourse) {
         const required_course = (JSON.parse(updatedCourse.required_course) || []).map(course => course.uuid);
@@ -114,7 +112,7 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
                 layout="vertical"
                 name="form_in_modal"
                 initialValues={{
-                    modifier: 'public',
+
                 }}
             >
                 <Form.Item label="Tên học phần (VN):" name="course_name_vi">
@@ -201,32 +199,12 @@ const ListCoursePage = () => {
         axios.delete(`/courses/${uuid}`)
             .then((response) => {
                 message.success(response.data.message)
-                setDataSource(
+                /*setDataSource(
                     dataSource.filter((course) => course.uuid !== uuid)
-                )
+                )*/
+                dispatch(actions.getAllCourse());
             })
     }
-
-/*    const getColumnSearchProps = (dataIndex) => (
-        {
-            filterDropdown: ({setSelectedKeys, selectedKeys, confirm, clearFilters}) => (
-                <div style={{padding: 8}}>
-                    <Input
-                        placeholder={`Tìm kiếm`}
-                        onChange={e => {
-                            onSearchCourse(dataIndex, e.target.value)
-                        }}
-                        style={{width: dataIndex == 'course_code' ? 100 : 190, marginBottom: 8, display: 'block'}}
-                    />
-                </div>
-            ),
-            filterIcon: filtered => <SearchOutlined style={{color: filtered ? '#1890ff' : undefined}}/>,
-        }
-    )*/
-
-    /*const onSearchCourse = (dataIndex, searchText) => {
-        setSearchObj({...searchObj, [dataIndex]: searchText})
-    }*/
 
     const showModalCreate = () => {
         setIsModalCreateVisible(true);

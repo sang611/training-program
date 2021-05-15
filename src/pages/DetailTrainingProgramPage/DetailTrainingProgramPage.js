@@ -110,6 +110,7 @@ const DetailTrainingProgramPage = (props) => {
             <Skeleton active />
             <Skeleton active />
             <Skeleton active />
+            <Skeleton active />
         </>
     }
 

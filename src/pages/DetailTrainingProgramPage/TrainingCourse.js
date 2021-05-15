@@ -50,7 +50,6 @@ const TrainingCourse = () => {
             setData(
                 [{course_name_vi: 'Khối kiến thức chung', credits: requireSummary.common, h: 1}]
                     .concat(course_c)
-
                     .concat([{
                         course_name_vi: 'Khối kiến thức theo lĩnh vực',
                         credits: requireSummary.field,
@@ -189,15 +188,19 @@ const TrainingCourse = () => {
             <Title level={4}>
                 Khung chương trình đào tạo
             </Title>
-            <Table dataSource={
-                data.map((course, index) => {
-                    course.key = course.uuid;
-                    if (course.uuid) {
-                        course.stt = index_course ++;
-                    }
-                    return course
-                })
-            } bordered pagination={false}>
+            <Table
+                dataSource={
+                    data.map((course, index) => {
+                        course.key = course.uuid;
+                        if (course.uuid) {
+                            course.stt = index_course ++;
+                        }
+                        return course
+                    })
+                }
+               bordered
+               pagination={false}
+            >
                 <Column title="STT" dataIndex="stt" key="stt"/>
                 <Column title="Mã học phần" dataIndex="course_code" key="course_code"/>
                 <Column

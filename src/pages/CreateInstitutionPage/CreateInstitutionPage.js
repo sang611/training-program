@@ -23,7 +23,8 @@ const CreateInstitutionPage = (props) => {
             message.success("Đã thêm một đơn vị mới");
             form.resetFields();
         }
-    }, [createSuccess, form])
+    }, [createSuccess])
+
 
 
     const layout = {

@@ -224,7 +224,8 @@ const MatrixLearningOutcomes = ({trainingItem, levelLocs}) => {
                         return loc;
                     })
                 }
-                scroll={{x: 1600, y: 2000}}
+
+                scroll={{x: 200 * trainingItem.courses.length, y: '65vh'}}
             />
         </>
     }, [])
@@ -263,6 +264,8 @@ const MatrixCourses = ({trainingItem}) => {
                         return "Bổ trợ"
                     case 'TACS':
                         return "Tiếng Anh cơ sở"
+                    case 'KLTN':
+                        return "Khóa luận tốt nghiệp"
                 }
             }
         }
