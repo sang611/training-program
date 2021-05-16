@@ -56,7 +56,6 @@ const ListLocs = ({trainingProgram}) => {
     }, [])
 
     useEffect(() => {
-        console.log(choosedLocs)
         setSelectedRowKeys(choosedLocs);
     }, [choosedLocs])
 

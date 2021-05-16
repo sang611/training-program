@@ -6,12 +6,13 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
 import {generateDataFrame} from "../../utils/frameCourse";
+import SearchCourseFrameComponent from "./SearchCourseFrameComponent";
 
 const AddCourseDocument = ({trainingProgram, type}) => {
 
     const dispatch = useDispatch();
     const {accounts} = useSelector(state => state.accounts);
-
+    const [dataSource, setDataSource] = useState(generateDataFrame(trainingProgram));
 
     const [editing, setEditing] = useState([]);
 
@@ -172,9 +173,11 @@ const AddCourseDocument = ({trainingProgram, type}) => {
             <Title level={4}>
                 {type === "doc" ? "Danh mục tài liệu tham khảo" : "Đội ngũ cán bộ giảng dạy"}
             </Title>
+            <SearchCourseFrameComponent trainingProgram={trainingProgram} setDataSource={setDataSource}/>
             <Table
                 columns={columns}
-                dataSource={generateDataFrame(trainingProgram).map(
+                dataSource={
+                    dataSource.map(
                     (course, index) => {
                         course.key = course.uuid;
                         if (course.uuid) {
@@ -182,7 +185,8 @@ const AddCourseDocument = ({trainingProgram, type}) => {
                         }
                         return course
                     }
-                )}
+                )
+                }
                 bordered
                 pagination={false}
             />

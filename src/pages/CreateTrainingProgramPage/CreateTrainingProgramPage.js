@@ -22,7 +22,14 @@ const CreateTrainingProgramPage = () => {
     useEffect(() => {
         dispatch(actions.getAllInstitution());
         dispatch(actions.getAllMajor());
+
+        form.setFieldsValue({
+            training_duration: 1,
+            version: 2021
+        })
     }, [])
+
+
 
     /*function handleIns(listInstitution) {
         listInstitution.forEach((ins => {
@@ -45,7 +52,7 @@ const CreateTrainingProgramPage = () => {
             values.specific_destination = specificDestination;
 
             const response = await axios.post("/training-programs", values)
-            console.log(response.status)
+
             if (response.status === 201) {
                 message.success("Tạo mới Chương trình đào tạo thành công")
                 history.push("/uet/training-programs")

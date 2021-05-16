@@ -6,6 +6,7 @@ import Title from "antd/lib/typography/Title";
 import AddTrainingProgramCourses from "./AddTrainingProgramCourses";
 import axios from "axios";
 import {generateDataFrame} from "../../utils/frameCourse";
+import SearchCourseFrameComponent from "./SearchCourseFrameComponent";
 
 
 const EditableCell = ({
@@ -171,7 +172,7 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
             dataIndex: 'course_code',
         },
         {
-            title: 'Tên học phần (vi)',
+            title: 'Tên học phần',
             dataIndex: 'course_name_vi',
             editable: true,
             render: (_, course) => {
@@ -322,6 +323,10 @@ const AddTrainingProgramFrame = ({trainingProgram}) => {
                 />
                 <br/>*/}
             </Title>
+            <SearchCourseFrameComponent
+                setDataSource={setDataSource}
+                trainingProgram={trainingProgram}
+            />
             <Form form={form} component={false}>
                 <Table
                     components={{
