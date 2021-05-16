@@ -45,7 +45,11 @@ const CreatePLO = ({onCloseDrawer, setContent, setTitle}) => {
                                             fieldKey={[fieldKey, 'content']}
                                             rules={[{ required: true, message: 'Nhập nội dung chuẩn đầu ra' }]}
                                         >
-                                            <Input.TextArea placeholder="Mô tả" cols={90}/>
+                                            <Input.TextArea
+                                                placeholder="Mô tả"
+                                                cols={90}
+                                                autoSize
+                                            />
                                         </Form.Item>
                                     </Col>
                                     <Col span={4}>

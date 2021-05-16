@@ -2,13 +2,18 @@ import Title from "antd/lib/typography/Title";
 import {Col, Row, Table} from "antd";
 import React from "react";
 import {useSelector} from "react-redux";
+import {generateDataFrame} from "../../utils/frameCourse";
+import TextArea from "antd/es/input/TextArea";
 
 const CourseDocumentAndSequence = ({courses, semester}) => {
+    let index_course = 1;
     const {trainingProgram} = useSelector(state => state.trainingPrograms)
     const columns = [
         {
             title: 'STT',
-            render: (value, row, index) => index + 1,
+            render: (_, record) => {
+                if(record.uuid) return index_course ++;
+            },
             width: 80
         },
         {
@@ -19,17 +24,46 @@ const CourseDocumentAndSequence = ({courses, semester}) => {
         {
             title: 'Tên học phần (vi)',
             dataIndex: 'course_name_vi',
-            width: '30%'
+            width: '30%',
+            render: (_, course) => {
+                if (course.uuid) {
+                    return (
+                        <>
+                            <div>{course.course_name_vi}</div>
+                            <div>
+                                <i>{course.course_name_en}</i>
+                            </div>
+                        </>
+                    )
+                } else {
+                    if(course.h===1)
+                        return <b>{course.course_name_vi}</b>
+                    else if(course.h===2)
+                        return <span style={{fontWeight: 500}}><i>{course.course_name_vi}</i></span>
+                }
+            }
         },
         {
             title: 'Số tín chỉ',
             dataIndex: 'credits',
-            width: 100
+            width: 100,
+            render: (_, course) => {
+                if (course.uuid) return course.credits;
+                else return <b>{course.credits}</b>
+            }
         },
         {
             title: 'Tài liệu tham khảo',
             dataIndex: ['training_program_course', 'documents'],
-            width: '40%'
+            width: '40%',
+            render: (_, course) => (
+                <TextArea
+                    disabled
+                    autoSize
+                    style={{color: '#000'}}
+                    defaultValue={course.training_program_course ? course.training_program_course.documents : ''}
+                />
+            )
         },
 
     ]
@@ -45,7 +79,7 @@ const CourseDocumentAndSequence = ({courses, semester}) => {
             </Title>
             <Table
                 columns={columns}
-                dataSource={courses.map((course) => {
+                dataSource={generateDataFrame(trainingProgram).map((course) => {
                     course.key = course.uuid
                     return course;
                 })}

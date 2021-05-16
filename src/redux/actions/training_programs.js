@@ -47,3 +47,49 @@ export const getATrainingProgramFail = (payload) => {
         payload
     }
 }
+
+export const getLocOfTrainingProgram = (payload) => {
+    return {
+        type: actionsTypes.GET_LOC_OF_TRAINING,
+        payload
+    }
+}
+export const getLocOfTrainingProgramStart = () => {
+    return {
+        type: actionsTypes.GET_LOC_OF_TRAINING_START
+    }
+}
+export const getLocOfTrainingProgramSuccess = (payload) => {
+    return {
+        type: actionsTypes.GET_LOC_OF_TRAINING_SUCCESS,
+        payload
+    }
+}
+export const getLocOfTrainingProgramFail = () => {
+    return {
+        type: actionsTypes.GET_LOC_OF_TRAINING_FAIL
+    }
+}
+
+export const getCourseOfMatrixTrainingProgram = (payload) => {
+    return {
+        type: actionsTypes.GET_COURSE_OF_TRAINING,
+        payload
+    }
+}
+export const getCourseOfMatrixTrainingProgramStart = () => {
+    return {
+        type: actionsTypes.GET_COURSE_OF_TRAINING_START
+    }
+}
+export const getCourseOfMatrixTrainingProgramSuccess = (payload) => {
+    return {
+        type: actionsTypes.GET_COURSE_OF_TRAINING_SUCCESS,
+        payload
+    }
+}
+export const getCourseOfMatrixTrainingProgramFail = () => {
+    return {
+        type: actionsTypes.GET_COURSE_OF_TRAINING_FAIL
+    }
+}

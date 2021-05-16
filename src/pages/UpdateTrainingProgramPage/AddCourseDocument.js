@@ -2,27 +2,25 @@ import Title from "antd/lib/typography/Title";
 import TextArea from "antd/lib/input/TextArea";
 import {Button, message, Select, Table} from "antd";
 import axios from "axios";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
+import {generateDataFrame} from "../../utils/frameCourse";
 
 const AddCourseDocument = ({trainingProgram, type}) => {
 
     const dispatch = useDispatch();
     const {accounts} = useSelector(state => state.accounts);
 
-    const [editing, setEditing] = useState([]);
 
-    useEffect(() => {
-        console.log("doc render")
-    }, [trainingProgram])
+    const [editing, setEditing] = useState([]);
 
     const onUpdateDocument = (trainingProgramUuid, course) => {
         let apiUrl = `/training-programs/${trainingProgramUuid}/courses/${course.courseUuid}/documents`
 
         axios.put(apiUrl, course)
             .then((res) => {
-                message.success("Thành công")
+                message.success("Cập nhật thành công")
             })
             .catch(() => {
                 message.error("Đã có lỗi xảy ra")
@@ -50,7 +48,6 @@ const AddCourseDocument = ({trainingProgram, type}) => {
     }
 
     useEffect(() => {
-
         if (type === "lec") {
             dispatch(actions.fetchAccounts({typeAccount: "GV", fullnameSearch: ""}))
         }
@@ -69,24 +66,47 @@ const AddCourseDocument = ({trainingProgram, type}) => {
             title: 'Tên học phần (vi)',
             dataIndex: 'course_name_vi',
             editable: true,
+            render: (_, course) => {
+                if (course.uuid) {
+                    return (
+                        <>
+                            <div>{course.course_name_vi}</div>
+                            <div>
+                                <i>{course.course_name_en}</i>
+                            </div>
+                        </>
+                    )
+                } else {
+                    if(course.h===1)
+                        return <b>{course.course_name_vi}</b>
+                    else if(course.h===2)
+                        return <span style={{fontWeight: 500}}><i>{course.course_name_vi}</i></span>
+                }
+            }
         },
         {
             title: 'Số tín chỉ',
             dataIndex: 'credits',
+            render: (_, course) => {
+                if (course.uuid) return course.credits;
+                else return <b>{course.credits}</b>
+            }
         },
         {
             title: type === "doc" ? 'Tài liệu tham khảo' : 'Cán bộ giảng dạy',
             render: (_, record) => {
-                return type === "doc" ? (
+                return record.uuid ? type === "doc" ? (
                     <TextArea
-                        cols={40}
-                        rows={5}
+                        cols={45}
+                        rows={6}
+                        autoSize
                         defaultValue={record.training_program_course.documents}
                         onChange={(e) => {
                             setEditing([...editing, record.uuid]);
                             record.training_program_course.documents = e.target.value
                         }}
-                    />) : (
+                    />
+                ) : (
                     <Select
                         mode="multiple"
                         allowClear
@@ -96,15 +116,6 @@ const AddCourseDocument = ({trainingProgram, type}) => {
                             record.training_program_course.lecturers ?
                                 JSON.parse(record.training_program_course.lecturers).map(lec => lec.uuid) : []
                         }
-                        /*onChange={value => {
-                            setEditing([...editing, record.uuid]);
-                            record.training_program_course.lecturers = JSON.stringify(
-                                value.map((val) => {
-                                    let lecturer = state.accounts.accounts.find((acc) => acc.uuid === val)
-                                    return lecturer;
-                                })
-                            )
-                        }}*/
                         onSelect={(value) => {
                             let lecturer = accounts.find((acc) => acc.uuid === value)
                             onAddLecturer(trainingProgram.uuid, record.training_program_course, {lecturer});
@@ -135,23 +146,26 @@ const AddCourseDocument = ({trainingProgram, type}) => {
                                 })
                         }
                     </Select>
-                )
+                ) : ''
             }
         },
         {
             title: '',
             render: (_, record) => {
-                return <Button
-                    onClick={() => onUpdateDocument(trainingProgram.uuid, record.training_program_course)}
+                return record.uuid ? <Button
+                    onClick={() => {
+                        onUpdateDocument(trainingProgram.uuid, record.training_program_course);
+                        setEditing(editing.filter(red => red !== record.uuid))
+                    }}
                     disabled={!editing.includes(record.uuid)}
                 >
                     Cập nhật
-                </Button>
+                </Button> : ''
             }
         },
     ]
-
-    if (type == "lec") columns.pop()
+    let index_course = 1;
+    if (type === "lec") columns.pop()
 
     return (
         <>
@@ -160,10 +174,12 @@ const AddCourseDocument = ({trainingProgram, type}) => {
             </Title>
             <Table
                 columns={columns}
-                dataSource={trainingProgram.courses.map(
+                dataSource={generateDataFrame(trainingProgram).map(
                     (course, index) => {
                         course.key = course.uuid;
-                        course.stt = index + 1;
+                        if (course.uuid) {
+                            course.stt = index_course ++;
+                        }
                         return course
                     }
                 )}

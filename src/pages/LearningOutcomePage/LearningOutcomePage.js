@@ -277,7 +277,7 @@ const LearningOutcomePage = () => {
                                 },
                             ]}
                         >
-                            <Input.TextArea/>
+                            <Input.TextArea autoSize/>
                         </Form.Item>
                     </Form>
                 </Modal>

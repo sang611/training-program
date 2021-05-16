@@ -91,7 +91,15 @@ export {
     getATrainingProgramFail,
     getATrainingProgramSuccess,
     getATrainingProgramStart,
-    getATrainingProgram
+    getATrainingProgram,
+    getLocOfTrainingProgramFail,
+    getLocOfTrainingProgram,
+    getLocOfTrainingProgramStart,
+    getLocOfTrainingProgramSuccess,
+    getCourseOfMatrixTrainingProgramFail,
+    getCourseOfMatrixTrainingProgramSuccess,
+    getCourseOfMatrixTrainingProgram,
+    getCourseOfMatrixTrainingProgramStart
 } from './training_programs'
 
 export {

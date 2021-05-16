@@ -48,23 +48,13 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
         })
             .then((res) => {
                 addCourseForm.resetFields();
-                /*getNewCoursesAdded(
-                    res.data.newCourses.map(course => {
-                            course.training_program_course = {
-                                theory_time: course.theory_time,
-                                exercise_time: course.exercise_time,
-                                practice_time: course.practice_time,
-                            }
-                            return course;
-                        }
-                    ))*/
                 dispatch(actions.getATrainingProgram({id: uuid}))
             })
             .then(() => {
                 onCloseDrawer();
-                values.courses.length > 0 ?
-                    message.success("Thêm học phần vào CTĐT thành công") :
-                    message.success("Cập nhật số tín chỉ yêu cầu thành công")
+
+                message.success("Thêm học phần vào CTĐT thành công")
+
             })
             .catch((e) => {
                 if (e.response) {
@@ -251,10 +241,26 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
             <Row>
                 {uploadFile ? <UploadFileComponent/> :
                     <Col span={24}>
-                        <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off" form={addCourseForm}>
-                            <Form.List name="courses">
+                        <Form
+                            name="dynamic_form_nest_item"
+                            onFinish={onFinish}
+                            autoComplete="off"
+                            form={addCourseForm}
+                        >
+                            <Form.List
+                                name="courses"
+                                rules={[
+                                    {
+                                        validator: async (_, courses) => {
+                                            if (!courses || courses.length < 1) {
+                                                return Promise.reject(new Error('Cần thêm ít nhất 1 học phần'));
+                                            }
+                                        },
+                                    },
+                                ]}
+                            >
                                 {
-                                    (fields, {add, remove}) => (
+                                    (fields, {add, remove}, {errors}) => (
                                         <>
                                             {fields.map(field => (
 
@@ -264,6 +270,7 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                                                             {...field}
                                                             name={[field.name, 'course_uuid']}
                                                             fieldKey={[field.fieldKey, 'course_uuid']}
+                                                            rules={[{required: true, message: 'Chọn 1 học phần'}]}
                                                         >
                                                             <Select
                                                                 showSearch
@@ -358,6 +365,7 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
 
                                             ))}
                                             <Form.Item>
+                                                <Form.ErrorList errors={errors} />
                                                 <Button
                                                     block
                                                     onClick={() => add()} icon={<PlusOutlined/>}
@@ -368,8 +376,8 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                                         </>
                                     )}
                             </Form.List>
-                            <Form.Item>
 
+                            <Form.Item>
                                     <Button type="primary" htmlType="submit">
                                         Thêm vào khung đào tạo
                                     </Button>

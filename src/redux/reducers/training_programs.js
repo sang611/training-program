@@ -3,10 +3,16 @@ import * as actionTypes from '../actions/actionTypes';
 const initialState = {
     loadingAllTrainings: null,
     loadingATraining: null,
+    loadingLocsMatrix: null,
+    loadingCoursesMatrix: null,
     trainingPrograms: [],
     trainingProgram: null,
+    locsMatrixTraining: [],
+    coursesMatrixTraining: [],
     errorLoadAll: null,
     errorLoadA: null,
+    errorLoadLocsMatrix: null,
+    errorLoadCourseMatrix: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -49,6 +55,45 @@ const reducer = (state = initialState, action) => {
                 loadingATraining: false,
                 errorLoadA: action.payload,
                 trainingProgram: null
+            }
+        case actionTypes.GET_LOC_OF_TRAINING_START:
+            return {
+                ...state,
+                loadingLocsMatrix: true,
+            }
+        case actionTypes.GET_LOC_OF_TRAINING_SUCCESS:
+            return {
+                ...state,
+                loadingLocsMatrix: false,
+                locsMatrixTraining: action.payload,
+                errorLoadLocsMatrix: null
+            }
+        case actionTypes.GET_LOC_OF_TRAINING_FAIL:
+            return {
+                ...state,
+                loadingLocsMatrix: false,
+                locsMatrixTraining: [],
+                errorLoadLocsMatrix: action.payload
+            }
+
+        case actionTypes.GET_COURSE_OF_TRAINING_START:
+            return {
+                ...state,
+                loadingCoursesMatrix: true,
+            }
+        case actionTypes.GET_COURSE_OF_TRAINING_SUCCESS:
+            return {
+                ...state,
+                loadingCoursesMatrix: false,
+                coursesMatrixTraining: action.payload,
+                errorLoadCoursesMatrix: null
+            }
+        case actionTypes.GET_COURSE_OF_TRAINING_FAIL:
+            return {
+                ...state,
+                loadingCoursesMatrix: false,
+                coursesMatrixTraining: [],
+                errorLoadCoursesMatrix: action.payload
             }
         default:
             return {...state}

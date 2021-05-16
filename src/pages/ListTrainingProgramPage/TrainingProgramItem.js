@@ -1,30 +1,32 @@
 import {Link} from "react-router-dom";
-import {Button, Card, Descriptions, message, Modal, Popconfirm, Select, Space, Table} from "antd";
+import {Button, Card, Descriptions, message, Modal, Popconfirm, Select, Skeleton, Space, Spin, Table} from "antd";
 import {
     BuildOutlined,
     DeleteOutlined,
     EditOutlined,
     InfoOutlined,
-    InsertRowBelowOutlined,
+    InsertRowBelowOutlined, LoadingOutlined,
     LockOutlined, UnlockOutlined
 } from "@ant-design/icons";
 import Icon from "@ant-design/icons/es";
 import axios from "axios";
 import * as actions from "../../redux/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useMemo, useState} from "react";
 
 const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, trainingItem}) => {
     const [knowledgeType, setKnowledgeType] = useState("ALL");
-    const [data, setData] = useState(trainingItem.course);
+    const {coursesMatrixTraining, loadingCoursesMatrix} = useSelector(state => state.trainingPrograms);
+    const [data, setData] = useState(coursesMatrixTraining);
+    const dispatch = useDispatch();
+
 
     useEffect(() => {
-        if(knowledgeType === "ALL") {
-            setData(trainingItem.courses)
-        }
-        else {
+        if (knowledgeType === "ALL") {
+            setData(coursesMatrixTraining)
+        } else {
             setData(
-                trainingItem.courses.filter(course => course.training_program_course.knowledge_type === knowledgeType)
+                coursesMatrixTraining.filter(course => course.training_program_course.knowledge_type === knowledgeType)
             )
         }
 
@@ -117,7 +119,24 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
     )
 }
 
-const MatrixLearningOutcomes = ({trainingItem, levelLocs}) => {
+const MatrixLearningOutcomes = ({trainingItem, visibleLocMatrix, setVisibleLocMatrix}) => {
+    const dispatch = useDispatch();
+    const {locsMatrixTraining, loadingLocsMatrix} = useSelector(state => state.trainingPrograms)
+    const {coursesMatrixTraining, loadingCoursesMatrix} = useSelector(state => state.trainingPrograms)
+
+    useEffect(() => {
+        if (visibleLocMatrix) {
+            dispatch(actions.getLocOfTrainingProgram({id: trainingItem.uuid}))
+            dispatch(actions.getCourseOfMatrixTrainingProgram({id: trainingItem.uuid}))
+        }
+
+    }, [visibleLocMatrix])
+
+
+    let levelLocs = locsMatrixTraining.map(loc => ({
+        locUuid: loc.uuid,
+        levels: []
+    }))
 
     const columns = [
         {
@@ -127,7 +146,7 @@ const MatrixLearningOutcomes = ({trainingItem, levelLocs}) => {
             width: 280
         }
     ].concat(
-        trainingItem.courses.map(course => {
+        coursesMatrixTraining.map(course => {
             return {
                 title: course.course_name_vi,
                 render: (_, loc) => {
@@ -148,7 +167,7 @@ const MatrixLearningOutcomes = ({trainingItem, levelLocs}) => {
                         locsOfCourse.forEach(locOfCourse => {
                             if (clos.includes(locOfCourse.uuid)) {
                                 point += locOfCourse.outline_learning_outcome.level;
-                                num ++;
+                                num++;
                             }
                         })
 
@@ -159,7 +178,7 @@ const MatrixLearningOutcomes = ({trainingItem, levelLocs}) => {
                                 levelLoc.levels.push({course: course.uuid, point})
                             }
 
-                            return point/num;
+                            return point / num;
                         }
 
                         return "";
@@ -212,26 +231,52 @@ const MatrixLearningOutcomes = ({trainingItem, levelLocs}) => {
             )
     )
 
-    return useMemo(() => {
-        return <>
-            <Table
-                columns={columns}
-                bordered
-                pagination={false}
-                dataSource={
-                    trainingItem.learning_outcomes.map((loc, index) => {
-                        loc.key = index;
-                        return loc;
-                    })
-                }
 
-                scroll={{x: 200 * trainingItem.courses.length, y: '65vh'}}
-            />
-        </>
-    }, [])
+    return (
+        <Modal
+            visible={visibleLocMatrix}
+            title={`Ma trận chuẩn đầu ra chương trình đào tạo: ${trainingItem.vn_name}`}
+            okText="OK"
+            className="modal-locs"
+            onCancel={() => {
+                setVisibleLocMatrix(false);
+            }}
+            onOk={() => {
+                setVisibleLocMatrix(false);
+            }}
+            footer={null}
+        >
+            {
+                (loadingLocsMatrix || loadingCoursesMatrix) ? <Skeleton/> :
+                    <Table
+                        columns={columns}
+                        bordered
+                        pagination={false}
+                        dataSource={
+                            locsMatrixTraining.map((loc, index) => {
+                                loc.key = index;
+                                return loc;
+                            })
+                        }
+
+                        scroll={{x: 200 * coursesMatrixTraining.length, y: '65vh'}}
+                    />
+            }
+
+        </Modal>
+    )
+
+
 }
 
-const MatrixCourses = ({trainingItem}) => {
+const MatrixCourses = ({trainingItem, visibleCourseMatrix, setVisibleCourseMatrix}) => {
+    const dispatch = useDispatch();
+    const {coursesMatrixTraining, loadingCoursesMatrix} = useSelector(state => state.trainingPrograms);
+    useEffect(() => {
+        if (visibleCourseMatrix) {
+            dispatch(actions.getCourseOfMatrixTrainingProgram({id: trainingItem.uuid}))
+        }
+    }, [visibleCourseMatrix])
     const columns = [
         {
             title: 'STT',
@@ -271,21 +316,36 @@ const MatrixCourses = ({trainingItem}) => {
         }
     ]
     return (
-        <>
-            <Table
-                columns={columns}
-                bordered
-                pagination={false}
-                dataSource={
-                    trainingItem.courses.map((course, index) => {
-                        course.key = course.uuid;
-                        course.stt = index + 1;
-                        return course;
-                    })
-                }
-                scroll={{y: 500}}
-            />
-        </>
+        <Modal
+            visible={visibleCourseMatrix}
+            title={`Ma trận học phần chương trình đào tạo: ${trainingItem.vn_name}`}
+            okText="OK"
+            className="modal-courses"
+            onCancel={() => {
+                setVisibleCourseMatrix(false);
+            }}
+            onOk={() => {
+                setVisibleCourseMatrix(false);
+            }}
+            footer={null}
+        >
+            {
+                loadingCoursesMatrix ? <Skeleton/> :
+                    <Table
+                        columns={columns}
+                        bordered
+                        pagination={false}
+                        dataSource={
+                            coursesMatrixTraining.map((course, index) => {
+                                course.key = course.uuid;
+                                course.stt = index + 1;
+                                return course;
+                            })
+                        }
+                        scroll={{y: 500}}
+                    />
+            }
+        </Modal>
     )
 }
 
@@ -293,12 +353,13 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
     const [visibleCourseList, setVisibleCourseList] = useState(false);
     const [visibleLocMatrix, setVisibleLocMatrix] = useState(false);
     const [visibleCourseMatrix, setVisibleCourseMatrix] = useState(false);
+
+    const {coursesMatrixTraining, loadingCoursesMatrix} = useSelector(state => state.trainingPrograms);
     const dispatch = useDispatch();
 
-    let levelLocs = item.learning_outcomes.map(loc => ({
-        locUuid: loc.uuid,
-        levels: []
-    }))
+    useEffect(() => {
+        dispatch(actions.getCourseOfMatrixTrainingProgram({id: item.uuid}))
+    }, [])
 
     const onLock = async (uuid) => {
         let course_outlines = [];
@@ -451,11 +512,14 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
                             item.type ? item.type : ''
                         }
                     </Descriptions.Item>
-                    <Descriptions.Item label="Số học phần">
+
+                    <Descriptions.Item label="Năm">
                         {
-                            item.courses.length
+                            item.version || ''
                         }
                     </Descriptions.Item>
+
+
                     <Descriptions.Item label="Số lớp đang áp dụng">
                         {
                             item.classes ? JSON.parse(item.classes).length : 0
@@ -476,37 +540,19 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
             />
 
 
-            <Modal
-                visible={visibleLocMatrix}
-                title={`Ma trận chuẩn đầu ra chương trình đào tạo: ${item.vn_name}`}
-                okText="OK"
-                className="modal-locs"
-                onCancel={() => {
-                    setVisibleLocMatrix(false);
-                }}
-                onOk={() => {
-                    setVisibleLocMatrix(false);
-                }}
-                footer={null}
-            >
-                <MatrixLearningOutcomes trainingItem={item} levelLocs={levelLocs}/>
-            </Modal>
+            <MatrixLearningOutcomes
+                trainingItem={item}
+                visibleLocMatrix={visibleLocMatrix}
+                setVisibleLocMatrix={setVisibleLocMatrix}
+            />
 
-            <Modal
-                visible={visibleCourseMatrix}
-                title={`Ma trận học phần chương trình đào tạo: ${item.vn_name}`}
-                okText="OK"
-                className="modal-courses"
-                onCancel={() => {
-                    setVisibleCourseMatrix(false);
-                }}
-                onOk={() => {
-                    setVisibleCourseMatrix(false);
-                }}
-                footer={null}
-            >
-                <MatrixCourses trainingItem={item}/>
-            </Modal>
+
+            <MatrixCourses
+                trainingItem={item}
+                visibleCourseMatrix={visibleCourseMatrix}
+                setVisibleCourseMatrix={setVisibleCourseMatrix}
+            />
+
         </>
     )
 }

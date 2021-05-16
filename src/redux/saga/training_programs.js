@@ -36,3 +36,35 @@ export function* getATrainingProgram({payload}) {
         }
     }
 }
+
+export function* getLocsMatrixTraining({payload}) {
+    const {id} = payload;
+    try {
+        yield put(actions.getLocOfTrainingProgramStart());
+        const response = yield axios.get(`/training-programs/${id}/locs/matrix`);
+        yield put(actions.getLocOfTrainingProgramSuccess(response.data.trainingProgram.learning_outcomes));
+    } catch (e) {
+        if(e.response) {
+            yield put(actions.getLocOfTrainingProgramFail(e.response.data.message));
+        }
+        else {
+            yield put(actions.getLocOfTrainingProgramFail(e.message));
+        }
+    }
+}
+
+export function* getCoursesMatrixTraining({payload}) {
+    const {id} = payload;
+    try {
+        yield put(actions.getCourseOfMatrixTrainingProgramStart());
+        const response = yield axios.get(`/training-programs/${id}/courses/matrix`);
+        yield put(actions.getCourseOfMatrixTrainingProgramSuccess(response.data.trainingProgram.courses));
+    } catch (e) {
+        if(e.response) {
+            yield put(actions.getCourseOfMatrixTrainingProgramFail(e.response.data.message));
+        }
+        else {
+            yield put(actions.getCourseOfMatrixTrainingProgramFail(e.message));
+        }
+    }
+}

@@ -38,6 +38,9 @@ export function* watchAuth() {
     yield takeEvery(actionTypes.GET_ALL_TRAINING_PROGRAMS, trainingProgramSaga.getAllTrainingPrograms);
     yield takeEvery(actionTypes.GET_A_TRAINING_PROGRAMS, trainingProgramSaga.getATrainingProgram);
 
+    yield takeEvery(actionTypes.GET_LOC_OF_TRAINING, trainingProgramSaga.getLocsMatrixTraining);
+    yield takeEvery(actionTypes.GET_COURSE_OF_TRAINING, trainingProgramSaga.getCoursesMatrixTraining);
+
     yield takeEvery(actionTypes.GET_ALL_NOTIFICATION, notificationSaga.getAllNotification)
 }
 
