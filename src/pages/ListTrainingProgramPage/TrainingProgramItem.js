@@ -20,6 +20,10 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
     const [data, setData] = useState(coursesMatrixTraining);
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        if(visibleCourseList)
+        dispatch(actions.getCourseOfMatrixTrainingProgram({id: trainingItem.uuid}))
+    }, [visibleCourseList])
 
     useEffect(() => {
         if (knowledgeType === "ALL") {
@@ -30,9 +34,16 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
             )
         }
 
-    }, [knowledgeType])
+    }, [knowledgeType, coursesMatrixTraining])
 
     const columns = [
+        {
+            title: "STT",
+            render: (_, record, index) => {
+                return index+1;
+            },
+            key: "stt"
+        },
         {
             title: "Mã học phần",
             dataIndex: "course_code",
@@ -363,10 +374,10 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
 
     const onLock = async (uuid) => {
         let course_outlines = [];
-        for (let course of item.courses) {
+        for (let course of coursesMatrixTraining) {
             course_outlines.push({
                 courseUuid: course.uuid,
-                outlineUuid: course.outlines[0] ? course.outlines[0].uuid : null
+                outlineUuid: course.outlines[0] ? course.outlines[0].uuid : ""
             })
         }
         try {
@@ -382,10 +393,10 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
 
     const onUnLock = async (uuid) => {
         let course_outlines = [];
-        for (let course of item.courses) {
+        for (let course of coursesMatrixTraining) {
             course_outlines.push({
                 courseUuid: course.uuid,
-                outlineUuid: course.outlines[0] ? course.outlines[0].uuid : null
+                outlineUuid: course.outlines[0] ? course.outlines[0].uuid : ""
             })
         }
         try {

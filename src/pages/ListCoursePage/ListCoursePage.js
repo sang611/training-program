@@ -38,10 +38,10 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
         form.setFieldsValue(
             {
                 ...updatedCourse,
-                institutionUuid: [parentInstitution ? parentInstitution.uuid : updatedCourse.institution.uuid, updatedCourse.institution ? updatedCourse.institution.uuid : '']});
-        form.setFieldsValue({
-            required_course: required_course
-        });
+                required_course: required_course,
+                institutionUuid: [parentInstitution ? parentInstitution.uuid : updatedCourse.institution.uuid, updatedCourse.institution ? updatedCourse.institution.uuid : '']
+            });
+
 
 
     }

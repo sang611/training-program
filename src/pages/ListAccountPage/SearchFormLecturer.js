@@ -1,25 +1,37 @@
 import {Button, Cascader, Col, Form, Input, Row} from "antd";
-import React, {useEffect, useState} from "react";
-import * as actions from "../../redux/actions";
-import {useDispatch, useSelector} from "react-redux";
-import {course} from "../../constants/Items";
 import {SearchOutlined, SyncOutlined} from "@ant-design/icons";
+import React, {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import * as actions from "../../redux/actions";
 
-const SearchFormCourse = () => {
+const SearchFormLecturer = ({currentPage, setCurrentPage, searchObj, setSearchObj}) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const {listInstitutions} = useSelector(state => state.institutions)
     const [institutions, setInstitutions] = useState([]);
-    const {courses} = useSelector(state => state.courses)
 
     const initialSearchObj = {
-        course_name_vi: "",
-        course_name_en: "",
-        course_code: "",
+        fullname: "",
+        vnu_mail: "",
+        academic_rank: "",
+        academic_degree: "",
         institutionUuid: ""
     }
 
-    const [searchObj, setSearchObj] = useState(initialSearchObj)
+
+    const onSearch = (val) => {
+        setSearchObj({
+            ...val,
+            institutionUuid: val.institutionUuid ? val.institutionUuid[1] || val.institutionUuid[0] : ""
+        });
+        setCurrentPage(1);
+        dispatch(actions.fetchAccounts({
+            page: 1,
+            typeAccount: "GV",
+            ...val,
+            institutionUuid: val.institutionUuid ? val.institutionUuid[1] || val.institutionUuid[0] : ""
+        }))
+    }
 
     useEffect(() => {
         dispatch(actions.getAllInstitution());
@@ -29,10 +41,6 @@ const SearchFormCourse = () => {
         handleInstitutionData(listInstitutions)
         setInstitutions(listInstitutions)
     }, [listInstitutions])
-
-    useEffect(() => {
-        dispatch(actions.getAllCourse({params: searchObj}))
-    }, [searchObj])
 
     function handleInstitutionData(institutions) {
         for (let ins of institutions) {
@@ -44,23 +52,11 @@ const SearchFormCourse = () => {
         }
     }
 
-    const onFinish = ({course_name_vi, course_name_en, course_code, institutionUuid}) => {
-        console.log(institutionUuid)
-        setSearchObj({
-            course_name_vi: course_name_vi || "",
-            course_name_en: course_name_en || "",
-            course_code: course_code || "",
-            institutionUuid: institutionUuid ? institutionUuid[1] || institutionUuid[0] : "",
-        })
-    };
-
     return (
         <>
             <Form
                 form={form}
-                name="advanced_search"
-                className="ant-advanced-search-form"
-                onFinish={onFinish}
+                onFinish={onSearch}
                 style={{
                     backgroundColor: '#fbfbfb',
                     border: '1px solid #d9d9d9',
@@ -70,41 +66,52 @@ const SearchFormCourse = () => {
                 }
                 }
             >
-                <Row gutter={100}>
+                <Row gutter={50}>
                     <Col span={12}>
                         <Form.Item
-                            name="course_name_vi"
-                            label="Tên học phần (VI)"
+                            name="fullname"
+                            label="Họ tên"
                         >
-                            <Input placeholder="Tìm kiếm theo tên học phần"/>
+                            <Input placeholder="Nhập tên giảng viên"/>
                         </Form.Item>
                     </Col>
                     <Col span={12}>
                         <Form.Item
-                            name="course_name_en"
-                            label="Tên học phần (EN)"
+                            name="vnu_mail"
+                            label="Email (vnu)"
                         >
-                            <Input placeholder="Tìm kiếm theo tên học phần"/>
+                            <Input placeholder="Email vnu của giảng viên"/>
                         </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={6} flex={'auto'}>
                         <Form.Item
-                            name="course_code"
-                            label="Mã học phần"
+                            name="academic_rank"
+                            label="Học hàm"
                         >
-                            <Input placeholder="Tìm kiếm theo mã học phần"/>
+                            <Input placeholder="Học hàm của giảng viên"/>
+                        </Form.Item>
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item
+                            name="academic_degree"
+                            label="Học vị"
+                        >
+                            <Input placeholder="Học vị của giảng viên"/>
                         </Form.Item>
                     </Col>
                     <Col span={12}>
                         <Form.Item
                             name="institutionUuid"
-                            label="Đơn vị phụ trách"
+                            label="Đơn vị chuyên môn"
                         >
                             <Cascader
                                 style={{width: '100%'}}
-                                placeholder="Tìm kiếm theo đơn vị chuyên môn"
+                                placeholder="Đơn vị chuyên môn của giảng viên"
                                 options={
-                                    institutions.filter((ins) => !ins.parent_uuid)
+                                    [{label: "Tất cả", value: ""}].concat(
+                                        institutions
+                                            .filter((ins) => !ins.parent_uuid)
+                                    )
                                 }
                                 changeOnSelect
                             />
@@ -114,7 +121,7 @@ const SearchFormCourse = () => {
                 <Row>
                     <Col span={12} style={{textAlign: 'left'}}>
                         <i><b>
-                            {`${courses.length} học phần`}
+                            {/*{`${courses.length} học phần`}*/}
                         </b></i>
 
                     </Col>
@@ -125,8 +132,12 @@ const SearchFormCourse = () => {
                         <Button
                             style={{margin: '0 8px'}}
                             onClick={() => {
+                                dispatch(actions.fetchAccounts({
+                                    page: 1,
+                                    typeAccount: "GV",
+                                    ...initialSearchObj,
+                                }))
                                 form.resetFields();
-                                setSearchObj(initialSearchObj)
                             }}
                             icon={<SyncOutlined spin />}
                         >
@@ -137,6 +148,7 @@ const SearchFormCourse = () => {
             </Form>
         </>
     )
+
 }
 
-export default SearchFormCourse;
+export default SearchFormLecturer;

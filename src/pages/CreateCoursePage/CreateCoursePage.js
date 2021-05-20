@@ -26,6 +26,10 @@ const CreateCoursePage = ({onCancelModal}) => {
     useEffect(() => {
         dispatch(actions.getAllInstitution());
         getAllCourse();
+
+        form.setFieldsValue({
+            course_name_en: ""
+        })
     }, [])
 
     useEffect(() => {

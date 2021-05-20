@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
-import {Avatar, Button, Col, Descriptions, List, message, Popconfirm, Row, Select, Spin, Tabs} from "antd";
+import {Avatar, Button, Col, Descriptions, List, message, Pagination, Popconfirm, Row, Select, Spin, Tabs} from "antd";
 import Search from "antd/lib/input/Search";
 import {DeleteRowOutlined, DesktopOutlined, InfoCircleOutlined, MailOutlined, PhoneOutlined} from "@ant-design/icons";
 import {useHistory, useLocation} from "react-router-dom";
@@ -9,6 +9,8 @@ import axios from "axios";
 import InfiniteScroll from 'react-infinite-scroller';
 import './ListAccountPage.css'
 import {classCodes} from '../../constants/index'
+import SearchFormLecturer from "./SearchFormLecturer";
+import SearchFormStudent from "./SearchFormStudent";
 
 const ListAccountPage = () => {
     const dispatch = useDispatch();
@@ -19,43 +21,39 @@ const ListAccountPage = () => {
     const {userRole} = useSelector((state) => state.auth)
 
     const [typeAccount, setTypeAccount] = useState(query.get('type') || "GV");
-    const [currentPage, setCurrentPage] = useState(1);
-    const [searchText, setSearchText] = useState("");
-    const [className, setClassname] = useState("Tất cả");
+    const [currentPageLec, setCurrentPageLec] = useState(1);
+    const [currentPageStu, setCurrentPageStu] = useState(1);
 
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [data, setData] = useState([]);
     const [resetFetch, setResetFetch] = useState(false);
+    const [searching, setSearching] = useState(false);
+    const [searchObj, setSearchObj] = useState();
 
     useEffect(() => {
         dispatch(actions.fetchAccounts({
-            typeAccount,
-            fullnameSearch: searchText,
-            page: currentPage,
-            studentClass: className
+            page: typeAccount === "GV" ? currentPageLec : currentPageStu,
+            typeAccount: typeAccount,
+            ...searchObj,
         }))
-        setResetFetch(true)
-    }, [currentPage])
+    }, [typeAccount])
 
-    useEffect(() => {
-        setData([])
-        setCurrentPage(new Number(1));
-        setHasMore(true);
-    }, [typeAccount, searchText, className])
-
-
-    useEffect(() => {
-        if(resetFetch) {
-            setData(data.concat(
-                accounts.filter(acc => {
-                    return !data.map(d => d.uuid).includes(acc.uuid)
-                })
-            ));
-            setLoadingMore(false);
+    const onChangePage = (page) => {
+        if(typeAccount === "GV") {
+            setCurrentPageLec(page);
+        }
+        else if(typeAccount === "SV") {
+            setCurrentPageStu(page);
         }
 
-    }, [accounts])
+        dispatch(actions.fetchAccounts({
+            page: page,
+            typeAccount: typeAccount,
+            ...searchObj,
+        }))
+
+    }
 
     const onDeleteAccount = (item) => {
         let apiUrl = "";
@@ -74,16 +72,6 @@ const ListAccountPage = () => {
             })
             .catch((e) => message.error(e.response.data.message))
     }
-
-    const handleInfiniteOnLoad = () => {
-        setLoadingMore(true)
-        setCurrentPage(currentPage + 1);
-        if (data.length >= totalAccounts) {
-            message.warning('Đã đến cuối danh sách');
-            setHasMore(false);
-            setLoadingMore(false);
-        }
-    };
 
     const actionsToItem = function (item) {
         return (
@@ -116,7 +104,6 @@ const ListAccountPage = () => {
                             Xóa
                         </Button>
                     </Popconfirm>
-
                 ] :
                 [
                     <a
@@ -135,7 +122,7 @@ const ListAccountPage = () => {
             <Row>
                 <Col span={8}>
                     {
-                        userRole == 0 ?
+                        userRole === 0 ?
                             <Tabs defaultActiveKey={query.get('type') || "GV"} onTabClick={(e) => setTypeAccount(e)}>
                                 <Tabs.TabPane
                                     tab={
@@ -162,67 +149,38 @@ const ListAccountPage = () => {
                     }
 
                 </Col>
-                <Col span={9} offset={7}>
-                    <Row>
-                        <Col span={6}>
-                            {
-                                typeAccount === "SV" ?
-                                    <Select
-                                        size="large"
-                                        placeholder="Lớp"
-                                        style={{width: '100%'}}
-                                        onChange={(value => {
-                                            setClassname(value)
-                                        })}
-                                        value={className}
-                                    >
-                                        {
-                                            [   "Tất cả",
-                                            ].concat(classCodes).map(cl => (
-                                                <Select.Option value={cl} key={cl}>{cl}</Select.Option>
-                                            ))
-                                        }
-                                    </Select>
-                                    : ''
-                            }
 
-                        </Col>
-                        <Col span={18}>
-                            <Search
-                                placeholder="Nhập để tìm"
-                                enterButton
-                                size="large"
-                                style={{width: '100%'}}
-                                loading={false}
-                                onChange={(e) => {
-                                    setSearchText(e.target.value);
-                                }
-                                }
-
-                            />
-                        </Col>
-
-
-                    </Row>
-
-
-                </Col>
             </Row>
 
-            <br/>
+            {
+                typeAccount === "GV" ?
+                    <SearchFormLecturer
+                        currentPage={currentPageLec}
+                        setCurrentPage={setCurrentPageLec}
+                        searchObj={searchObj}
+                        setSearchObj={setSearchObj}
+                    /> :
+                    <SearchFormStudent
+                        currentPage={currentPageStu}
+                        setCurrentPage={setCurrentPageStu}
+                        searchObj={searchObj}
+                        setSearchObj={setSearchObj}
+                    />
+            }
+
 
             <div className="demo-infinite-container">
-                <InfiniteScroll
+                {/*<InfiniteScroll
                     initialLoad={false}
                     pageStart={0}
                     loadMore={handleInfiniteOnLoad}
                     hasMore={!loadingMore && hasMore}
                     useWindow={false}
-                >
+                >*/}
                     <List
                         className="demo-loadmore-list"
                         itemLayout="horizontal"
-                        dataSource={data}
+                        dataSource={accounts}
                         size="large"
                         loading={loadingAll}
                         renderItem={(item) => (
@@ -238,7 +196,7 @@ const ListAccountPage = () => {
                                                     if (item.avatar) {
                                                         return item.avatar.includes(':') ? item.avatar : `data:image/jpeg;base64, ${item.avatar}`
                                                     } else {
-                                                        if (item.gender == "Nam")
+                                                        if (item.gender === "Nam")
                                                             return "https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png"
                                                         else
                                                             return "https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png"
@@ -286,26 +244,28 @@ const ListAccountPage = () => {
                             </List.Item>
                         )}
                     >
-                        {loadingMore && hasMore && (
-                            <div className="demo-loading-container">
-                                <Spin/>
-                            </div>
-                        )}
                     </List>
-                </InfiniteScroll>
+                {/*</InfiniteScroll>*/}
             </div>
             <br/>
-            {/*<Row>
+            <Row>
                 <Col>
-                    <Pagination
-                        current={currentPage}
-                        total={totalAccounts}
-                        onChange={(e) => {
-                            setCurrentPage(e)
-                        }}
-                    />
+                    {
+                        typeAccount === "GV" ?
+                            <Pagination
+                                current={currentPageLec}
+                                total={totalAccounts}
+                                onChange={onChangePage}
+                            /> :
+                            <Pagination
+                                current={currentPageStu}
+                                total={totalAccounts}
+                                onChange={onChangePage}
+                                showSizeChanger={false}
+                            />
+                    }
                 </Col>
-            </Row>*/}
+            </Row>
         </div>
 
     );

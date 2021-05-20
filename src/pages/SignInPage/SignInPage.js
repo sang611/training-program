@@ -60,11 +60,9 @@ function SignInPage(props) {
     const dispatch = useDispatch();
     const state = useSelector(state => state.auth);
 
-
     const onFinish = (values) => {
         dispatch(actions.auth(values));
     };
-
 
     useEffect(() => {
         localStorage.removeItem("menu-active")
@@ -72,7 +70,6 @@ function SignInPage(props) {
 
     useEffect(() => {
         if (state.error) {
-
             notification.error({
                 message: 'Đăng nhập không thành công',
                 description:
@@ -135,7 +132,7 @@ function SignInPage(props) {
                                 ]}
                             >
                                 <Input prefix={<UserOutlined className="site-form-item-icon"/>}
-                                       placeholder="Email"
+                                       placeholder="Tên đăng nhập"
                                        size="large"
                                        className="login-form-input"
                                 />

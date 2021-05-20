@@ -27,20 +27,12 @@ const ListLocs = ({typeLoc, currentPage, onPaginateLOC, showModal}) => {
     const dispatch = useDispatch();
     const state = useSelector(state => state.learningOutcomes);
 
-
-    useEffect(() => {
-        state.locs.map((loc, index) => {
-            loc.stt = index + 1;
-            return loc;
-        })
-    }, [state])
     const columns = [
         {
             title: 'STT',
             dataIndex: 'stt',
             key: 'stt',
             width: '80px',
-            render: text => text,
         },
         {
             title: 'Chuẩn đầu ra',
@@ -93,7 +85,7 @@ const ListLocs = ({typeLoc, currentPage, onPaginateLOC, showModal}) => {
             columns={columns}
             dataSource={
                 state.locs.map((loc, index) => {
-                    loc.stt = index + 1;
+                    loc.stt = (currentPage-1)*10 + index + 1;
                     loc.key = loc.uuid;
                     return loc;
                 })
@@ -107,7 +99,10 @@ const ListLocs = ({typeLoc, currentPage, onPaginateLOC, showModal}) => {
                     total={state.total}
                     onChange={
                         onPaginateLOC
-                    }/>
+                    }
+                    showSizeChanger={false}
+                />
+
             </Col>
         </Row>
 

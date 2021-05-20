@@ -11,31 +11,43 @@ function hasNumber(myString) {
 
 export function* fetchAccountsSaga(action) {
     try {
-        let {typeAccount, fullnameSearch, studentClass, page} = action.payload;
-        fullnameSearch = fullnameSearch || "";
-        studentClass = studentClass || "";
-
-        if(studentClass === "Tất cả") studentClass = ""
-
-        let vnu_mail = "";
-
-        if(hasNumber(fullnameSearch) || fullnameSearch.includes("@")) {
-            vnu_mail = fullnameSearch;
-            fullnameSearch = "";
-        }
-
+        let {typeAccount, page} = action.payload;
         yield put(actions.fetchAccountsStart());
 
         let api;
         if (typeAccount === 'GV') {
-            api = `/employees?fullname=${fullnameSearch}&vnu_mail=${vnu_mail}&page=${page || 1}`;
+
+            const params = {
+                fullname: action.payload.fullname || "",
+                vnu_mail: action.payload.vnu_mail || "",
+                academic_rank: action.payload.academic_rank || "",
+                academic_degree: action.payload.academic_degree || "",
+                institutionUuid: action.payload.institutionUuid || "",
+                page: page || 1
+            }
+
+            api = `/employees`;
+            let {data} = yield axios.get(api, {params});
+            yield put(actions.fetchAccountsSuccess(data));
         }
         else if (typeAccount === "SV") {
-            api = `/students?fullname=${fullnameSearch}&vnu_mail=${vnu_mail}&class=${studentClass}&page=${page || 1}`;
+
+            const params = {
+                fullname: action.payload.fullname || "",
+                student_code: action.payload.student_code || "",
+                class: action.payload.class,
+                grade: action.payload.grade,
+                majorUuid: action.payload.majorUuid,
+                page: page || 1
+            }
+
+            api = `/students`;
+            let {data} = yield axios.get(api, {params});
+            yield put(actions.fetchAccountsSuccess(data));
         }
 
-        const {data} = api ? yield axios.get(api) : [];
-        yield put(actions.fetchAccountsSuccess(data));
+
+
     } catch (error) {
         console.log(error)
         yield put(actions.fetchAccountsFail(error));
