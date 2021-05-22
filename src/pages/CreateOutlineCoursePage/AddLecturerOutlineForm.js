@@ -40,16 +40,12 @@ const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
             {
                 accounts.map((employee, index) => {
                     return (
-
                             <Option value={employee.uuid} label={employee.fullname} key={index}>
                                 <div className="demo-option-label-item">
-
                                     {`${employee.fullname} (${employee.vnu_mail})`}
-
                                 </div>
                             </Option>
                     )
-
                 })
             }
 

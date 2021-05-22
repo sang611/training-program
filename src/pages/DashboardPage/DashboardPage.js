@@ -158,22 +158,22 @@ const DashboardPage = () => {
                         </Menu.Item>
                         <SubMenu key="sub0" icon={<DesktopOutlined/>} title="Chương trình đào tạo" className="sub-menu">
                             <Menu.Item key="/uet/training-programs" className="menu-item-child">
-                                <Link to="/uet/training-programs">Danh sách</Link>
+                                <Link to="/uet/training-programs">Danh sách CTĐT</Link>
                             </Menu.Item>
                             <Menu.Item key="/uet/documents/training-program" className="menu-item-child">
-                                <Link to="/uet/documents/training-program">Tài liệu</Link>
+                                <Link to="/uet/documents/training-program">Tài liệu CTĐT</Link>
                             </Menu.Item>
                         </SubMenu>
                         {
                             <SubMenu key="sub1" icon={<ReadOutlined/>} title="Học phần" className="sub-menu">
                                 <Menu.Item key="/uet/courses" className="menu-item-child">
-                                    <Link to="/uet/courses">Danh sách</Link>
+                                    <Link to="/uet/courses">Danh sách học phần</Link>
                                 </Menu.Item>
                                 {/* <Menu.Item key="6" className="menu-item-child">
                                             <Link to="/uet/courses/creation">Tạo mới</Link>
                                         </Menu.Item>*/}
                                 <Menu.Item key="/uet/documents/course" className="menu-item-child">
-                                    <Link to="/uet/documents/course">Tài liệu</Link>
+                                    <Link to="/uet/documents/course">Tài liệu học phần</Link>
                                 </Menu.Item>
                             </SubMenu>
                         }
@@ -192,7 +192,7 @@ const DashboardPage = () => {
                         <SubMenu key="sub3" icon={<BankOutlined/>} title="Đơn vị chuyên môn" className="sub-menu">
                             <Menu.Item key="/uet/institutions" className="menu-item-child">
                                 <Link to="/uet/institutions">
-                                    Danh sách
+                                    Danh sách đơn vị
                                 </Link>
                             </Menu.Item>
                             {/*<Menu.Item key="12" className="menu-item-child"><Link to="/uet/institutions/creation">Tạo
@@ -200,14 +200,14 @@ const DashboardPage = () => {
                         </SubMenu>
                         <SubMenu key="sub4" icon={<TeamOutlined/>} title="Tài khoản" className="sub-menu">
                             <Menu.Item key="/uet/accounts" className="menu-item-child">
-                                <Link to="/uet/accounts">Danh sách</Link>
+                                <Link to="/uet/accounts">Danh sách tài khoản</Link>
                             </Menu.Item>
                             <Menu.Item key="/uet/creation/accounts" className="menu-item-child">
-                                <Link to="/uet/creation/accounts">Tạo mới</Link>
+                                <Link to="/uet/creation/accounts">Thêm mới tài khoản</Link>
                             </Menu.Item>
                         </SubMenu>
                         <Menu.Item key="/uet/majors" icon={<PartitionOutlined/>} className="sub-menu">
-                            <Link to="/uet/majors">Ngành</Link>
+                            <Link to="/uet/majors">Ngành đào tạo</Link>
                         </Menu.Item>
                         <Menu.Item key="/uet/documents/involved" icon={<FileOutlined/>} className="sub-menu">
                             <Link to="/uet/documents/involved">Các văn bản liên quan</Link>

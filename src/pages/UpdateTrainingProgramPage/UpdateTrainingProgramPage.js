@@ -38,6 +38,7 @@ const UpdateTrainingProgramPage = (props) => {
        return trainingProgram ?  (
             <>
                 <Tabs
+                    type="card"
                     defaultActiveKey={localStorage.getItem('activeKeyTabTrainingCourse')}
                     tabPosition="top"
                     onChange={(key) => localStorage.setItem('activeKeyTabTrainingCourse', key) }

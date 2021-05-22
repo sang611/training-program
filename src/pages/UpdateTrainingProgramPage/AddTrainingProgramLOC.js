@@ -139,6 +139,7 @@ const ListLocs = ({trainingProgram}) => {
                     current={currentPage}
                     total={state.total}
                     onChange={(val) => setCurrentPage(val)}
+                    showSizeChanger={false}
                     />
             </Col>
             <Col span={10}>

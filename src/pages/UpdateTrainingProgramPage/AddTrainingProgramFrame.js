@@ -20,7 +20,7 @@ const EditableCell = ({
                           ...restProps
                       }) => {
     const courseState = useSelector(state => state.courses)
-    const inputNode = inputType === 'number' ? <InputNumber min={0} max={200} defaultValue={0}/> :
+    const inputNode = inputType === 'number' ? <InputNumber min={0} max={200} /> :
         <Select
             showSearch
             placeholder="Tên học phần"

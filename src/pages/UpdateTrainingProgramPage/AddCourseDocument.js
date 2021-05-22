@@ -1,6 +1,6 @@
 import Title from "antd/lib/typography/Title";
 import TextArea from "antd/lib/input/TextArea";
-import {Button, message, Select, Table} from "antd";
+import {Button, message, Pagination, Row, Select, Table} from "antd";
 import axios from "axios";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
@@ -8,11 +8,13 @@ import * as actions from "../../redux/actions";
 import {generateDataFrame} from "../../utils/frameCourse";
 import SearchCourseFrameComponent from "./SearchCourseFrameComponent";
 
-const AddCourseDocument = ({trainingProgram, type}) => {
 
+const AddCourseDocument = ({trainingProgram, type}) => {
     const dispatch = useDispatch();
-    const {accounts} = useSelector(state => state.accounts);
+    const {accounts, loadingAll, totalAccounts} = useSelector(state => state.accounts);
     const [dataSource, setDataSource] = useState(generateDataFrame(trainingProgram));
+    const [pageLec, setPageLec] = useState(1);
+    const [lecturers, setLecturers] = useState([]);
 
     const [editing, setEditing] = useState([]);
 
@@ -50,9 +52,13 @@ const AddCourseDocument = ({trainingProgram, type}) => {
 
     useEffect(() => {
         if (type === "lec") {
-            dispatch(actions.fetchAccounts({typeAccount: "GV", fullnameSearch: ""}))
+            dispatch(actions.fetchAccounts({typeAccount: "GV"}))
         }
     }, [])
+
+    useEffect(() => {
+        setLecturers(accounts);
+    }, [accounts])
 
     const columns = [
         {
@@ -78,9 +84,9 @@ const AddCourseDocument = ({trainingProgram, type}) => {
                         </>
                     )
                 } else {
-                    if(course.h===1)
+                    if (course.h === 1)
                         return <b>{course.course_name_vi}</b>
-                    else if(course.h===2)
+                    else if (course.h === 2)
                         return <span style={{fontWeight: 500}}><i>{course.course_name_vi}</i></span>
                 }
             }
@@ -95,6 +101,7 @@ const AddCourseDocument = ({trainingProgram, type}) => {
         },
         {
             title: type === "doc" ? 'Tài liệu tham khảo' : 'Cán bộ giảng dạy',
+            width: '40%',
             render: (_, record) => {
                 return record.uuid ? type === "doc" ? (
                     <TextArea
@@ -111,17 +118,37 @@ const AddCourseDocument = ({trainingProgram, type}) => {
                     <Select
                         mode="multiple"
                         allowClear
-                        style={{width: '300px'}}
+                        style={{width: '100%'}}
                         placeholder="Chọn cán bộ"
+                        dropdownRender={(menu) => (
+                            <>
+                                {menu}
+                                <br/>
+                                <Row justify="space-around">
+                                    <Pagination
+                                        total={totalAccounts}
+                                        size='small'
+                                        current={pageLec}
+                                        onChange={(page) => {
+                                            setPageLec(page);
+                                            dispatch(actions.fetchAccounts({
+                                                typeAccount: "GV",
+                                                page
+                                            }))
+                                        }}
+                                    />
+                                </Row>
+                            </>
+                        )}
                         defaultValue={
                             record.training_program_course.lecturers ?
                                 JSON.parse(record.training_program_course.lecturers).map(lec => lec.uuid) : []
                         }
-                        onSelect={(value) => {
-                            let lecturer = accounts.find((acc) => acc.uuid === value)
-                            onAddLecturer(trainingProgram.uuid, record.training_program_course, {lecturer});
-                        }
-
+                        onSelect={
+                            (value) => {
+                                let lecturer = accounts.find((acc) => acc.uuid === value)
+                                onAddLecturer(trainingProgram.uuid, record.training_program_course, {lecturer});
+                            }
                         }
                         onDeselect={(value => {
                             let lecturer = accounts.find((acc) => acc.uuid === value)
@@ -129,21 +156,42 @@ const AddCourseDocument = ({trainingProgram, type}) => {
                         })}
                     >
                         {
-
-                                accounts.map((employee, index) => {
+                            lecturers
+                                .map((employee) => {
                                     return (
-                                        <Select.Option
-                                            value={employee.uuid}
-                                            label={employee.fullname}
-                                            key={index}
-                                        >
-                                            <div className="demo-option-label-item">
-                                                {`${employee.fullname} (${employee.vnu_mail})`}
-                                            </div>
-                                        </Select.Option>
-
+                                        <>
+                                            <Select.Option
+                                                value={employee.uuid}
+                                                label={employee.fullname}
+                                                key={employee.uuid}
+                                            >
+                                                <div className="demo-option-label-item">
+                                                    {`${employee.fullname} (${employee.vnu_mail})`}
+                                                </div>
+                                            </Select.Option>
+                                        </>
                                     )
-
+                                })
+                        }
+                        {
+                            (JSON.parse(record.training_program_course.lecturers) || [])
+                                .filter((lec_of_course) => {
+                                    return !lecturers.map(l => l.uuid).includes(lec_of_course.uuid)
+                                })
+                                .map((employee) => {
+                                    return (
+                                        <>
+                                            <Select.Option
+                                                value={employee.uuid}
+                                                label={employee.fullname}
+                                                key={employee.uuid}
+                                            >
+                                                <div className="demo-option-label-item">
+                                                    {`${employee.fullname} (${employee.vnu_mail})`}
+                                                </div>
+                                            </Select.Option>
+                                        </>
+                                    )
                                 })
                         }
                     </Select>
@@ -178,14 +226,14 @@ const AddCourseDocument = ({trainingProgram, type}) => {
                 columns={columns}
                 dataSource={
                     dataSource.map(
-                    (course, index) => {
-                        course.key = course.uuid;
-                        if (course.uuid) {
-                            course.stt = index_course ++;
+                        (course) => {
+                            course.key = course.uuid;
+                            if (course.uuid) {
+                                course.stt = index_course ++;
+                            }
+                            return course
                         }
-                        return course
-                    }
-                )
+                    )
                 }
                 bordered
                 pagination={false}

@@ -1,12 +1,15 @@
 import React, {useEffect, useState} from "react";
 import Title from "antd/lib/typography/Title";
 import {Table} from "antd";
+import {useSelector} from "react-redux";
 
-const CourseLecturer = ({courses}) => {
+const CourseLecturer = () => {
     const [dataSource, setDataSource] = useState([])
+    const {trainingProgram} = useSelector(state => state.trainingPrograms)
+    let indexRow = 1;
     useEffect(() => {
         let mix = [];
-        for (let course of courses) {
+        for (let course of trainingProgram.courses) {
             let lecturers = JSON.parse(course.training_program_course.lecturers);
             course.lecturers = lecturers;
             if (lecturers) {
@@ -32,9 +35,12 @@ const CourseLecturer = ({courses}) => {
 
         obj.props.rowSpan = dataSource[index].lecturers ? dataSource[index].lecturers.length : 1;
 
+
+
         if (index > 0) {
             if (dataSource[index].courseUuid === dataSource[index - 1].courseUuid) {
                 obj.props.rowSpan = 0;
+                indexRow --;
             }
         }
 
@@ -44,7 +50,7 @@ const CourseLecturer = ({courses}) => {
         {
             title: 'STT',
             dataIndex: 'stt',
-            //render: renderContent,
+            render: renderContent,
         },
         {
             title: 'Mã học phần',
@@ -90,7 +96,13 @@ const CourseLecturer = ({courses}) => {
                 columns={columns}
                 dataSource={dataSource.map((course, index) => {
                     course.key = index;
-                    course.stt = index + 1;
+
+                    if (index > 0 && dataSource[index].courseUuid === dataSource[index - 1].courseUuid) {
+                        course.stt = indexRow - 1;
+                    }
+                    else {
+                        course.stt = indexRow ++;
+                    }
                     return course;
                 })}
                 bordered
