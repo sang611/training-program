@@ -50,7 +50,7 @@ const CourseSequence = ({courses}) => {
         },
     ]
     return (
-        <>
+        <div id="training-sequence">
             <Title level={4}>
                 {"Trình tự đào tạo dự kiến"}
             </Title>
@@ -98,7 +98,7 @@ const CourseSequence = ({courses}) => {
                         )
                     })
             }
-        </>
+        </div>
     )
 }
 

@@ -22,6 +22,7 @@ import * as actions from "../../redux/actions/index"
 import {Option} from "antd/lib/mentions";
 import CreatePLO from "./CreatePLO";
 import CreateCLO from "./CreateCLO";
+import {locTypes} from "../../constants";
 
 const ListLocs = ({typeLoc, currentPage, onPaginateLOC, showModal}) => {
     const dispatch = useDispatch();
@@ -85,7 +86,7 @@ const ListLocs = ({typeLoc, currentPage, onPaginateLOC, showModal}) => {
             columns={columns}
             dataSource={
                 state.locs.map((loc, index) => {
-                    loc.stt = (currentPage-1)*10 + index + 1;
+                    loc.stt = (currentPage - 1) * 10 + index + 1;
                     loc.key = loc.uuid;
                     return loc;
                 })
@@ -193,49 +194,50 @@ const LearningOutcomePage = () => {
             <div style={{paddingRight: '60px'}}>
 
 
-            <Row justify="space-between">
-                <Col>
-                    <Radio.Group value={typeLoc} onChange={(e) => setTypeLoc(e.target.value)} buttonStyle="solid">
-                        <Radio.Button value={1}>Chương trình đào tạo</Radio.Button>
-                        <Radio.Button value={2}>Học phần</Radio.Button>
-                    </Radio.Group>
-                </Col>
-                <Col span={10}>
-                    <Row>
-                        <Col span={6}>
-                            <Select
-                                onChange={onFilterByTitle}
-                                size="large"
-                                defaultValue={0}
-                                style={{width: '100%'}}
-                            >
-                                <Option key='all' value={0}>Tất cả</Option>
-                                <Option key='kien_thuc' value={1}>Kiến thức</Option>
-                                <Option key='ki_nang' value={2}>Kĩ năng</Option>
-                                <Option key='dao_duc' value={3}>Thái độ</Option>
-                            </Select>
-                        </Col>
-                        <Col span={18}>
-                            <Input placeholder="Tìm kiếm theo nội dung" onChange={onSearch} style={{width: '100%'}} size="large"/>
-                        </Col>
+                <Row justify="space-between">
+                    <Col>
+                        <Radio.Group value={typeLoc} onChange={(e) => setTypeLoc(e.target.value)} buttonStyle="solid">
+                            <Radio.Button value={1}>Chương trình đào tạo</Radio.Button>
+                            <Radio.Button value={2}>Học phần</Radio.Button>
+                        </Radio.Group>
+                    </Col>
+                    <Col span={10}>
+                        <Row>
+                            <Col span={6}>
+                                <Select
+                                    onChange={onFilterByTitle}
+                                    size="large"
+                                    defaultValue={0}
+                                    style={{width: '100%'}}
+                                >
+                                    <Option key='all' value={0}>Tất cả</Option>
+                                    <Option key='kien_thuc' value={1}>Kiến thức</Option>
+                                    <Option key='ki_nang' value={2}>Kĩ năng</Option>
+                                    <Option key='dao_duc' value={3}>Thái độ</Option>
+                                </Select>
+                            </Col>
+                            <Col span={18}>
+                                <Input placeholder="Tìm kiếm theo nội dung" onChange={onSearch} style={{width: '100%'}}
+                                       size="large"/>
+                            </Col>
 
 
-                    </Row>
+                        </Row>
 
 
-                </Col>
-            </Row><br/>
+                    </Col>
+                </Row><br/>
 
-            {
-                useMemo(() => {
-                    return <ListLocs
-                        typeLoc={typeLoc}
-                        onPaginateLOC={onPaginateLOC}
-                        currentPage={currentPage}
-                        showModal={showModal}
-                    />
-                }, [typeLoc, currentPage, content])
-            }
+                {
+                    useMemo(() => {
+                        return <ListLocs
+                            typeLoc={typeLoc}
+                            onPaginateLOC={onPaginateLOC}
+                            currentPage={currentPage}
+                            showModal={showModal}
+                        />
+                    }, [typeLoc, currentPage, content])
+                }
             </div>
             <Button
                 type="primary"
@@ -273,6 +275,23 @@ const LearningOutcomePage = () => {
                             ]}
                         >
                             <Input.TextArea autoSize/>
+                        </Form.Item>
+                        <Form.Item name="title">
+                            <Select
+                                placeholder="Nhóm"
+                            >
+                                {
+                                    locTypes.map(
+                                        type =>
+                                            <Select.Option
+                                                key={type.value}
+                                                value={type.value}
+                                            >
+                                                {type.content}
+                                            </Select.Option>
+                                    )
+                                }
+                            </Select>
                         </Form.Item>
                     </Form>
                 </Modal>

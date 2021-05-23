@@ -144,12 +144,13 @@ const ListLocs = ({trainingProgram}) => {
             </Col>
             <Col span={10}>
                 <Row>
-                    <Col span={7}>
+                    <Col span={6}>
                         <Select
                             onChange={(val) => setTitle(val)}
                             size="large"
-                            defaultValue={0}
-                            value={title}
+                            placeholder="Nhóm"
+                            //defaultValue={0}
+                            //value={title}
                             style={{width: '100%'}}
                         >
                             <Option key='0' value={0}>Tất cả</Option>
@@ -158,7 +159,7 @@ const ListLocs = ({trainingProgram}) => {
                             <Option key='3' value={3}>Thái độ</Option>
                         </Select>
                     </Col>
-                    <Col span={17}>
+                    <Col span={18}>
                         <Input
                             placeholder="Tìm kiếm"
                             onChange={(e) => {

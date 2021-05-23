@@ -40,7 +40,7 @@ const TrainingLOC = ({learning_outcomes}) => {
     ];
 
     return (
-        <>
+        <div id="training-loc">
             <Title level={4}>
                 PHẦN II. CHUẨN ĐẦU RA CỦA CHƯƠNG TRÌNH ĐÀO TẠO
             </Title>
@@ -54,7 +54,7 @@ const TrainingLOC = ({learning_outcomes}) => {
             <LOCItems learning_outcomes={learning_outcomes} title={1}/>
             <LOCItems learning_outcomes={learning_outcomes} title={2}/>
             <LOCItems learning_outcomes={learning_outcomes} title={3}/>
-        </>
+        </div>
     )
 
 }

@@ -16,6 +16,7 @@ import {CKEditor} from "@ckeditor/ckeditor5-react";
 import Text from "antd/lib/typography/Text";
 import UpdateTrainingProgramIntroduce from "./UpdateTrainingProgramIntroduce";
 import {Skeleton} from "antd/es";
+import {LoadingOutlined} from "@ant-design/icons";
 
 const UpdateTrainingProgramPage = (props) => {
     const dispatch = useDispatch();
@@ -30,9 +31,12 @@ const UpdateTrainingProgramPage = (props) => {
     }, [])
 
     if(loadingATraining) return <>
+        {/*<Skeleton active />
         <Skeleton active />
-        <Skeleton active />
-        <Skeleton active />
+        <Skeleton active />*/}
+        <center>
+            <LoadingOutlined style={{fontSize: '40px'}} />
+        </center>
     </>
 
        return trainingProgram ?  (

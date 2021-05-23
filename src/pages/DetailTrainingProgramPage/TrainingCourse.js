@@ -2,6 +2,7 @@ import {Col, Descriptions, Row, Table} from "antd";
 import Title from "antd/lib/typography/Title";
 import React, {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
+import {generateDataFrame} from "../../utils/frameCourse";
 
 const TrainingCourse = () => {
     const {Column, ColumnGroup} = Table;
@@ -28,65 +29,8 @@ const TrainingCourse = () => {
 
     useEffect(() => {
         if (trainingProgram) {
-            let requireSummary = {};
-            if (trainingProgram.require_summary) {
-                requireSummary = JSON.parse(trainingProgram.require_summary)
-            }
-
-            let course_c = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'C');
-            let course_lv = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'LV');
-            let course_kn_B = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'KN' && course.training_program_course.course_type === 'B');
-            let course_kn_L = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'KN' && course.training_program_course.course_type === 'L');
-
-            //let course_nn = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'NN');
-            let course_nn_B = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'NN' && course.training_program_course.course_type === 'B');
-            let course_nn_L = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'NN' && course.training_program_course.course_type === 'L');
-
-            //let course_n = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'N');
-            let course_n_B = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'N' && course.training_program_course.course_type === 'B');
-            let course_n_L = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'N' && course.training_program_course.course_type === 'L');
-            let course_n_BT = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'N' && course.training_program_course.course_type === 'BT');
-            let course_n_KLTN = trainingProgram.courses.filter(course => course.training_program_course.knowledge_type === 'N' && course.training_program_course.course_type === 'KLTN');
             setData(
-                [{course_name_vi: 'Khối kiến thức chung', credits: requireSummary.common, h: 1}]
-                    .concat(course_c)
-                    .concat([{
-                        course_name_vi: 'Khối kiến thức theo lĩnh vực',
-                        credits: requireSummary.field,
-                        h: 1
-                    }])
-                    .concat(course_lv)
-                    .concat([{
-                        course_name_vi: 'Khối kiến thức theo khối ngành',
-                        credits: requireSummary.major_unit,
-                        h: 1
-                    }])
-                    .concat([{course_name_vi: 'Các học phần bắt buộc', credits: requireSummary.major_unit_B, h: 2}])
-                    .concat(course_kn_B)
-                    .concat([{course_name_vi: 'Các học phần tự chọn', credits: requireSummary.major_unit_L, h: 2}])
-                    .concat(course_kn_L)
-                    .concat([{
-                        course_name_vi: 'Khối kiến thức theo nhóm ngành',
-                        credits: requireSummary.major_group,
-                        h: 1
-                    }])
-                    .concat([{course_name_vi: 'Các học phần bắt buộc', credits: requireSummary.major_group_B, h: 2}])
-                    .concat(course_nn_B)
-                    .concat([{course_name_vi: 'Các học phần tự chọn', credits: requireSummary.major_group_L, h: 2}])
-                    .concat(course_nn_L)
-                    .concat([{
-                        course_name_vi: 'Khối kiến thức ngành',
-                        credits: requireSummary.major,
-                        h: 1
-                    }])
-                    .concat([{course_name_vi: 'Các học phần bắt buộc', credits: requireSummary.major_B, h: 2}])
-                    .concat(course_n_B)
-                    .concat([{course_name_vi: 'Các học phần tự chọn', credits: requireSummary.major_L, h: 2}])
-                    .concat(course_n_L)
-                    .concat([{course_name_vi: 'Các học phần bổ trợ', credits: requireSummary.major_BT, h: 2}])
-                    .concat(course_n_BT)
-                    .concat([{course_name_vi: 'KLTN/Các học phần thay thế', credits: requireSummary.major_KLTN, h: 2}])
-                    .concat(course_n_KLTN)
+                generateDataFrame(trainingProgram)
             )
         }
 
@@ -94,7 +38,7 @@ const TrainingCourse = () => {
 
 
     return (
-        <>
+        <div id="training-course">
             <Title level={4}>
                 PHẦN III. NỘI DUNG CHƯƠNG TRÌNH ĐÀO TẠO
             </Title>
@@ -103,84 +47,100 @@ const TrainingCourse = () => {
             </Title>
             <Row>
                 <Col span={12} offset={1}>
-                    <Descriptions column={1} labelStyle={{fontWeight: 'bold'}}>
-                        <Descriptions.Item label="Tổng số tín chỉ của chương trình đào tạo">
-                            {requireSummary ? requireSummary.total : '?'} tín chỉ
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Khối kiến thức chung">
-                            {requireSummary ? requireSummary.common : '?'} tín chỉ
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Khối kiến thức theo lĩnh vực">
-                            {requireSummary ? requireSummary.field : '?'} tín chỉ
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Khối kiến thức theo khối ngành" span={2}>
-                            {requireSummary ? requireSummary.major_unit : '?'} tín chỉ
-                        </Descriptions.Item>
+                    {
+                        requireSummary ?
+                            <Descriptions column={1} labelStyle={{fontWeight: 'bold'}}>
+                                <Descriptions.Item label="Tổng số tín chỉ của chương trình đào tạo">
+                                    {requireSummary.total} tín chỉ
+                                </Descriptions.Item>
+                                <Descriptions.Item label="Khối kiến thức chung">
+                                    {requireSummary.common} tín chỉ
+                                </Descriptions.Item>
+                                <Descriptions.Item label="Khối kiến thức theo lĩnh vực">
+                                    {requireSummary.field} tín chỉ
+                                </Descriptions.Item>
+                                <Descriptions.Item label="Khối kiến thức theo khối ngành" span={2}>
+                                    {requireSummary.major_unit} tín chỉ
+                                </Descriptions.Item>
 
-                        <Descriptions.Item
-                            label="Các học phần bắt buộc"
-                            span={2}
-                            labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
-                        >
-                            {requireSummary ? requireSummary.major_unit_B : '?'} tín chỉ
-                        </Descriptions.Item>
-                        <Descriptions.Item
-                            label="Các học phần tự chọn"
-                            span={2}
-                            labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
-                        >
-                            {requireSummary ? requireSummary.major_unit_L : '?'} tín chỉ
-                        </Descriptions.Item>
+                                <Descriptions.Item
+                                    label="Các học phần bắt buộc"
+                                    span={2}
+                                    labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
+                                >
+                                    {requireSummary.major_unit_B} tín chỉ
+                                </Descriptions.Item>
+                                <Descriptions.Item
+                                    label="Các học phần tự chọn"
+                                    span={2}
+                                    labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
+                                >
+                                    {requireSummary.major_unit_L} tín chỉ
+                                </Descriptions.Item>
 
-                        <Descriptions.Item label="Khối kiến thức theo nhóm ngành">
-                            {requireSummary ? requireSummary.major_group : ''}
-                        </Descriptions.Item>
-                        <Descriptions.Item
-                            label="Các học phần bắt buộc"
-                            span={2}
-                            labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
-                        >
-                            {requireSummary ? requireSummary.major_group_B : '?'} tín chỉ
-                        </Descriptions.Item>
-                        <Descriptions.Item
-                            label="Các học phần tự chọn"
-                            span={2}
-                            labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
-                        >
-                            {requireSummary ? requireSummary.major_group_L : '?'} tín chỉ
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Khối kiến thức ngành">
-                            {requireSummary ? requireSummary.major : ''}
-                        </Descriptions.Item>
-                        <Descriptions.Item
-                            label="Các học phần bắt buộc"
-                            span={2}
-                            labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
-                        >
-                            {requireSummary ? requireSummary.major_B : '?'} tín chỉ
-                        </Descriptions.Item>
-                        <Descriptions.Item
-                            label="Các học phần tự chọn"
-                            span={2}
-                            labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
-                        >
-                            {requireSummary ? requireSummary.major_L : '?'} tín chỉ
-                        </Descriptions.Item>
-                        <Descriptions.Item
-                            label="Các học phần bổ trợ"
-                            span={2}
-                            labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
-                        >
-                            {requireSummary ? requireSummary.major_BT : '?'} tín chỉ
-                        </Descriptions.Item>
-                        <Descriptions.Item
-                            label="Khóa luận tốt nghiệp/Các học phần thay thế"
-                            span={2}
-                            labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
-                        >
-                            {requireSummary ? requireSummary.major_KLTN : '?'} tín chỉ
-                        </Descriptions.Item>
-                    </Descriptions>
+                                <Descriptions.Item label="Khối kiến thức theo nhóm ngành">
+                                    {requireSummary.major_group}
+                                </Descriptions.Item>
+                                {
+                                    !(requireSummary.major_group_B == 0 || requireSummary.major_group_B == "" || !requireSummary.major_group_B) ?
+                                        <Descriptions.Item
+                                            label="Các học phần bắt buộc"
+                                            span={2}
+                                            labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
+                                        >
+                                            {requireSummary.major_group_B} tín chỉ
+                                        </Descriptions.Item>
+                                        : ''
+                                }
+
+                                {
+                                    !(requireSummary.major_group_L == 0 || requireSummary.major_group_L == "" || !requireSummary.major_group_L) ?
+                                    <Descriptions.Item
+                                        label="Các học phần tự chọn"
+                                        span={2}
+                                        labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
+                                    >
+                                        {requireSummary.major_group_L} tín chỉ
+                                    </Descriptions.Item>
+                                        : ''
+                                }
+
+
+                                <Descriptions.Item label="Khối kiến thức ngành">
+                                    {requireSummary.major}
+                                </Descriptions.Item>
+                                <Descriptions.Item
+                                    label="Các học phần bắt buộc"
+                                    span={2}
+                                    labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
+                                >
+                                    {requireSummary.major_B} tín chỉ
+                                </Descriptions.Item>
+                                <Descriptions.Item
+                                    label="Các học phần tự chọn"
+                                    span={2}
+                                    labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
+                                >
+                                    {requireSummary.major_L} tín chỉ
+                                </Descriptions.Item>
+                                <Descriptions.Item
+                                    label="Các học phần bổ trợ"
+                                    span={2}
+                                    labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
+                                >
+                                    {requireSummary.major_BT} tín chỉ
+                                </Descriptions.Item>
+                                <Descriptions.Item
+                                    label="Khóa luận tốt nghiệp/Các học phần thay thế"
+                                    span={2}
+                                    labelStyle={{fontStyle: 'italic', fontWeight: 'normal', marginLeft: '40px'}}
+                                >
+                                    {requireSummary.major_KLTN} tín chỉ
+                                </Descriptions.Item>
+                            </Descriptions>
+                            : ''
+                    }
+
                 </Col>
             </Row>
 
@@ -193,13 +153,13 @@ const TrainingCourse = () => {
                     data.map((course, index) => {
                         course.key = course.uuid;
                         if (course.uuid) {
-                            course.stt = index_course ++;
+                            course.stt = index_course++;
                         }
                         return course
                     })
                 }
-               bordered
-               pagination={false}
+                bordered
+                pagination={false}
             >
                 <Column title="STT" dataIndex="stt" key="stt"/>
                 <Column title="Mã học phần" dataIndex="course_code" key="course_code"/>
@@ -218,9 +178,9 @@ const TrainingCourse = () => {
                                     </>
                                 )
                             } else {
-                                if(record.h===1)
+                                if (record.h === 1)
                                     return <b>{record.course_name_vi}</b>
-                                else if(record.h===2)
+                                else if (record.h === 2)
                                     return <span style={{fontWeight: 500}}><i>{record.course_name_vi}</i></span>
                             }
                         }
@@ -234,9 +194,9 @@ const TrainingCourse = () => {
                         if (record.uuid) {
                             return record.credits
                         } else {
-                            if(record.h===1)
+                            if (record.h === 1)
                                 return <b>{record.credits}</b>
-                            else if(record.h===2)
+                            else if (record.h === 2)
                                 return <span style={{fontWeight: 500}}><i>{record.credits}</i></span>
                         }
                     }}
@@ -262,7 +222,7 @@ const TrainingCourse = () => {
                     }}
                 />
             </Table>
-        </>
+        </div>
     )
 }
 

@@ -79,14 +79,13 @@ const UpdateOutlinePage = () => {
 
         axios.post("/outlines", data)
             .then((res) => {
-                if(userRole > 0) {
+                if (userRole > 0) {
 
                     notification.success({
                         message: res.data.message,
                         description: "Cập nhật sẽ được thực hiện sau khi admin chấp nhận!"
                     });
-                }
-                else {
+                } else {
                     message.success(res.data.message)
                     history.push(`/uet/courses/${uuid}/outlines`)
                 }
@@ -95,7 +94,7 @@ const UpdateOutlinePage = () => {
     }
 
     return loading || loadingACourse ? <Spin/> : (
-       course && outline ? <>
+        course && outline ? <>
             <Title level={4}>
                 1. Giảng viên phụ trách môn học
             </Title>
@@ -124,13 +123,14 @@ const UpdateOutlinePage = () => {
             <Title level={4}>
                 5. Tóm tắt nội dung môn học
             </Title>
-            <TextArea
+            {/*<TextArea
                 value={summaryContent}
                 style={{width: '70%'}}
                 rows="8"
                 onChange={(e) => {
                     setSummaryContent(e.target.value)
-                }}/>
+                }}/>*/}
+            <ContentCourse setSummaryContent={setSummaryContent} content={outline.summaryContent}/>
             <br/><br/>
 
             <Title level={4}>
@@ -142,14 +142,14 @@ const UpdateOutlinePage = () => {
             <Title level={4}>
                 7. Học liệu
             </Title>
-            <TextArea
+            {/*<TextArea
                 value={documents}
                 style={{width: '70%'}}
                 rows="8"
                 onChange={(e) => {
                     setDocument(e.target.value)
-                }}/>
-
+                }}/>*/}
+            <ContentCourse setDocument={setDocument} content={outline.documents}/>
             <br/><br/>
 
             <Title level={4}>
@@ -161,13 +161,14 @@ const UpdateOutlinePage = () => {
             <Title level={4}>
                 9. Chính sách đối với môn học và các yêu cầu khác của giảng viên
             </Title>
-            <TextArea
+            {/*<TextArea
                 value={coursePolicy}
                 style={{width: '70%'}}
                 rows="8"
                 onChange={(e) => {
                     setCoursePolicy(e.target.value)
-                }}/>
+                }}/>*/}
+            <ContentCourse setCoursePolicy={setCoursePolicy} content={outline.coursePolicy}/>
             <br/><br/>
 
             <Title level={4}>
@@ -177,23 +178,23 @@ const UpdateOutlinePage = () => {
             <br/><br/>
 
             {
-               userRole > 0 ?
-                   <>
-                       <Title level={4}>
-                           Mô tả những phần đã chỉnh sửa
-                       </Title>
-                       <Row>
-                           <Col span={16}>
-                               <TextArea
-                                   rows="8"
-                                   onChange={(e) => {
-                                       setDescriptionEdit(e.target.value)
-                                   }}
-                               />
-                           </Col>
-                       </Row>
-                       <br/><br/>
-                   </> : ''
+                userRole > 0 ?
+                    <>
+                        <Title level={4}>
+                            Mô tả những phần đã chỉnh sửa
+                        </Title>
+                        <Row>
+                            <Col span={16}>
+                                <TextArea
+                                    rows="8"
+                                    onChange={(e) => {
+                                        setDescriptionEdit(e.target.value)
+                                    }}
+                                />
+                            </Col>
+                        </Row>
+                        <br/><br/>
+                    </> : ''
             }
 
             <Row justify="space-between">

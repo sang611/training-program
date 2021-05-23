@@ -13,7 +13,7 @@ const DependencyCourseGraph = () => {
 
     useEffect(() => {
         if (trainingProgram) {
-            if(trainingProgram.courses) {
+            if (trainingProgram.courses) {
                 let edgeList = [];
                 trainingProgram.courses.forEach(course => {
                     let requiredCourses = JSON.parse(course.required_course);
@@ -29,9 +29,8 @@ const DependencyCourseGraph = () => {
     }, [trainingProgram])
 
     useEffect(() => {
-        if(trainingProgram)
-            if(trainingProgram.courses)
-            {
+        if (trainingProgram)
+            if (trainingProgram.courses) {
                 setSourceData(
                     {
                         nodes: trainingProgram.courses.map((course, index) => {
@@ -46,8 +45,6 @@ const DependencyCourseGraph = () => {
             }
 
     }, [edges])
-
-
 
 
     const [data, setData] = useState(sourceData);
@@ -121,36 +118,38 @@ const DependencyCourseGraph = () => {
     };
 
 
-    return <>
-        <Title level={4}>
-            Phụ thuộc giữa các học phần (theo quan hệ học phần tiên quyết)
-        </Title>
-        <Row>
-            <Col span={20}>
-                <Card>
-                    <DagreGraph
-                        nodeStyle={nodeStyle}
-                        nodeSize={nodeSize}
-                        layout={layoutCfg}
-                        nodeAnchorPoints={anchorPoints}
-                        nodeType={nodeType}
-                        nodeLabelCfg={nodeLabelCfg}
-                        minimapCfg={minimapCfg}
-                        behaviors={behaviors}
-                        data={sourceData}
-                        handleEdgeClick={handleEdgeClick}
-                        handleCanvasClick={handleCanvasClick}
-                        edgeStateStyles={edgeStateStyles}
-                        nodeStateStyles={nodeStateStyles}
-                        handleNodeClick={handleNodeClick}
-                        graphId="dagreFirst"
-                    />
-                </Card>
-            </Col>
-        </Row>
+    return (
+        <div id="training-graph">
+            <Title level={4}>
+                Phụ thuộc giữa các học phần (theo quan hệ học phần tiên quyết)
+            </Title>
+            <Row>
+                <Col span={20}>
+                    <Card>
+                        <DagreGraph
+                            nodeStyle={nodeStyle}
+                            nodeSize={nodeSize}
+                            layout={layoutCfg}
+                            nodeAnchorPoints={anchorPoints}
+                            nodeType={nodeType}
+                            nodeLabelCfg={nodeLabelCfg}
+                            minimapCfg={minimapCfg}
+                            behaviors={behaviors}
+                            data={sourceData}
+                            handleEdgeClick={handleEdgeClick}
+                            handleCanvasClick={handleCanvasClick}
+                            edgeStateStyles={edgeStateStyles}
+                            nodeStateStyles={nodeStateStyles}
+                            handleNodeClick={handleNodeClick}
+                            graphId="dagreFirst"
+                        />
+                    </Card>
+                </Col>
+            </Row>
 
 
-    </>
+        </div>
+    )
 }
 
 export default DependencyCourseGraph;

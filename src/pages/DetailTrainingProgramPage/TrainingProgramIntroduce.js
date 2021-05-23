@@ -8,6 +8,7 @@ import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
 import {useParams} from "react-router-dom";
+
 const DescriptionItem = ({title, content}) => (
     <>
         <div style={{display: 'inline-flex'}}>
@@ -44,21 +45,20 @@ const TrainingProgramIntroduce = () => {
             type
         } = trainingProgram
         return (
-            <>
-
-                    <Title level={3}>
-                        {
-                            `Chương trình đào tạo ${type.toLowerCase()} trình độ đại học`.toUpperCase()
-                        }
-                    </Title>
-                    <Descriptions column={1}>
-                        <Descriptions.Item label={<Title level={5}>NGÀNH</Title>} style={{paddingBottom: 0}}>
-                            <Title level={5}>{vn_name.toUpperCase()}</Title>
-                        </Descriptions.Item>
-                        <Descriptions.Item label={<Title level={5}>MÃ SỐ</Title>}>
-                            {<Title level={5}>{training_program_code}</Title>}
-                        </Descriptions.Item>
-                    </Descriptions>
+            <div id="training-introduce">
+                <Title level={3}>
+                    {
+                        `Chương trình đào tạo ${type.toLowerCase()} trình độ đại học`.toUpperCase()
+                    }
+                </Title>
+                <Descriptions column={1}>
+                    <Descriptions.Item label={<Title level={5}>NGÀNH</Title>} style={{paddingBottom: 0}}>
+                        <Title level={5}>{vn_name.toUpperCase()}</Title>
+                    </Descriptions.Item>
+                    <Descriptions.Item label={<Title level={5}>MÃ SỐ</Title>}>
+                        {<Title level={5}>{training_program_code}</Title>}
+                    </Descriptions.Item>
+                </Descriptions>
 
                 <br/><br/>
                 <Title level={4}>
@@ -70,13 +70,20 @@ const TrainingProgramIntroduce = () => {
                 <Row>
                     <Col offset={1} span={23}>
                         <Descriptions column={1} labelStyle={{fontWeight: 'bold'}}>
-                            <Descriptions.Item label="Tên ngành đào tạo (VI)" content={vn_name}>{vn_name}</Descriptions.Item>
-                            <Descriptions.Item label="Tên ngành đào tạo (EN)" content={en_name}>{en_name}</Descriptions.Item>
-                            <Descriptions.Item label="Mã ngành đào tạo" content={training_program_code}>{training_program_code}</Descriptions.Item>
-                            <Descriptions.Item label="Danh hiệu tốt nghiệp" content={graduation_title}>{graduation_title}</Descriptions.Item>
-                            <Descriptions.Item label="Thời gian đào tạo" content={training_duration + " năm"}>{training_duration + " năm"}</Descriptions.Item>
-                            <Descriptions.Item label="Tên văn bằng tốt nghiệp (VI)" content={graduation_diploma_vi}>{graduation_diploma_vi}</Descriptions.Item>
-                            <Descriptions.Item label="Tên văn bằng tốt nghiệp (EN)" content={graduation_diploma_en}>{graduation_diploma_en}</Descriptions.Item>
+                            <Descriptions.Item label="Tên ngành đào tạo (VI)"
+                                               content={vn_name}>{vn_name}</Descriptions.Item>
+                            <Descriptions.Item label="Tên ngành đào tạo (EN)"
+                                               content={en_name}>{en_name}</Descriptions.Item>
+                            <Descriptions.Item label="Mã ngành đào tạo"
+                                               content={training_program_code}>{training_program_code}</Descriptions.Item>
+                            <Descriptions.Item label="Danh hiệu tốt nghiệp"
+                                               content={graduation_title}>{graduation_title}</Descriptions.Item>
+                            <Descriptions.Item label="Thời gian đào tạo"
+                                               content={training_duration + " năm"}>{training_duration + " năm"}</Descriptions.Item>
+                            <Descriptions.Item label="Tên văn bằng tốt nghiệp (VI)"
+                                               content={graduation_diploma_vi}>{graduation_diploma_vi}</Descriptions.Item>
+                            <Descriptions.Item label="Tên văn bằng tốt nghiệp (EN)"
+                                               content={graduation_diploma_en}>{graduation_diploma_en}</Descriptions.Item>
                             <Descriptions.Item label="Đơn vị được giao nhiệm vụ đào tạo" content={
                                 institution ? `${institution.vn_name}, Trường Đại học Công nghệ, ĐHQGHN` : ''
                             }>
@@ -124,11 +131,10 @@ const TrainingProgramIntroduce = () => {
                     <DescriptionItem title="Hình thức tuyển sinh" content={admission_method}/>
                     <DescriptionItem title="Dự kiến quy mô tuyển sinh" content={admission_scale}/>
                 </Col>
-            </>
+            </div>
         )
-    }
-    else {
-        return <Spin />;
+    } else {
+        return <Spin/>;
     }
 }
 

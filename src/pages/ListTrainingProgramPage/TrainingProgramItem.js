@@ -1,5 +1,19 @@
 import {Link} from "react-router-dom";
-import {Button, Card, Descriptions, message, Modal, Popconfirm, Select, Skeleton, Space, Spin, Table} from "antd";
+import {
+    Button,
+    Card,
+    Col,
+    Descriptions,
+    message,
+    Modal,
+    Popconfirm,
+    Row,
+    Select,
+    Skeleton,
+    Space,
+    Spin,
+    Table
+} from "antd";
 import {
     BuildOutlined,
     DeleteOutlined,
@@ -12,12 +26,14 @@ import Icon from "@ant-design/icons/es";
 import axios from "axios";
 import * as actions from "../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
+import {generateDataFrame} from "../../utils/frameCourse";
 
 const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, trainingItem}) => {
     const [knowledgeType, setKnowledgeType] = useState("ALL");
     const {coursesMatrixTraining, loadingCoursesMatrix} = useSelector(state => state.trainingPrograms);
     const [data, setData] = useState(coursesMatrixTraining);
+    let indexRow = 1;
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -40,7 +56,7 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
         {
             title: "STT",
             render: (_, record, index) => {
-                return index+1;
+                return record.uuid ? indexRow ++ : '';
             },
             key: "stt"
         },
@@ -55,7 +71,24 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
                 {
                     title: "Tên học phần (vi)",
                     dataIndex: "course_name_vi",
-                    key: "course_name_vi"
+                    key: "course_name_vi",
+                    render: (_, course) => {
+                        if (course.uuid) {
+                            return (
+                                <>
+                                    <div>{course.course_name_vi}</div>
+                                    <div>
+                                        <i>{course.course_name_en}</i>
+                                    </div>
+                                </>
+                            )
+                        } else {
+                            if(course.h===1)
+                                return <b>{course.course_name_vi}</b>
+                            else if(course.h===2)
+                                return <span style={{fontWeight: 500}}><i>{course.course_name_vi}</i></span>
+                        }
+                    }
                 },
                 {
                     title: "Tên học phần (en)",
@@ -67,7 +100,11 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
         {
             title: "Số tín chỉ",
             dataIndex: "credits",
-            key: "credits"
+            key: "credits",
+            render: (_, course) => {
+                if (course.uuid) return course.credits;
+                else return <b>{course.credits}</b>
+            }
         },
     ]
     return (
@@ -86,43 +123,48 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
                 }}
                 footer={null}
             >
-                <Space align="baseline">
-                    <h4>
-                        Khối kiến thức:
-                    </h4>
-                    <Select
-                        showSearch
-                        placeholder="Khối kiến thức"
-                        optionFilterProp="children"
-                        style={{width: '150px'}}
-                        filterOption={(input, option) =>
-                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
-                        value={knowledgeType}
-                        onChange={(val) => {
-                            setKnowledgeType(val)
-                        }}
-                    >
-                        <Select.Option value="ALL"
-                                       key={1}>Tất cả</Select.Option>
-                        <Select.Option value="C"
-                                       key={1}>Chung</Select.Option>
-                        <Select.Option value="LV"
-                                       key={2}>Lĩnh vực</Select.Option>
-                        <Select.Option value="KN"
-                                       key={3}>Khối ngành</Select.Option>
-                        <Select.Option value="NN"
-                                       key={4}>Nhóm ngành</Select.Option>
-                        <Select.Option value="N"
-                                       key={4}>Ngành</Select.Option>
-                    </Select>
-                </Space>
-                <Table
-                    columns={columns}
-                    dataSource={data ? data : []}
-                    bordered
-                    pagination={false}
-                />
+
+                <Row>
+                    <Col span={22} offset={1}>
+                        <Space align="baseline">
+                            <h4>
+                                Khối kiến thức:
+                            </h4>
+                            <Select
+                                placeholder="Khối kiến thức"
+                                optionFilterProp="children"
+                                style={{width: '150px'}}
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                                onChange={(val) => {
+                                    setKnowledgeType(val)
+                                }}
+                            >
+                                <Select.Option value="ALL"
+                                               key={1}>Tất cả</Select.Option>
+                                <Select.Option value="C"
+                                               key={1}>Chung</Select.Option>
+                                <Select.Option value="LV"
+                                               key={2}>Lĩnh vực</Select.Option>
+                                <Select.Option value="KN"
+                                               key={3}>Khối ngành</Select.Option>
+                                <Select.Option value="NN"
+                                               key={4}>Nhóm ngành</Select.Option>
+                                <Select.Option value="N"
+                                               key={4}>Ngành</Select.Option>
+                            </Select>
+                        </Space>
+                        <br/><br/>
+                        <Table
+                            columns={columns}
+                            dataSource={data ? generateDataFrame({courses: data}) : []}
+                            bordered
+                            pagination={false}
+                        />
+                    </Col>
+                </Row>
+
 
 
             </Modal>

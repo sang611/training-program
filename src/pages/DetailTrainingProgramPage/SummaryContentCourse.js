@@ -17,7 +17,7 @@ const SummaryContentCourse = () => {
     }
 
     return (
-        <>
+        <div id="training-summary-content">
             <Title level={4}>
                 Tóm tắt nội dung học phần
             </Title>
@@ -63,7 +63,7 @@ const SummaryContentCourse = () => {
                 </Col>
             </Row>
 
-        </>
+        </div>
     )
 }
 

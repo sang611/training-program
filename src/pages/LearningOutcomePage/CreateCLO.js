@@ -58,6 +58,7 @@ const CreateCLO = () => {
                 placeholder="Chọn các CĐR CTĐT có liên quan"
                 onChange={handleChange}
                 onSearch={onSearch}
+                searchValue={searchContent}
                 filterOption={false}
                 dropdownRender={(menu) => (
                     <>
@@ -67,6 +68,8 @@ const CreateCLO = () => {
                             <Pagination
                                 total={totalLocs}
                                 current={page}
+                                size="small"
+                                showSizeChanger={false}
                                 onChange={(page) => setPage(page)}
                             />
                         </Row>
@@ -104,7 +107,11 @@ const CreateCLO = () => {
                                         fieldKey={[fieldKey, 'content']}
                                         rules={[{ required: true, message: 'Nhập nội dung chuẩn đầu ra' }]}
                                     >
-                                        <Input.TextArea placeholder="Mô tả" cols={100}/>
+                                        <Input.TextArea
+                                            placeholder="Mô tả"
+                                            cols={90}
+                                            autoSize
+                                        />
                                     </Form.Item>
                                     <Form.Item
                                         {...restField}

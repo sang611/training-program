@@ -67,7 +67,7 @@ const CourseDocument = ({courses, semester}) => {
     ]
 
     return (
-        <>
+        <div id="training-doc">
             <Title level={4}>
                 {"Danh mục tài liệu tham khảo"}
             </Title>
@@ -81,7 +81,7 @@ const CourseDocument = ({courses, semester}) => {
                 bordered
                 pagination={false}
             />
-        </>
+        </div>
     )
 
 }

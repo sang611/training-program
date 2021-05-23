@@ -11,6 +11,9 @@ const ContentCourse = ({
                            setExamFormality,
                            setGoal,
                            setTeachingFormality,
+                           setSummaryContent,
+                           setDocument,
+                           setCoursePolicy,
                            content
                        }) => {
 
@@ -19,6 +22,10 @@ const ContentCourse = ({
         if (setDetailContent) setDetailContent(value);
         if (setExamFormality) setExamFormality(value);
         if (setGoal) setGoal(value);
+        if (setSummaryContent) setSummaryContent(value);
+        if (setDocument) setDocument(value);
+        if (setCoursePolicy) setCoursePolicy(value);
+
     }
 
     useEffect(() => {
@@ -27,6 +34,9 @@ const ContentCourse = ({
             if (setDetailContent) setDetailContent(content);
             if (setExamFormality) setExamFormality(content);
             if (setGoal) setGoal(content);
+            if (setSummaryContent) setSummaryContent(content);
+            if (setDocument) setDocument(content);
+            if (setCoursePolicy) setCoursePolicy(content);
         }
     }, [])
 
