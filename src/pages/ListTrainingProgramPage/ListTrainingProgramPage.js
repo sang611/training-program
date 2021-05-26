@@ -1,22 +1,12 @@
-import {Button, Card, Col, Descriptions, Divider, List, message, Modal, Popconfirm, Row, Spin, Table} from "antd";
+import {Button, Col, Divider, List, Modal, Row, Spin, Table} from "antd";
 import React, {useEffect, useState} from 'react'
-import axios from "axios";
-import {
-    BuildOutlined,
-    DeleteOutlined,
-    EditOutlined, InfoOutlined,
-    InsertRowBelowOutlined,
-    LockOutlined,
-    PlusOutlined
-} from "@ant-design/icons";
-import {Link, useHistory} from "react-router-dom";
+import {PlusOutlined} from "@ant-design/icons";
+import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
 import './ListTrainingProgramPage.css'
-import Icon from "@ant-design/icons/es";
 import Search from "antd/lib/input/Search";
 import Text from "antd/es/typography/Text";
-import Title from "antd/lib/typography/Title";
 import TrainingProgramItem from "./TrainingProgramItem";
 
 
@@ -194,9 +184,6 @@ const ListTrainingProgramPage = () => {
             vnNameSearch
         }));
     }, [vnNameSearch])
-
-
-
 
     const ButtonActions = (
         <>

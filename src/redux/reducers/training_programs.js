@@ -9,6 +9,7 @@ const initialState = {
     trainingProgram: null,
     locsMatrixTraining: [],
     coursesMatrixTraining: [],
+    requireSummary: null,
     errorLoadAll: null,
     errorLoadA: null,
     errorLoadLocsMatrix: null,
@@ -85,7 +86,8 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 loadingCoursesMatrix: false,
-                coursesMatrixTraining: action.payload,
+                coursesMatrixTraining: action.payload.courses,
+                requireSummary: action.payload.requireSummary,
                 errorLoadCoursesMatrix: null
             }
         case actionTypes.GET_COURSE_OF_TRAINING_FAIL:
@@ -93,6 +95,7 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 loadingCoursesMatrix: false,
                 coursesMatrixTraining: [],
+                requireSummary: null,
                 errorLoadCoursesMatrix: action.payload
             }
         default:

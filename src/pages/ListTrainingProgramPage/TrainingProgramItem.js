@@ -28,35 +28,41 @@ import * as actions from "../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
 import React, {useEffect, useMemo, useState} from "react";
 import {generateDataFrame} from "../../utils/frameCourse";
+import SearchCourseFrameComponent from "../UpdateTrainingProgramPage/SearchCourseFrameComponent";
 
 const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, trainingItem}) => {
     const [knowledgeType, setKnowledgeType] = useState("ALL");
-    const {coursesMatrixTraining, loadingCoursesMatrix} = useSelector(state => state.trainingPrograms);
-    const [data, setData] = useState(coursesMatrixTraining);
+    const {coursesMatrixTraining, requireSummary, loadingCoursesMatrix} = useSelector(state => state.trainingPrograms);
+    const [data, setData] = useState(
+        generateDataFrame({
+            courses: coursesMatrixTraining,
+            require_summary: requireSummary
+        })
+    );
     let indexRow = 1;
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if(visibleCourseList)
-        dispatch(actions.getCourseOfMatrixTrainingProgram({id: trainingItem.uuid}))
+        if (visibleCourseList) {
+            dispatch(actions.getCourseOfMatrixTrainingProgram({id: trainingItem.uuid}))
+        }
+
     }, [visibleCourseList])
 
     useEffect(() => {
-        if (knowledgeType === "ALL") {
-            setData(coursesMatrixTraining)
-        } else {
-            setData(
-                coursesMatrixTraining.filter(course => course.training_program_course.knowledge_type === knowledgeType)
-            )
-        }
-
-    }, [knowledgeType, coursesMatrixTraining])
+        setData(
+            generateDataFrame({
+                courses: coursesMatrixTraining,
+                require_summary: requireSummary
+            })
+        )
+    }, [coursesMatrixTraining])
 
     const columns = [
         {
             title: "STT",
             render: (_, record, index) => {
-                return record.uuid ? indexRow ++ : '';
+                return record.uuid ? indexRow++ : '';
             },
             key: "stt"
         },
@@ -83,9 +89,9 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
                                 </>
                             )
                         } else {
-                            if(course.h===1)
+                            if (course.h === 1)
                                 return <b>{course.course_name_vi}</b>
-                            else if(course.h===2)
+                            else if (course.h === 2)
                                 return <span style={{fontWeight: 500}}><i>{course.course_name_vi}</i></span>
                         }
                     }
@@ -107,6 +113,8 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
             }
         },
     ]
+
+
     return (
         <>
 
@@ -123,49 +131,61 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
                 }}
                 footer={null}
             >
+                {
+                    loadingCoursesMatrix ? <Skeleton/> :
 
-                <Row>
-                    <Col span={22} offset={1}>
-                        <Space align="baseline">
-                            <h4>
-                                Khối kiến thức:
-                            </h4>
-                            <Select
-                                placeholder="Khối kiến thức"
-                                optionFilterProp="children"
-                                style={{width: '150px'}}
-                                filterOption={(input, option) =>
-                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }
-                                onChange={(val) => {
-                                    setKnowledgeType(val)
-                                }}
-                            >
-                                <Select.Option value="ALL"
-                                               key={1}>Tất cả</Select.Option>
-                                <Select.Option value="C"
-                                               key={1}>Chung</Select.Option>
-                                <Select.Option value="LV"
-                                               key={2}>Lĩnh vực</Select.Option>
-                                <Select.Option value="KN"
-                                               key={3}>Khối ngành</Select.Option>
-                                <Select.Option value="NN"
-                                               key={4}>Nhóm ngành</Select.Option>
-                                <Select.Option value="N"
-                                               key={4}>Ngành</Select.Option>
-                            </Select>
-                        </Space>
-                        <br/><br/>
-                        <Table
-                            columns={columns}
-                            dataSource={data ? generateDataFrame({courses: data}) : []}
-                            bordered
-                            pagination={false}
-                        />
-                    </Col>
-                </Row>
+                        <Row>
+                            <Col span={22} offset={1}>
+                                {/*<Space align="baseline">
+                                    <h4>
+                                        Khối kiến thức:
+                                    </h4>
+                                    <Select
+                                        placeholder="Khối kiến thức"
+                                        optionFilterProp="children"
+                                        style={{width: '150px'}}
+                                        filterOption={(input, option) =>
+                                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }
+                                        onChange={(val) => {
+                                            setKnowledgeType(val)
+                                        }}
+                                    >
+                                        <Select.Option value="ALL"
+                                                       key={1}>Tất cả</Select.Option>
+                                        <Select.Option value="C"
+                                                       key={1}>Chung</Select.Option>
+                                        <Select.Option value="LV"
+                                                       key={2}>Lĩnh vực</Select.Option>
+                                        <Select.Option value="KN"
+                                                       key={3}>Khối ngành</Select.Option>
+                                        <Select.Option value="NN"
+                                                       key={4}>Nhóm ngành</Select.Option>
+                                        <Select.Option value="N"
+                                                       key={4}>Ngành</Select.Option>
+                                    </Select>
+                                </Space>*/}
+                                <SearchCourseFrameComponent
+                                    setDataSource={setData}
+                                    trainingProgram={
+                                        {
+                                            courses: coursesMatrixTraining,
+                                            require_summary: requireSummary
+                                        }
+                                    }
+                                />
+                                <Table
+                                    columns={columns}
+                                    dataSource={
+                                        data
+                                    }
+                                    bordered
+                                    pagination={false}
+                                />
+                            </Col>
+                        </Row>
 
-
+                }
 
             </Modal>
         </>
@@ -327,6 +347,7 @@ const MatrixCourses = ({trainingItem, visibleCourseMatrix, setVisibleCourseMatri
     const {coursesMatrixTraining, loadingCoursesMatrix} = useSelector(state => state.trainingPrograms);
     useEffect(() => {
         if (visibleCourseMatrix) {
+            console.log("aaaaaaaa")
             dispatch(actions.getCourseOfMatrixTrainingProgram({id: trainingItem.uuid}))
         }
     }, [visibleCourseMatrix])

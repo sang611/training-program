@@ -35,7 +35,7 @@ const UpdateTrainingProgramPage = (props) => {
         <Skeleton active />
         <Skeleton active />*/}
         <center>
-            <LoadingOutlined style={{fontSize: '40px'}} />
+            <LoadingOutlined style={{fontSize: '60px', marginTop: '150px'}} />
         </center>
     </>
 

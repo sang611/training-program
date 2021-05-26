@@ -58,7 +58,12 @@ export function* getCoursesMatrixTraining({payload}) {
     try {
         yield put(actions.getCourseOfMatrixTrainingProgramStart());
         const response = yield axios.get(`/training-programs/${id}/courses/matrix`);
-        yield put(actions.getCourseOfMatrixTrainingProgramSuccess(response.data.trainingProgram.courses));
+        yield put(actions.getCourseOfMatrixTrainingProgramSuccess(
+            {
+                courses: response.data.trainingProgram.courses,
+                requireSummary: response.data.trainingProgram.require_summary
+            }
+        ));
     } catch (e) {
         if(e.response) {
             yield put(actions.getCourseOfMatrixTrainingProgramFail(e.response.data.message));

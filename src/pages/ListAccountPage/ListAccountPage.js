@@ -23,12 +23,8 @@ const ListAccountPage = () => {
     const [typeAccount, setTypeAccount] = useState(query.get('type') || "GV");
     const [currentPageLec, setCurrentPageLec] = useState(1);
     const [currentPageStu, setCurrentPageStu] = useState(1);
-
-    const [loadingMore, setLoadingMore] = useState(false);
-    const [hasMore, setHasMore] = useState(true);
     const [data, setData] = useState([]);
-    const [resetFetch, setResetFetch] = useState(false);
-    const [searching, setSearching] = useState(false);
+
     const [searchObj, setSearchObj] = useState();
 
     useEffect(() => {
@@ -40,10 +36,9 @@ const ListAccountPage = () => {
     }, [typeAccount])
 
     const onChangePage = (page) => {
-        if(typeAccount === "GV") {
+        if (typeAccount === "GV") {
             setCurrentPageLec(page);
-        }
-        else if(typeAccount === "SV") {
+        } else if (typeAccount === "SV") {
             setCurrentPageStu(page);
         }
 
@@ -170,82 +165,75 @@ const ListAccountPage = () => {
 
 
             <div className="demo-infinite-container">
-                {/*<InfiniteScroll
-                    initialLoad={false}
-                    pageStart={0}
-                    loadMore={handleInfiniteOnLoad}
-                    hasMore={!loadingMore && hasMore}
-                    useWindow={false}
-                >*/}
-                    <List
-                        className="demo-loadmore-list"
-                        itemLayout="horizontal"
-                        dataSource={accounts}
-                        size="large"
-                        loading={loadingAll}
-                        renderItem={(item) => (
-                            <List.Item
-                                actions={actionsToItem(item)}
-                                key={item.uuid}
-                            >
-                                <List.Item.Meta
-                                    avatar={
-                                        <Avatar src={
-                                            function () {
-                                                if (item) {
-                                                    if (item.avatar) {
-                                                        return item.avatar.includes(':') ? item.avatar : `data:image/jpeg;base64, ${item.avatar}`
-                                                    } else {
-                                                        if (item.gender === "Nam")
-                                                            return "https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png"
-                                                        else
-                                                            return "https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png"
-                                                    }
-                                                } else return ''
-                                            }()
+                <List
+                    className="demo-loadmore-list"
+                    itemLayout="horizontal"
+                    dataSource={accounts}
+                    size="large"
+                    loading={loadingAll}
+                    renderItem={(item) => (
+                        <List.Item
+                            actions={actionsToItem(item)}
+                            key={item.uuid}
+                        >
+                            <List.Item.Meta
+                                avatar={
+                                    <Avatar src={
+                                        function () {
+                                            if (item) {
+                                                if (item.avatar) {
+                                                    return item.avatar.includes(':') ? item.avatar : `data:image/jpeg;base64, ${item.avatar}`
+                                                } else {
+                                                    if (item.gender === "Nam")
+                                                        return "https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png"
+                                                    else
+                                                        return "https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png"
+                                                }
+                                            } else return ''
+                                        }()
+                                    }
+                                            size={64}/>
+                                }
+                                title={item.fullname}
+                                description={
+                                    <Descriptions size={"small"} column={{xs: 1, sm: 1, md: 2}}>
+                                        <Descriptions.Item contentStyle={{color: "gray"}}>
+                                            <MailOutlined/>&ensp;{item.vnu_mail}
+                                        </Descriptions.Item>
+
+                                        {
+                                            item.account.role < 3 ?
+                                                <>
+                                                    <Descriptions.Item contentStyle={{color: "gray"}}>
+                                                        <DesktopOutlined/>&ensp;{item.institution.vn_name}
+                                                    </Descriptions.Item>
+                                                    <Descriptions.Item contentStyle={{color: "gray"}}>
+                                                        <i className="fab fa-medapps"/>&ensp;{`${item.academic_rank || ''} ${item.academic_degree || ''}`}
+                                                    </Descriptions.Item>
+                                                    <Descriptions.Item contentStyle={{color: "gray"}}>
+                                                        <i className="fas fa-layer-group"/>&ensp;{item.note}
+                                                    </Descriptions.Item>
+                                                </> :
+                                                <>
+                                                    <Descriptions.Item contentStyle={{color: "gray"}}>
+                                                        <i className="fas fa-house-user"/>&ensp;
+                                                        {`${item.grade} - ${item.class}`}
+                                                    </Descriptions.Item>
+                                                    <Descriptions.Item contentStyle={{color: "gray"}}>
+                                                        <DesktopOutlined/>&ensp;{item.training_program.institution ? item.training_program.institution.vn_name : ''}
+                                                    </Descriptions.Item>
+                                                </>
                                         }
-                                                size={64}/>
-                                    }
-                                    title={item.fullname}
-                                    description={
-                                        <Descriptions size={"small"} column={{xs: 1, sm: 1, md: 2}}>
-                                            <Descriptions.Item contentStyle={{color: "gray"}}>
-                                                <MailOutlined/>&ensp;{item.vnu_mail}
-                                            </Descriptions.Item>
 
-                                            {
-                                                item.account.role < 3 ?
-                                                    <>
-                                                        <Descriptions.Item contentStyle={{color: "gray"}}>
-                                                            <DesktopOutlined/>&ensp;{item.institution.vn_name}
-                                                        </Descriptions.Item>
-                                                        <Descriptions.Item contentStyle={{color: "gray"}}>
-                                                            <i className="fab fa-medapps"/>&ensp;{`${item.academic_degree || ''} ${item.academic_rank || ''}`}
-                                                        </Descriptions.Item>
-                                                        <Descriptions.Item contentStyle={{color: "gray"}}>
-                                                            <i className="fas fa-layer-group"/>&ensp;{item.note}
-                                                        </Descriptions.Item>
-                                                    </> :
-                                                    <>
-                                                        <Descriptions.Item contentStyle={{color: "gray"}}>
-                                                            <i className="fas fa-house-user"/>&ensp;
-                                                            {`${item.grade} - ${item.class}`}
-                                                        </Descriptions.Item>
-                                                        <Descriptions.Item contentStyle={{color: "gray"}}>
-                                                            <DesktopOutlined/>&ensp;{item.training_program.institution ? item.training_program.institution.vn_name : ''}
-                                                        </Descriptions.Item>
-                                                    </>
-                                            }
+                                    </Descriptions>
+                                }
+                            />
 
-                                        </Descriptions>
-                                    }
-                                />
+                        </List.Item>
+                    )}
+                >
+                </List>
 
-                            </List.Item>
-                        )}
-                    >
-                    </List>
-                {/*</InfiniteScroll>*/}
             </div>
             <br/>
             <Row>

@@ -1,15 +1,7 @@
 import {Redirect} from "react-router-dom";
-import {Button, Cascader, Col, DatePicker, Form, Input, message, Radio, Row, Select, Tabs} from "antd";
-import Dragger from "antd/lib/upload/Dragger";
-import {AndroidOutlined, AppleOutlined, InboxOutlined, MailFilled, MailTwoTone, PhoneTwoTone} from "@ant-design/icons";
-import {useDispatch, useSelector} from "react-redux";
-import React, {useState, useEffect} from "react";
-import * as actions from '../../redux/actions'
-import {Option} from "antd/lib/mentions";
-import Title from "antd/lib/typography/Title";
-import Search from "antd/lib/input/Search";
-import axios from "axios";
-import moment from 'moment';
+import {Col, Row, Tabs} from "antd";
+import {useSelector} from "react-redux";
+import React from "react";
 import AddingLecturerForm from "./AddingLecturerForm";
 import AddingStudentForm from "./AddingStudentForm";
 

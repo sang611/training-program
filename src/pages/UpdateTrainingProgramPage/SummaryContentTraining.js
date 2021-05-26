@@ -71,7 +71,7 @@ const SummaryContentTraining = ({trainingProgram}) => {
             >
                 <Form.Item
                     name="total"
-                    label={<Title level={5}>Tổng số tín chỉ của chương trình đào tạo</Title>}
+                    label={<Title level={5} style={majorBlockStyle}>Tổng số tín chỉ của chương trình đào tạo</Title>}
                     rules={rules}
                     colon={false}
                 >

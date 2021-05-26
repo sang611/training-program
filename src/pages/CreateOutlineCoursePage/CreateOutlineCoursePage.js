@@ -92,9 +92,10 @@ const CreateOutlineCoursePage = () => {
             <Title level={4}>
                 5. Tóm tắt nội dung môn học
             </Title>
-            <TextArea style={{width: '60%'}} rows="8" onChange={(e) => {
+            {/*<TextArea style={{width: '60%'}} rows="8" onChange={(e) => {
                 setSummaryContent(e.target.value)
-            }}/>
+            }}/>*/}
+            <ContentCourse setSummaryContent={setSummaryContent}/>
             <br/><br/>
 
             <Title level={4}>
@@ -106,9 +107,10 @@ const CreateOutlineCoursePage = () => {
             <Title level={4}>
                 7. Học liệu
             </Title>
-            <TextArea style={{width: '60%'}} rows="8" onChange={(e) => {
+            {/*<TextArea style={{width: '60%'}} rows="8" onChange={(e) => {
                 setDocument(e.target.value)
-            }}/>
+            }}/>*/}
+            <ContentCourse setDocument={setDocument}/>
             <br/><br/>
 
             <Title level={4}>
@@ -120,9 +122,10 @@ const CreateOutlineCoursePage = () => {
             <Title level={4}>
                 9. Chính sách đối với môn học và các yêu cầu khác của giảng viên
             </Title>
-            <TextArea style={{width: '60%'}} rows="8" onChange={(e) => {
+            {/*<TextArea style={{width: '60%'}} rows="8" onChange={(e) => {
                 setCoursePolicy(e.target.value)
-            }}/>
+            }}/>*/}
+            <ContentCourse setCoursePolicy={setCoursePolicy}/>
             <br/><br/>
 
             <Title level={4}>

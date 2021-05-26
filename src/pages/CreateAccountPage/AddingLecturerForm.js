@@ -166,8 +166,7 @@ const AddingLecturerForm = () => {
 
     return (
         <Row>
-            <Col span={12} offset={1}>
-                <Title level={3}>Thêm mới giảng viên</Title>
+            <Col span={24}>
                 <Form
                     {...formItemLayout}
                     layout={formLayout}
@@ -177,110 +176,101 @@ const AddingLecturerForm = () => {
                     }}
                     onFinish={onCreateAccountLecturer}
                 >
-                    <Form.Item
-                        label="Họ tên giảng viên:"
-                        name="fullname"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Tên giảng viên không được để trống'
-                            },
-                        ]}
-                    >
-                        <Input placeholder="Nhập tên giảng viên"
-                               addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
-                    </Form.Item>
                     <Row>
-                        {/*<Col span={12}>
+                        <Col span={12}>
                             <Form.Item
-                                label="Ngày sinh:"
-                                name="birth_date"
+                                label="Họ tên giảng viên:"
+                                name="fullname"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Chọn 1 ngày sinh cho giảng viên'
+                                        message: 'Tên giảng viên không được để trống'
                                     },
                                 ]}
                             >
-                                <DatePicker defaultValue={moment('01/01/2021', 'DD/MM/YYYY')}
-                                            format={['DD/MM/YYYY', 'DD/MM/YY']}/>
+                                <Input placeholder="Nhập tên giảng viên"
+                                       addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
                             </Form.Item>
-                        </Col>*/}
-                        <Col span={12}>
+                            <Row>
+                                <Col span={12}>
+                                    <Form.Item
+                                        label="Giới tính:"
+                                        name="gender"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vui lòng chọn giới tính của giảng viên'
+                                            },
+                                        ]}
+                                    >
+                                        <Radio.Group name="radio-gender">
+                                            <Radio value={"Nam"}>Nam</Radio>
+                                            <Radio value={"Nữ"}>Nữ</Radio>
+                                        </Radio.Group>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col span={12}>
+                                    <Form.Item label="Học hàm:" name="academic_rank">
+                                        <Input
+                                            placeholder="Học hàm của giảng viên"
+                                            addonBefore={<i className="fas fa-brain" style={{color: '#1890FF'}}/>}
+                                        />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={12}>
+                                    <Form.Item label="Học vị:" name="academic_degree">
+                                        <Input placeholder="Học vị của giảng viên"
+                                               addonBefore={<i className="fas fa-medal" style={{color: '#1890FF'}}/>}/>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+
                             <Form.Item
-                                label="Giới tính:"
-                                name="gender"
+                                label="Đơn vị chuyên môn:"
+                                name="institution"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Vui lòng chọn giới tính của giảng viên'
+                                        message: 'Chọn 1 đơn vị giảng viên làm việc'
                                     },
                                 ]}
                             >
-                                <Radio.Group name="radio-gender">
-                                    <Radio value={"Nam"}>Nam</Radio>
-                                    <Radio value={"Nữ"}>Nữ</Radio>
-                                </Radio.Group>
+                                <Cascader
+                                    style={{width: '100%'}}
+                                    options={
+                                        institutions.filter((ins) => !ins.parent_uuid)
+                                    }
+                                    placeholder="Chọn đơn vị chuyên môn"
+                                    changeOnSelect
+                                />
                             </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={12}>
-                            <Form.Item label="Học hàm:" name="academic_rank">
+
+                            <Form.Item
+                                label="Ghi chú, chức vụ:"
+                                name="note"
+                            >
                                 <Input
-                                    placeholder="Học hàm của giảng viên"
-                                    addonBefore={<i className="fas fa-brain" style={{color: '#1890FF'}}/>}
+                                    placeholder="Chức vụ, ghi chú"
+                                    addonBefore={<i className="fas fa-quote-right"
+                                                    style={{color: '#1890FF'}}/>}
                                 />
                             </Form.Item>
                         </Col>
-                        <Col span={12}>
-                            <Form.Item label="Học vị:" name="academic_degree">
-                                <Input placeholder="Học vị của giảng viên"
-                                       addonBefore={<i className="fas fa-medal" style={{color: '#1890FF'}}/>}/>
-                            </Form.Item>
+                        <Col span={11} offset={1}>
+                            {UsernamePasswordForm}
                         </Col>
                     </Row>
 
-
-                    <Form.Item
-                        label="Đơn vị chuyên môn:"
-                        name="institution"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Chọn 1 đơn vị giảng viên làm việc'
-                            },
-                        ]}
-                    >
-                        <Cascader
-                            style={{width: '100%'}}
-                            options={
-                                institutions.filter((ins) => !ins.parent_uuid)
-                            }
-                            placeholder="Chọn đơn vị chuyên môn"
-                            changeOnSelect
-                        />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Ghi chú, chức vụ:"
-                        name="note"
-                    >
-                        <Input
-                            placeholder="Chức vụ, ghi chú"
-                            addonBefore={<i className="fas fa-quote-right"
-                                            style={{color: '#1890FF'}}/>}
-                        />
-                    </Form.Item>
-
-                    {UsernamePasswordForm}
                     <br/>
                     <Form.Item {...buttonItemLayout}>
                         <Button type="primary" htmlType="submit">Thêm giảng viên</Button>
                     </Form.Item>
                 </Form>
             </Col>
-            <Col span={8} offset={1}>
+
+            {/*<Col span={8} offset={1}>
                 <Form>
                     <Title level={3}>Thêm danh sách giảng viên</Title>
                     <Form.Item>
@@ -307,7 +297,7 @@ const AddingLecturerForm = () => {
                     </Form.Item>
 
                 </Form>
-            </Col>
+            </Col>*/}
         </Row>
     )
 }
