@@ -54,9 +54,10 @@ const DashboardPage = () => {
     const {currentUser} = useSelector(state => state.auth)
     const {user} = useSelector(state => state.accounts)
     const {notifications} = useSelector(state => state.notifications)
-    const [activeKey, setActiveKey] = useState(history.location.pathname);
+    // const [activeKey, setActiveKey] = useState(history.location.pathname);
+    const [activeKey, setActiveKey] = useState(localStorage.getItem("menu-active"));
 
-    useEffect(() => {
+    /*useEffect(() => {
         return history.listen(location => {
             if (history.action === 'PUSH') {
                 setActiveKey(location.pathname)
@@ -66,7 +67,7 @@ const DashboardPage = () => {
                 setActiveKey(location.pathname)
             }
         })
-    }, [])
+    }, [])*/
 
 
     let socket = useRef(null);
@@ -107,6 +108,7 @@ const DashboardPage = () => {
 
 
     const onClickMenuItem = (value) => {
+        setActiveKey(value.key)
         localStorage.setItem("menu-active", value.key);
     }
 
@@ -152,7 +154,8 @@ const DashboardPage = () => {
                     <Menu
                         theme="dark"
                         selectedKeys={activeKey}
-                        mode="inline" onClick={onClickMenuItem}
+                        mode="inline"
+                        onClick={onClickMenuItem}
                     >
                         <Menu.Item key="/uet/statistic" className="sub-menu" icon={<PieChartOutlined />}>
                             <Link to="/uet/statistic">Trang chủ</Link>
