@@ -60,14 +60,12 @@ const AddingLecturerForm = () => {
             }
             : null;
     const buttonItemLayout =
-        formLayout === 'horizontal'
-            ? {
-                wrapperCol: {
-                    span: 14,
-                    offset: 4,
-                },
-            }
-            : null;
+        {
+            wrapperCol: {
+                offset: 1,
+            },
+        }
+
 
     const onCreateAccountLecturer = async (values) => {
         values.institution = values.institution.length === 2 ? values.institution[1] : values.institution[0]
@@ -177,7 +175,7 @@ const AddingLecturerForm = () => {
                     onFinish={onCreateAccountLecturer}
                 >
                     <Row>
-                        <Col span={12}>
+                        <Col span={11} offset={1}>
                             <Form.Item
                                 label="Họ tên giảng viên:"
                                 name="fullname"
@@ -258,7 +256,7 @@ const AddingLecturerForm = () => {
                                 />
                             </Form.Item>
                         </Col>
-                        <Col span={11} offset={1}>
+                        <Col span={10} offset={1}>
                             {UsernamePasswordForm}
                         </Col>
                     </Row>
