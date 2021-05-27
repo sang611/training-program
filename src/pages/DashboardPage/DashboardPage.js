@@ -1,10 +1,12 @@
-import {Badge, Breadcrumb, Divider, Drawer, Image, Layout, List, Menu, notification} from "antd";
+import {Badge, Breadcrumb, Image, Layout, Menu, notification} from "antd";
 import {
-    BankOutlined, BellOutlined,
+    BankOutlined,
+    BellOutlined,
     DesktopOutlined,
     FileOutlined,
     LogoutOutlined,
-    PartitionOutlined, PieChartOutlined,
+    PartitionOutlined,
+    PieChartOutlined,
     ReadOutlined,
     SolutionOutlined,
     TableOutlined,
@@ -15,11 +17,10 @@ import {useEffect, useRef, useState} from "react";
 import './DashboardPage.css'
 import * as actions from '../../redux/actions'
 import {useDispatch, useSelector} from "react-redux";
-import {Link, Route, Switch, useHistory, useParams} from "react-router-dom";
+import {Link, Route, Switch, useHistory} from "react-router-dom";
 import CreateInstitutionPage from '../CreateInstitutionPage'
 import ListInstitutionPage from '../ListInstitutionPage'
 import CreateAccountPage from "../CreateAccountPage";
-import Cookies from "universal-cookie";
 import ListAccountPage from "../ListAccountPage";
 import CreateTrainingProgramPage from "../CreateTrainingProgramPage";
 import ListTrainingProgramPage from "../ListTrainingProgramPage";
@@ -50,7 +51,7 @@ const DashboardPage = () => {
     const {SubMenu} = Menu;
     const dispatch = useDispatch();
     const history = useHistory();
-    const {userRole, currentUser} = useSelector(state => state.auth)
+    const {currentUser} = useSelector(state => state.auth)
     const {user} = useSelector(state => state.accounts)
     const {notifications} = useSelector(state => state.notifications)
     const [activeKey, setActiveKey] = useState(history.location.pathname);
@@ -199,8 +200,8 @@ const DashboardPage = () => {
                                 mới</Link></Menu.Item>*/}
                         </SubMenu>
                         <SubMenu key="sub4" icon={<TeamOutlined/>} title="Tài khoản" className="sub-menu">
-                            <Menu.Item key="/uet/accounts" className="menu-item-child">
-                                <Link to="/uet/accounts">Danh sách tài khoản</Link>
+                            <Menu.Item key="/uet/users" className="menu-item-child">
+                                <Link to="/uet/users">Danh sách tài khoản</Link>
                             </Menu.Item>
                             <Menu.Item key="/uet/creation/accounts" className="menu-item-child">
                                 <Link to="/uet/creation/accounts">Thêm mới tài khoản</Link>
@@ -283,7 +284,7 @@ const DashboardPage = () => {
                                 <Route path="/uet/institutions" component={ListInstitutionPage}/>
 
                                 <Route exact path="/uet/creation/accounts" component={CreateAccountPage}/>
-                                <Route exact path="/uet/accounts" component={ListAccountPage}/>
+                                <Route exact path="/uet/users" component={ListAccountPage}/>
 
                                 <Route path="/uet/training-programs/creation" component={CreateTrainingProgramPage}/>
                                 <Route exact path="/uet/training-programs" component={ListTrainingProgramPage}/>
@@ -305,7 +306,7 @@ const DashboardPage = () => {
                                 <Route path="/uet/learning-outcomes" component={LearningOutcomePage}/>
                                 <Route path="/uet/learning-outcome-titles" component={LearningOutcomeTitlePage}/>
 
-                                <Route path="/uet/user/:uuid" component={DetailAccountPage}/>
+                                <Route path="/uet/users/:uuid" component={DetailAccountPage}/>
                                 <Route path="/uet/documents/:doc_of" component={DocumentPage}/>
 
                                 <Route path="/uet/majors" component={MajorPage}/>

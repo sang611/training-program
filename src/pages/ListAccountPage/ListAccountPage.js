@@ -78,7 +78,7 @@ const ListAccountPage = () => {
                         size="small"
                         icon={<InfoCircleOutlined/>}
                         key="list-load-detail"
-                        onClick={() => history.push(`/uet/user/${item.account.uuid}`)}
+                        onClick={() => history.push(`/uet/users/${item.account.uuid}`)}
                     >
                         Chi tiết
                     </Button>,

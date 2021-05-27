@@ -1,32 +1,33 @@
 import {
     Avatar,
-    Button, Card, Cascader,
+    Button,
+    Card,
+    Cascader,
     Col,
     DatePicker,
     Descriptions,
-    Divider,
     Form,
-    Input, message,
+    Input,
+    message,
     Radio,
     Row,
     Select,
     Space,
     Spin,
-    Tabs, Upload
+    Tabs,
+    Upload
 } from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import React, {useState, useEffect, useMemo} from "react"
+import React, {useEffect, useState} from "react"
 import {useParams} from "react-router-dom";
 import * as actions from '../../redux/actions'
 import Title from "antd/lib/typography/Title";
-import Icon, {DesktopOutlined, MailOutlined, MailTwoTone, PhoneOutlined, PhoneTwoTone} from "@ant-design/icons";
+import Icon, {MailOutlined, MailTwoTone, PhoneTwoTone} from "@ant-design/icons";
 import './DetailAccountPage.css'
 import moment from "moment";
-import Cookies from "universal-cookie/lib";
 import axios from "axios";
 import UpdateLoginInfor from "./UpdateLoginInfor";
 import EmployeeAssignCourses from "./EmployeeAssignCourses";
-import {course} from "../../constants/Items";
 
 function handleBirthday(user) {
     if (user.birthday) {
@@ -54,6 +55,7 @@ const UpdateStudentProfile = ({user, userRole}) => {
             fullname: user.fullname,
             student_code: user.student_code,
             gender: user.gender,
+            birthday: moment(user.birthday, 'YYYY/MM/DD'),
             address: user.address,
             email: user.email,
             phone_number: user.phone_number,
@@ -71,9 +73,7 @@ const UpdateStudentProfile = ({user, userRole}) => {
         axios.put(`/students/${user.uuid}`, values)
             .then(res => {
                 message.success(res.data.message)
-
                 dispatch(actions.getDetailUser({accountUuid: uuid}));
-
             })
             .catch(e => message.error(e.response.data.message))
     }
@@ -126,9 +126,6 @@ const UpdateStudentProfile = ({user, userRole}) => {
                                         {
                                             user.birthday ?
                                                 <DatePicker
-                                                    defaultValue={
-                                                        moment(user.birthday, 'YYYY/MM/DD')
-                                                    }
                                                     format={['DD/MM/YYYY', 'DD/MM/YY']}/>
                                                 :
                                                 <DatePicker
