@@ -58,6 +58,7 @@ const UpdateStudentProfile = ({user, userRole}) => {
             email: user.email,
             phone_number: user.phone_number,
             class: user.class,
+            grade: user.grade,
             vnu_mail: user.vnu_mail,
             majorUuid: user.major ? user.major.uuid : "",
             trainingProgramUuid: user.training_program ? user.training_program.uuid : ""
@@ -93,11 +94,29 @@ const UpdateStudentProfile = ({user, userRole}) => {
                             }}
                             onFinish={onUpdateStudentInfor}
                         >
-                            <Form.Item label="Họ tên sinh viên:" name="fullname">
+                            <Form.Item
+                                label="Họ tên sinh viên:"
+                                name="fullname"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Tên sinh viên không được để trống'
+                                    },
+                                ]}
+                            >
                                 <Input placeholder="Nhập tên sinh viên"
                                        addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
                             </Form.Item>
-                            <Form.Item label="Mã sinh viên:" name="student_code">
+                            <Form.Item
+                                label="Mã sinh viên:"
+                                name="student_code"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Mã sinh viên không được để trống'
+                                    },
+                                ]}
+                            >
                                 <Input placeholder="Nhập mã sinh viên"
                                        addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
                             </Form.Item>
@@ -147,7 +166,16 @@ const UpdateStudentProfile = ({user, userRole}) => {
                             </Form.Item>
 
 
-                            <Form.Item label="Ngành đào tạo:" name="majorUuid">
+                            <Form.Item
+                                label="Ngành đào tạo:"
+                                name="majorUuid"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Chọn ngành đào tạo của sinh viên'
+                                    },
+                                ]}
+                            >
 
                                 <Select
                                     showSearch
@@ -167,7 +195,16 @@ const UpdateStudentProfile = ({user, userRole}) => {
                                 </Select>
                             </Form.Item>
 
-                            <Form.Item label="Thuộc chương trình đào tạo:" name="trainingProgramUuid">
+                            <Form.Item
+                                label="Thuộc chương trình đào tạo:"
+                                name="trainingProgramUuid"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Chọn 1 chương trình đào tạo sinh viên theo học'
+                                    },
+                                ]}
+                            >
                                 <Select
                                     showSearch
                                     style={{width: '100%'}}
@@ -187,10 +224,40 @@ const UpdateStudentProfile = ({user, userRole}) => {
 
                             </Form.Item>
 
-                            <Form.Item label="Lớp môn học:" name="class">
-                                <Input placeholder="Lớp môn học của sinh viên"
-                                       addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
-                            </Form.Item>
+                            <Row>
+                                <Col span={12}>
+                                    <Form.Item
+                                        label="Lớp môn học:"
+                                        name="class"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Lớp môn học của sinh viên không được để trống'
+                                            },
+                                        ]}
+                                    >
+                                        <Input placeholder="Lớp môn học của sinh viên"
+                                               addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
+                                    </Form.Item>
+                                </Col>
+                                <Col span={12}>
+                                    <Form.Item
+                                        label="Khóa:"
+                                        name="grade"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Sinh viên thuộc khóa nào?'
+                                            },
+                                        ]}
+                                    >
+                                        <Input
+                                            placeholder="K60, K61, K62,..."
+                                            addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+
 
                             <br/>
                             <Form.Item>
@@ -199,7 +266,7 @@ const UpdateStudentProfile = ({user, userRole}) => {
                         </Form>
                     </Card>
                 </Col>
-                <Col span={10} offset={2}>
+                <Col span={11} offset={1}>
                     <UpdateLoginInfor
                         user={user}
                         userRole={userRole}

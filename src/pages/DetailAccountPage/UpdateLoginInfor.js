@@ -48,7 +48,7 @@ const UpdateLoginInfor = ({user, userRole}) => {
                 name="username"
                 rules={[{ required: true, message: 'Tên đăng nhập không được để trống!' }]}
             >
-                <Input />
+                <Input disabled/>
             </Form.Item>
 
             <Form.Item

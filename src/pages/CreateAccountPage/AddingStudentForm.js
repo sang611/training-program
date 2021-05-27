@@ -294,7 +294,7 @@ const AddingStudentForm = () => {
                                 ]}
                             >
                                 <Input
-                                    placeholder="Lớp môn học của sinh viên"
+                                    placeholder="C, CLC, CAC, N,..."
                                     addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
                             </Form.Item>
                         </Col>
