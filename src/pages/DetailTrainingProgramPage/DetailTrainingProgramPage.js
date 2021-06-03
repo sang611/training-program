@@ -71,7 +71,7 @@ const DetailTrainingProgramPage = (props) => {
                                 <br/><br/>
                                 <SummaryContentCourse/>
                             </div>
-                            <Row align="end">
+                            {/*<Row align="end">
                                 <Space>
                                     <Button
                                         icon={<FilePdfOutlined/>}
@@ -96,7 +96,7 @@ const DetailTrainingProgramPage = (props) => {
                                         Export Word
                                     </Button>
                                 </Space>
-                            </Row>
+                            </Row>*/}
                         </Col>
                         <Col span={3}>
                             <Anchor offsetTop={100} activeLink="#training-introduce">
@@ -110,22 +110,50 @@ const DetailTrainingProgramPage = (props) => {
                                 <Anchor.Link href="#training-summary-content" title="Nội dung học phần" />
                             </Anchor>
 
-                            {
-                                (!lock_edit && userRole == 0) ?
                                     <Affix
-                                        style={{float: 'right', marginRight: '30px'}}
-                                        offsetTop={650}
-                                        offsetBottom={90}
+                                        style={{float: 'right'}}
+                                        offsetTop={580}
                                     >
-                                        <Button
-                                            type="primary"
-                                            shape="circle"
-                                            icon={<EditOutlined/>}
-                                            style={{position: 'absolute', left: 0}}
-                                            onClick={() => history.push(`/uet/training-programs/updating/${uuid}`)}
-                                        />
-                                    </Affix> : ""
-                            }
+                                        <Space direction="vertical">
+                                            {
+                                                (!lock_edit && userRole === 0) ?
+                                                    <Button
+                                                        type="primary"
+                                                        shape="circle"
+                                                        icon={<EditOutlined/>}
+                                                        onClick={() => history.push(`/uet/training-programs/updating/${uuid}`)}
+                                                    /> : ""
+                                            }
+                                            <Button
+                                                type="primary"
+                                                shape="circle"
+                                                danger
+                                                icon={<FilePdfOutlined/>}
+                                                onClick={() => {
+                                                    setIsExportingPdf(true);
+                                                    printDocument("training_program").then(r => setIsExportingPdf(false))
+
+                                                }}
+                                                loading={isExportingPdf}
+                                            >
+                                            </Button>
+                                            <Button
+                                                type="primary"
+                                                shape="circle"
+                                                danger
+                                                icon={<FileWordOutlined/>}
+                                                onClick={() => {
+                                                    setIsExportingDoc(true);
+                                                    exportToDoc("training_program")
+                                                    setIsExportingDoc(false);
+                                                }}
+                                                loading={isExportingDoc}
+                                            >
+                                            </Button>
+                                        </Space>
+
+                                    </Affix>
+
                         </Col>
                     </Row>
 

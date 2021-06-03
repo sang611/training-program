@@ -47,18 +47,19 @@ const reducer = (state = initialState, action) => {
         case actionTypes.ADD_ACCOUNT_START:
             return {
                 ...state,
-                error: null
+                error: null,
+                addAccountType: action.payload.typeAccount
             }
         case actionTypes.ADD_ACCOUNT_SUCCESS:
             return {
                 ...state,
                 error: false,
-                addAccountType: action.payload.typeAccount
+
             }
         case actionTypes.ADD_ACCOUNT_FAIL:
             return {
                 ...state,
-                error: action.error
+                error: action.error,
             }
         case actionTypes.SEARCH_ACCOUNTS_SUCCESS:
             return {

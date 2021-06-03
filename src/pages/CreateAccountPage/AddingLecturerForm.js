@@ -41,7 +41,7 @@ const AddingLecturerForm = () => {
     useEffect(() => {
         if(accState.addAccountType === 1) {
             if (accState.error) {
-                message.error("Đã có lỗi xảy ra")
+                message.error(accState.error)
             } else if (accState.error === false) {
                 message.success("Tạo mới giảng viên thành công")
             }

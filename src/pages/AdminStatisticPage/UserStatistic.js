@@ -20,7 +20,7 @@ function CourseStatistic() {
 
     useEffect(() => {
         if(accounts.length > 0) {
-            if(accounts[0].account.role == 3) {
+            if(accounts[0].account.role === 3) {
                 setTotalStu(
                     totalAccounts
                 )
@@ -44,7 +44,7 @@ function CourseStatistic() {
                             bodyStyle={{backgroundColor: '#F56954'}}
                             className="statistic-info"
                             hoverable
-                            onClick={() => history.push("/uet/accounts")}
+                            onClick={() => history.push("/uet/users")}
                         >
                             <center>
                                 <Title level={1}>
@@ -62,7 +62,7 @@ function CourseStatistic() {
                             bodyStyle={{backgroundColor: '#E95258'}}
                             className="statistic-info"
                             hoverable
-                            onClick={() => history.push("/uet/accounts/?type=SV")}
+                            onClick={() => history.push("/uet/users/?type=SV")}
                         >
                             <center>
                                 <Title level={1}>

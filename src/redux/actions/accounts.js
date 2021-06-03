@@ -27,9 +27,10 @@ export const fetchAccounts = (payload) => {
     }
 }
 
-export const addAccountStart = () => {
+export const addAccountStart = (payload) => {
     return {
-        type: actionTypes.ADD_ACCOUNT_START
+        type: actionTypes.ADD_ACCOUNT_START,
+        payload: payload
     }
 }
 

@@ -257,12 +257,14 @@ const DashboardPage = () => {
                                         } else return ''
                                     } else return ''
                                 }()
-                            }/>} title={"    admin"}>
+                            }
+                            />
+                            } title={"    admin"}>
                                 <Menu.Item
                                     key="4-1"
                                     icon={<SolutionOutlined/>}
                                 >
-                                    <Link to={`/uet/user/${currentUser.uuid}`}>Hồ sơ</Link>
+                                    <Link to={`/uet/users/${currentUser.uuid}`}>Hồ sơ</Link>
                                 </Menu.Item>
                                 <Menu.Item
                                     key="4-2"

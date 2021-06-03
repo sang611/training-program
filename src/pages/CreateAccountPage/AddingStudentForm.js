@@ -27,7 +27,7 @@ const AddingStudentForm = () => {
     useEffect(() => {
         if(accState.addAccountType === 2) {
             if (accState.error) {
-                message.error("Đã có lỗi xảy ra")
+                message.error(accState.error)
             } else if (accState.error === false) {
                 message.success("Tạo mới sinh viên thành công")
             }
@@ -117,7 +117,7 @@ const AddingStudentForm = () => {
 
     const onCreateAccountStudent = async (values) => {
         await dispatch(actions.addAccount({values, typeAccount: 2}));
-        formStu.resetFields();
+        //formStu.resetFields();
     };
 
 

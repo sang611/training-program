@@ -5,10 +5,6 @@ import * as items from '../../constants/Items';
 import axios from "axios";
 import * as actionTypes from "../actions/actionTypes";
 
-function hasNumber(myString) {
-    return /\d/.test(myString);
-}
-
 export function* fetchAccountsSaga(action) {
     try {
         let {typeAccount, page} = action.payload;
@@ -87,19 +83,24 @@ export function* filterAccountsSaga(action) {
 
 
 export function* addAccountSaga(action) {
-    yield put(actions.addAccountStart());
+    const {values, typeAccount} = action.payload;
+    yield put(actions.addAccountStart({typeAccount}));
     try {
-        const {values, typeAccount} = action.payload;
-        console.log(action.payload)
-        if (typeAccount == 1) {
+
+        if (typeAccount === 1) {
             yield axios.post("/employees", values)
-        } else if (typeAccount == 2) {
+        } else if (typeAccount === 2) {
             yield axios.post("/students", values)
         }
 
-        yield put(actions.addAccountSuccess({typeAccount}));
+        yield put(actions.addAccountSuccess());
     } catch (error) {
-        yield put(actions.addAccountFail(error));
+        if(error.response) {
+            yield put(actions.addAccountFail(error.response.data.message));
+        }
+        else {
+            yield put(actions.addAccountFail(error.message));
+        }
     }
     yield put({type: actionTypes.ADD_ACCOUNT_RESET});
 }
