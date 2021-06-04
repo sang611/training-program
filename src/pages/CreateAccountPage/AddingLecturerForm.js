@@ -142,6 +142,10 @@ const AddingLecturerForm = () => {
                         required: true,
                         message: 'VNU mail không được để trống!',
                     },
+                    {
+                        type: 'email',
+                        message: 'VNU mail không đúng định dạng!'
+                    },
                 ]}
             >
                 <Input suffix={<i className="far fa-envelope"/>}/>

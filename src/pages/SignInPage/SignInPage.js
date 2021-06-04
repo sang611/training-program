@@ -159,7 +159,7 @@ function SignInPage(props) {
                                     {/*<Checkbox>Sử dụng tài khoản UET</Checkbox>*/}
                                     <Switch
                                         defaultChecked
-                                        checkedChildren="Tài khoản UET"
+                                        checkedChildren="Tài khoản VNU"
                                         unCheckedChildren="Tài khoản hệ thống"
                                     />
                                 </Form.Item>

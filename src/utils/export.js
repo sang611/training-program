@@ -6,14 +6,16 @@ function printDocument(element) {
     const input = document.getElementById(element);
 
     return new Promise((resolve, reject) => {
-        html2canvas(input, {
-            scrollX: -window.scrollX,
-            scrollY: -window.scrollY,
-            windowWidth: document.documentElement.offsetWidth,
-            windowHeight: document.documentElement.offsetHeight
-        })
+        html2canvas(
+            input,
+            {
+                scrollX: -window.scrollX,
+                scrollY: -window.scrollY,
+                windowWidth: document.documentElement.offsetWidth,
+                windowHeight: document.documentElement.offsetHeight
+            })
             .then((canvas) => {
-                let imgData = canvas.toDataURL('image/png');
+                let imgData = canvas.toDataURL('image/png',  1.0);
                 let imgWidth = 210;
                 let pageHeight = 295;
                 let imgHeight = canvas.height * imgWidth / canvas.width;
@@ -22,20 +24,20 @@ function printDocument(element) {
                 let doc = new jsPDF('p', 'mm', 'a4', true);
                 let position = 0;
 
-                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined,'FAST');
+                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
                 heightLeft -= pageHeight;
 
                 while (heightLeft >= 0) {
                     position = heightLeft - imgHeight;
                     doc.addPage();
-                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
                     heightLeft -= pageHeight;
                 }
                 resolve(doc.save('document.pdf'))
             })
 
     })
-
 
 
 }

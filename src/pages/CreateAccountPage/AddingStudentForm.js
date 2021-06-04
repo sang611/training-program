@@ -7,6 +7,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import * as actions from "../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
+import {classCodes} from "../../constants";
 
 const AddingStudentForm = () => {
     const [formStu] = Form.useForm();
@@ -130,6 +131,10 @@ const AddingStudentForm = () => {
                     {
                         required: true,
                         message: 'VNU mail không được để trống!',
+                    },
+                    {
+                        type: 'email',
+                        message: 'VNU mail không đúng định dạng!'
                     },
                 ]}
             >
@@ -293,9 +298,23 @@ const AddingStudentForm = () => {
                                     },
                                 ]}
                             >
-                                <Input
+                                {/*<Input
                                     placeholder="C, CLC, CAC, N,..."
-                                    addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
+                                    addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>*/}
+                                <Select
+                                    allowClear
+                                    style={{ width: '100%' }}
+                                    placeholder="Lớp môn học của sinh viên"
+                                    suffixIcon={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}
+                                >
+                                    {
+                                        classCodes.map((classCode, index) => {
+                                            return (
+                                                <Select.Option value={classCode} key={index}>{classCode}</Select.Option>
+                                            )
+                                        })
+                                    }
+                                </Select>
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -307,6 +326,10 @@ const AddingStudentForm = () => {
                                         required: true,
                                         message: 'Sinh viên thuộc khóa nào?'
                                     },
+                                    {
+                                        whitespace: true,
+                                        message: 'Dữ liệu không hợp lệ'
+                                    }
                                 ]}
                             >
                                 <Input

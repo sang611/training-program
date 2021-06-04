@@ -7,7 +7,7 @@ import {
     DatePicker,
     Descriptions,
     Form,
-    Input,
+    Input, InputNumber,
     message,
     Radio,
     Row,
@@ -28,6 +28,7 @@ import moment from "moment";
 import axios from "axios";
 import UpdateLoginInfor from "./UpdateLoginInfor";
 import EmployeeAssignCourses from "./EmployeeAssignCourses";
+import {classCodes} from "../../constants";
 
 function handleBirthday(user) {
     if (user.birthday) {
@@ -150,13 +151,37 @@ const UpdateStudentProfile = ({user, userRole}) => {
                                        addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
                             </Form.Item>
 
-                            <Form.Item label="Email cá nhân:" name="email">
+                            <Form.Item
+                                label="Email cá nhân:"
+                                name="email"
+                                rules={[
+                                    {
+                                        type: 'email',
+                                        message: 'email không đúng định dạng!'
+                                    },
+                                ]}
+                            >
                                 <Input placeholder="Địa chỉ email" rules={[{type: 'email'}]}
                                        addonBefore={<MailTwoTone/>}/>
                             </Form.Item>
-                            <Form.Item label="Email VNU:" name="vnu_mail">
-                                <Input placeholder="Địa chỉ email vnu" rules={[{type: 'email'}]}
-                                       addonBefore={<MailTwoTone/>}/>
+                            <Form.Item
+                                label="Email VNU:"
+                                name="vnu_mail"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'VNU mail không được để trống!'
+                                    },
+                                    {
+                                        type: 'email',
+                                        message: 'VNU mail không đúng định dạng!'
+                                    },
+                                ]}
+                            >
+                                <Input
+                                    placeholder="Địa chỉ email vnu"
+                                    addonBefore={<MailTwoTone/>}
+                                />
                             </Form.Item>
                             <Form.Item label="Số điện thoại:" name="phone_number">
                                 <Input placeholder="Số điện thoại" addonBefore={<PhoneTwoTone/>}/>
@@ -233,8 +258,22 @@ const UpdateStudentProfile = ({user, userRole}) => {
                                             },
                                         ]}
                                     >
-                                        <Input placeholder="Lớp môn học của sinh viên"
-                                               addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>
+                                        {/*<Input placeholder="Lớp môn học của sinh viên"
+                                               addonBefore={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}/>*/}
+                                        <Select
+                                            allowClear
+                                            style={{ width: '100%' }}
+                                            placeholder="Lớp môn học của sinh viên"
+                                            suffixIcon={<i className="fas fa-signature" style={{color: '#1890FF'}}/>}
+                                        >
+                                            {
+                                                classCodes.map((classCode, index) => {
+                                                    return (
+                                                        <Select.Option value={classCode} key={index}>{classCode}</Select.Option>
+                                                    )
+                                                })
+                                            }
+                                        </Select>
                                     </Form.Item>
                                 </Col>
                                 <Col span={12}>
@@ -246,6 +285,10 @@ const UpdateStudentProfile = ({user, userRole}) => {
                                                 required: true,
                                                 message: 'Sinh viên thuộc khóa nào?'
                                             },
+                                            {
+                                                whitespace: true,
+                                                message: 'Dữ liệu không hợp lệ'
+                                            }
                                         ]}
                                     >
                                         <Input
@@ -433,7 +476,16 @@ const UpdateLecturerProfile = ({user, userRole}) => {
                             </Col>
                         </Row>
 
-                        <Form.Item label="Email cá nhân:" name="email">
+                        <Form.Item
+                            label="Email cá nhân:"
+                            name="email"
+                            rules={[
+                                {
+                                    type: 'email',
+                                    message: 'email không đúng định dạng!'
+                                },
+                            ]}
+                        >
                             <Input placeholder="Địa chỉ email" addonBefore={<MailTwoTone/>}/>
                         </Form.Item>
                         <Form.Item
@@ -443,6 +495,10 @@ const UpdateLecturerProfile = ({user, userRole}) => {
                                 {
                                     required: true,
                                     message: 'VNU mail không được để trống!',
+                                },
+                                {
+                                    type: 'email',
+                                    message: 'VNU mail không đúng định dạng!'
                                 },
                             ]}
                         >

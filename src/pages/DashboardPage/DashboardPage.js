@@ -54,10 +54,10 @@ const DashboardPage = () => {
     const {currentUser} = useSelector(state => state.auth)
     const {user} = useSelector(state => state.accounts)
     const {notifications} = useSelector(state => state.notifications)
-    // const [activeKey, setActiveKey] = useState(history.location.pathname);
-    const [activeKey, setActiveKey] = useState(localStorage.getItem("menu-active"));
+     const [activeKey, setActiveKey] = useState(history.location.pathname);
+    //const [activeKey, setActiveKey] = useState(localStorage.getItem("menu-active"));
 
-    /*useEffect(() => {
+    useEffect(() => {
         return history.listen(location => {
             if (history.action === 'PUSH') {
                 setActiveKey(location.pathname)
@@ -67,7 +67,7 @@ const DashboardPage = () => {
                 setActiveKey(location.pathname)
             }
         })
-    }, [])*/
+    }, [])
 
 
     let socket = useRef(null);

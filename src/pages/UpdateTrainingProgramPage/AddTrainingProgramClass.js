@@ -55,7 +55,7 @@ const AddTrainingProgramClass = ({trainingProgram}) => {
                         {
                             classCodes.map((classCode, index) => {
                                 return (
-                                    <Select.Option value={classCode} key={index}>{classCode.split('-').join('')}</Select.Option>
+                                    <Select.Option value={classCode} key={index}>{classCode}</Select.Option>
                                 )
                             })
                         }
