@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from "react-router";
-import {Affix, Anchor, Button, Col, Row, Skeleton, Space, Spin} from "antd";
+import {Affix, Anchor, Button, Col, message, Row, Skeleton, Space, Spin} from "antd";
 import {useHistory} from "react-router-dom";
 import * as actions from "../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
@@ -38,7 +38,7 @@ const DetailTrainingProgramPage = (props) => {
             <Skeleton active/>
             <Skeleton active/>*/}
             <center>
-                <LoadingOutlined style={{fontSize: '60px', marginTop: '150px'}} />
+                <LoadingOutlined style={{fontSize: '60px', marginTop: '150px'}}/>
             </center>
         </>
     } else {
@@ -55,21 +55,34 @@ const DetailTrainingProgramPage = (props) => {
                     <Row>
                         <Col span={21}>
                             <div id="training_program" style={{padding: '20px'}}>
-                                <TrainingProgramIntroduce/>
-                                <br/><br/>
-                                <TrainingLOC learning_outcomes={learning_outcomes}/>
-                                <br/><br/>
-                                <TrainingCourse/>
-                                <br/><br/>
-                                <CourseDocument courses={courses}/>
-                                <br/><br/>
-                                <CourseLecturer courses={courses}/>
-                                <br/><br/>
+                                <div id="training_program_1">
+                                    <TrainingProgramIntroduce/>
+                                    <br/><br/>
+                                    <TrainingLOC learning_outcomes={learning_outcomes}/>
+                                    <br/><br/>
+                                </div>
+                                <div id="training_program_2">
+                                    <TrainingCourse/>
+                                    <br/><br/>
+                                </div>
+                                <div id="training_program_3">
+                                    <CourseDocument courses={courses}/>
+                                    <br/><br/>
+                                </div>
+                                <div id="training_program_4">
+                                    <CourseLecturer courses={courses}/>
+                                    <br/><br/>
+                                </div>
                                 <DependencyCourseGraph/>
                                 <br/><br/>
-                                <CourseSequence courses={courses}/>
-                                <br/><br/>
-                                <SummaryContentCourse/>
+
+                                <div id="training_program_5">
+                                    <CourseSequence courses={courses}/>
+                                    <br/><br/>
+                                    <SummaryContentCourse/>
+                                </div>
+
+
                             </div>
                             {/*<Row align="end">
                                 <Space>
@@ -100,59 +113,72 @@ const DetailTrainingProgramPage = (props) => {
                         </Col>
                         <Col span={3}>
                             <Anchor offsetTop={100} activeLink="#training-introduce">
-                                <Anchor.Link href="#training-introduce" title="Giới thiệu chung" />
-                                <Anchor.Link href="#training-loc" title="Chuẩn đầu ra" />
-                                <Anchor.Link href="#training-course" title="Khung đào tạo" />
-                                <Anchor.Link href="#training-doc" title="Tài liệu giảng dạy" />
-                                <Anchor.Link href="#training-lec" title="Đội ngũ cán bộ" />
-                                <Anchor.Link href="#training-graph" title="Quan hệ học phần" />
-                                <Anchor.Link href="#training-sequence" title="Trình tự đào tạo" />
-                                <Anchor.Link href="#training-summary-content" title="Nội dung học phần" />
+                                <Anchor.Link href="#training-introduce" title="Giới thiệu chung"/>
+                                <Anchor.Link href="#training-loc" title="Chuẩn đầu ra"/>
+                                <Anchor.Link href="#training-course" title="Khung đào tạo"/>
+                                <Anchor.Link href="#training-doc" title="Tài liệu giảng dạy"/>
+                                <Anchor.Link href="#training-lec" title="Đội ngũ cán bộ"/>
+                                <Anchor.Link href="#training-graph" title="Quan hệ học phần"/>
+                                <Anchor.Link href="#training-sequence" title="Trình tự đào tạo"/>
+                                <Anchor.Link href="#training-summary-content" title="Nội dung học phần"/>
                             </Anchor>
 
-                                    <Affix
-                                        style={{float: 'right'}}
-                                        offsetTop={580}
+                            <Affix
+                                style={{float: 'right'}}
+                                offsetTop={580}
+                            >
+                                <Space direction="vertical">
+                                    {
+                                        (!lock_edit && userRole === 0) ?
+                                            <Button
+                                                type="primary"
+                                                shape="circle"
+                                                icon={<EditOutlined/>}
+                                                onClick={() => history.push(`/uet/training-programs/updating/${uuid}`)}
+                                            /> : ""
+                                    }
+                                    <Button
+                                        type="primary"
+                                        shape="circle"
+                                        danger
+                                        icon={<FilePdfOutlined/>}
+                                        onClick={() => {
+                                            setIsExportingPdf(true);
+                                            printDocument(
+                                                [
+                                                    "training_program_1",
+                                                    "training_program_2",
+                                                    "training_program_3",
+                                                    "training_program_4",
+                                                    "training_program_5",
+                                                ]
+                                            )
+                                                .then()
+                                                .catch(err => {
+                                                    message.error(err.toString())
+                                                })
+                                                .finally(() => setIsExportingPdf(false))
+
+                                        }}
+                                        loading={isExportingPdf}
                                     >
-                                        <Space direction="vertical">
-                                            {
-                                                (!lock_edit && userRole === 0) ?
-                                                    <Button
-                                                        type="primary"
-                                                        shape="circle"
-                                                        icon={<EditOutlined/>}
-                                                        onClick={() => history.push(`/uet/training-programs/updating/${uuid}`)}
-                                                    /> : ""
-                                            }
-                                            <Button
-                                                type="primary"
-                                                shape="circle"
-                                                danger
-                                                icon={<FilePdfOutlined/>}
-                                                onClick={() => {
-                                                    setIsExportingPdf(true);
-                                                    printDocument("training_program").then(r => setIsExportingPdf(false))
+                                    </Button>
+                                    <Button
+                                        type="primary"
+                                        shape="circle"
+                                        danger
+                                        icon={<FileWordOutlined/>}
+                                        onClick={() => {
+                                            setIsExportingDoc(true);
+                                            exportToDoc("training_program")
+                                            setIsExportingDoc(false);
+                                        }}
+                                        loading={isExportingDoc}
+                                    >
+                                    </Button>
+                                </Space>
 
-                                                }}
-                                                loading={isExportingPdf}
-                                            >
-                                            </Button>
-                                            <Button
-                                                type="primary"
-                                                shape="circle"
-                                                danger
-                                                icon={<FileWordOutlined/>}
-                                                onClick={() => {
-                                                    setIsExportingDoc(true);
-                                                    exportToDoc("training_program")
-                                                    setIsExportingDoc(false);
-                                                }}
-                                                loading={isExportingDoc}
-                                            >
-                                            </Button>
-                                        </Space>
-
-                                    </Affix>
+                            </Affix>
 
                         </Col>
                     </Row>

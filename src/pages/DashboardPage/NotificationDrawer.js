@@ -62,7 +62,7 @@ const NotificationDrawer = ({
                     dataSource={
                         notifications
                     }
-                    renderItem={item => item.outline ? (
+                    renderItem={item => item.outline && item.employee ? (
                         <List.Item
                         >
                             <List.Item.Meta

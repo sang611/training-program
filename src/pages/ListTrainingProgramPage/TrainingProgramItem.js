@@ -560,6 +560,16 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
         />,
     ];
 
+    const actionLecturer = [
+        <Icon
+            component={() => <i className="fas fa-th-list"/>}
+            key="setting"
+            onClick={() => {
+                setVisibleCourseList(true)
+            }}
+        />,
+    ];
+
 
     return (
         <>
@@ -570,7 +580,7 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
                     </Link>
                 }
                 actions={
-                    userRole == 0 ? actionAdmin : (userRole == 3 ? actionStudent : "")
+                    userRole == 0 ? actionAdmin : (userRole == 3 ? actionStudent : actionLecturer)
                 }
                 title={item.vn_name}
                 hoverable

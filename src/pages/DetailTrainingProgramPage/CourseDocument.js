@@ -55,12 +55,13 @@ const CourseDocument = ({courses, semester}) => {
             dataIndex: ['training_program_course', 'documents'],
             width: '40%',
             render: (_, course) => (
-                <TextArea
+                course.uuid ? <TextArea
                     disabled
                     autoSize
                     style={{color: '#000', cursor: 'auto'}}
                     defaultValue={course.training_program_course ? course.training_program_course.documents : ''}
-                />
+                /> : ''
+
             )
         },
 

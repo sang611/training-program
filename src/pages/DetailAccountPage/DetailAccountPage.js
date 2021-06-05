@@ -902,13 +902,13 @@ const DetailAccountPage = () => {
                 <Col offset={4} span={20}>
                     <Descriptions column={{xxl: 1, xl: 1, lg: 1, md: 1, sm: 1, xs: 1}}>
                         <Descriptions.Item contentStyle={{color: "gray"}}>
-                            <Icon component={() => <i className="fas fa-briefcase"></i>}/>&ensp;
+                            <Icon component={() => <i className="fas fa-briefcase"/>}/>&ensp;
                             {
-                                detailUser.account.role == 3 ?
+                                detailUser.account.role === 3 ?
                                     "Sinh viên trường Đại học Công nghệ"
                                     : (
-                                        (detailUser.account.role == 1 || detailUser.account.role == 2) ?
-                                            "Giảng viên trường đại học công nghệ" : ""
+                                        (detailUser.account.role === 1 || detailUser.account.role === 2) ?
+                                            "Giảng viên trường đại học công nghệ" : "Admin hệ thống"
                                     )
                             }
                         </Descriptions.Item>

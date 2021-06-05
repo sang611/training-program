@@ -339,9 +339,9 @@ const AddingStudentForm = () => {
                         </Col>
                     </Row>
 
-
                     {UsernamePasswordForm}
                     <br/>
+
                     <Form.Item {...buttonItemLayout}>
                         <Button type="primary" htmlType="submit">Tạo</Button>
                     </Form.Item>
