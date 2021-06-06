@@ -32,9 +32,21 @@ const EmployeeAssignCourses = ({employee}) => {
             .catch(e => message.error(e.response.data.message))
     }
 
-    const onGrantModerator = (e, course) => {
-        console.log(e.target.checked, course)
-
+    const onGrantCourse = (course, selected) => {
+        axios.put('/employee-courses/grant', {
+            employeeUuid: employee.uuid,
+            courseUuid: course.uuid,
+            isModerator: selected
+        })
+            .then((res) => {
+                if(selected)
+                    message.success(`Đã cấp quyền moderator cho ${employee.fullname} với môn học ${course.course_name_vi}`)
+                else
+                    message.success(`Đã gỡ quyền moderator của ${employee.fullname} với môn học ${course.course_name_vi}`)
+            })
+            .catch((e) =>
+                message.error(e.response.data.message)
+            )
     }
 
     useEffect(() => {
@@ -53,26 +65,16 @@ const EmployeeAssignCourses = ({employee}) => {
         onChange: (selectedRowKeys, selectedRows) => {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
             setSelectedRowKeys(selectedRowKeys)
-
         },
 
         selectedRowKeys: selectedRowKeys,
         onSelect: (record, selected, selectedRows) => {
             console.log(record, selected, selectedRows)
-            axios.put('/employee-courses/grant', {
-                employeeUuid: employee.uuid,
-                courseUuid: record.uuid,
-                isModerator: selected
-            })
-                .then((res) => {
-                    if(selected)
-                        message.success(`Đã cấp quyền moderator cho ${employee.fullname} với môn học ${record.course_name_vi}`)
-                    else
-                        message.success(`Đã gỡ quyền moderator của ${employee.fullname} với môn học ${record.course_name_vi}`)
-                })
-                .catch((e) =>
-                    message.error(e.response.data.message)
-                )
+            onGrantCourse(record, selected)
+        },
+        onSelectAll: (selected, selectedRows, changeRows) => {
+            console.log(selected, selectedRows, changeRows)
+            changeRows.map((course) => onGrantCourse(course, selected))
         }
     };
     return (

@@ -304,7 +304,7 @@ const ListInstitutionPage = () => {
                 size={"large"}
                 style={{
                     position: 'fixed',
-                    right: 42,
+                    right: 20,
                     bottom: 22
                 }}
                 onClick={showModal}
@@ -316,7 +316,7 @@ const ListInstitutionPage = () => {
                 size={"large"}
                 style={{
                     position: 'fixed',
-                    right: 42,
+                    right: 20,
                     bottom: 72
                 }}
                 onClick={() => {

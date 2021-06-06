@@ -72,8 +72,9 @@ const StudentDashboardPage = () => {
                     message: data.message,
                 });
             }
-
         })
+
+        return () => socket.current.disconnect()
 
     }, [user])
 
@@ -95,87 +96,99 @@ const StudentDashboardPage = () => {
                     display: 'flex',
                 }}
                 >
-                        <Image
-                            src="http://www.ballinamorecs.ie/wp-content/uploads/2014/07/elearning-logo.png"
-                            height='100%'
-                            width={200}
-                        />
+                    <Image
+                        src="http://www.ballinamorecs.ie/wp-content/uploads/2014/07/elearning-logo.png"
+                        height='100%'
+                        width={200}
+                    />
 
-                        <Menu
-                            mode="horizontal"
-                            selectedKeys={activeKey}
-                            onClick={onClickMenuItem}
-                            style={{
-                                marginLeft: 'auto'
-                            }}
+                    <Menu
+                        mode="horizontal"
+                        selectedKeys={activeKey}
+                        onClick={onClickMenuItem}
+                        style={{
+                            marginLeft: 'auto'
+                        }}
+                    >
+                        <Menu.Item key="/uet/training-programs" icon={<ApartmentOutlined/>}>
+                            <Link to="/uet/training-programs">
+                                Chương trình đào tạo
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="/uet/accounts" icon={<TeamOutlined/>}>
+                            <Link to="/uet/accounts">Giảng viên</Link>
+                        </Menu.Item>
+                        {
+                            userRole == 3 ?
+                                <Menu.Item key={`/uet/${currentUser.uuid}/planning`} icon={<CompassOutlined/>}>
+                                    <Link to={`/uet/${currentUser.uuid}/planning`}>Tiến độ học tập</Link>
+                                </Menu.Item> : <></>
+
+                        }
+                        {
+                            userRole == 3 ?
+                                <Menu.Item
+                                    key="4-1"
+                                    icon={<PieChartOutlined/>}
+                                >
+                                    <Link to="/uet/statistic">Thống kê</Link>
+                                </Menu.Item> : <></>
+                        }
+                        <SubMenu key="5" icon={<SnippetsOutlined/>} title="Tài liệu">
+                            <Menu.Item
+                                key="/uet/documents/training-program"
+                                icon={<FileOutlined/>}
+                            >
+                                <Link to="/uet/documents/training-program">Tài liệu CTĐT</Link>
+                            </Menu.Item>
+                            <Menu.Item
+                                key="/uet/documents/course"
+                                icon={<AuditOutlined/>}
+                            >
+                                <Link to="/uet/documents/course">Tài liệu học phần</Link>
+                            </Menu.Item>
+
+                        </SubMenu>
+                        <SubMenu
+                            key="4"
+                            icon={
+                                <Avatar
+                                    src={
+                                        function () {
+                                            if (user) {
+                                                if (user.avatar) {
+                                                    return user.avatar.includes(':') ? user.avatar : `data:image/jpeg;base64, ${user.avatar}`
+                                                } else {
+                                                    if (user.gender === "Nam")
+                                                        return "https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png"
+                                                    else
+                                                        return "https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png"
+                                                }
+                                            } else return ''
+                                        }()
+                                    }
+                                />}
+                            title={" " + user.fullname}
                         >
-                            <Menu.Item key="/uet/training-programs" icon={<ApartmentOutlined/>}>
-                                <Link to="/uet/training-programs">
-                                    Chương trình đào tạo
-                                </Link>
+
+                            <Menu.Item
+                                key={`/uet/user/${currentUser.uuid}`}
+                                icon={<SolutionOutlined/>}
+                            >
+
+                                <Link to={`/uet/user/${currentUser.uuid}`}>Hồ sơ</Link>
+
                             </Menu.Item>
-                            <Menu.Item key="/uet/accounts" icon={<TeamOutlined/>}>
-                                <Link to="/uet/accounts">Giảng viên</Link>
+                            <Menu.Item
+                                key="4-3"
+                                icon={<LogoutOutlined/>}
+                                onClick={() => dispatch(actions.authLogout())}
+                            >
+                                Đăng xuất
                             </Menu.Item>
-                            {
-                                userRole == 3 ?
-                                    <Menu.Item key={`/uet/${currentUser.uuid}/planning`} icon={<CompassOutlined/>}>
-                                        <Link to={`/uet/${currentUser.uuid}/planning`}>Tiến độ học tập</Link>
-                                    </Menu.Item> : <></>
 
-                            }
-                            {
-                                userRole == 3 ?
-                                    <Menu.Item
-                                        key="4-1"
-                                        icon={<PieChartOutlined/>}
-                                    >
-                                        <Link to="/uet/statistic">Thống kê</Link>
-                                    </Menu.Item> : <></>
-                            }
-                            <SubMenu key="5" icon={<SnippetsOutlined/>} title="Tài liệu">
-                                <Menu.Item
-                                    key="/uet/documents/training-program"
-                                    icon={<FileOutlined/>}
-                                >
-                                    <Link to="/uet/documents/training-program">Tài liệu CTĐT</Link>
-                                </Menu.Item>
-                                <Menu.Item
-                                    key="/uet/documents/course"
-                                    icon={<AuditOutlined/>}
-                                >
-                                    <Link to="/uet/documents/course">Tài liệu học phần</Link>
-                                </Menu.Item>
-
-                            </SubMenu>
-                            <SubMenu key="4" icon={<Avatar src={
-                                function () {
-                                    if (user) {
-                                        if (user.avatar) {
-                                            return user.avatar.includes(':') ? user.avatar : `data:image/jpeg;base64, ${user.avatar}`
-                                        } else return ''
-                                    } else return ''
-                                }()
-                            }/>} title={" " + user.fullname}>
-
-                                <Menu.Item
-                                    key={`/uet/user/${currentUser.uuid}`}
-                                    icon={<SolutionOutlined/>}
-                                >
-
-                                    <Link to={`/uet/user/${currentUser.uuid}`}>Hồ sơ</Link>
-
-                                </Menu.Item>
-                                <Menu.Item
-                                    key="4-3"
-                                    icon={<LogoutOutlined/>}
-                                    onClick={() => dispatch(actions.authLogout())}
-                                >
-                                    Đăng xuất
-                                </Menu.Item>
-
-                            </SubMenu>
-                        </Menu>
+                        </SubMenu>
+                    </Menu>
 
                 </Header>
 
@@ -186,7 +199,7 @@ const StudentDashboardPage = () => {
                         <Breadcrumb.Item>App</Breadcrumb.Item>*/}
                     </Breadcrumb>
                     <div className="site-layout-background" style={{padding: 30, minHeight: '100vh'}}>
-                        <ScrollToTop />
+                        <ScrollToTop/>
                         <Switch>
                             <Route path="/uet/institutions" component={ListInstitutionPage}/>
                             <Route path="/uet/accounts" component={ListAccountPage}/>

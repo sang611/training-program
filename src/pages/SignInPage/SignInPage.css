@@ -16,18 +16,14 @@
    grid-template-columns: 2fr 1.5fr;
 }
 
-.signin-image{
+#signin-image{
    background-position: center;
    background-size: cover;
    height: 100%;
    width: 100%;
+   /*background-image: url(https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-blue-tech-achievement-future-poster-background-image_190794.jpg)*/
+   background-image: url(https://image.freepik.com/free-vector/color-background-men-worker-desk-with-computer-programming-language-around-window-pc_18591-12962.jpg);
 }
-
-.signin-image:nth-child(1) {
-   background-image: url(https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-blue-tech-achievement-future-poster-background-image_190794.jpg)
-}
-
-
 
 #siginin-form-wrapper {
    width: 100%;

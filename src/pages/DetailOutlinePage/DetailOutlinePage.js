@@ -30,8 +30,8 @@ const Lecturers = ({lecturers}) => {
             render: (_, {academic_degree, academic_rank}) => {
                 return (
                     <>
-                        <span>{academic_degree ? `${academic_degree} - ` : ""}</span>
-                        <span>{academic_rank ? academic_rank : ""}</span>
+                        <span>{academic_rank ? `${academic_rank} - ` : ""}</span>
+                        <span>{academic_degree ? academic_degree : ""}</span>
                     </>
                 )
             }
@@ -219,8 +219,22 @@ const DetailOutlinePage = () => {
             </div>
             <Row align="end">
                 <Space>
-                    <Button icon={<FilePdfOutlined/>} onClick={() => printDocument('outline')}>Export PDF</Button>
-                    <Button icon={<FileWordOutlined/>} onClick={() => exportToDoc('outline')}>Export Word</Button>
+                    <Button
+                        type="primary"
+                        danger
+                        icon={<FilePdfOutlined/>}
+                        onClick={() => printDocument(['outline'])}
+                    >
+                        Export PDF
+                    </Button>
+                    <Button
+                        type="primary"
+                        danger
+                        icon={<FileWordOutlined/>}
+                        onClick={() => exportToDoc('outline')}
+                    >
+                        Export Word
+                    </Button>
                 </Space>
             </Row>
 

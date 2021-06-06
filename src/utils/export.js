@@ -52,7 +52,7 @@ function printDocument(elements) {
 
     return new Promise((resolve, reject) => {
         Promise.all(docs)
-            .then(docs => resolve(docs[2].save('document.pdf')))
+            .then(docs => resolve(doc.save('document.pdf')))
     })
 
 

@@ -2,18 +2,10 @@ import {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions/index'
 import {Button, Cascader, Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Table, Tag} from "antd";
-import {
-    DeleteOutlined,
-    EditOutlined,
-    InfoCircleOutlined,
-    PlusOutlined,
-    ReloadOutlined,
-    SearchOutlined
-} from "@ant-design/icons";
+import {DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import axios from "axios";
 import {useHistory} from "react-router-dom";
 import CreateCoursePage from "../CreateCoursePage";
-import {searchAccounts} from "../../redux/actions/index";
 import SearchFormCourse from "./SearchFormCourse";
 
 const {Column, ColumnGroup} = Table;
@@ -246,6 +238,9 @@ const ListCoursePage = () => {
                         onClick={showModalCreate}
                     />
                 )}
+                pagination={{
+                    showSizeChanger: false
+                }}
             >
                 <Column
                     title="Mã học phần"

@@ -68,6 +68,7 @@ function SignInPage(props) {
         localStorage.removeItem("menu-active")
     }, [])
 
+
     useEffect(() => {
         if (state.error) {
             notification.error({
@@ -103,12 +104,9 @@ function SignInPage(props) {
     return state.isValidToken ? <Redirect to={state.userRole == 0 ? '/uet/statistic' : '/uet/training-programs'}/> : (
 
         <div className="login-container">
-
             <div className="login-card">
-
-                <div className="signin-image">
+                <div id="signin-image">
                 </div>
-
                 <div id="siginin-form-wrapper">
                     <div id="signin-form">
                         <Divider style={{marginTop: 0, marginBottom: 25}}>

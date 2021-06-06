@@ -22,23 +22,6 @@ function CourseStatistic() {
                 <Row gutter={[16, 16]}>
                     <Col span={24}>
                         <Card
-                            bodyStyle={{backgroundColor: '#FF9600'}}
-                            className="statistic-info"
-                            hoverable
-                        >
-                            <center>
-                                <Title level={1}>
-                                    {
-                                        courses.reduce((a, b) => a + b.outlines.length, 0)
-                                    }&nbsp;
-                                    <ApartmentOutlined />
-                                </Title>
-                                <Title level={3}>ĐỀ CƯƠNG</Title>
-                            </center>
-                        </Card>
-                    </Col>
-                    <Col span={24}>
-                        <Card
                             bodyStyle={{backgroundColor: '#00A65A'}}
                             className="statistic-info"
                             hoverable
@@ -49,9 +32,26 @@ function CourseStatistic() {
                                     {
                                         courses.length
                                     }&nbsp;
-                                    <BookOutlined />
+                                    <ApartmentOutlined />
                                 </Title>
                                 <Title level={3}>HỌC PHẦN</Title>
+                            </center>
+                        </Card>
+                    </Col>
+                    <Col span={24}>
+                        <Card
+                            bodyStyle={{backgroundColor: '#FF9600'}}
+                            className="statistic-info"
+                            hoverable
+                        >
+                            <center>
+                                <Title level={1}>
+                                    {
+                                        courses.reduce((a, b) => a + b.outlines.length, 0)
+                                    }&nbsp;
+                                    <BookOutlined />
+                                </Title>
+                                <Title level={3}>ĐỀ CƯƠNG</Title>
                             </center>
                         </Card>
                     </Col>

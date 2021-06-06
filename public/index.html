@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="theme-color" content="#000000"/>
     <meta
-      name="description"
-      content="Web site created using create-react-app"
+            name="description"
+            content="Web site created using create-react-app"
     />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json"/>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -23,11 +23,45 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <!--<link rel="stylesheet" href="%PUBLIC_URL%/font/all.min.css" type="text/css"/>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+            integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>Training Program</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+</head>
+<body>
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<div id="root"></div>
 
-  </body>
+<!--<script type="text/javascript">
+    var images = [
+        "https://image.freepik.com/free-vector/color-background-men-worker-desk-with-computer-programming-language-around-window-pc_18591-12962.jpg",
+        "https://image.freepik.com/free-vector/isometric-online-library_102902-623.jpg",
+        "https://image.freepik.com/free-vector/online-meeting-video-conference-landing-people-computer-smartphone-screen-virtual-work-meeting-flat-vector-illustration_218639-43.jpg",
+        "https://cdn.wewiin.com/api/download_public/storage_public/a0/95fd93970f36a47ac253281ef778e5c7.jpg",
+        "https://www.slps.org/cms/lib/MO01001157/Centricity/Domain/13061/tech.jpg",
+        "https://static7.depositphotos.com/1010652/679/v/950/depositphotos_6794239-stock-illustration-seamless-education-background.jpg",
+        "https://media.istockphoto.com/vectors/online-training-vector-id869155894?b=1&k=6&m=869155894&s=612x612&w=0&h=eP4iReetj0iBX-odqssE7yZwx62u-ZjVtJigVRNYx9Q=",
+        "https://image.freepik.com/free-vector/colorful-2x2-concept-with-graphic-design-illustrator-designer-various-tools-work-3d-isometric-isolated-vector-illustration_1284-29998.jpg",
+        "https://chronicle.brightspotcdn.com/62/d9/ae16a6443d82f3d8d53dc5e266bb/onlinelearning-new.jpg",
+        "https://media.istockphoto.com/vectors/programming-and-coding-vector-id908200362?b=1&k=6&m=908200362&s=612x612&w=0&h=85auhxpZA-5WCi4AKaAfOpBIlOrv9ZHa8PvjwzybOoA=",
+        "https://png.pngtree.com/thumb_back/fw800/background/20200907/pngtree-education-hand-drawn-school-supplies-creative-blackboard-background-image_398069.jpg",
+        "https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-blue-tech-achievement-future-poster-background-image_190794.jpg",
+    ];
+    $(function () {
+        var i = 0;
+        $("#signin-image").css("background-image", "url(" + images[i] + ")");
+        setInterval(function () {
+            i++;
+            if (i == images.length) {
+                i = 0;
+            }
+            console.log(i)
+            $("#signin-image").fadeOut("slow", function () {
+                $(this).css("background-image", "url(" + images[i] + ")");
+                $(this).fadeIn("slow");
+            });
+        }, 5000);
+    });
+</script>-->
+</body>
 </html>

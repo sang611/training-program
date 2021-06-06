@@ -24,7 +24,7 @@ const UpdateLoginInfor = ({user, userRole}) => {
                 newPassword: values.password
             })
             .then(res => {
-                loginUpdateForm.resetFields();
+                loginUpdateForm.resetFields(["password"]);
                 message.success(res.data.message);
             })
             .catch(error => message.error(error.response.data.message))
