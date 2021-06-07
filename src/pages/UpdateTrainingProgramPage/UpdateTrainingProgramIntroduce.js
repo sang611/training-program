@@ -86,7 +86,16 @@ const UpdateTrainingProgramIntroduce = () => {
                     <Col span={20} offset={1}>
                         <Row>
                             <Col span={12}>
-                                <Form.Item label="Tên ngành đào tạo (VN):" name="vn_name">
+                                <Form.Item
+                                    label="Tên ngành đào tạo (VN):"
+                                    name="vn_name"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Nhập tên ngành đào tạo của chương trình'
+                                        },
+                                    ]}
+                                >
                                     <Input placeholder="Tên chương trình bằng Tiếng Việt"
                                            addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
                                 </Form.Item>
@@ -101,11 +110,29 @@ const UpdateTrainingProgramIntroduce = () => {
 
                         <Row>
                             <Col span={12}>
-                                <Form.Item label="Mã ngành đào tạo:" name="training_program_code">
+                                <Form.Item
+                                    label="Mã ngành đào tạo:"
+                                    name="training_program_code"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Nhập mã ngành đào tạo của chương trình'
+                                        },
+                                    ]}
+                                >
                                     <Input placeholder="Nhập mã ngành đào tạo"
                                            addonBefore={<i className="fas fa-code" style={{color: '#1890FF'}}/>}/>
                                 </Form.Item>
-                                <Form.Item label="Danh hiệu tốt nghiệp:" name="graduation_title">
+                                <Form.Item
+                                    label="Danh hiệu tốt nghiệp:"
+                                    name="graduation_title"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Danh hiệu tốt nghiệp không được để trống'
+                                        },
+                                    ]}
+                                >
                                     <Input placeholder="Danh hiệu tốt nghiệp của CTĐT"
                                            addonBefore={<i className="fas fa-user-graduate"
                                                            style={{color: '#1890FF'}}/>}/>
@@ -126,7 +153,16 @@ const UpdateTrainingProgramIntroduce = () => {
                         </Row>
                         <Row>
                             <Col span={12}>
-                                <Form.Item label="Tên văn bằng tốt nghiệp (VN):" name="graduation_diploma_vi">
+                                <Form.Item
+                                    label="Tên văn bằng tốt nghiệp (VN):"
+                                    name="graduation_diploma_vi"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Nhập tên văn bằng tốt nghiệp của chương trình'
+                                        },
+                                    ]}
+                                >
                                     <Input placeholder="Tên văn bằng tốt nghiệp bằng Tiếng Việt"
                                            addonBefore={<i className="fas fa-file-signature"
                                                            style={{color: '#1890FF'}}/>}/>
@@ -143,7 +179,16 @@ const UpdateTrainingProgramIntroduce = () => {
 
                         <Row>
                             <Col span={12}>
-                                <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
+                                <Form.Item
+                                    label="Đơn vị chuyên môn:"
+                                    name="institutionUuid"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Chọn đơn vị phụ trách chương trình'
+                                        },
+                                    ]}
+                                >
                                     <Select
                                         showSearch
                                         style={{width: '100%'}}
@@ -168,7 +213,16 @@ const UpdateTrainingProgramIntroduce = () => {
                         </Row>
                         <Row>
                             <Col span={12}>
-                                <Form.Item label="Loại chương trình đào tạo:" name="type">
+                                <Form.Item
+                                    label="Loại chương trình đào tạo:"
+                                    name="type"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Chọn loại chương trình đào tạo'
+                                        },
+                                    ]}
+                                >
                                     <Select
                                         showSearch
                                         style={{width: '100%'}}

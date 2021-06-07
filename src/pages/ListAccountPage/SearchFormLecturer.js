@@ -137,6 +137,7 @@ const SearchFormLecturer = ({currentPage, setCurrentPage, searchObj, setSearchOb
                                     typeAccount: "GV",
                                     ...initialSearchObj,
                                 }))
+                                setSearchObj(initialSearchObj)
                                 form.resetFields();
                             }}
                             icon={<SyncOutlined spin />}

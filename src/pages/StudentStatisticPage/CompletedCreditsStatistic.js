@@ -7,13 +7,15 @@ const CompletedCreditsStatistic = ({trainingProgram, courses}) => {
     const [BTotal, setBTotal] = useState(0);
     const [LTotal, setLTotal] = useState(0);
     const [BTTotal, setBTTotal] = useState(0);
+    const [KLTNTotal, setKLTNTotal] = useState(0);
 
     const [BTotal_, setBTotal_] = useState(0);
     const [LTotal_, setLTotal_] = useState(0);
     const [BTTotal_, setBTTotal_] = useState(0);
+    const [KLTNTotal_, setKLTNTotal_] = useState(0);
 
     useEffect(() => {
-        let b=0, l=0, bt=0;
+        let b=0, l=0, bt=0, kltn=0;
         trainingProgram.courses.forEach(course => {
                 switch (course.training_program_course.course_type) {
                     case "B":
@@ -25,6 +27,9 @@ const CompletedCreditsStatistic = ({trainingProgram, courses}) => {
                     case "BT":
                         bt += course.credits
                         break;
+                    case "KLTN":
+                        kltn += course.credits
+                        break;
                     default:
                         break;
                 }
@@ -32,7 +37,7 @@ const CompletedCreditsStatistic = ({trainingProgram, courses}) => {
         )
         setBTotal(b);setLTotal(l);setBTTotal(bt);
 
-        let b_=0, l_=0, bt_=0;
+        let b_=0, l_=0, bt_=0, kltn_=0;
         for(let course of courses) {
             if(course.student_course.completed) {
                 let matchCourse = trainingProgram.courses.find(courseOfTraining => {
@@ -50,6 +55,9 @@ const CompletedCreditsStatistic = ({trainingProgram, courses}) => {
                         case "BT":
                             bt_ += course.credits
                             break;
+                        case "KLTN":
+                            kltn_ += course.credits
+                            break;
                         default:
                             break;
                     }
@@ -59,12 +67,13 @@ const CompletedCreditsStatistic = ({trainingProgram, courses}) => {
         setBTotal_(b_);
         setLTotal_(l_);
         setBTTotal_(bt_);
+        setKLTNTotal_(kltn_);
     }, [courses])
 
-    var data = [
+    var data = (trainingProgram.require_summary && trainingProgram.require_L && trainingProgram.require_BT) ? [
         {
             type: 'Bắt buộc',
-            value: (JSON.parse(trainingProgram.require_summary).total-trainingProgram.require_L-trainingProgram.require_BT) - BTotal_,
+            value: (JSON.parse(trainingProgram.require_summary).total-trainingProgram.require_L-trainingProgram.require_BT-JSON.parse(trainingProgram.require_summary).major_KLTN) - BTotal_,
         },
         {
             type: 'Tự chọn',
@@ -74,9 +83,12 @@ const CompletedCreditsStatistic = ({trainingProgram, courses}) => {
             type: 'Bổ trợ',
             value: trainingProgram.require_BT - BTTotal_,
         },
-
-    ];
-    var config = {
+        {
+            type: 'Khóa luận',
+            value: JSON.parse(trainingProgram.require_summary).major_KLTN - KLTNTotal_,
+        },
+    ] : [];
+    let config = {
         appendPadding: 10,
         data: data,
         angleField: 'value',
@@ -104,7 +116,9 @@ const CompletedCreditsStatistic = ({trainingProgram, courses}) => {
                     textOverflow: 'ellipsis',
                 },
                 formatter: function formatter() {
-                    return `${JSON.parse(trainingProgram.require_summary).total-BTotal_-LTotal_-BTTotal_} tín chỉ`
+                    return JSON.parse(trainingProgram.require_summary) ?
+                        `${JSON.parse(trainingProgram.require_summary).total-BTotal_-LTotal_-BTTotal_-KLTNTotal_} tín chỉ` :
+                        '? tín chỉ'
                 },
             },
         },

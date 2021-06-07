@@ -4,7 +4,12 @@ import {useEffect, useState} from 'react'
 const CourseTypeByStatusStatistic = ({courses, trainingProgram, semes}) => {
 
     let [dataCreditsByStatus, setDataCreditsByStatus] = useState([]);
-    const courseTypes = ['B', 'L', 'BT']
+    const courseTypes = ['B', 'L', 'BT', 'KLTN'];
+    const convertCourseType = new Map();
+    convertCourseType.set('B', "Bắt buộc");
+    convertCourseType.set('L', "Tự chọn");
+    convertCourseType.set('BT', "Bổ trợ");
+    convertCourseType.set('KLTN', "Khóa luận");
 
     function generateCreditsByStatus(statusCourse, courseTypes) {
         let courseByStatus = [];
@@ -42,7 +47,7 @@ const CourseTypeByStatusStatistic = ({courses, trainingProgram, semes}) => {
             if(type != "status") {
                 result.push({
                     status: statusCourse.status,
-                    course_type: type == "B" ? "Bắt buộc" : (type == "L" ? "Tự chọn" : "Bổ trợ"),
+                    course_type: convertCourseType.get(type),
                     value: statusCourse[type]
                 })
             }

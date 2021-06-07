@@ -127,7 +127,7 @@ const CreateTrainingProgramPage = () => {
                                                            style={{color: '#1890FF'}}/>}/>
                                 </Form.Item>
                                 <Space size="large">
-                                    <Form.Item label="Thời gian đào tạo:" name="training_duration">
+                                    <Form.Item label="Thời gian đào tạo (năm):" name="training_duration">
                                         <InputNumber min={1} max={10} defaultValue={1} stringMode/>
                                     </Form.Item>
                                     <Form.Item label="Năm áp dụng:" name="version">

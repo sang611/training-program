@@ -207,6 +207,7 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                         onChange={(val) => {
                             setCourseType(val)
                         }}
+                        disabled={knowledgeType === 'C' || knowledgeType === 'LV'}
                     >
                         <Select.Option value="B"
                                        key={1}>Bắt buộc</Select.Option>

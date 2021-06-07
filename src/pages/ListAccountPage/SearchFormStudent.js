@@ -114,6 +114,7 @@ const SearchFormStudent = ({currentPage, setCurrentPage, searchObj, setSearchObj
                                     typeAccount: "SV",
                                     ...initialSearchObj,
                                 }))
+                                setSearchObj(initialSearchObj)
                                 form.resetFields();
                             }}
                             icon={<SyncOutlined spin />}
