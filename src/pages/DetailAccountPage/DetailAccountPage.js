@@ -842,7 +842,7 @@ const DetailAccountPage = () => {
     }, [uuid])
 
 
-    return loadingDetailUser == false && detailUser ? (
+    return loadingDetailUser === false && detailUser ? (
         <>
             <div style={{
                 position: 'relative',
@@ -930,54 +930,7 @@ const DetailAccountPage = () => {
 
             </div>
             <br/><br/>
-            {/*{
-                (userRole == 0 || currentUser.uuid == uuid) ? (
-                    <Tabs defaultActiveKey="1" type="card" size={"middle"}>
-                        <Tabs.TabPane tab="Hồ sơ" key="1">
-                            <Row>
-                                <Col span={15}>
-                                    {
-                                        detailUser.account.role == 3 ?
-                                            <StudentInfoDescription user={detailUser} /> :
-                                            <LecturerInfoDescription user={detailUser} />
-                                    }
-                                </Col>
-                            </Row>
-                        </Tabs.TabPane>
-                        <Tabs.TabPane tab="Chỉnh sửa hồ sơ" key="2">
-                            {
-                                detailUser.account.role == 3 ?
-                                    <UpdateStudentProfile
-                                        user={detailUser}
-                                        userRole={userRole}
-                                    /> :
-                                    <UpdateLecturerProfile
-                                        user={detailUser}
-                                        userRole={userRole}
-                                    />
-                            }
-                        </Tabs.TabPane>
-                        {
-                            (userRole == 0 && (detailUser.account.role == 1 || detailUser.account.role == 2)) ||
-                            (currentUser.uuid == uuid && (detailUser.account.role == 1 || detailUser.account.role == 2))
-                                ?
-                                <Tabs.TabPane tab="Học phần phụ trách" key="3">
-                                    <EmployeeAssignCourses employee={detailUser}/>
-                                </Tabs.TabPane> : ''
-                        }
-                    </Tabs>
-                ) : (
-                    <Row>
-                        <Col span={15}>
-                            {
-                                detailUser.account.role == 3 ? StudentInfoDescription(detailUser) : LecturerInfoDescription(detailUser)
-                            }
-                        </Col>
-                    </Row>
-                )
 
-
-            }*/}
             <DetailActivities detailUser={detailUser} userRole={userRole} currentUser={currentUser} uuid={uuid}/>
         </>
 

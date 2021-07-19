@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
 import axios from "axios";
 
-const MajosList = ({majors, loading, setVisibleModal, setEditedMajor, dispatch}) => {
+const MajorsList = ({majors, loading, setVisibleModal, setEditedMajor, dispatch}) => {
     const columns = [
         {
             title: '#',
@@ -45,7 +45,10 @@ const MajosList = ({majors, loading, setVisibleModal, setEditedMajor, dispatch})
                             <Button type="primary" onClick={() => {
                                 setEditedMajor(record);
                                 setVisibleModal(true)
-                            }}>Chỉnh sửa</Button>
+                            }}
+                            >
+                                Chỉnh sửa
+                            </Button>
                             <Popconfirm
                                 title="Xóa ngành này?"
                                 onConfirm={
@@ -88,85 +91,86 @@ const MajosList = ({majors, loading, setVisibleModal, setEditedMajor, dispatch})
     )
 }
 
-const MajorModalForm = ({ visible, onCancel, editedMajor, dispatch }) => {
-    const [form] = Form.useForm();
 
-    if(editedMajor) {
-        form.setFieldsValue(editedMajor);
-    }
-
-
-    return (
-        <Modal
-            visible={visible}
-            title="Thêm mới ngành"
-            okText="Lưu"
-            cancelText="Thoát"
-            onCancel={onCancel}
-            onOk={() => {
-                form
-                    .validateFields()
-                    .then((values) => {
-                        !editedMajor ?
-                            axios.post(`/majors`, values)
-                                .then((res) => {
-                                    message.success(res.data.message)
-                                    dispatch(actions.getAllMajor());
-                                })
-                                .catch((e) => message.error(e.response.data.message))
-                            :
-                            axios.put(`/majors/${editedMajor.uuid}`, values)
-                                .then((res) => {
-                                    message.success(res.data.message)
-                                    dispatch(actions.getAllMajor());
-                                })
-                                .catch((e) => message.error(e.response.data.message))
-
-
-                    })
-                    .then(() => {
-                        form.resetFields();
-                        //dispatch(actions.getAllCourse())
-                        onCancel();
-                    })
-                    .catch((info) => {
-                        console.log('Validate Failed:', info);
-                    });
-            }}
-        >
-            <Form
-                form={form}
-                layout="vertical"
-                name="form_in_modal"
-                initialValues={{
-                    modifier: 'public',
-                }}
-            >
-                <Form.Item label="Tên ngành (VI):" name="vn_name">
-                    <Input placeholder="Tên ngành bằng Tiếng Việt"
-                           addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
-                </Form.Item>
-                <Form.Item label="Tên ngành (EN):" name="en_name">
-                    <Input placeholder="Tên ngành bằng Tiếng Anh"
-                           addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
-                </Form.Item>
-
-                <Form.Item label="Mã ngành:" name="code">
-                    <Input placeholder="Nhập mã ngành"
-                           addonBefore={<i className="fas fa-code" style={{color: '#1890FF'}}/>}/>
-                </Form.Item>
-
-                <Form.Item label="Bậc:" name="level">
-                    <Input placeholder="Bậc của ngành"
-                           addonBefore={<i className="fas fa-code" style={{color: '#1890FF'}}/>}/>
-                </Form.Item>
-
-            </Form>
-        </Modal>
-    );
-};
 
 const MajorPage = () => {
+    const MajorModalForm = ({ visible, onCancel, editedMajor, dispatch }) => {
+        const [form] = Form.useForm();
+
+        if(editedMajor) {
+            form.setFieldsValue(editedMajor);
+        }
+
+        return (
+            <Modal
+                visible={visible}
+                title={!editedMajor ? "Thêm mới ngành" : `Chỉnh sửa ngành ${editedMajor.vn_name}`}
+                okText="Lưu"
+                cancelText="Thoát"
+                onCancel={onCancel}
+                onOk={() => {
+                    form
+                        .validateFields()
+                        .then((values) => {
+                            !editedMajor ?
+                                axios.post(`/majors`, values)
+                                    .then((res) => {
+                                        message.success(res.data.message)
+                                        dispatch(actions.getAllMajor());
+                                    })
+                                    .catch((e) => message.error(e.response.data.message))
+                                :
+                                axios.put(`/majors/${editedMajor.uuid}`, values)
+                                    .then((res) => {
+                                        message.success(res.data.message)
+                                        dispatch(actions.getAllMajor());
+                                    })
+                                    .catch((e) => message.error(e.response.data.message))
+
+
+                        })
+                        .then(() => {
+                            form.resetFields();
+                            //dispatch(actions.getAllCourse())
+                            onCancel();
+                        })
+                        .catch((info) => {
+                            console.log('Validate Failed:', info);
+                        });
+                }}
+            >
+                <Form
+                    form={form}
+                    layout="vertical"
+                    name="form_in_modal"
+                    initialValues={{
+                        modifier: 'public',
+                    }}
+                >
+                    <Form.Item label="Tên ngành (VI):" name="vn_name">
+                        <Input placeholder="Tên ngành bằng Tiếng Việt"
+                               addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
+                    </Form.Item>
+                    <Form.Item label="Tên ngành (EN):" name="en_name">
+                        <Input placeholder="Tên ngành bằng Tiếng Anh"
+                               addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
+                    </Form.Item>
+
+                    <Form.Item label="Mã ngành:" name="code">
+                        <Input placeholder="Nhập mã ngành"
+                               addonBefore={<i className="fas fa-code" style={{color: '#1890FF'}}/>}/>
+                    </Form.Item>
+
+                    <Form.Item label="Bậc:" name="level">
+                        <Input placeholder="Bậc của ngành"
+                               addonBefore={<i className="fas fa-code" style={{color: '#1890FF'}}/>}/>
+                    </Form.Item>
+
+                </Form>
+            </Modal>
+        );
+    };
+
     const [visibleModal, setVisibleModal] = useState(false);
     const dispatch =  useDispatch();
     const {majors, loadingAllMajor} = useSelector(state => state.majors)
@@ -178,10 +182,11 @@ const MajorPage = () => {
 
     const onCancel = () => {
         setVisibleModal(false);
+        setEditedMajor(null);
     }
     return (
         <>
-            <MajosList
+            <MajorsList
                 majors={majors}
                 loading={loadingAllMajor}
                 setVisibleModal={setVisibleModal}

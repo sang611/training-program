@@ -321,7 +321,6 @@ const ListInstitutionPage = () => {
                 }}
                 onClick={() => {
                     setSearchObj(initialSearchObj);
-
                 }}
             />
         </>

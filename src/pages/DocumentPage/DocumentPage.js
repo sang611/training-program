@@ -1,7 +1,7 @@
-import {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useHistory, useParams} from "react-router-dom";
-import {Button, Col, Form, Input, List, message, Row, Select, Spin} from "antd";
-import {InboxOutlined, UploadOutlined} from "@ant-design/icons";
+import {Button, Col, Form, Input, List, message, Radio, Row, Select, Space, Spin} from "antd";
+import {BlockOutlined, InboxOutlined, TableOutlined, UploadOutlined} from "@ant-design/icons";
 import Modal from "antd/es/modal/Modal";
 import Dragger from "antd/es/upload/Dragger";
 import {useDispatch, useSelector} from "react-redux";
@@ -21,7 +21,7 @@ function DocumentPage() {
     const [formData, setFormData] = useState(new FormData());
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [uploadingDoc, setUploadingDoc] = useState(false);
-
+    const [themeType, setThemeType] = useState(1);
     const {trainingPrograms} = useSelector(state => state.trainingPrograms)
     const {courses} = useSelector(state => state.courses)
 
@@ -93,27 +93,28 @@ function DocumentPage() {
     }
 
     const ResourceInput = () => {
-        if(doc_of === "training-program") {
+        if (doc_of === "training-program") {
             return (
-                    <Select
-                        placeholder={`Chọn 1 chương trình đào tạo`}
-                    >
-                        {
-                            trainingPrograms.map((item) => {
-                                return <Select.Option value={item.uuid} key={item.uuid}>{item.vn_name}</Select.Option>
-                            })
-                        }
-                    </Select>
+                <Select
+                    placeholder={`Chọn 1 chương trình đào tạo`}
+                >
+                    {
+                        trainingPrograms.map((item) => {
+                            return <Select.Option value={item.uuid} key={item.uuid}>{item.vn_name}</Select.Option>
+                        })
+                    }
+                </Select>
             )
         }
-        if(doc_of === "course") {
+        if (doc_of === "course") {
             return (
                 <Select
                     placeholder={`Chọn 1 học phần`}
                 >
                     {
                         courses.map((item) => {
-                            return <Select.Option value={item.uuid} key={item.uuid}>{`${item.course_name_vi}-${item.course_code}`}</Select.Option>
+                            return <Select.Option value={item.uuid}
+                                                  key={item.uuid}>{`${item.course_name_vi}-${item.course_code}`}</Select.Option>
                         })
                     }
                 </Select>
@@ -123,8 +124,8 @@ function DocumentPage() {
     }
 
     const RenderLabel = () => {
-        if(doc_of === "training-program") return "Chương trình đào tạo"
-        if(doc_of === "course") return "Học phần"
+        if (doc_of === "training-program") return "Chương trình đào tạo";
+        if (doc_of === "course") return "Học phần";
     }
 
     const FormUploadFile = () => {
@@ -194,74 +195,120 @@ function DocumentPage() {
         dispatch(actions.getAllDocuments({doc_of: doc_of, title: e.target.value}));
     }
 
+    const BlockTheme = () => {
+        return (
+            <List
+                grid={userRole === 0 ? {
+                    gutter: [50, 30],
+                    xs: 1,
+                    sm: 2,
+                    md: 3,
+                    lg: 3,
+                    xl: 4,
+                    xxl: 4,
+                } : {
+                    gutter: [50, 30],
+                    xs: 1,
+                    sm: 2,
+                    md: 3,
+                    lg: 4,
+                    xl: 5,
+                    xxl: 5,
+                }
+                }
+                dataSource={documents}
+                renderItem={item => (
+                    <List.Item>
+                        <DocumentCard userRole={userRole} item={item} themeType={themeType}/>
+                    </List.Item>
+                )}
+            />
+        )
+    }
+
+    const ListTheme = () => {
+        return (
+            <>
+                <List
+                    dataSource={documents}
+                    itemLayout="horizontal"
+                    renderItem={item => (
+                        <List.Item>
+                            <DocumentCard userRole={userRole} item={item} themeType={themeType}/>
+                        </List.Item>
+                    )}
+                >
+
+                </List>
+            </>
+        )
+    }
 
     return (
         <>
             <Row>
                 <Col span={12}>
-                    <Title level={3}>{
-                        function () {
-                            if (doc_of === 'training-program') return "Tài liệu chương trình đào tạo"
-                            if (doc_of === 'course') return "Tài liệu học phần"
-                            if (doc_of === 'learning-outcome') return "Tài liệu chuẩn đầu ra"
-                            if (doc_of === 'involved') return "Các văn bản liên quan"
-                        }()
-                    }</Title>
+                    <Space size="middle">
+                        <Title level={3}>{
+                            function () {
+                                if (doc_of === 'training-program') return "Tài liệu chương trình đào tạo"
+                                else if (doc_of === 'course') return "Tài liệu học phần"
+                                else if (doc_of === 'involved') return "Các văn bản liên quan"
+                            }()
+                        }
+                        </Title>
+
+                        <Radio.Group
+                            defaultValue={themeType}
+                            buttonStyle="solid"
+                            onChange={(e) => setThemeType(e.target.value)}
+                        >
+                            <Radio.Button value={1}>
+                                <BlockOutlined/>
+                            </Radio.Button>
+                            <Radio.Button value={2}>
+                                <TableOutlined/>
+                            </Radio.Button>
+
+                        </Radio.Group>
+                    </Space>
+
+
                 </Col>
                 <Col span={12}>
                     <Search placeholder="Tìm kiếm tài liệu" onChange={onSearch} enterButton/>
                 </Col>
             </Row>
             <br/>
-            {
-                useMemo(() => {
-                    return loading ? <Spin /> : (
-                        <List
-                            grid={userRole == 0 ? {
-                                gutter: [50, 30],
-                                xs: 1,
-                                sm: 2,
-                                md: 3,
-                                lg: 3,
-                                xl: 4,
-                                xxl: 4,
-                            } : {
-                                gutter: [50, 30],
-                                xs: 1,
-                                sm: 2,
-                                md: 3,
-                                lg: 4,
-                                xl: 5,
-                                xxl: 5,
-                            }
-                            }
-                            dataSource={documents}
-                            renderItem={item => (
-                                <List.Item>
-                                    <DocumentCard userRole={userRole} item={item}/>
-                                </List.Item>
-                            )}
-                        />
-                    )
-                }, [documents, loading])
+            <Row>
+                <Col span={22}>
+                    {
+                        useMemo(() => {
+                            return loading ? <Spin/> : (
+                                themeType === 1 ? <BlockTheme /> : <ListTheme />
+                            )
+                        }, [documents, loading, themeType])
 
-            }
-
-            {userRole == 0 ? <Button
-                type="primary"
-                shape="circle"
-                danger
-                icon={<UploadOutlined/>}
-                size={"large"}
-                style={{
-                    position: 'fixed',
-                    right: 52,
-                    bottom: 32
-                }}
-                onClick={() => {
-                    showModal();
-                }}
-            /> : ""}
+                    }
+                </Col>
+                <Col span={2}>
+                    {userRole === 0 ? <Button
+                        type="primary"
+                        shape="circle"
+                        danger
+                        icon={<UploadOutlined/>}
+                        size={"large"}
+                        style={{
+                            position: 'fixed',
+                            right: 52,
+                            bottom: 32
+                        }}
+                        onClick={() => {
+                            showModal();
+                        }}
+                    /> : ""}
+                </Col>
+            </Row>
 
             <Modal
                 title={"Thêm mới tài liệu"}

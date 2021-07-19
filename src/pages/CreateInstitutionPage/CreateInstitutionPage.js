@@ -20,11 +20,9 @@ const CreateInstitutionPage = (props) => {
 
     useEffect(() => {
         if (createSuccess) {
-            message.success("Đã thêm một đơn vị mới");
             form.resetFields();
         }
     }, [createSuccess])
-
 
 
     const layout = {

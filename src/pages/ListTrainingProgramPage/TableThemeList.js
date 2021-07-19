@@ -1,20 +1,13 @@
-import {Link} from "react-router-dom";
-import {Button, Card, Col, Descriptions, message, Modal, Popconfirm, Row, Skeleton, Table, Tooltip} from "antd";
-import {
-    BuildOutlined,
-    DeleteOutlined,
-    EditOutlined,
-    InfoOutlined,
-    InsertRowBelowOutlined,
-    UnlockOutlined
-} from "@ant-design/icons";
-import Icon from "@ant-design/icons/es";
-import axios from "axios";
-import * as actions from "../../redux/actions";
+import {Col, message, Modal, Popconfirm, Row, Skeleton, Space, Table, Tag, Tooltip} from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import React, {useEffect, useState} from "react";
+import * as actions from "../../redux/actions";
+import axios from "axios";
+import {Link} from "react-router-dom";
+import {BuildOutlined, DeleteOutlined, EditOutlined, InsertRowBelowOutlined, UnlockOutlined} from "@ant-design/icons";
+import Icon from "@ant-design/icons/es";
 import {generateDataFrame} from "../../utils/frameCourse";
 import SearchCourseFrameComponent from "../UpdateTrainingProgramPage/SearchCourseFrameComponent";
+import {useEffect, useState} from "react";
 
 const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, trainingItem}) => {
     const [knowledgeType, setKnowledgeType] = useState("ALL");
@@ -265,7 +258,7 @@ const MatrixLearningOutcomes = ({trainingItem, visibleLocMatrix, setVisibleLocMa
     return (
         <Modal
             visible={visibleLocMatrix}
-            title={`Ma trận chuẩn đầu ra chương trình đào tạo: ${trainingItem.vn_name}`}
+            title={`Ma trận chuẩn đầu ra chương trình đào tạo: ${trainingItem ? trainingItem.vn_name : ""}`}
             okText="OK"
             className="modal-locs"
             onCancel={() => {
@@ -348,7 +341,7 @@ const MatrixCourses = ({trainingItem, visibleCourseMatrix, setVisibleCourseMatri
     return (
         <Modal
             visible={visibleCourseMatrix}
-            title={`Danh sách học phần chương trình đào tạo: ${trainingItem.vn_name}`}
+            title={`Danh sách học phần chương trình đào tạo: ${trainingItem ? trainingItem.vn_name : ""}`}
             okText="OK"
             className="modal-courses"
             onCancel={() => {
@@ -379,17 +372,163 @@ const MatrixCourses = ({trainingItem, visibleCourseMatrix, setVisibleCourseMatri
     )
 }
 
-const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
+const TableThemeList = (vnNameSearch) => {
+    const {trainingPrograms, loadingAllTrainings, errors} = useSelector(state => state.trainingPrograms)
+    const [item, setItem] = useState();
+    const {userRole} = useSelector(state => state.auth)
+
+
+    const columns = [
+        {
+            title: "Ngành đào tạo",
+            key: "vn_name",
+            render: (_, item) => {
+                return <>
+                    <Link to={`/uet/training-programs/${item.uuid}`}>
+                        {item.vn_name}
+                    </Link>
+                </>
+            }
+        },
+        {
+            title: "Hệ",
+            dataIndex: "type",
+            key: "type"
+        },
+        {
+            title: "Năm áp dụng",
+            dataIndex: "version",
+            key: "version"
+        },
+        {
+            title: "Số lớp áp dụng",
+            render: (_, item) => {
+                return item.classes ? JSON.parse(item.classes).length : 0
+            }
+        },
+        {
+            title: "Trạng thái",
+            render: (_, item) => {
+                return item.lock_edit ? "Đã ban hành" : "Chưa ban hành"
+            }
+        },
+        {
+            title: "Thao tác",
+            render: (_, record) => {
+                if (userRole === 0) {
+                    if (!record.lock_edit) {
+                        return (
+                            <Space size="middle">
+                                <Link to={`/uet/training-programs/updating/${record.uuid}`}>
+                                    <Tooltip title="Chỉnh sửa" color="#108ee9">
+                                        <EditOutlined key="edit"/>
+                                    </Tooltip>
+                                </Link>
+                                <Tooltip title="Ma trận CĐR" color="#108ee9">
+                                    <BuildOutlined onClick={() => {
+                                        setItem(record)
+                                        setVisibleLocMatrix(true)
+                                    }}
+                                                   style={{color: "#1890FF"}}
+                                    />
+                                </Tooltip>
+                                <Tooltip title="Danh sách HP" color="#108ee9">
+                                    <InsertRowBelowOutlined onClick={() => {
+                                        setItem(record)
+                                        setVisibleCourseMatrix(true)
+                                    }}
+                                                            style={{color: "#1890FF"}}
+                                    />
+                                </Tooltip>
+                                <Popconfirm
+                                    title="Sau khi khóa sẽ không thể chỉnh sửa?"
+                                    cancelText="Hủy"
+                                    okText="Khóa"
+                                    onConfirm={() => {
+                                        onLock(record.uuid)
+                                    }}
+                                >
+                                    <Tooltip title="Khóa" color="#108ee9">
+                                        <UnlockOutlined style={{color: "#1890FF"}}/>
+                                    </Tooltip>
+                                </Popconfirm>
+                                <Popconfirm
+                                    title="Xóa CTĐT?"
+                                    cancelText="Hủy"
+                                    okText="Xóa"
+                                    onConfirm={() => {
+                                        onDeleteTrainingProgram(record.uuid)
+                                    }}
+                                >
+                                    <Tooltip title="Xóa" color="#108ee9">
+                                        <DeleteOutlined style={{color: "#1890FF"}}/>
+                                    </Tooltip>
+                                </Popconfirm>
+
+                            </Space>
+
+                        )
+                    } else {
+                        return (
+                            <Space size="middle">
+                                <Tooltip title="Ma trận CĐR" color="#108ee9">
+                                    <BuildOutlined onClick={() => {
+                                        setItem(record)
+                                        setVisibleLocMatrix(true)
+                                    }}
+                                                   style={{color: "#1890FF"}}
+                                    />
+                                </Tooltip>
+                                <Tooltip title="Danh sách HP" color="#108ee9">
+                                    <InsertRowBelowOutlined onClick={() => {
+                                        setItem(record)
+                                        setVisibleCourseMatrix(true)
+                                    }}
+                                                            style={{color: "#1890FF"}}
+                                    />
+                                </Tooltip>
+                            </Space>
+                        )
+                    }
+                } else if (userRole === 3) {
+                    return (
+                        <>
+                            <Tooltip title="Danh sách học phần" color="#108ee9">
+                                <Icon
+                                    component={() => <i className="fas fa-th-list" style={{color: "#1890FF"}}/>}
+                                    onClick={() => {
+                                        setItem(record)
+                                        setVisibleCourseList(true)
+                                    }}
+                                />
+                            </Tooltip>
+                        </>
+                    )
+                } else {
+                    return (
+                        <>
+                            <Tooltip title="Danh sách học phần" color="#108ee9">
+                                <Icon
+                                    component={() => <i className="fas fa-th-list" style={{color: "#1890FF"}}/>}
+                                    onClick={() => {
+                                        setItem(record)
+                                        setVisibleCourseList(true)
+                                    }}
+                                />
+                            </Tooltip>,
+                        </>
+                    )
+                }
+            }
+        },
+    ]
+
     const [visibleCourseList, setVisibleCourseList] = useState(false);
     const [visibleLocMatrix, setVisibleLocMatrix] = useState(false);
     const [visibleCourseMatrix, setVisibleCourseMatrix] = useState(false);
 
     const {coursesMatrixTraining, loadingCoursesMatrix} = useSelector(state => state.trainingPrograms);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(actions.getCourseOfMatrixTrainingProgram({id: item.uuid}))
-    }, [])
 
     const onLock = async (uuid) => {
         let course_outlines = [];
@@ -442,135 +581,15 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
             })
     }
 
-    const actionAdmin = !item.lock_edit ?
-        [
-            <Link to={`/uet/training-programs/updating/${item.uuid}`}>
-                <Tooltip title="Chỉnh sửa" color="#108ee9">
-                    <EditOutlined key="edit"/>
-                </Tooltip>
-            </Link>,
-            <Tooltip title="Ma trận CĐR" color="#108ee9">
-                <BuildOutlined onClick={() => setVisibleLocMatrix(true)}/>
-            </Tooltip>,
-            <Tooltip title="Danh sách HP" color="#108ee9">
-                <InsertRowBelowOutlined onClick={() => setVisibleCourseMatrix(true)}/>
-            </Tooltip>,
-
-
-            <Popconfirm
-                title="Sau khi khóa sẽ không thể chỉnh sửa?"
-                cancelText="Hủy"
-                okText="Khóa"
-                onConfirm={() => onLock(item.uuid)}
-            >
-                <Tooltip title="Khóa" color="#108ee9">
-                    <UnlockOutlined/>
-                </Tooltip>
-            </Popconfirm>,
-
-            <Popconfirm
-                title="Xóa CTĐT?"
-                cancelText="Hủy"
-                okText="Xóa"
-                onConfirm={() => onDeleteTrainingProgram(item.uuid)}
-            >
-                <Tooltip title="Xóa" color="#108ee9">
-                    <DeleteOutlined/>
-                </Tooltip>
-            </Popconfirm>
-            ,
-        ] :
-        [
-            <Tooltip title="Ma trận CĐR" color="#108ee9">
-                <BuildOutlined onClick={() => setVisibleLocMatrix(true)}/>
-            </Tooltip>,
-            <Tooltip title="Danh sách HP" color="#108ee9">
-                <InsertRowBelowOutlined onClick={() => setVisibleCourseMatrix(true)}/>
-            </Tooltip>,
-            /*<Popconfirm
-                title="Mở khóa chương trình đào tạo này?"
-                cancelText="Hủy"
-                okText="Mở khóa"
-                onConfirm={() => onUnLock(item.uuid)}
-            >
-                <LockOutlined/>
-            </Popconfirm>,*/
-
-        ]
-
-
-    const actionStudent = [
-        <Tooltip title="Danh sách học phần" color="#108ee9">
-            <Icon
-                component={() => <i className="fas fa-th-list"/>}
-                key="setting"
-                onClick={() => {
-                    setVisibleCourseList(true)
-                }}
-            />
-        </Tooltip>
-
-    ];
-
-    const actionLecturer = [
-        <Tooltip title="Danh sách học phần" color="#108ee9">
-            <Icon
-                component={() => <i className="fas fa-th-list"/>}
-                key="setting"
-                onClick={() => {
-                    setVisibleCourseList(true)
-                }}
-            />
-        </Tooltip>,
-    ];
-
     return (
         <>
-            <Card
-                extra={
-                    <Link to={`/uet/training-programs/${item.uuid}`}>
-                        <Tooltip title="Chi tiết" color="#108ee9">
-                            <Button type="primary" shape="circle" icon={<InfoOutlined/>} size="small"/>
-                        </Tooltip>
-
-                    </Link>
-                }
-                actions={userRole === 0 ? actionAdmin : (userRole === 3 ? actionStudent : actionLecturer)}
-                title={item.vn_name}
-                hoverable
+            <Table
+                columns={columns}
+                dataSource={trainingPrograms}
+                bordered
             >
-                <Descriptions column={1} style={{height: '200px'}}>
-                    <Descriptions.Item label="Ngành đào tạo">
-                        {
-                            item.vn_name ? item.vn_name : ''
-                        }
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Hệ">
-                        {
-                            item.type ? item.type : ''
-                        }
-                    </Descriptions.Item>
 
-                    <Descriptions.Item label="Năm">
-                        {
-                            item.version || ''
-                        }
-                    </Descriptions.Item>
-
-                    <Descriptions.Item label="Số lớp đang áp dụng">
-                        {
-                            item.classes ? JSON.parse(item.classes).length : 0
-                        }
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Trạng thái">
-                        {
-                            item.lock_edit ? "Đã ban hành" : "Chưa ban hành"
-                        }
-                    </Descriptions.Item>
-
-                </Descriptions>
-            </Card>
-
+            </Table>
             <>
                 <ListCourseOfTraining
                     visibleCourseList={visibleCourseList}
@@ -591,7 +610,8 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
                 />
             </>
         </>
+
     )
 }
 
-export default TrainingProgramItem;
+export default TableThemeList;

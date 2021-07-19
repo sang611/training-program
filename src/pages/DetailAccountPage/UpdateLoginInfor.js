@@ -2,6 +2,7 @@ import {Button, Card, Col, Form, Input, message} from "antd";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Title from "antd/lib/typography/Title";
+import Text from "antd/lib/typography/Text";
 
 const UpdateLoginInfor = ({user, userRole}) => {
     const [loginUpdateForm] = Form.useForm();
@@ -13,7 +14,7 @@ const UpdateLoginInfor = ({user, userRole}) => {
 
     useEffect(() => {
         loginUpdateForm.setFieldsValue({
-            username: user.vnu_mail
+            username: user.account.username
         })
     }, [])
 
@@ -68,6 +69,9 @@ const UpdateLoginInfor = ({user, userRole}) => {
                     Lưu
                 </Button>
             </Form.Item>
+            <Text mark>
+                * Không áp dụng cho tài khoản VNU
+            </Text>
         </Form>
     )
 
@@ -143,6 +147,9 @@ const UpdateLoginInfor = ({user, userRole}) => {
                     Lưu
                 </Button>
             </Form.Item>
+            <Text mark>
+                * Không áp dụng cho tài khoản VNU
+            </Text>
         </Form>
     )
 

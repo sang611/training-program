@@ -1,8 +1,8 @@
-import {CloudDownloadOutlined, DeleteOutlined, EditOutlined, LoadingOutlined} from "@ant-design/icons";
+import {CloudDownloadOutlined, DeleteOutlined, EyeOutlined, LoadingOutlined} from "@ant-design/icons";
 import axios from "axios";
 import Meta from "antd/lib/card/Meta";
 import Paragraph from "antd/lib/typography/Paragraph";
-import {Card, Divider, message, Popconfirm, Tag, Tooltip} from "antd";
+import {Button, Card, List, message, Popconfirm, Tag, Tooltip} from "antd";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
@@ -11,7 +11,7 @@ import {useHistory} from "react-router-dom";
 
 const FileDownload = require('js-file-download');
 
-const DocumentCard = ({userRole, item}) => {
+const DocumentCard = ({userRole, item, themeType}) => {
     const [editableTitle, setEditableTitle] = useState(item.name);
     const [editableDesc, setEditableDesc] = useState(item.description);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -38,7 +38,7 @@ const DocumentCard = ({userRole, item}) => {
             if (course)
                 return course.course_name_vi
         }
-        return ""
+        return "";
     }
 
     useEffect(() => {
@@ -97,10 +97,9 @@ const DocumentCard = ({userRole, item}) => {
         setDownloading(true);
         axios.get(`/documents/downloadOneFile/${item.document_url}`, {responseType: 'blob'})
             .then(res => {
-                if(res.headers['content-type'] === 'application/pdf') {
+                if (res.headers['content-type'] === 'application/pdf') {
                     FileDownload(res.data, 'document.pdf');
-                }
-                else if(res.headers['content-type'] === 'application/msword') {
+                } else if (res.headers['content-type'] === 'application/msword') {
                     FileDownload(res.data, 'document.doc');
                 }
                 setDownloading(false)
@@ -113,62 +112,141 @@ const DocumentCard = ({userRole, item}) => {
     }
 
     function onRouteToResource() {
-        if(item.category === 'training-program') {
+        if (item.category === 'training-program') {
             history.push(`/uet/training-programs/${item.resourceUuid}`);
         }
     }
 
-
-    return (
-        <>
-            <Card
-                hoverable
-                loading={loading}
-                title={
-                    <Tooltip title={getDocumentResourceName()}>
-                        <Tag color="#108ee9" onClick={onRouteToResource}>
-                            {getDocumentResourceName()}
-                        </Tag>
-                    </Tooltip>
-                }
-                bodyStyle={{
-                    padding: '0'
+    const ModalPreview = () => (
+        <Modal
+            visible={isModalVisible}
+            footer={null}
+            width='80%'
+            style={{top: 0}}
+            onCancel={() => {
+                handleCancel();
+            }
+            }
+        >
+            <iframe
+                src={`https://drive.google.com/file/d/${item.document_url}/preview`}
+                style={{
+                    width: '100%',
+                    height: '92vh'
                 }}
-                actions={userRole == 0 ? [
-                    !downloading
-                        ? <CloudDownloadOutlined key="download" onClick={onDownloadFile}/>
-                        : <LoadingOutlined key="downloading"/>,
-                    <Popconfirm
-                        title="Bạn muốn xóa tài liệu này?"
-                        onConfirm={() => onConfirmDelete(item.uuid, item.category)}
-                        okText="Xóa"
-                        cancelText="Hủy"
-                    >
-                        <DeleteOutlined key="delete"/>
-                    </Popconfirm>
+            />
+        </Modal>
+    )
 
-                ] : (
-                    !downloading
-                        ? [<CloudDownloadOutlined key="download" onClick={onDownloadFile}/>]
-                        : [<LoadingOutlined key="downloading"/>]
+    if (themeType === 1)
+        return (
+            <>
+                <Card
+                    hoverable
+                    loading={loading}
+                    title={
+                        <Tooltip title={getDocumentResourceName()}>
+                            <Tag color="#108ee9" onClick={onRouteToResource}>
+                                {getDocumentResourceName()}
+                            </Tag>
+                        </Tooltip>
+                    }
+                    bodyStyle={{
+                        padding: '0'
+                    }}
+                    actions={userRole === 0 ? [
+                        !downloading
+                            ? <CloudDownloadOutlined key="download" onClick={onDownloadFile}/>
+                            : <LoadingOutlined key="downloading"/>,
+                        <Popconfirm
+                            title="Bạn muốn xóa tài liệu này?"
+                            onConfirm={() => onConfirmDelete(item.uuid, item.category)}
+                            okText="Xóa"
+                            cancelText="Hủy"
+                        >
+                            <DeleteOutlined key="delete"/>
+                        </Popconfirm>
 
-                )}
-            >
-                <center>
-                    <img
-                        width='100%'
-                        height='250px'
-                        alt="Document"
-                        src={`https://drive.google.com/thumbnail?authuser=0&sz=w320&id=${item.document_url}`}
-                        onClick={showModal}
-                    />
-                </center>
+                    ] : (
+                        !downloading
+                            ? [<CloudDownloadOutlined key="download" onClick={onDownloadFile}/>]
+                            : [<LoadingOutlined key="downloading"/>]
 
-                <div>
+                    )}
+                >
+                    <center>
+                        <img
+                            width='100%'
+                            height='250px'
+                            alt="Document"
+                            src={`https://drive.google.com/thumbnail?authuser=0&sz=w320&id=${item.document_url}`}
+                            onClick={showModal}
+                        />
+                    </center>
 
-                    <Meta
+                    <div>
+                        <Meta
+                            title={
+                                userRole === 0 ?
+                                    <Paragraph
+                                        editable={{
+                                            onChange: (e) => onUpdateTitleDoc(e),
+                                        }}
+                                        style={{margin: 0}}
+                                    >{editableTitle}</Paragraph>
+                                    : item.name
+                            }
+                            description={
+                                userRole === 0 ?
+                                    <Paragraph
+                                        editable={{onChange: (e) => onUpdateDescDoc(e)}}
+                                        style={{margin: 0}}
+                                    >{editableDesc}</Paragraph>
+                                    : (item.description || "")
+                            }
+                            style={{width: '100%', padding: '15px'}}
+                        />
+                    </div>
+                </Card>
+               <ModalPreview />
+            </>
+        )
+
+    else
+        return (
+            <>
+                <List.Item
+                    style={{width: '100%'}}
+                    actions={userRole === 0 ? [
+                        <Button type="primary" shape="circle" icon={<EyeOutlined/>} size="middle" onClick={showModal}/>,
+                        !downloading
+                            ?
+                            <CloudDownloadOutlined key="download" onClick={onDownloadFile} style={{fontSize: '22px'}}/>
+                            : <LoadingOutlined key="downloading"/>,
+                        <Popconfirm
+                            title="Bạn muốn xóa tài liệu này?"
+                            onConfirm={() => onConfirmDelete(item.uuid, item.category)}
+                            okText="Xóa"
+                            cancelText="Hủy"
+                            placement="topRight"
+                        >
+                            <DeleteOutlined key="delete" style={{fontSize: '22px'}}/>
+                        </Popconfirm>
+
+                    ] : (
+
+                        [
+                            <Button type="primary" shape="circle" icon={<EyeOutlined/>} size="middle" onClick={showModal}/>,
+                            !downloading
+                                ? <CloudDownloadOutlined key="download" onClick={onDownloadFile}
+                                                         style={{fontSize: '22px'}}/>
+                                : <LoadingOutlined key="downloading"/>
+                        ]
+                    )}
+                >
+                    <List.Item.Meta
                         title={
-                            userRole == 0 ?
+                            userRole === 0 ?
                                 <Paragraph
                                     editable={{
                                         onChange: (e) => onUpdateTitleDoc(e),
@@ -178,37 +256,22 @@ const DocumentCard = ({userRole, item}) => {
                                 : item.name
                         }
                         description={
-                            userRole == 0 ?
+                            userRole === 0 ?
                                 <Paragraph
                                     editable={{onChange: (e) => onUpdateDescDoc(e)}}
                                     style={{margin: 0}}
                                 >{editableDesc}</Paragraph>
                                 : (item.description || "")
                         }
-                        style={{width: '100%', padding: '15px'}}
                     />
-                </div>
-            </Card>
-            <Modal
-                visible={isModalVisible}
-                footer={null}
-                width='80%'
-                style={{top: 0}}
-                onCancel={() => {
-                    handleCancel();
-                }
-                }
-            >
-                <iframe
-                    src={`https://drive.google.com/file/d/${item.document_url}/preview`}
-                    style={{
-                        width: '100%',
-                        height: '92vh'
-                    }}
-                />
-            </Modal>
-        </>
-    )
+                    <Tag color="geekblue" onClick={onRouteToResource}>
+                        {getDocumentResourceName()}
+                    </Tag>
+
+                </List.Item>
+                <ModalPreview />
+            </>
+        )
 }
 
 export default DocumentCard;

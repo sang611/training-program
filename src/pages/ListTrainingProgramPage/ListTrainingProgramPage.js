@@ -1,6 +1,6 @@
-import {Button, Col, Divider, List, Modal, Row, Spin, Table} from "antd";
+import {Button, Col, Divider, List, Radio, Row, Spin, Table} from "antd";
 import React, {useEffect, useState} from 'react'
-import {PlusOutlined} from "@ant-design/icons";
+import {BlockOutlined, PlusOutlined, TableOutlined, UnorderedListOutlined} from "@ant-design/icons";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
@@ -8,175 +8,16 @@ import './ListTrainingProgramPage.css'
 import Search from "antd/lib/input/Search";
 import Text from "antd/es/typography/Text";
 import TrainingProgramItem from "./TrainingProgramItem";
-
-
-const MatrixCourses = ({visibleCourseMatrix, setVisibleCourseMatrix, trainingList}) => {
-    const dispatch = useDispatch();
-    const {courses} = useSelector(state => state.courses)
-    useEffect(() => {
-        dispatch(actions.getAllCourse())
-    }, [])
-    const columns = [
-        {
-            title: 'STT',
-            dataIndex: 'stt'
-        },
-        {
-            title: 'Mã học phần',
-            dataIndex: 'course_code'
-        },
-        {
-            title: 'Tên học phần',
-            dataIndex: 'course_name_vi'
-        },
-        {
-            title: 'Số tín chỉ',
-            dataIndex: 'credits'
-        }
-    ].concat(
-        trainingList.map((training, index) => {
-            return {
-                title: training.vn_name,
-                render: (_, course) => {
-                    const courseOfTraining = training.courses.find((c) => c.uuid === course.uuid);
-                    if (courseOfTraining) {
-                        return courseOfTraining.training_program_course.course_type;
-                    }
-                }
-            }
-        })
-    )
-
-    return (
-        <>
-            <Modal
-                visible={visibleCourseMatrix}
-                title="Ma trận học phần"
-                okText="OK"
-                className="modal-courses"
-                onCancel={() => {
-                    setVisibleCourseMatrix(false);
-                }}
-                onOk={() => {
-                    setVisibleCourseMatrix(false);
-                }}
-                footer={null}
-            >
-                <Table
-                    columns={columns}
-                    bordered
-                    pagination={false}
-                    dataSource={
-                        courses.map((course, index) => {
-                            course.key = index;
-                            course.stt = index + 1;
-                            return course;
-                        })
-                    }
-                >
-
-                </Table>
-            </Modal>
-        </>
-    )
-}
-
-const MatrixLoc = ({visibleLocMatrix, setVisibleLocMatrix, trainingList}) => {
-
-    const dispatch = useDispatch();
-    const {locs} = useSelector(state => state.learningOutcomes)
-
-    useEffect(() => {
-        dispatch(actions.getAllLearningOutcomes({typeLoc: 0}));
-    }, [])
-
-    const columns = [
-        {
-            title: 'Chuẩn đầu ra',
-            dataIndex: 'content',
-            width: '50%'
-        }
-    ].concat(
-        trainingList.map((training, index) => {
-            return {
-                title: training.vn_name,
-                render: (_, loc) => {
-                    let data = [];
-                    let courseCodesOfTraining = training.courses.map(course => course.course_code)
-                    training.learning_outcomes.forEach((locOfTraining) => {
-                        if(locOfTraining.uuid === loc.uuid) {
-                            let clos = locOfTraining.clos;
-                            clos.forEach(clo => {
-                                let outlines = clo.outlines;
-                                outlines.forEach((outline) => {
-                                    if(courseCodesOfTraining.includes(outline.course.course_code)){
-                                        let course_level = (
-
-                                                `${outline.course.course_code} (${outline.outline_learning_outcome.level})`
-
-                                        )
-                                        if(!data.includes(course_level)) {
-                                            data.push(course_level);
-                                        }
-
-                                    }
-                                })
-                            })
-                        }
-                    })
-                    return data.map(d => (
-                        <div>{d}</div>
-                    ))
-                }
-            }
-        })
-    )
-
-    return (
-        <>
-            <Modal
-                visible={visibleLocMatrix}
-                title="Ma trận chuẩn đầu ra"
-                okText="OK"
-                className="modal-locs"
-                onCancel={() => {
-                    setVisibleLocMatrix(false);
-                }}
-                onOk={() => {
-                    setVisibleLocMatrix(false);
-                }}
-                footer={null}
-            >
-                <Table
-                    columns={columns}
-                    bordered
-                    pagination={false}
-                    dataSource={
-                        locs.map((loc, index) => {
-                            loc.key = index;
-                            return loc;
-                        })
-                    }
-                >
-
-                </Table>
-            </Modal>
-
-        </>
-    )
-}
-
-
+import TableThemeList from "./TableThemeList";
 
 const ListTrainingProgramPage = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const {userRole} = useSelector(state => state.auth);
     const {trainingPrograms, loadingAllTrainings, errors} = useSelector(state => state.trainingPrograms)
-    const [visibleCourseMatrix, setVisibleCourseMatrix] = useState(false);
-    const [visibleLocMatrix, setVisibleLocMatrix] = useState(false);
 
     const [vnNameSearch, setVnNameSearch] = useState("");
+    const [themeType, setThemeType] = useState(1);
 
 
     useEffect(() => {
@@ -187,34 +28,6 @@ const ListTrainingProgramPage = () => {
 
     const ButtonActions = (
         <>
-            {/*<Button
-                type="primary"
-                shape="circle"
-                icon={<BuildOutlined/>}
-                size={"large"}
-                style={{
-                    position: 'fixed',
-                    right: 52,
-                    bottom: 132
-                }}
-                onClick={() => {
-                    setVisibleLocMatrix(true);
-                }}
-            />
-            <Button
-                type="primary"
-                shape="circle"
-                icon={<InsertRowBelowOutlined/>}
-                size={"large"}
-                style={{
-                    position: 'fixed',
-                    right: 52,
-                    bottom: 82
-                }}
-                onClick={() => {
-                    setVisibleCourseMatrix(true);
-                }}
-            />*/}
             <Button
                 type="primary"
                 shape="circle"
@@ -234,10 +47,60 @@ const ListTrainingProgramPage = () => {
     )
 
 
-    return  (
+    const ListTheme = (
+        <List
+            grid={{
+                gutter: 30,
+                xs: 1,
+                sm: 2,
+                md: 2,
+                lg: 3,
+                xl: userRole > 0 ? 4 : 3,
+                xxl: 4,
+            }}
+            dataSource={trainingPrograms}
+            renderItem={item => {
+                return <List.Item>
+                    <TrainingProgramItem
+                        item={item}
+                        userRole={userRole}
+                        vnNameSearch={vnNameSearch}
+                    />
+                </List.Item>
+            }
+
+            }
+        />
+    )
+
+    const renderByTheme = () => {
+        if(themeType === 1) {
+            return ListTheme;
+        }
+        else if(themeType === 2) {
+            return <TableThemeList vnNameSearch={vnNameSearch}/>;
+        }
+    }
+
+    return (
         !errors ?
             <>
-                <Row align="middle" justify="end">
+                <Row align="middle" justify="space-between">
+                    <Col>
+                        <Radio.Group
+                            defaultValue={themeType}
+                            buttonStyle="solid"
+                            onChange = {(e) => setThemeType(e.target.value)}
+                        >
+                            <Radio.Button value={1}>
+                                <BlockOutlined />
+                            </Radio.Button>
+                            <Radio.Button value={2}>
+                                <TableOutlined />
+                            </Radio.Button>
+
+                        </Radio.Group>
+                    </Col>
                     <Col span={10}>
                         <Search
                             placeholder="Tìm kiếm chương trình đào tạo"
@@ -255,37 +118,13 @@ const ListTrainingProgramPage = () => {
                     </Text>
                 </Divider>
                 {
-                    loadingAllTrainings == false ?
-                        (
-                            <List
-                                grid={{
-                                    gutter: 30,
-                                    xs: 1,
-                                    sm: 2,
-                                    md: 2,
-                                    lg: 3,
-                                    xl: userRole > 0 ? 4 : 3,
-                                    xxl: 4,
-                                }}
-                                dataSource={trainingPrograms}
-                                renderItem={item => {
-                                    return <List.Item>
-                                        <TrainingProgramItem
-                                            item={item}
-                                            userRole={userRole}
-                                            vnNameSearch={vnNameSearch}
-                                        />
-                                    </List.Item>
-                                }
-
-                                }
-                            />
-                        ) : <Spin />
+                    loadingAllTrainings === false ? renderByTheme() : <Spin/>
                 }
 
-                {userRole == 0 ? ButtonActions : ""}
+                {userRole === 0 ? ButtonActions : ""}
             </> : <div>{errors.toString()}</div>
     )
+
 }
 
 export default ListTrainingProgramPage;

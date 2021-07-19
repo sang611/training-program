@@ -1,7 +1,7 @@
 import {useHistory, useParams} from "react-router-dom";
 import {useState, useEffect} from 'react';
 import axios from "axios";
-import {Button, Col, message, notification, Row, Spin} from "antd";
+import {Button, Col, message, notification, Popconfirm, Row, Spin} from "antd";
 import Title from "antd/lib/typography/Title";
 import AddLecturerOutlineForm from "../CreateOutlineCoursePage/AddLecturerOutlineForm";
 import InforCourseOutline from "../CreateOutlineCoursePage/InforCourseOutline";
@@ -56,8 +56,13 @@ const UpdateOutlinePage = () => {
             setSummaryContent(outline.summary_content);
             setDocument(outline.documents);
             setCoursePolicy(outline.coursePolicy)
+            setLecturers(JSON.parse(outline.lecturers))
         }
     }, [outline])
+
+    useEffect(() => {
+        console.log(lecturers)
+    }, [lecturers])
 
     const onSubmitOutline = () => {
         const data = {
@@ -93,12 +98,32 @@ const UpdateOutlinePage = () => {
             .catch((err) => message.error("Đã có lỗi xảy ra"))
     }
 
+    const onUpdateOutline = () => {
+        const data = {
+            lecturers,
+            goal,
+            locs,
+            summaryContent,
+            detailContent,
+            documents,
+            teachingFormality,
+            coursePolicy,
+            examFormality,
+        };
+
+        axios.put(`/outlines/${outline.uuid}`, data)
+            .then((res) => {
+                message.success("Cập nhật đề cương thành công")
+            })
+            .catch((err) => message.error("Đã có lỗi xảy ra"))
+    }
+
     return loading || loadingACourse ? <Spin/> : (
         course && outline ? <>
             <Title level={4}>
                 1. Giảng viên phụ trách môn học
             </Title>
-            <AddLecturerOutlineForm setLecturers={setLecturers} lecturers={outline.lecturers}/>
+            <AddLecturerOutlineForm setLecturers={setLecturers} lecturers={lecturers}/>
             <br/><br/>
 
             <Title level={4}>
@@ -199,7 +224,17 @@ const UpdateOutlinePage = () => {
 
             <Row justify="space-between">
                 <Button onClick={() => history.push(`/uet/courses/${uuid}/outlines`)}>Thoát</Button>
-                <Button type="primary" onClick={onSubmitOutline}>Lưu</Button>
+                <Popconfirm
+                    title="Tạo version mới cho đề cương này?"
+                    okText="Yes"
+                    cancelText="No"
+                    onConfirm={onSubmitOutline}
+                    onCancel={onUpdateOutline}
+                    placement="topRight"
+                >
+                    <Button type="primary" >Lưu</Button>
+                </Popconfirm>
+
             </Row>
         </> : <Title>500</Title>
     )

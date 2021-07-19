@@ -67,7 +67,7 @@ const SearchFormLecturer = ({currentPage, setCurrentPage, searchObj, setSearchOb
                 }
             >
                 <Row gutter={50}>
-                    <Col span={12}>
+                    {/*<Col span={12}>
                         <Form.Item
                             name="fullname"
                             label="Họ tên"
@@ -97,6 +97,14 @@ const SearchFormLecturer = ({currentPage, setCurrentPage, searchObj, setSearchOb
                             label="Học vị"
                         >
                             <Input placeholder="Học vị của giảng viên"/>
+                        </Form.Item>
+                    </Col>*/}
+                    <Col span={12}>
+                        <Form.Item
+                            name="textSearch"
+                            label="Nhập từ tìm kiếm"
+                        >
+                            <Input placeholder="Nhập họ tên, email, học vị,..."/>
                         </Form.Item>
                     </Col>
                     <Col span={12}>

@@ -14,11 +14,12 @@ export function* fetchAccountsSaga(action) {
         if (typeAccount === 'GV') {
 
             const params = {
-                fullname: action.payload.fullname || "",
+               /* fullname: action.payload.fullname || "",
                 vnu_mail: action.payload.vnu_mail || "",
                 academic_rank: action.payload.academic_rank || "",
-                academic_degree: action.payload.academic_degree || "",
+                academic_degree: action.payload.academic_degree || "",*/
                 institutionUuid: action.payload.institutionUuid || "",
+                textSearch: action.payload.textSearch || "",
                 page: page || 1
             }
 
@@ -29,11 +30,12 @@ export function* fetchAccountsSaga(action) {
         else if (typeAccount === "SV") {
 
             const params = {
-                fullname: action.payload.fullname || "",
+               /* fullname: action.payload.fullname || "",
                 student_code: action.payload.student_code || "",
                 class: action.payload.class,
-                grade: action.payload.grade,
+                grade: action.payload.grade,*/
                 majorUuid: action.payload.majorUuid,
+                textSearch: action.payload.textSearch || "",
                 page: page || 1
             }
 

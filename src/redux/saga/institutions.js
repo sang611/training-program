@@ -2,6 +2,7 @@ import * as actions from "../actions/index";
 import {put} from "redux-saga/effects";
 import axios from "../../my.axios";
 import * as actionTypes from "../actions/actionTypes";
+import {message} from "antd";
 
 export function* createInstitution(action) {
     yield put(actions.createStart());
@@ -10,6 +11,7 @@ export function* createInstitution(action) {
     try {
         const response = yield axios.post("/institutions", action.payload)
         yield put(actions.createSuccess(response));
+        message.success("Thêm mới đơn vị thành công")
     } catch (error) {
         if (error.response.status === 401 || error.response.status === 500) {
             yield put(actions.createFail(error.response));

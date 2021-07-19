@@ -10,11 +10,8 @@ const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
     const {accounts, loadingAll, totalAccounts} = useSelector(state => state.accounts);
     const [pageLec, setPageLec] = useState(1);
     const [searchText, setSearchText] = useState("");
+    const [lecSelected, setLecSelected] = useState([]);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        if (lecturers) setLecturers(JSON.parse(lecturers))
-    }, [])
 
     useEffect(() => {
         dispatch(actions.fetchAccounts(
@@ -32,6 +29,25 @@ const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
         })
         setLecturers(lecturers)
     }
+
+    function handleSelect(value) {
+        const lecturer = accounts.find((acc) => acc.uuid === value)
+        setLecturers([...lecturers, lecturer]);
+    }
+
+    function handleDeselect(value) {
+        const lecturer = accounts.find((acc) => acc.uuid === value)
+        setLecturers([...lecturers].filter(lec => lec.uuid !== lecturer.uuid));
+    }
+
+/*
+    useEffect(() => {
+        const lecturers = lecSelected.map((id) => {
+            return accounts.find((acc) => acc.uuid === id)
+        })
+        setLecturers(lecturers)
+    }, [lecSelected])
+*/
 
     function handleSearch (value) {
         setSearchText(value)
@@ -66,9 +82,10 @@ const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
             filterOption={false}
             searchValue={searchText}
             defaultValue={
-                lecturers ? JSON.parse(lecturers).map(lec => lec.uuid) : []
+                lecturers.map(lec => lec.uuid)
             }
-            onChange={handleChange}
+            onSelect={handleSelect}
+            onDeselect={handleDeselect}
             onSearch={handleSearch}
             dropdownRender={(menu) => (
                 <>
@@ -97,7 +114,7 @@ const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
                 })
             }
             {
-                lecturers ? (JSON.parse(lecturers) || [])
+                lecturers
                     .filter((lec_of_course) => {
                         return !accounts.map(acc => acc.uuid).includes(lec_of_course.uuid)
                     })
@@ -115,7 +132,7 @@ const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
                                 </Select.Option>
                             </>
                         )
-                    }) : ''
+                    })
             }
 
         </Select>

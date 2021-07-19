@@ -65,7 +65,7 @@ const CreateOutlineCoursePage = () => {
             <Title level={4}>
                 1. Giảng viên phụ trách môn học
             </Title>
-            <AddLecturerOutlineForm setLecturers={setLecturers}/>
+            <AddLecturerOutlineForm setLecturers={setLecturers} lecturers={[]}/>
             <br/><br/>
 
             <Title level={4}>
