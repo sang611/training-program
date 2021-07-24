@@ -401,9 +401,9 @@ const TableThemeList = (vnNameSearch) => {
             key: "version"
         },
         {
-            title: "Số lớp áp dụng",
+            title: "Danh sách lớp áp dụng",
             render: (_, item) => {
-                return item.classes ? JSON.parse(item.classes).length : 0
+                return item.classes ? JSON.parse(item.classes).reduce((cl1, cl2) => cl1 + ", " + cl2) : 0
             }
         },
         {

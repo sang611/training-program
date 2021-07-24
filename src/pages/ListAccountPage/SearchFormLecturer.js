@@ -57,14 +57,6 @@ const SearchFormLecturer = ({currentPage, setCurrentPage, searchObj, setSearchOb
             <Form
                 form={form}
                 onFinish={onSearch}
-                style={{
-                    backgroundColor: '#fbfbfb',
-                    border: '1px solid #d9d9d9',
-                    padding: '24px',
-                    marginBottom: '30px',
-                    borderRadius: '5px'
-                }
-                }
             >
                 <Row gutter={50}>
                     {/*<Col span={12}>

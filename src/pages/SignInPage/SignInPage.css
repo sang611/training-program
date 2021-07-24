@@ -1,11 +1,11 @@
-
 .login-container {
    display: flex;
    justify-content: center;
    align-items: center;
    height: 100vh;
    width: 100%;
-   background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+   /*background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+   background-image: linear-gradient(-225deg, #473B7B 0%, #3584A7 51%, #30D2BE 100%);
 }
 
 .login-container .login-card {
@@ -14,6 +14,7 @@
    box-shadow: 0 0 20px;
    display: grid;
    grid-template-columns: 2fr 1.5fr;
+   border-radius: 20px;
 }
 
 #signin-image{
@@ -21,14 +22,16 @@
    background-size: cover;
    height: 100%;
    width: 100%;
+   border-radius: 20px 0 0 20px;
    /*background-image: url(https://png.pngtree.com/thumb_back/fw800/back_our/20190621/ourmid/pngtree-blue-tech-achievement-future-poster-background-image_190794.jpg)*/
-   background-image: url(https://image.freepik.com/free-vector/color-background-men-worker-desk-with-computer-programming-language-around-window-pc_18591-12962.jpg);
+   background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Nha_dieu_hanh_144_Xuan_Thuy_26Jan2005-01s.jpg/1200px-Nha_dieu_hanh_144_Xuan_Thuy_26Jan2005-01s.jpg);
 }
 
 #siginin-form-wrapper {
    width: 100%;
    height: 100%;
    background-color: #F7F7F7;
+   border-radius: 0 20px 20px 0;
 }
 
 #signin-form {
@@ -49,9 +52,10 @@
 .login-form-button {
    width: 100%;
    height: fit-content !important;
+   padding: 10px 0 !important;
 }
 
-.login-form-input,.login-form-button {
+.login-form-input {
    border-radius: 10px !important;
    padding: 10px !important;
 }

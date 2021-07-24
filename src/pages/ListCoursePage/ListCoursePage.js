@@ -1,7 +1,21 @@
 import {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions/index'
-import {Button, Cascader, Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Table, Tag} from "antd";
+import {
+    Button,
+    Cascader, Col, Collapse, Divider,
+    Form,
+    Input,
+    InputNumber,
+    message,
+    Modal,
+    Popconfirm,
+    Row,
+    Select,
+    Space,
+    Table,
+    Tag
+} from "antd";
 import {DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import axios from "axios";
 import {useHistory} from "react-router-dom";
@@ -13,16 +27,9 @@ const {Column, ColumnGroup} = Table;
 const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
     const [form] = Form.useForm();
     //const {courses} = useSelector(state => state.courses)
-    const [courses, setCourses] = useState([]);
+    const {courses} = useSelector(state => state.courses)
     const {listInstitutions} = useSelector(state => state.institutions)
     const [institutions, setInstitutions] = useState([]);
-
-    useEffect(() => {
-        axios.get('/courses')
-            .then((res) => {
-                setCourses(res.data.courses)
-            })
-    }, [])
 
     if (updatedCourse) {
         const required_course = (JSON.parse(updatedCourse.required_course) || []).map(course => course.uuid);
@@ -33,8 +40,6 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
                 required_course: required_course,
                 institutionUuid: [parentInstitution ? parentInstitution.uuid : updatedCourse.institution.uuid, updatedCourse.institution ? updatedCourse.institution.uuid : '']
             });
-
-
 
     }
 
@@ -103,9 +108,7 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
                 form={form}
                 layout="vertical"
                 name="form_in_modal"
-                initialValues={{
-
-                }}
+                initialValues={{}}
             >
                 <Form.Item label="Tên học phần (VN):" name="course_name_vi">
                     <Input placeholder="Tên học phần bằng Tiếng Việt"
@@ -149,7 +152,8 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
                     >
                         {
                             courses.map((course, index) =>
-                                <Select.Option value={course.uuid} key={index}>{`${course.course_name_vi} (${course.course_code})`}</Select.Option>
+                                <Select.Option value={course.uuid}
+                                               key={index}>{`${course.course_name_vi} (${course.course_code})`}</Select.Option>
                             )
                         }
 
@@ -163,27 +167,29 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
 const ListCoursePage = () => {
     const dispatch = useDispatch();
     const courseState = useSelector(state => state.courses)
+    const {courses} = useSelector(state => state.courses)
     const [dataSource, setDataSource] = useState([]);
     const [visible, setVisible] = useState(false);
     const [updatedCourse, setUpdatedCourse] = useState(null);
     const [isModalCreateVisible, setIsModalCreateVisible] = useState(false);
     const history = useHistory();
 
-
- /*   useEffect(() => {
-        dispatch(actions.getAllCourse({params: searchObj}))
-    }, [searchObj])*/
+    console.log("re render")
 
     useEffect(() => {
-        if (courseState.response.data) {
-            const dataSource = courseState.response.data.courses.map((course, index) => {
-                return {
-                    ...course,
-                    key: index
-                }
-            })
-            setDataSource(dataSource);
-        }
+        dispatch(actions.getAllCourse())
+    }, [])
+
+    useEffect(() => {
+
+        const dataSource = courses.map((course, index) => {
+            return {
+                ...course,
+                key: index
+            }
+        })
+        setDataSource(dataSource);
+
     }, [courseState])
 
     function deleteCourse({uuid}) {
@@ -212,8 +218,27 @@ const ListCoursePage = () => {
 
     return (
         <>
-            <SearchFormCourse />
-
+            <Collapse bordered={true} defaultActiveKey={[]}>
+                <Collapse.Panel header="Tìm kiếm học phần" key="1">
+                    <SearchFormCourse/>
+                </Collapse.Panel>
+            </Collapse>
+            <br/>
+            <Row justify="space-between">
+                <i><b>
+                    {`${courses.length} học phần`}
+                </b></i>
+                <Button
+                    type="primary"
+                    danger
+                    icon={<PlusOutlined/>}
+                    shape="round"
+                    onClick={showModalCreate}
+                >
+                    Thêm mới học phần
+                </Button>
+            </Row>
+            <br/>
             <Modal
                 title="Thêm mới học phần"
                 visible={isModalCreateVisible}
@@ -229,15 +254,6 @@ const ListCoursePage = () => {
                 dataSource={dataSource}
                 loading={courseState.loading}
                 bordered
-                footer={() => (
-                    <Button
-                        type="primary"
-                        danger
-                        icon={<PlusOutlined/>}
-                        shape="circle"
-                        onClick={showModalCreate}
-                    />
-                )}
                 pagination={{
                     showSizeChanger: false
                 }}
@@ -246,14 +262,22 @@ const ListCoursePage = () => {
                     title="Mã học phần"
                     dataIndex="course_code"
                     key="course_code"
-
+                    sorter={
+                        {
+                            compare: (a, b) => a.course_code.localeCompare(b.course_code),
+                        }
+                    }
                 />
                 <ColumnGroup title="Tên học phần">
                     <Column
                         title="Tiếng Việt"
                         dataIndex="course_name_vi"
                         key="course_name_vi"
-
+                        sorter={
+                            {
+                                compare: (a, b) =>  a.course_name_vi.localeCompare(b.course_name_vi),
+                            }
+                        }
                     />
                     <Column
                         title="Tiếng Anh"
@@ -263,14 +287,26 @@ const ListCoursePage = () => {
                     />
                 </ColumnGroup>
 
-                <Column title="Số tín chỉ" dataIndex="credits" key="credits"/>
+                <Column
+                    title="Số tín chỉ"
+                    dataIndex="credits"
+                    key="credits"
+                    sorter={
+                        {
+                            compare: (a, b) => a.credits - b.credits,
+                        }
+                    }
+                />
                 <Column
                     title="Đơn vị phụ trách"
-                    dataIndex="institution"
+                    dataIndex={["institution", "vn_name"]}
                     key="institution"
-                    render={
-                        (ins) => ins ? ins.vn_name : ''
+                    sorter={
+                        {
+                            compare: (a, b) =>  a.institution.vn_name.localeCompare(b.institution.vn_name),
+                        }
                     }
+
                 />
                 <Column
                     title="Thao tác"

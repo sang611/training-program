@@ -1,4 +1,4 @@
-import {Badge, Breadcrumb, Image, Layout, Menu, notification} from "antd";
+import {Badge, Breadcrumb, Image, Layout, Menu, notification, PageHeader} from "antd";
 import {
     BankOutlined,
     BellOutlined,
@@ -17,7 +17,7 @@ import {useEffect, useRef, useState} from "react";
 import './DashboardPage.css'
 import * as actions from '../../redux/actions'
 import {useDispatch, useSelector} from "react-redux";
-import {Link, Route, Switch, useHistory} from "react-router-dom";
+import {Link, Route, Switch, useHistory, matchPath } from "react-router-dom";
 import CreateInstitutionPage from '../CreateInstitutionPage'
 import ListInstitutionPage from '../ListInstitutionPage'
 import CreateAccountPage from "../CreateAccountPage";
@@ -56,6 +56,37 @@ const DashboardPage = () => {
     const {notifications} = useSelector(state => state.notifications)
      const [activeKey, setActiveKey] = useState(history.location.pathname);
     //const [activeKey, setActiveKey] = useState(localStorage.getItem("menu-active"));
+
+    const listRouteBackable = [
+        {
+            path: '/uet/training-programs/:uuid',
+            exact: true
+        },
+        {
+            path: '/uet/training-programs/updating/:uuid',
+            exact: true
+        },
+        {
+            path: '/uet/training-programs/creation',
+            exact: true
+        },
+        {
+            path: '/uet/courses/:uuid/outlines',
+            exact: true
+        },
+        {
+            path: '/uet/courses/:uuid1/outlines/:uuid2',
+            exact: true
+        },
+        {
+            path: '/uet/courses/:uuid1/outlines/:uuid2/updating',
+            exact: true
+        },
+        {
+            path: '/uet/users/:uuid',
+            exact: true
+        },
+    ]
 
     useEffect(() => {
         return history.listen(location => {
@@ -120,6 +151,12 @@ const DashboardPage = () => {
         setVisible(false);
     };
 
+    const checkIsBackable = () => {
+        const currentRoute = listRouteBackable.find(
+            route => matchPath(history.location.pathname, route)
+        )
+        return currentRoute
+    }
 
     return (
         <>
@@ -231,6 +268,20 @@ const DashboardPage = () => {
                             boxShadow: '0 0 5px gray'
                         }}
                     >
+                        {
+                            checkIsBackable() ? <>
+                                <PageHeader
+                                    className="site-page-header"
+                                    onBack={() => {
+
+                                            history.goBack()
+
+                                    }}
+                                    subTitle="Quay lại"
+                                />
+                            </> : ""
+                        }
+
                         <Menu
                             mode="horizontal"
                             style={{

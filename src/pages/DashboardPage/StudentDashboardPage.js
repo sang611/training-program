@@ -44,6 +44,37 @@ const StudentDashboardPage = () => {
     const history = useHistory();
     const [activeKey, setActiveKey] = useState(history.location.pathname);
 
+    const listRouteBackable = [
+        {
+            path: '/uet/training-programs/:uuid',
+            exact: true
+        },
+        {
+            path: '/uet/training-programs/updating/:uuid',
+            exact: true
+        },
+        {
+            path: '/uet/training-programs/creation',
+            exact: true
+        },
+        {
+            path: '/uet/courses/:uuid/outlines',
+            exact: true
+        },
+        {
+            path: '/uet/courses/:uuid1/outlines/:uuid2',
+            exact: true
+        },
+        {
+            path: '/uet/courses/:uuid1/outlines/:uuid2/updating',
+            exact: true
+        },
+        {
+            path: '/uet/users/:uuid',
+            exact: true
+        },
+    ]
+
     useEffect(() => {
         return history.listen(location => {
             if (history.action === 'PUSH') {
@@ -193,11 +224,7 @@ const StudentDashboardPage = () => {
                 </Header>
 
                 <Content className="site-layout" style={{padding: '0 50px', marginTop: 64, height: '100%'}}>
-                    <Breadcrumb style={{margin: '16px 0'}}>
-                        {/*<Breadcrumb.Item>Home</Breadcrumb.Item>
-                        <Breadcrumb.Item>List</Breadcrumb.Item>
-                        <Breadcrumb.Item>App</Breadcrumb.Item>*/}
-                    </Breadcrumb>
+
                     <div className="site-layout-background" style={{padding: 30, minHeight: '100vh'}}>
                         <ScrollToTop/>
                         <Switch>

@@ -19,7 +19,6 @@ const SearchFormCourse = () => {
         institutionUuid: ""
     }
 
-    const [searchObj, setSearchObj] = useState(initialSearchObj)
 
     useEffect(() => {
         dispatch(actions.getAllInstitution());
@@ -30,9 +29,6 @@ const SearchFormCourse = () => {
         setInstitutions(listInstitutions)
     }, [listInstitutions])
 
-    useEffect(() => {
-        dispatch(actions.getAllCourse({params: searchObj}))
-    }, [searchObj])
 
     function handleInstitutionData(institutions) {
         for (let ins of institutions) {
@@ -45,13 +41,14 @@ const SearchFormCourse = () => {
     }
 
     const onFinish = ({course_name_vi, course_name_en, course_code, institutionUuid}) => {
-        console.log(institutionUuid)
-        setSearchObj({
-            course_name_vi: course_name_vi || "",
-            course_name_en: course_name_en || "",
-            course_code: course_code || "",
-            institutionUuid: institutionUuid ? institutionUuid[1] || institutionUuid[0] : "",
-        })
+        dispatch(actions.getAllCourse({
+            params: {
+                course_name_vi: course_name_vi || "",
+                course_name_en: course_name_en || "",
+                course_code: course_code || "",
+                institutionUuid: institutionUuid ? institutionUuid[1] || institutionUuid[0] : "",
+            }
+        }))
     };
 
     return (
@@ -61,14 +58,7 @@ const SearchFormCourse = () => {
                 name="advanced_search"
                 className="ant-advanced-search-form"
                 onFinish={onFinish}
-                style={{
-                    backgroundColor: '#fbfbfb',
-                    border: '1px solid #d9d9d9',
-                    padding: '24px',
-                    marginBottom: '30px',
-                    borderRadius: '5px'
-                }
-                }
+
             >
                 <Row gutter={100}>
                     <Col span={12}>
@@ -111,24 +101,20 @@ const SearchFormCourse = () => {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Row>
-                    <Col span={12} style={{textAlign: 'left'}}>
-                        <i><b>
-                            {`${courses.length} học phần`}
-                        </b></i>
+                <Row justify="end">
 
-                    </Col>
                     <Col span={12} style={{textAlign: 'right'}}>
-                        <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
+                        <Button type="primary" htmlType="submit" icon={<SearchOutlined/>}>
                             Tìm kiếm
                         </Button>
                         <Button
                             style={{margin: '0 8px'}}
                             onClick={() => {
                                 form.resetFields();
-                                setSearchObj(initialSearchObj)
+                                onFinish({});
+                                //setSearchObj(initialSearchObj)
                             }}
-                            icon={<SyncOutlined spin />}
+                            icon={<SyncOutlined spin/>}
                         >
                             Reset
                         </Button>

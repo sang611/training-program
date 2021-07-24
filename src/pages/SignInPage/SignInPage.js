@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Checkbox, Divider, Form, Input, message, Modal, notification, Switch} from "antd";
 import './SignInPage.css'
 import Title from "antd/lib/typography/Title";
-import {LockOutlined, UserOutlined} from "@ant-design/icons";
+import {LockOutlined, LoginOutlined, UserOutlined} from "@ant-design/icons";
 import axios from "axios";
 import * as actions from '../../redux/actions/index'
 import {useDispatch, useSelector} from "react-redux";
@@ -173,8 +173,10 @@ function SignInPage(props) {
                                 <Button
                                     type="primary"
                                     htmlType="submit"
+                                    shape="round"
                                     className="login-form-button"
                                     loading={state.loading}
+                                    icon={<LoginOutlined />}
                                 >
                                     Đăng nhập
                                 </Button>

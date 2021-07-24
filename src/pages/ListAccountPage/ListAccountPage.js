@@ -1,7 +1,21 @@
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
-import {Avatar, Button, Col, Descriptions, List, message, Pagination, Popconfirm, Row, Select, Spin, Tabs} from "antd";
+import {
+    Avatar,
+    Button,
+    Col,
+    Collapse,
+    Descriptions,
+    List,
+    message,
+    Pagination,
+    Popconfirm,
+    Row,
+    Select,
+    Spin,
+    Tabs
+} from "antd";
 import Search from "antd/lib/input/Search";
 import {DeleteRowOutlined, DesktopOutlined, InfoCircleOutlined, MailOutlined, PhoneOutlined} from "@ant-design/icons";
 import {useHistory, useLocation} from "react-router-dom";
@@ -11,6 +25,7 @@ import './ListAccountPage.css'
 import {classCodes} from '../../constants/index'
 import SearchFormLecturer from "./SearchFormLecturer";
 import SearchFormStudent from "./SearchFormStudent";
+import SearchFormCourse from "../ListCoursePage/SearchFormCourse";
 
 const ListAccountPage = () => {
     const dispatch = useDispatch();
@@ -147,22 +162,25 @@ const ListAccountPage = () => {
 
             </Row>
 
-            {
-                typeAccount === "GV" ?
-                    <SearchFormLecturer
-                        currentPage={currentPageLec}
-                        setCurrentPage={setCurrentPageLec}
-                        searchObj={searchObj}
-                        setSearchObj={setSearchObj}
-                    /> :
-                    <SearchFormStudent
-                        currentPage={currentPageStu}
-                        setCurrentPage={setCurrentPageStu}
-                        searchObj={searchObj}
-                        setSearchObj={setSearchObj}
-                    />
-            }
-
+            <Collapse bordered={true} defaultActiveKey={[]}>
+                <Collapse.Panel header={`Tìm kiếm ${typeAccount === "GV" ? "giảng viên" : "sinh viên"} `} key="1">
+                    {
+                        typeAccount === "GV" ?
+                            <SearchFormLecturer
+                                currentPage={currentPageLec}
+                                setCurrentPage={setCurrentPageLec}
+                                searchObj={searchObj}
+                                setSearchObj={setSearchObj}
+                            /> :
+                            <SearchFormStudent
+                                currentPage={currentPageStu}
+                                setCurrentPage={setCurrentPageStu}
+                                searchObj={searchObj}
+                                setSearchObj={setSearchObj}
+                            />
+                    }
+                </Collapse.Panel>
+            </Collapse>
 
             <div className="demo-infinite-container">
                 <List

@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import {Button, Card, Col, Descriptions, message, Modal, Popconfirm, Row, Skeleton, Table, Tooltip} from "antd";
 import {
-    BuildOutlined,
+    BuildOutlined, CopyOutlined,
     DeleteOutlined,
     EditOutlined,
     InfoOutlined,
@@ -449,13 +449,18 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
                     <EditOutlined key="edit"/>
                 </Tooltip>
             </Link>,
+
+            <Tooltip title="Sao chép" color="#108ee9">
+                <CopyOutlined />
+            </Tooltip>,
+
             <Tooltip title="Ma trận CĐR" color="#108ee9">
                 <BuildOutlined onClick={() => setVisibleLocMatrix(true)}/>
             </Tooltip>,
+
             <Tooltip title="Danh sách HP" color="#108ee9">
                 <InsertRowBelowOutlined onClick={() => setVisibleCourseMatrix(true)}/>
             </Tooltip>,
-
 
             <Popconfirm
                 title="Sau khi khóa sẽ không thể chỉnh sửa?"
@@ -481,6 +486,9 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
             ,
         ] :
         [
+            <Tooltip title="Sao chép" color="#108ee9">
+                <CopyOutlined />
+            </Tooltip>,
             <Tooltip title="Ma trận CĐR" color="#108ee9">
                 <BuildOutlined onClick={() => setVisibleLocMatrix(true)}/>
             </Tooltip>,

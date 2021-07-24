@@ -30,19 +30,20 @@ const ListTrainingProgramPage = () => {
         <>
             <Button
                 type="primary"
-                shape="circle"
+                shape="round"
                 danger
                 icon={<PlusOutlined/>}
-                size={"large"}
-                style={{
+                /*style={{
                     position: 'fixed',
                     right: 52,
                     bottom: 32
-                }}
+                }}*/
                 onClick={() => {
                     history.push("/uet/training-programs/creation")
                 }}
-            />
+            >
+                Thêm mới CTĐT
+            </Button>
         </>
     )
 
@@ -83,8 +84,10 @@ const ListTrainingProgramPage = () => {
     }
 
     return (
+
         !errors ?
             <>
+
                 <Row align="middle" justify="space-between">
                     <Col>
                         <Radio.Group
@@ -117,11 +120,15 @@ const ListTrainingProgramPage = () => {
                         </i>
                     </Text>
                 </Divider>
+                <Row justify="end">
+                    {userRole === 0 ? ButtonActions : ""}
+                </Row>
+                <br/>
                 {
                     loadingAllTrainings === false ? renderByTheme() : <Spin/>
                 }
 
-                {userRole === 0 ? ButtonActions : ""}
+
             </> : <div>{errors.toString()}</div>
     )
 
