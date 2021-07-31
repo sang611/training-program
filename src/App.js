@@ -14,7 +14,6 @@ function App() {
     const history = useHistory();
     const dispatch = useDispatch();
 
-    axios.defaults.baseURL = "http://localhost:9000"
     axios.interceptors.response.use( (response) => {
         // Return a successful response back to the calling service
         return response;
