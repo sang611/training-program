@@ -23,31 +23,14 @@ const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
         ))
     }, [])
 
-    function handleChange(lecturerIds) {
-        const lecturers = lecturerIds.map((id) => {
-            return accounts.find((acc) => acc.uuid === id)
-        })
-        setLecturers(lecturers)
-    }
-
     function handleSelect(value) {
         const lecturer = accounts.find((acc) => acc.uuid === value)
         setLecturers([...lecturers, lecturer]);
     }
 
     function handleDeselect(value) {
-        const lecturer = accounts.find((acc) => acc.uuid === value)
-        setLecturers([...lecturers].filter(lec => lec.uuid !== lecturer.uuid));
+        setLecturers([...lecturers].filter(lec => lec.uuid !== value));
     }
-
-/*
-    useEffect(() => {
-        const lecturers = lecSelected.map((id) => {
-            return accounts.find((acc) => acc.uuid === id)
-        })
-        setLecturers(lecturers)
-    }, [lecSelected])
-*/
 
     function handleSearch (value) {
         setSearchText(value)
