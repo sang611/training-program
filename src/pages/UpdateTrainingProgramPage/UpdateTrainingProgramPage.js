@@ -1,8 +1,6 @@
-import axios from "axios";
-import {useHistory, useParams} from "react-router";
-import React, {useEffect, useState} from 'react';
-import Title from "antd/lib/typography/Title";
-import {Button, Col, Divider, Form, Input, InputNumber, message, Row, Select, Spin, Tabs} from "antd";
+import {useParams} from "react-router";
+import React, {useEffect} from 'react';
+import {Spin, Tabs} from "antd";
 import * as actions from "../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
 import AddTrainingProgramLOC from "./AddTrainingProgramLOC";
@@ -11,12 +9,8 @@ import AddCourseDocument from "./AddCourseDocument";
 import AddTrainingSequence from "./AddTrainingSequence";
 import AddTrainingProgramClass from "./AddTrainingProgramClass";
 import SummaryContentTraining from "./SummaryContentTraining";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import {CKEditor} from "@ckeditor/ckeditor5-react";
-import Text from "antd/lib/typography/Text";
 import UpdateTrainingProgramIntroduce from "./UpdateTrainingProgramIntroduce";
-import {Skeleton} from "antd/es";
-import {LoadingOutlined} from "@ant-design/icons";
+import {SlackOutlined} from "@ant-design/icons";
 
 const UpdateTrainingProgramPage = (props) => {
     const dispatch = useDispatch();
@@ -31,11 +25,16 @@ const UpdateTrainingProgramPage = (props) => {
     }, [])
 
     if(loadingATraining) return <>
-        {/*<Skeleton active />
-        <Skeleton active />
-        <Skeleton active />*/}
         <center>
-            <LoadingOutlined style={{fontSize: '60px', marginTop: '150px'}} />
+            <Spin
+                indicator={
+                    <SlackOutlined
+                        style={{fontSize: '60px', marginTop: '200px'}}
+                        spin
+                    />
+                }
+                size="large"
+            />
         </center>
     </>
 

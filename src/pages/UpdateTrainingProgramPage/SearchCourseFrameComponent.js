@@ -35,14 +35,6 @@ const SearchCourseFrameComponent = ({setDataSource, trainingProgram}) => {
                 form={form}
                 onFinish={onFinish}
                 initialValues={initialSearchObj}
-                style={{
-                    backgroundColor: '#fbfbfb',
-                    border: '1px solid #d9d9d9',
-                    padding: '24px',
-                    marginBottom: '30px',
-                    borderRadius: '5px'
-                }
-                }
             >
                 <Row gutter={100}>
                     <Col span={12}>

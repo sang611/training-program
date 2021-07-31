@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from "react-router";
-import {Affix, Anchor, Button, Col, message, Row, Skeleton, Space, Spin} from "antd";
+import {Affix, Anchor, Button, Col, message, Row, Space, Spin} from "antd";
 import {useHistory} from "react-router-dom";
 import * as actions from "../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {EditOutlined, FilePdfOutlined, FileWordOutlined, LoadingOutlined} from "@ant-design/icons";
+import {EditOutlined, FilePdfOutlined, FileWordOutlined, SlackOutlined} from "@ant-design/icons";
 import DependencyCourseGraph from "./DependencyCourseGraph";
 import SummaryContentCourse from "./SummaryContentCourse";
 import TrainingProgramIntroduce from "./TrainingProgramIntroduce";
@@ -12,7 +12,6 @@ import TrainingLOC from "./TrainingLOC";
 import TrainingCourse from "./TrainingCourse";
 import CourseDocument from "./CourseDocument";
 import CourseLecturer from "./CourseLecturer";
-import Title from "antd/lib/typography/Title";
 import {exportToDoc, printDocument} from "../../utils/export";
 import CourseSequence from "./CourseSequence";
 
@@ -33,12 +32,16 @@ const DetailTrainingProgramPage = (props) => {
 
     if (loadingATraining) {
         return <>
-            {/*<Skeleton active/>
-            <Skeleton active/>
-            <Skeleton active/>
-            <Skeleton active/>*/}
             <center>
-                <LoadingOutlined style={{fontSize: '60px', marginTop: '150px'}}/>
+                <Spin
+                    indicator={
+                        <SlackOutlined
+                            style={{fontSize: '60px', marginTop: '200px'}}
+                            spin
+                        />
+                    }
+                    size="large"
+                />
             </center>
         </>
     } else {

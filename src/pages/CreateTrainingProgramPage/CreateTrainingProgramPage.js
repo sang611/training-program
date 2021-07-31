@@ -1,23 +1,26 @@
 import {useEffect, useState} from 'react';
 import Title from "antd/lib/typography/Title";
-import {Button, Col, Form, Input, InputNumber, message, Row, Select, Space} from "antd";
+import {Button, Col, Form, Input, InputNumber, message, Row, Select, Space, Spin} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
 import axios from "axios";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import {CKEditor} from "@ckeditor/ckeditor5-react";
-import {useHistory} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {trainingTypes} from "../../constants";
+import {SlackOutlined} from "@ant-design/icons";
 
 const CreateTrainingProgramPage = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const history = useHistory();
     const insState = useSelector(state => state.institutions)
-    const {majors} = useSelector(state => state.majors);
+    const {uuid} = useParams();
 
     const [commonDestination, setCommonDestination] = useState("");
     const [specificDestination, setSpecificDestination] = useState("");
+    const {trainingProgram, loadingATraining, errorLoadA} = useSelector(state => state.trainingPrograms);
+
 
     useEffect(() => {
         dispatch(actions.getAllInstitution());
@@ -27,8 +30,19 @@ const CreateTrainingProgramPage = () => {
             training_duration: 1,
             version: 2021
         })
+
+        if (uuid) {
+            dispatch(actions.getATrainingProgram({id: uuid}));
+        }
     }, [])
 
+    useEffect(() => {
+        if (uuid && loadingATraining === false && !errorLoadA) {
+            form.setFieldsValue(trainingProgram);
+            setCommonDestination(trainingProgram.common_destination);
+            setSpecificDestination(trainingProgram.specific_destination);
+        }
+    }, [loadingATraining, errorLoadA])
 
 
     /*function handleIns(listInstitution) {
@@ -48,19 +62,51 @@ const CreateTrainingProgramPage = () => {
 
     async function onCreateTrainingProgram(values) {
         try {
+
             values.common_destination = commonDestination;
             values.specific_destination = specificDestination;
 
-            const response = await axios.post("/training-programs", values)
+            if (!uuid) {
+                const response = await axios.post("/training-programs", values)
 
-            if (response.status === 201) {
-                message.success("Tạo mới Chương trình đào tạo thành công")
-                history.push("/uet/training-programs")
+                if (response.status === 201) {
+                    message.success("Tạo mới Chương trình đào tạo thành công")
+                    history.push("/uet/training-programs")
+                }
+            } else {
+                const response = await axios.post("/training-programs/clone",
+                    {
+                        data: values,
+                        idClone: uuid
+                    }
+                )
+
+                if (response.status === 201) {
+                    message.success("Tạo mới Chương trình đào tạo thành công")
+                    history.push("/uet/training-programs")
+                }
             }
+
         } catch (e) {
             message.error("Đã có lỗi xảy ra")
         }
 
+    }
+
+    if (uuid && loadingATraining) {
+        return <>
+            <center>
+                <Spin
+                    indicator={
+                        <SlackOutlined
+                            style={{fontSize: '60px', marginTop: '200px'}}
+                            spin
+                        />
+                    }
+                    size="large"
+                />
+            </center>
+        </>
     }
 
     return (
@@ -187,7 +233,8 @@ const CreateTrainingProgramPage = () => {
                                             insState.listInstitutions
                                                 .filter(ins => !ins.parent_uuid)
                                                 .map((ins, index) =>
-                                                    <Select.Option value={ins.uuid} key={index}>{ins.vn_name}</Select.Option>
+                                                    <Select.Option value={ins.uuid}
+                                                                   key={index}>{ins.vn_name}</Select.Option>
                                                 )
                                         }
                                     </Select>
@@ -240,7 +287,7 @@ const CreateTrainingProgramPage = () => {
                             config={{
                                 placeholder: "Nội dung mục tiêu đào tạo chung",
                             }}
-
+                            data={trainingProgram && uuid ? trainingProgram.common_destination : ""}
                             onChange={(event, editor) => {
                                 const data = editor.getData();
                                 setCommonDestination(data)
@@ -253,7 +300,7 @@ const CreateTrainingProgramPage = () => {
                             config={{
                                 placeholder: "Nội dung mục tiêu đào tạo cụ thể",
                             }}
-
+                            data={trainingProgram && uuid ? trainingProgram.specific_destination : ""}
                             onChange={(event, editor) => {
                                 const data = editor.getData();
                                 setSpecificDestination(data)

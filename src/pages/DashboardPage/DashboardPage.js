@@ -17,7 +17,7 @@ import {useEffect, useRef, useState} from "react";
 import './DashboardPage.css'
 import * as actions from '../../redux/actions'
 import {useDispatch, useSelector} from "react-redux";
-import {Link, Route, Switch, useHistory, matchPath } from "react-router-dom";
+import {Link, Route, Switch, useHistory, matchPath} from "react-router-dom";
 import CreateInstitutionPage from '../CreateInstitutionPage'
 import ListInstitutionPage from '../ListInstitutionPage'
 import CreateAccountPage from "../CreateAccountPage";
@@ -54,7 +54,7 @@ const DashboardPage = () => {
     const {currentUser} = useSelector(state => state.auth)
     const {user} = useSelector(state => state.accounts)
     const {notifications} = useSelector(state => state.notifications)
-     const [activeKey, setActiveKey] = useState(history.location.pathname);
+    const [activeKey, setActiveKey] = useState(history.location.pathname);
     //const [activeKey, setActiveKey] = useState(localStorage.getItem("menu-active"));
 
     const listRouteBackable = [
@@ -68,6 +68,10 @@ const DashboardPage = () => {
         },
         {
             path: '/uet/training-programs/creation',
+            exact: true
+        },
+        {
+            path: '/uet/training-programs/clone/:uuid',
             exact: true
         },
         {
@@ -187,14 +191,15 @@ const DashboardPage = () => {
                                 preview={false}
                             />
                         </center>
-                    </div><br/>
+                    </div>
+                    <br/>
                     <Menu
                         theme="dark"
                         selectedKeys={activeKey}
                         mode="inline"
                         onClick={onClickMenuItem}
                     >
-                        <Menu.Item key="/uet/statistic" className="sub-menu" icon={<PieChartOutlined />}>
+                        <Menu.Item key="/uet/statistic" className="sub-menu" icon={<PieChartOutlined/>}>
                             <Link to="/uet/statistic">Trang chủ</Link>
                         </Menu.Item>
                         <SubMenu key="sub0" icon={<DesktopOutlined/>} title="Chương trình đào tạo" className="sub-menu">
@@ -223,12 +228,6 @@ const DashboardPage = () => {
                             <Menu.Item key="/uet/learning-outcome" className="menu-item-child">
                                 <Link to="/uet/learning-outcomes">Danh sách CĐR</Link>
                             </Menu.Item>
-                            {/*<Menu.Item key="9" className="menu-item-child">
-                                        <Link to="/uet/learning-outcome-titles">Danh sách đầu mục</Link>
-                                    </Menu.Item>*/}
-                            {/*<Menu.Item key="/uet/documents/learning-outcome" className="menu-item-child">
-                                <Link to="/uet/documents/learning-outcome">Tài liệu</Link>
-                            </Menu.Item>*/}
                         </SubMenu>
                         <SubMenu key="sub3" icon={<BankOutlined/>} title="Đơn vị chuyên môn" className="sub-menu">
                             <Menu.Item key="/uet/institutions" className="menu-item-child">
@@ -273,9 +272,7 @@ const DashboardPage = () => {
                                 <PageHeader
                                     className="site-page-header"
                                     onBack={() => {
-
-                                            history.goBack()
-
+                                        history.goBack()
                                     }}
                                     subTitle="Quay lại"
                                 />
@@ -334,7 +331,7 @@ const DashboardPage = () => {
                         </Breadcrumb>
 
                         <div className="site-layout-background" style={{padding: 24, minHeight: '100vh'}}>
-                            <ScrollToTop />
+                            <ScrollToTop/>
                             <Switch>
                                 <Route path="/uet/institutions/creation" component={CreateInstitutionPage}/>
                                 <Route path="/uet/institutions" component={ListInstitutionPage}/>
@@ -345,8 +342,8 @@ const DashboardPage = () => {
                                 <Route path="/uet/training-programs/creation" component={CreateTrainingProgramPage}/>
                                 <Route exact path="/uet/training-programs" component={ListTrainingProgramPage}/>
                                 <Route exact path="/uet/training-programs/:uuid" component={DetailTrainingProgramPage}/>
-                                <Route exact path="/uet/training-programs/updating/:uuid"
-                                       component={UpdateTrainingProgramPage}/>
+                                <Route exact path="/uet/training-programs/updating/:uuid" component={UpdateTrainingProgramPage}/>
+                                <Route exact path="/uet/training-programs/clone/:uuid" component={CreateTrainingProgramPage}/>
 
                                 <Route path="/uet/courses/creation" component={CreateCoursePage}/>
                                 <Route exact path="/uet/courses" component={ListCoursePage}/>
@@ -366,7 +363,7 @@ const DashboardPage = () => {
                                 <Route path="/uet/documents/:doc_of" component={DocumentPage}/>
 
                                 <Route path="/uet/majors" component={MajorPage}/>
-                                <Route path="/uet/statistic" component={AdminStatisticPage} />
+                                <Route path="/uet/statistic" component={AdminStatisticPage}/>
                             </Switch>
                         </div>
                     </Content>

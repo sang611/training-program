@@ -1,6 +1,6 @@
 import {Button, Col, Divider, List, Radio, Row, Spin, Table} from "antd";
 import React, {useEffect, useState} from 'react'
-import {BlockOutlined, PlusOutlined, TableOutlined, UnorderedListOutlined} from "@ant-design/icons";
+import {BlockOutlined, PlusOutlined, SlackOutlined, TableOutlined, UnorderedListOutlined} from "@ant-design/icons";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
@@ -83,11 +83,25 @@ const ListTrainingProgramPage = () => {
         }
     }
 
-    return (
+    const SlackLoading = () => {
+        return <>
+            <center>
+                <Spin
+                    indicator={
+                        <SlackOutlined
+                            style={{fontSize: '60px', marginTop: '100px'}}
+                            spin
+                        />
+                    }
+                    size="large"
+                />
+            </center>
+        </>
+    }
 
+    return (
         !errors ?
             <>
-
                 <Row align="middle" justify="space-between">
                     <Col>
                         <Radio.Group
@@ -125,7 +139,7 @@ const ListTrainingProgramPage = () => {
                 </Row>
                 <br/>
                 {
-                    loadingAllTrainings === false ? renderByTheme() : <Spin/>
+                    loadingAllTrainings === false ? renderByTheme() : <SlackLoading />
                 }
 
 

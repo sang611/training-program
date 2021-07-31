@@ -3,11 +3,18 @@ import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
 import axios from "axios";
 import {Link} from "react-router-dom";
-import {BuildOutlined, DeleteOutlined, EditOutlined, InsertRowBelowOutlined, UnlockOutlined} from "@ant-design/icons";
+import {
+    BuildOutlined,
+    CopyOutlined,
+    DeleteOutlined,
+    EditOutlined,
+    InsertRowBelowOutlined,
+    UnlockOutlined
+} from "@ant-design/icons";
 import Icon from "@ant-design/icons/es";
 import {generateDataFrame} from "../../utils/frameCourse";
 import SearchCourseFrameComponent from "../UpdateTrainingProgramPage/SearchCourseFrameComponent";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, trainingItem}) => {
     const [knowledgeType, setKnowledgeType] = useState("ALL");
@@ -377,6 +384,70 @@ const TableThemeList = (vnNameSearch) => {
     const [item, setItem] = useState();
     const {userRole} = useSelector(state => state.auth)
 
+    const EditIcon = (record) => (
+        <Link to={`/uet/training-programs/updating/${record.uuid}`}>
+            <Tooltip title="Chỉnh sửa" color="#108ee9">
+                <EditOutlined key="edit"/>
+            </Tooltip>
+        </Link>
+    )
+    const CloneIcon = (record) => (
+        <Link to={`/uet/training-programs/clone/${record.uuid}`}>
+            <Tooltip title="Sao chép" color="#108ee9">
+                <CopyOutlined />
+            </Tooltip>
+        </Link>
+    )
+    const LocMatrixIcon = (record) => (
+        <Tooltip title="Ma trận CĐR" color="#108ee9">
+            <BuildOutlined onClick={() => {
+                setItem(record)
+                setVisibleLocMatrix(true)
+            }}
+                           style={{color: "#1890FF"}}
+            />
+        </Tooltip>
+    )
+    const CourseListIcon = (record) => (
+        <Tooltip title="Danh sách HP" color="#108ee9">
+            <InsertRowBelowOutlined onClick={() => {
+                setItem(record)
+                setVisibleCourseMatrix(true)
+            }}
+                                    style={{color: "#1890FF"}}
+            />
+        </Tooltip>
+    )
+    const LockIcon = (record) => (
+        <Popconfirm
+            title="Sau khi khóa sẽ không thể chỉnh sửa?"
+            cancelText="Hủy"
+            okText="Khóa"
+            onConfirm={() => {
+                onLock(record.uuid)
+            }}
+        >
+            <Tooltip title="Khóa" color="#108ee9">
+                <UnlockOutlined style={{color: "#1890FF"}}/>
+            </Tooltip>
+        </Popconfirm>
+    )
+    const DeleteIcon = (record) => (
+        <Popconfirm
+            title="Xóa CTĐT?"
+            cancelText="Hủy"
+            okText="Xóa"
+            onConfirm={() => {
+                onDeleteTrainingProgram(record.uuid)
+            }}
+        >
+            <Tooltip title="Xóa" color="#108ee9">
+                <DeleteOutlined style={{color: "#1890FF"}}/>
+            </Tooltip>
+        </Popconfirm>
+    )
+
+
 
     const columns = [
         {
@@ -419,103 +490,33 @@ const TableThemeList = (vnNameSearch) => {
                     if (!record.lock_edit) {
                         return (
                             <Space size="middle">
-                                <Link to={`/uet/training-programs/updating/${record.uuid}`}>
-                                    <Tooltip title="Chỉnh sửa" color="#108ee9">
-                                        <EditOutlined key="edit"/>
-                                    </Tooltip>
-                                </Link>
-                                <Tooltip title="Ma trận CĐR" color="#108ee9">
-                                    <BuildOutlined onClick={() => {
-                                        setItem(record)
-                                        setVisibleLocMatrix(true)
-                                    }}
-                                                   style={{color: "#1890FF"}}
-                                    />
-                                </Tooltip>
-                                <Tooltip title="Danh sách HP" color="#108ee9">
-                                    <InsertRowBelowOutlined onClick={() => {
-                                        setItem(record)
-                                        setVisibleCourseMatrix(true)
-                                    }}
-                                                            style={{color: "#1890FF"}}
-                                    />
-                                </Tooltip>
-                                <Popconfirm
-                                    title="Sau khi khóa sẽ không thể chỉnh sửa?"
-                                    cancelText="Hủy"
-                                    okText="Khóa"
-                                    onConfirm={() => {
-                                        onLock(record.uuid)
-                                    }}
-                                >
-                                    <Tooltip title="Khóa" color="#108ee9">
-                                        <UnlockOutlined style={{color: "#1890FF"}}/>
-                                    </Tooltip>
-                                </Popconfirm>
-                                <Popconfirm
-                                    title="Xóa CTĐT?"
-                                    cancelText="Hủy"
-                                    okText="Xóa"
-                                    onConfirm={() => {
-                                        onDeleteTrainingProgram(record.uuid)
-                                    }}
-                                >
-                                    <Tooltip title="Xóa" color="#108ee9">
-                                        <DeleteOutlined style={{color: "#1890FF"}}/>
-                                    </Tooltip>
-                                </Popconfirm>
-
+                                {EditIcon(record)}
+                                {CloneIcon(record)}
+                                {LocMatrixIcon(record)}
+                                {CourseListIcon(record)}
+                                {LockIcon(record)}
+                                {DeleteIcon(record)}
                             </Space>
 
                         )
                     } else {
                         return (
                             <Space size="middle">
-                                <Tooltip title="Ma trận CĐR" color="#108ee9">
-                                    <BuildOutlined onClick={() => {
-                                        setItem(record)
-                                        setVisibleLocMatrix(true)
-                                    }}
-                                                   style={{color: "#1890FF"}}
-                                    />
-                                </Tooltip>
-                                <Tooltip title="Danh sách HP" color="#108ee9">
-                                    <InsertRowBelowOutlined onClick={() => {
-                                        setItem(record)
-                                        setVisibleCourseMatrix(true)
-                                    }}
-                                                            style={{color: "#1890FF"}}
-                                    />
-                                </Tooltip>
+                                {LocMatrixIcon(record)}
+                                {CourseListIcon(record)}
                             </Space>
                         )
                     }
                 } else if (userRole === 3) {
                     return (
                         <>
-                            <Tooltip title="Danh sách học phần" color="#108ee9">
-                                <Icon
-                                    component={() => <i className="fas fa-th-list" style={{color: "#1890FF"}}/>}
-                                    onClick={() => {
-                                        setItem(record)
-                                        setVisibleCourseList(true)
-                                    }}
-                                />
-                            </Tooltip>
+                            {CourseListIcon(record)}
                         </>
                     )
                 } else {
                     return (
                         <>
-                            <Tooltip title="Danh sách học phần" color="#108ee9">
-                                <Icon
-                                    component={() => <i className="fas fa-th-list" style={{color: "#1890FF"}}/>}
-                                    onClick={() => {
-                                        setItem(record)
-                                        setVisibleCourseList(true)
-                                    }}
-                                />
-                            </Tooltip>,
+                            {CourseListIcon(record)}
                         </>
                     )
                 }

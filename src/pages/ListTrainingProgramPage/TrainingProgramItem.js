@@ -1,5 +1,18 @@
 import {Link} from "react-router-dom";
-import {Button, Card, Col, Descriptions, message, Modal, Popconfirm, Row, Skeleton, Table, Tooltip} from "antd";
+import {
+    Button,
+    Card,
+    Col,
+    Collapse,
+    Descriptions,
+    message,
+    Modal,
+    Popconfirm,
+    Row,
+    Skeleton,
+    Table,
+    Tooltip
+} from "antd";
 import {
     BuildOutlined, CopyOutlined,
     DeleteOutlined,
@@ -17,7 +30,6 @@ import {generateDataFrame} from "../../utils/frameCourse";
 import SearchCourseFrameComponent from "../UpdateTrainingProgramPage/SearchCourseFrameComponent";
 
 const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, trainingItem}) => {
-    const [knowledgeType, setKnowledgeType] = useState("ALL");
     const {coursesMatrixTraining, requireSummary, loadingCoursesMatrix} = useSelector(state => state.trainingPrograms);
     const [data, setData] = useState(
         generateDataFrame({
@@ -103,7 +115,6 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
 
     return (
         <>
-
             <Modal
                 visible={visibleCourseList}
                 title={`Danh sách học phần - ${trainingItem ? trainingItem.vn_name : ""}`}
@@ -119,18 +130,22 @@ const ListCourseOfTraining = ({visibleCourseList, setVisibleCourseList, training
             >
                 {
                     loadingCoursesMatrix ? <Skeleton/> :
-
                         <Row>
-                            <Col span={22} offset={1}>}
-                                <SearchCourseFrameComponent
-                                    setDataSource={setData}
-                                    trainingProgram={
-                                        {
-                                            courses: coursesMatrixTraining,
-                                            require_summary: requireSummary
-                                        }
-                                    }
-                                />
+                            <Col span={22} offset={1}>
+                                <Collapse defaultActiveKey={[]}>
+                                    <Collapse.Panel header="Tìm kiếm môn học" key="1">
+                                        <SearchCourseFrameComponent
+                                            setDataSource={setData}
+                                            trainingProgram={
+                                                {
+                                                    courses: coursesMatrixTraining,
+                                                    require_summary: requireSummary
+                                                }
+                                            }
+                                        />
+                                    </Collapse.Panel>
+                                </Collapse>
+
                                 <Table
                                     columns={columns}
                                     dataSource={
@@ -442,72 +457,56 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
             })
     }
 
-    const actionAdmin = !item.lock_edit ?
-        [
-            <Link to={`/uet/training-programs/updating/${item.uuid}`}>
-                <Tooltip title="Chỉnh sửa" color="#108ee9">
-                    <EditOutlined key="edit"/>
-                </Tooltip>
-            </Link>,
-
+    const EditIcon = (
+        <Link to={`/uet/training-programs/updating/${item.uuid}`}>
+            <Tooltip title="Chỉnh sửa" color="#108ee9">
+                <EditOutlined key="edit"/>
+            </Tooltip>
+        </Link>
+    )
+    const CloneIcon = (
+        <Link to={`/uet/training-programs/clone/${item.uuid}`}>
             <Tooltip title="Sao chép" color="#108ee9">
-                <CopyOutlined />
-            </Tooltip>,
+                <CopyOutlined/>
+            </Tooltip>
+        </Link>
+    )
+    const LocMatrixIcon = (
+        <Tooltip title="Ma trận CĐR" color="#108ee9">
+            <BuildOutlined onClick={() => setVisibleLocMatrix(true)}/>
+        </Tooltip>
+    )
+    const CourseListIcon = (
+        <Tooltip title="Danh sách HP" color="#108ee9">
+            <InsertRowBelowOutlined onClick={() => setVisibleCourseMatrix(true)}/>
+        </Tooltip>
+    )
+    const LockIcon = (
+        <Popconfirm
+            title="Sau khi khóa sẽ không thể chỉnh sửa?"
+            cancelText="Hủy"
+            okText="Khóa"
+            onConfirm={() => onLock(item.uuid)}
+        >
+            <Tooltip title="Khóa" color="#108ee9">
+                <UnlockOutlined/>
+            </Tooltip>
+        </Popconfirm>
+    )
+    const DeleteIcon = (
+        <Popconfirm
+            title="Xóa CTĐT?"
+            cancelText="Hủy"
+            okText="Xóa"
+            onConfirm={() => onDeleteTrainingProgram(item.uuid)}
+        >
+            <Tooltip title="Xóa" color="#108ee9">
+                <DeleteOutlined/>
+            </Tooltip>
+        </Popconfirm>
+    )
 
-            <Tooltip title="Ma trận CĐR" color="#108ee9">
-                <BuildOutlined onClick={() => setVisibleLocMatrix(true)}/>
-            </Tooltip>,
-
-            <Tooltip title="Danh sách HP" color="#108ee9">
-                <InsertRowBelowOutlined onClick={() => setVisibleCourseMatrix(true)}/>
-            </Tooltip>,
-
-            <Popconfirm
-                title="Sau khi khóa sẽ không thể chỉnh sửa?"
-                cancelText="Hủy"
-                okText="Khóa"
-                onConfirm={() => onLock(item.uuid)}
-            >
-                <Tooltip title="Khóa" color="#108ee9">
-                    <UnlockOutlined/>
-                </Tooltip>
-            </Popconfirm>,
-
-            <Popconfirm
-                title="Xóa CTĐT?"
-                cancelText="Hủy"
-                okText="Xóa"
-                onConfirm={() => onDeleteTrainingProgram(item.uuid)}
-            >
-                <Tooltip title="Xóa" color="#108ee9">
-                    <DeleteOutlined/>
-                </Tooltip>
-            </Popconfirm>
-            ,
-        ] :
-        [
-            <Tooltip title="Sao chép" color="#108ee9">
-                <CopyOutlined />
-            </Tooltip>,
-            <Tooltip title="Ma trận CĐR" color="#108ee9">
-                <BuildOutlined onClick={() => setVisibleLocMatrix(true)}/>
-            </Tooltip>,
-            <Tooltip title="Danh sách HP" color="#108ee9">
-                <InsertRowBelowOutlined onClick={() => setVisibleCourseMatrix(true)}/>
-            </Tooltip>,
-            /*<Popconfirm
-                title="Mở khóa chương trình đào tạo này?"
-                cancelText="Hủy"
-                okText="Mở khóa"
-                onConfirm={() => onUnLock(item.uuid)}
-            >
-                <LockOutlined/>
-            </Popconfirm>,*/
-
-        ]
-
-
-    const actionStudent = [
+    const CourseListSearchPanelIcon = (
         <Tooltip title="Danh sách học phần" color="#108ee9">
             <Icon
                 component={() => <i className="fas fa-th-list"/>}
@@ -518,18 +517,30 @@ const TrainingProgramItem = ({item, userRole, vnNameSearch}) => {
             />
         </Tooltip>
 
+    )
+
+    const actionAdmin = !item.lock_edit ?
+        [
+            EditIcon,
+            CloneIcon,
+            LocMatrixIcon,
+            CourseListIcon,
+            LockIcon,
+            DeleteIcon
+        ] :
+        [
+            CloneIcon,
+            LocMatrixIcon,
+            CourseListIcon,
+        ]
+
+
+    const actionStudent = [
+        CourseListSearchPanelIcon
     ];
 
     const actionLecturer = [
-        <Tooltip title="Danh sách học phần" color="#108ee9">
-            <Icon
-                component={() => <i className="fas fa-th-list"/>}
-                key="setting"
-                onClick={() => {
-                    setVisibleCourseList(true)
-                }}
-            />
-        </Tooltip>,
+        CourseListSearchPanelIcon
     ];
 
     return (
