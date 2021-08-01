@@ -1,4 +1,4 @@
-import {Row, Col, Form, Input, Button, Select} from "antd";
+import {Row, Col, Form, Input, Button, Select, Collapse} from "antd";
 import React, {useEffect, useState} from "react";
 import {SearchOutlined, SyncOutlined} from "@ant-design/icons";
 import {generateDataFrame} from "../../utils/frameCourse";
@@ -31,84 +31,88 @@ const SearchCourseFrameComponent = ({setDataSource, trainingProgram}) => {
 
     return (
         <>
-            <Form
-                form={form}
-                onFinish={onFinish}
-                initialValues={initialSearchObj}
-            >
-                <Row gutter={100}>
-                    <Col span={12}>
-                        <Form.Item
-                            name="course_code"
-                            label="Mã học phần"
-                        >
-                            <Input placeholder="Tìm kiếm theo mã học phần"/>
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name="course_name_vi"
-                            label="Tên học phần (VI)"
-                        >
-                            <Input placeholder="Tìm kiếm theo tên học phần"/>
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name="knowledgeType"
-                            label="Khối kiến thức"
-                        >
-                            <Select
-                                placeholder="Khối kiến thức"
-                                style={{width: '150px'}}
+            <Collapse defaultActiveKey={[]}>
+                <Collapse.Panel header="Tìm kiếm môn học" key="1">
+                    <Form
+                        form={form}
+                        onFinish={onFinish}
+                        initialValues={initialSearchObj}
+                    >
+                        <Row gutter={100}>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="course_code"
+                                    label="Mã học phần"
+                                >
+                                    <Input placeholder="Tìm kiếm theo mã học phần"/>
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="course_name_vi"
+                                    label="Tên học phần (VI)"
+                                >
+                                    <Input placeholder="Tìm kiếm theo tên học phần"/>
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="knowledgeType"
+                                    label="Khối kiến thức"
+                                >
+                                    <Select
+                                        placeholder="Khối kiến thức"
+                                        style={{width: '150px'}}
 
-                                onChange={(val) => {
-                                }}
-                            >
-                                <Select.Option value="ALL"
-                                               key={1}>Tất cả</Select.Option>
-                                <Select.Option value="C"
-                                               key={1}>Chung</Select.Option>
-                                <Select.Option value="LV"
-                                               key={2}>Lĩnh vực</Select.Option>
-                                <Select.Option value="KN"
-                                               key={3}>Khối ngành</Select.Option>
-                                <Select.Option value="NN"
-                                               key={4}>Nhóm ngành</Select.Option>
-                                <Select.Option value="N"
-                                               key={4}>Ngành</Select.Option>
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name="course_name_en"
-                            label="Tên học phần (EN)"
-                        >
-                            <Input placeholder="Tìm kiếm theo tên học phần"/>
-                        </Form.Item>
-                    </Col>
+                                        onChange={(val) => {
+                                        }}
+                                    >
+                                        <Select.Option value="ALL"
+                                                       key={1}>Tất cả</Select.Option>
+                                        <Select.Option value="C"
+                                                       key={1}>Chung</Select.Option>
+                                        <Select.Option value="LV"
+                                                       key={2}>Lĩnh vực</Select.Option>
+                                        <Select.Option value="KN"
+                                                       key={3}>Khối ngành</Select.Option>
+                                        <Select.Option value="NN"
+                                                       key={4}>Nhóm ngành</Select.Option>
+                                        <Select.Option value="N"
+                                                       key={4}>Ngành</Select.Option>
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="course_name_en"
+                                    label="Tên học phần (EN)"
+                                >
+                                    <Input placeholder="Tìm kiếm theo tên học phần"/>
+                                </Form.Item>
+                            </Col>
 
 
-                </Row>
-                <Row justify="end">
-                    <Col span={12} style={{textAlign: 'right'}}>
-                        <Button type="primary" htmlType="submit" icon={<SearchOutlined/>}>
-                            Tìm kiếm
-                        </Button>
-                        <Button
-                            style={{margin: '0 8px'}}
-                            onClick={() => {
-                                form.resetFields();
-                                setDataSource(generateDataFrame(trainingProgram))
-                            }}
-                            icon={<SyncOutlined spin/>}
-                        >
-                            Reset
-                        </Button>
-                    </Col>
-                </Row>
-            </Form>
+                        </Row>
+                        <Row justify="end">
+                            <Col span={12} style={{textAlign: 'right'}}>
+                                <Button type="primary" htmlType="submit" icon={<SearchOutlined/>}>
+                                    Tìm kiếm
+                                </Button>
+                                <Button
+                                    style={{margin: '0 8px'}}
+                                    onClick={() => {
+                                        form.resetFields();
+                                        setDataSource(generateDataFrame(trainingProgram))
+                                    }}
+                                    icon={<SyncOutlined spin/>}
+                                >
+                                    Reset
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Form>
+                </Collapse.Panel>
+            </Collapse>
         </>
     )
 }
