@@ -3,7 +3,9 @@ import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions/index'
 import {
     Button,
-    Cascader, Col, Collapse, Divider,
+    Cascader,
+    Col,
+    Collapse,
     Form,
     Input,
     InputNumber,
@@ -21,27 +23,33 @@ import axios from "axios";
 import {useHistory} from "react-router-dom";
 import CreateCoursePage from "../CreateCoursePage";
 import SearchFormCourse from "./SearchFormCourse";
+import AddLecturerOutlineForm from "../CreateOutlineCoursePage/AddLecturerOutlineForm";
+import TextArea from "antd/lib/input/TextArea";
 
 const {Column, ColumnGroup} = Table;
 
-const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
+const UpdateCourseForm = ({visible, onCancel, updatedCourse, dispatch, allCourses}) => {
     const [form] = Form.useForm();
-    //const {courses} = useSelector(state => state.courses)
     const {courses} = useSelector(state => state.courses)
     const {listInstitutions} = useSelector(state => state.institutions)
     const [institutions, setInstitutions] = useState([]);
+    const [lecturers, setLecturers] = useState([]);
 
-    if (updatedCourse) {
-        const required_course = (JSON.parse(updatedCourse.required_course) || []).map(course => course.uuid);
-        let parentInstitution = listInstitutions.find(ins => ins.uuid === updatedCourse.institution.parent_uuid)
-        form.setFieldsValue(
-            {
-                ...updatedCourse,
-                required_course: required_course,
-                institutionUuid: [parentInstitution ? parentInstitution.uuid : updatedCourse.institution.uuid, updatedCourse.institution ? updatedCourse.institution.uuid : '']
-            });
 
-    }
+    useEffect(() => {
+        if (updatedCourse) {
+            const required_course = (JSON.parse(updatedCourse.required_course) || []).map(course => course.uuid);
+            let parentInstitution = listInstitutions.find(ins => ins.uuid === updatedCourse.institution.parent_uuid)
+            form.setFieldsValue(
+                {
+                    ...updatedCourse,
+                    required_course: required_course,
+                    institutionUuid: [parentInstitution ? parentInstitution.uuid : updatedCourse.institution.uuid, updatedCourse.institution ? updatedCourse.institution.uuid : ''],
+                });
+            setLecturers(updatedCourse.employees)
+        }
+    }, [updatedCourse])
+
 
     useEffect(() => {
         dispatch(actions.getAllInstitution());
@@ -62,6 +70,11 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
         }
     }
 
+    const formItemLayout =
+        {
+            labelCol: {span: 6, offset: 1},
+            wrapperCol: {span: 15, offset: 0},
+        }
 
     return (
         <Modal
@@ -70,6 +83,7 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
             okText="Cập nhật"
             cancelText="Thoát"
             onCancel={onCancel}
+            width='80%'
             style={{
                 top: '20px'
             }}
@@ -86,6 +100,7 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
                         axios.put(`/courses/${updatedCourse.uuid}`,
                             {
                                 ...values,
+                                lecturers,
                                 institutionUuid: values.institutionUuid.length === 2 ? values.institutionUuid[1] : values.institutionUuid[0]
                             }
                         )
@@ -106,59 +121,80 @@ const CollectionCreateForm = ({visible, onCancel, updatedCourse, dispatch}) => {
         >
             <Form
                 form={form}
-                layout="vertical"
+                {...formItemLayout}
+                layout={formItemLayout}
                 name="form_in_modal"
                 initialValues={{}}
             >
-                <Form.Item label="Tên học phần (VN):" name="course_name_vi">
-                    <Input placeholder="Tên học phần bằng Tiếng Việt"
-                           addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
-                </Form.Item>
-                <Form.Item label="Tên học phần (EN):" name="course_name_en">
-                    <Input placeholder="Tên học phần bằng Tiếng Anh"
-                           addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
-                </Form.Item>
+                <Row justify="space-between">
+                    <Col span={12}>
 
-                <Form.Item label="Mã học phần:" name="course_code">
-                    <Input placeholder="Nhập mã học phần"
-                           addonBefore={<i className="fas fa-code" style={{color: '#1890FF'}}/>}/>
-                </Form.Item>
+                        <Form.Item label="Tên học phần (VN):" name="course_name_vi">
+                            <Input placeholder="Tên học phần bằng Tiếng Việt"
+                                   addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
+                        </Form.Item>
+                        <Form.Item label="Tên học phần (EN):" name="course_name_en">
+                            <Input placeholder="Tên học phần bằng Tiếng Anh"
+                                   addonBefore={<i className="fas fa-text-width" style={{color: '#1890FF'}}/>}/>
+                        </Form.Item>
 
-                <Form.Item label="Số tín chỉ:" name="credits">
-                    <InputNumber min={1} max={20}/>
-                </Form.Item>
+                        <Form.Item label="Mã học phần:" name="course_code">
+                            <Input placeholder="Nhập mã học phần"
+                                   addonBefore={<i className="fas fa-code" style={{color: '#1890FF'}}/>}/>
+                        </Form.Item>
 
-                <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
-                    <Cascader
-                        style={{width: '100%'}}
-                        options={
-                            institutions.filter((ins) => !ins.parent_uuid)
-                        }
-                        changeOnSelect
-                    />
+                        <Form.Item label="Số tín chỉ:" name="credits">
+                            <InputNumber min={1} max={20}/>
+                        </Form.Item>
 
-                </Form.Item>
-                <Form.Item label="Học phần tiên quyết:" name="required_course">
-                    <Select
-                        showSearch
-                        mode="multiple"
-                        allowClear
-                        style={{width: '100%'}}
-                        placeholder="Chọn học phần tiên quyết"
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
-                    >
-                        {
-                            courses.map((course, index) =>
-                                <Select.Option value={course.uuid}
-                                               key={index}>{`${course.course_name_vi} (${course.course_code})`}</Select.Option>
-                            )
-                        }
+                        <Form.Item label="Đơn vị chuyên môn:" name="institutionUuid">
+                            <Cascader
+                                style={{width: '100%'}}
+                                options={
+                                    institutions.filter((ins) => !ins.parent_uuid)
+                                }
+                                changeOnSelect
+                            />
 
-                    </Select>
-                </Form.Item>
+                        </Form.Item>
+                        <Form.Item label="Học phần tiên quyết:" name="required_course">
+                            <Select
+                                showSearch
+                                mode="multiple"
+                                allowClear
+                                style={{width: '100%'}}
+                                placeholder="Chọn học phần tiên quyết"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }
+                            >
+                                {
+                                    allCourses.map((course, index) =>
+                                        <Select.Option value={course.uuid}
+                                                       key={index}>{`${course.course_name_vi} (${course.course_code})`}</Select.Option>
+                                    )
+                                }
+
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Giảng viên phụ trách" name="lecturers">
+                            <AddLecturerOutlineForm lecturers={lecturers} setLecturers={setLecturers}/>
+                        </Form.Item>
+                        <Form.Item label="Nội dung học phần" name="description">
+                            <TextArea
+                                autoSize
+                            />
+                        </Form.Item>
+                        <Form.Item label="Tài liệu tham khảo" name="document_url">
+                            <TextArea
+                                autoSize
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
             </Form>
         </Modal>
     );
@@ -173,11 +209,18 @@ const ListCoursePage = () => {
     const [updatedCourse, setUpdatedCourse] = useState(null);
     const [isModalCreateVisible, setIsModalCreateVisible] = useState(false);
     const history = useHistory();
+    const [allCourses, setAllCourses] = useState([]);
+    const [flag, setFlag] = useState(true);
 
     console.log("re render")
 
     useEffect(() => {
         dispatch(actions.getAllCourse())
+    }, [])
+
+    useEffect(() => {
+        axios.get(`/courses`)
+            .then((res) => setAllCourses(res.data.courses))
     }, [])
 
     useEffect(() => {
@@ -244,7 +287,7 @@ const ListCoursePage = () => {
                 visible={isModalCreateVisible}
                 onOk={handleOkCreate}
                 onCancel={handleCancelCreate}
-                width='50%'
+                width='80%'
                 footer={null}
             >
                 <CreateCoursePage onCancelModal={handleCancelCreate}/>
@@ -275,7 +318,7 @@ const ListCoursePage = () => {
                         key="course_name_vi"
                         sorter={
                             {
-                                compare: (a, b) =>  a.course_name_vi.localeCompare(b.course_name_vi),
+                                compare: (a, b) => a.course_name_vi.localeCompare(b.course_name_vi),
                             }
                         }
                     />
@@ -303,7 +346,7 @@ const ListCoursePage = () => {
                     key="institution"
                     sorter={
                         {
-                            compare: (a, b) =>  a.institution.vn_name.localeCompare(b.institution.vn_name),
+                            compare: (a, b) => a.institution.vn_name.localeCompare(b.institution.vn_name),
                         }
                     }
 
@@ -347,10 +390,11 @@ const ListCoursePage = () => {
                     )}
                 />
             </Table>
-            <CollectionCreateForm
+            <UpdateCourseForm
                 visible={visible}
                 dispatch={dispatch}
                 updatedCourse={updatedCourse}
+                allCourses={allCourses}
                 onCancel={() => {
                     setVisible(false);
                 }}

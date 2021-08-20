@@ -59,7 +59,7 @@ const CourseDocument = ({courses, semester}) => {
                     disabled
                     autoSize
                     style={{color: '#000', cursor: 'auto'}}
-                    defaultValue={course.training_program_course ? course.training_program_course.documents : ''}
+                    defaultValue={course.document_url || ""}
                 /> : ''
 
             )

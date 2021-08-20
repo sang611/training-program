@@ -8,7 +8,6 @@ import axios from "axios";
 import {generateDataFrame} from "../../utils/frameCourse";
 import SearchCourseFrameComponent from "./SearchCourseFrameComponent";
 
-
 const EditableCell = ({
                           editing,
                           dataIndex,

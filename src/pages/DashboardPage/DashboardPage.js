@@ -17,7 +17,7 @@ import {useEffect, useRef, useState} from "react";
 import './DashboardPage.css'
 import * as actions from '../../redux/actions'
 import {useDispatch, useSelector} from "react-redux";
-import {Link, Route, Switch, useHistory, matchPath} from "react-router-dom";
+import {Link, matchPath, Route, Switch, useHistory} from "react-router-dom";
 import CreateInstitutionPage from '../CreateInstitutionPage'
 import ListInstitutionPage from '../ListInstitutionPage'
 import CreateAccountPage from "../CreateAccountPage";
@@ -90,6 +90,10 @@ const DashboardPage = () => {
             path: '/uet/users/:uuid',
             exact: true
         },
+        {
+            path: '/uet/documents/:doc_of/:resourceUuid',
+            exact: true
+        }
     ]
 
     useEffect(() => {
@@ -360,7 +364,7 @@ const DashboardPage = () => {
                                 <Route path="/uet/learning-outcome-titles" component={LearningOutcomeTitlePage}/>
 
                                 <Route path="/uet/users/:uuid" component={DetailAccountPage}/>
-                                <Route path="/uet/documents/:doc_of" component={DocumentPage}/>
+                                <Route path="/uet/documents/:doc_of/:resourceUuid" component={DocumentPage}/>
 
                                 <Route path="/uet/majors" component={MajorPage}/>
                                 <Route path="/uet/statistic" component={AdminStatisticPage}/>

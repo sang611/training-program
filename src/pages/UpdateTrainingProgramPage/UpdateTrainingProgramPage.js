@@ -56,12 +56,12 @@ const UpdateTrainingProgramPage = (props) => {
                         <SummaryContentTraining trainingProgram={trainingProgram}/><br/><br/>
                         <AddTrainingProgramFrame trainingProgram={trainingProgram}/><br/><br/>
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab="Danh mục tài liệu" key={4}>
+                    {/*<Tabs.TabPane tab="Danh mục tài liệu" key={4}>
                         <AddCourseDocument trainingProgram={trainingProgram} type={"doc"}/><br/><br/>
                     </Tabs.TabPane>
                     <Tabs.TabPane tab="Đội ngũ cán bộ" key={5}>
                         <AddCourseDocument trainingProgram={trainingProgram} type={"lec"}/><br/><br/>
-                    </Tabs.TabPane>
+                    </Tabs.TabPane>*/}
                     <Tabs.TabPane tab="Trình tự đào tạo" key={6}>
                         <AddTrainingSequence trainingProgram={trainingProgram} /><br/><br/>
                         <AddTrainingProgramClass trainingProgram={trainingProgram} /><br/><br/>

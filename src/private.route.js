@@ -5,6 +5,7 @@ import * as actions from './redux/actions/index';
 import axios from "axios";
 import Cookies from "universal-cookie";
 import jwt from "jsonwebtoken";
+import SignInPage from "./pages/SignInPage/SignInPage";
 
 const cookies = new Cookies();
 const PrivateRoute = ({component: Component, children, ...rest}) => {
@@ -13,9 +14,9 @@ const PrivateRoute = ({component: Component, children, ...rest}) => {
     const dispatch = useDispatch();
     const checkToken = useSelector(state => state.auth);
     const {isValidToken} = checkToken;
+
     useEffect(() => {
         const token = cookies.get("access_token");
-
         if (token) {
             axios.defaults.withCredentials = true;
             axios.post("/accounts/checkAccessToken")
@@ -40,21 +41,29 @@ const PrivateRoute = ({component: Component, children, ...rest}) => {
         }
     }, []);
 
+
     if (!isTokenValidated) return "";
+
     return !isValidToken ? (
-        <Route
-            {...rest}
-            render={(props) => {
-                return (
-                    <Redirect
-                        to={{
-                            pathname: "/uet/signin",
-                            state: {from: props.location},
-                        }}
-                    />
-                );
-            }}
-        />
+        <>
+            <Route
+                {...rest}
+                render={(props) => {
+                    return (
+                        <>
+                            <Redirect
+                                to={{
+                                    pathname: "/uet/signin",
+                                    state: {from: props.location},
+                                }}
+                            />
+                        </>
+
+                    );
+                }}
+            />
+        </>
+
     ) : (
         children
     )

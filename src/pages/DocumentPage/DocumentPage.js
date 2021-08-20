@@ -24,6 +24,7 @@ function DocumentPage() {
     const [themeType, setThemeType] = useState(1);
     const {trainingPrograms} = useSelector(state => state.trainingPrograms)
     const {courses} = useSelector(state => state.courses)
+    const {resourceUuid} = useParams();
 
     useEffect(() => {
         switch (doc_of) {
@@ -39,7 +40,9 @@ function DocumentPage() {
     }, [])
 
     useEffect(() => {
-        dispatch(actions.getAllDocuments({doc_of}));
+        dispatch(actions.getAllDocuments(
+            {doc_of, resourceUuid}
+        ));
     }, [doc_of])
 
 
@@ -192,7 +195,11 @@ function DocumentPage() {
     }
 
     const onSearch = (e) => {
-        dispatch(actions.getAllDocuments({doc_of: doc_of, title: e.target.value}));
+        dispatch(actions.getAllDocuments({
+            doc_of: doc_of,
+            title: e.target.value,
+            resourceUuid: resourceUuid || ""
+        }));
     }
 
     const BlockTheme = () => {

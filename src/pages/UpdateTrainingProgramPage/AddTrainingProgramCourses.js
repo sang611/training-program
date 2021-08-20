@@ -12,13 +12,12 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
     const dispatch = useDispatch();
     const {courses} = useSelector(state => state.courses)
     const [uploadFile, setUploadFile] = useState(false);
-    const [form] = Form.useForm();
     const [addCourseForm] = Form.useForm();
     const [courseType, setCourseType] = useState("B");
     const [knowledgeType, setKnowledgeType] = useState("C");
     const [requiredCredits, setRequiredCredits] = useState(0);
-
-
+    const [fields, setFields] = useState([]);
+    const [totalCreditsAdded, setTotalCreditsAdded] = useState(0);
 
     let {uuid} = useParams();
 
@@ -27,10 +26,10 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
     }, [])
 
     useEffect(() => {
-        if(courseType == 'L') {
+        if (courseType == 'L') {
             setRequiredCredits(trainingProgram.require_L);
         }
-        if(courseType == 'BT') {
+        if (courseType == 'BT') {
             setRequiredCredits(trainingProgram.require_BT);
         }
     }, [courseType])
@@ -66,7 +65,56 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
             })
     };
 
-    const UploadFileComponent = () => {
+    const onChangeFields = (changedField, allFields) => {
+
+        let fieldChange = changedField[0].value;
+        let total = totalCreditsAdded;
+        console.log(fieldChange, fields)
+        if (Array.isArray(fieldChange) && fieldChange.length < fields.length) {
+
+            for (let f of fields) {
+                if (!fieldChange.map(fc => fc.course_uuid).includes(f)) {
+                    console.log("remove ", f)
+                    total -= courses.filter(course => course.uuid === f)[0].credits;
+                    setTotalCreditsAdded(total);
+                    let indexRemove = fields.indexOf(f);
+                    setFields([...fields].filter((f, index) => index !== indexRemove))
+                }
+
+            }
+
+        }
+
+        if (changedField[0].name[1] !== undefined && changedField[0].name[2] && changedField[0].name[2] === "course_uuid") {
+            let indexAdd = changedField[0].name[1];
+
+            let fields_ = [...fields];
+
+
+            if (indexAdd < fields.length && changedField[0].value) {
+                total -= courses.filter(course => course.uuid === fields_[indexAdd])[0].credits;
+                fields_[indexAdd] = changedField[0].value;
+            } else {
+                fields_.push(changedField[0].value);
+            }
+            setFields(fields_);
+
+            courses
+                .forEach((course) => {
+
+                    if (course.uuid === changedField[0].value) {
+                        total += course.credits;
+                    }
+
+                })
+
+            setTotalCreditsAdded(total);
+        }
+
+    }
+
+
+    /*const UploadFileComponent = () => {
         const [xslxFile, setXslxFile] = useState(null);
         const [isSendingForm, setIsSendinggForm] = useState(false);
         const propsDragger = {
@@ -151,23 +199,14 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
             </Form.Item>
 
         </Form>
-    }
+    }*/
 
 
     return (
         <>
             <Title level={3}>
-                {/*<Switch
-                    checkedChildren="Thêm bằng file"
-                    unCheckedChildren="Thêm "
-                    defaultChecked
-                    onChange={(value) => {
-                        setUploadFile(value);
-                    }}
-                />
-                <br/>*/}
             </Title>
-            <Space >
+            <Space>
                 <Space align="baseline">
                     <h4>
                         Khối kiến thức:
@@ -189,10 +228,10 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                         <Select.Option value="NN"
                                        key={4}>Nhóm ngành</Select.Option>
                         <Select.Option value="N"
-                                       key={4}>Ngành</Select.Option>
+                                       key={5}>Ngành</Select.Option>
                     </Select>
                 </Space>
-                <Space align="baseline">
+                {/*<Space align="baseline">
                     <h4>
                         Loại học phần:
                     </h4>
@@ -218,175 +257,186 @@ const AddTrainingProgramCourses = ({onCloseDrawer, getNewCoursesAdded, trainingP
                         <Select.Option value="KLTN"
                                        key={4}>Khóa luận tốt nghiệp</Select.Option>
                     </Select>
+                </Space>*/}
+
+                <Space align="baseline">
+                    {totalCreditsAdded} tín chỉ
                 </Space>
-
-
-
-                {/*{
-                   courseType == 'L' || courseType == 'BT' ? <Space align="baseline">
-                        <h4>
-                            Số tín chỉ yêu cầu:
-                        </h4>
-                        <InputNumber
-                            min={1}
-                            max={100}
-                            value={requiredCredits}
-                            onChange={(val) => {
-                                setRequiredCredits(val);
-                            }}
-                        />
-                    </Space> : ''
-                }*/}
             </Space>
             <br/><br/>
             <Row>
-                {uploadFile ? <UploadFileComponent/> :
-                    <Col span={24}>
-                        <Form
-                            name="dynamic_form_nest_item"
-                            onFinish={onFinish}
-                            autoComplete="off"
-                            form={addCourseForm}
-                        >
-                            <Form.List
-                                name="courses"
-                                rules={[
-                                    {
-                                        validator: async (_, courses) => {
-                                            if (!courses || courses.length < 1) {
-                                                return Promise.reject(new Error('Cần thêm ít nhất 1 học phần'));
-                                            }
-                                        },
-                                    },
-                                ]}
-                            >
+
+                <Col span={24}>
+                    <Form
+                        name="dynamic_form_nest_item"
+                        onFinish={onFinish}
+                        autoComplete="off"
+                        form={addCourseForm}
+                        onFieldsChange={(changedFields, allFields) => onChangeFields(changedFields, allFields)}
+                    >
+                        <Form.List
+                            name="courses"
+                            rules={[
                                 {
-                                    (fields, {add, remove}, {errors}) => (
-                                        <>
-                                            {fields.map(field => (
-
-                                                <Row justify="space-between">
-                                                    <Col span={10}>
-                                                        <Form.Item
-                                                            {...field}
-                                                            name={[field.name, 'course_uuid']}
-                                                            fieldKey={[field.fieldKey, 'course_uuid']}
-                                                            rules={[{required: true, message: 'Chọn 1 học phần'}]}
+                                    validator: async (_, courses) => {
+                                        if (!courses || courses.length < 1) {
+                                            return Promise.reject(new Error('Cần thêm ít nhất 1 học phần'));
+                                        }
+                                    },
+                                },
+                            ]}
+                        >
+                            {
+                                (fields, {add, remove}, {errors}) => (
+                                    <>
+                                        {fields.map(field => (
+                                            <Row justify="space-between">
+                                                <Col span={7}>
+                                                    <Form.Item
+                                                        {...field}
+                                                        name={[field.name, 'course_uuid']}
+                                                        fieldKey={[field.fieldKey, 'course_uuid']}
+                                                        rules={[{required: true, message: 'Chọn 1 học phần'}]}
+                                                    >
+                                                        <Select
+                                                            showSearch
+                                                            style={{width: '100%'}}
+                                                            placeholder="Tên học phần"
+                                                            optionFilterProp="children"
+                                                            filterOption={(input, option) =>
+                                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                            }
                                                         >
-                                                            <Select
-                                                                showSearch
-                                                                style={{width: '100%'}}
-                                                                placeholder="Tên học phần"
-                                                                optionFilterProp="children"
-                                                                filterOption={(input, option) =>
-                                                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                                                }
-                                                            >
-                                                                {
-                                                                    courses
-                                                                        .filter((course => {
-                                                                            return !coursesOfTraining
-                                                                                .map(c => c.uuid)
-                                                                                .includes(course.uuid)
+                                                            {
+                                                                courses
+                                                                    .filter((course => {
+                                                                        return !coursesOfTraining
+                                                                            .map(c => c.uuid)
+                                                                            .includes(course.uuid)
 
-                                                                        }))
-                                                                        .map((ins, index) =>
+                                                                    }))
+                                                                    .map((ins, index) =>
                                                                         <Select.Option value={ins.uuid}
                                                                                        key={index}>{`${ins.course_name_vi} - ${ins.course_code}`}</Select.Option>
                                                                     )
-                                                                }
+                                                            }
 
-                                                            </Select>
-                                                        </Form.Item>
-                                                    </Col>
-                                                    <Col span={3}>
-                                                        <Form.Item
-                                                            {...field}
-                                                            name={[field.name, 'theory_time']}
-                                                            fieldKey={[field.fieldKey, 'theory_time']}
-                                                            //rules={[{required: true, message: 'Nhập số giờ lý thuyết'}]}
+                                                        </Select>
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={3}>
+                                                    <Form.Item
+                                                        {...field}
+                                                        name={[field.name, 'theory_time']}
+                                                        fieldKey={[field.fieldKey, 'theory_time']}
+                                                        //rules={[{required: true, message: 'Nhập số giờ lý thuyết'}]}
+                                                    >
+                                                        <InputNumber
+                                                            min={1}
+                                                            max={100}
+                                                            placeholder="Lý thuyết"
+                                                            style={{width: '100%'}}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={3}>
+                                                    <Form.Item
+                                                        {...field}
+                                                        name={[field.name, 'exercise_time']}
+                                                        fieldKey={[field.fieldKey, 'exercise_time']}
+                                                        //rules={[{required: true, message: 'Nhập số giờ bài tập'}]}
+                                                    >
+                                                        <InputNumber
+                                                            min={1}
+                                                            max={100}
+                                                            placeholder="Bài tập"
+                                                            style={{width: '100%'}}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={3}>
+                                                    <Form.Item
+                                                        {...field}
+                                                        name={[field.name, 'practice_time']}
+                                                        fieldKey={[field.fieldKey, 'practice_time']}
+                                                        //rules={[{required: true, message: 'Nhập số giờ thực hành'}]}
+                                                    >
+                                                        <InputNumber
+                                                            min={1}
+                                                            max={100}
+                                                            placeholder="Thực hành"
+                                                            style={{width: '100%'}}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={3}>
+                                                    <Form.Item
+                                                        {...field}
+                                                        name={[field.name, 'self_time']}
+                                                        fieldKey={[field.fieldKey, 'self_time']}
+                                                        //rules={[{required: true, message: 'Nhập số giờ tự học'}]}
+                                                    >
+                                                        <InputNumber
+                                                            min={1}
+                                                            max={100}
+                                                            placeholder="Tự học"
+                                                            style={{width: '100%'}}
+                                                        />
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={3}>
+                                                    <Form.Item
+                                                        {...field}
+                                                        name={[field.name, 'self_time']}
+                                                        fieldKey={[field.fieldKey, 'course_type']}
+                                                    >
+                                                        <Select
+                                                            placeholder="Loại"
+                                                            optionFilterProp="children"
+                                                            filterOption={(input, option) =>
+                                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                            }
+                                                            disabled={knowledgeType === 'C' || knowledgeType === 'LV'}
                                                         >
-                                                            <InputNumber
-                                                                min={1}
-                                                                max={100}
-                                                                placeholder="Lý thuyết"
-                                                                style={{width: '100%'}}
-                                                            />
-                                                        </Form.Item>
-                                                    </Col>
-                                                    <Col span={3}>
-                                                        <Form.Item
-                                                            {...field}
-                                                            name={[field.name, 'exercise_time']}
-                                                            fieldKey={[field.fieldKey, 'exercise_time']}
-                                                            //rules={[{required: true, message: 'Nhập số giờ bài tập'}]}
-                                                        >
-                                                            <InputNumber
-                                                                min={1}
-                                                                max={100}
-                                                                placeholder="Bài tập"
-                                                                style={{width: '100%'}}
-                                                            />
-                                                        </Form.Item>
-                                                    </Col>
-                                                    <Col span={3}>
-                                                        <Form.Item
-                                                            {...field}
-                                                            name={[field.name, 'practice_time']}
-                                                            fieldKey={[field.fieldKey, 'practice_time']}
-                                                            //rules={[{required: true, message: 'Nhập số giờ thực hành'}]}
-                                                        >
-                                                            <InputNumber
-                                                                min={1}
-                                                                max={100}
-                                                                placeholder="Thực hành"
-                                                                style={{width: '100%'}}
-                                                            />
-                                                        </Form.Item>
-                                                    </Col>
-                                                    <Col span={3}>
-                                                        <Form.Item
-                                                            {...field}
-                                                            name={[field.name, 'self_time']}
-                                                            fieldKey={[field.fieldKey, 'self_time']}
-                                                            //rules={[{required: true, message: 'Nhập số giờ tự học'}]}
-                                                        >
-                                                            <InputNumber
-                                                                min={1}
-                                                                max={100}
-                                                                placeholder="Tự học"
-                                                                style={{width: '100%'}}
-                                                            />
-                                                        </Form.Item>
-                                                    </Col>
-                                                    <Col span={2}>
-                                                        &ensp;<MinusCircleOutlined onClick={() => remove(field.name)}/>
-                                                    </Col>
-                                                </Row>
+                                                            <Select.Option value="B"
+                                                                           key={1}>Bắt buộc</Select.Option>
+                                                            <Select.Option value="L"
+                                                                           key={2}>Tự chọn</Select.Option>
+                                                            <Select.Option value="BT"
+                                                                           key={3}>Bổ trợ</Select.Option>
+                                                            <Select.Option value="KLTN"
+                                                                           key={4}>Khóa luận tốt nghiệp</Select.Option>
+                                                        </Select>
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col span={2}>
+                                                    &ensp;<MinusCircleOutlined onClick={() => remove(field.name)}/>
+                                                </Col>
+                                            </Row>
 
-                                            ))}
-                                            <Form.Item>
-                                                <Form.ErrorList errors={errors} />
-                                                <Button
-                                                    block
-                                                    onClick={() => add()} icon={<PlusOutlined/>}
-                                                >
-                                                    Thêm học phần
-                                                </Button>
-                                            </Form.Item>
-                                        </>
-                                    )}
-                            </Form.List>
+                                        ))}
+                                        <Form.Item>
+                                            <Form.ErrorList errors={errors}/>
+                                            <Button
+                                                block
+                                                onClick={() => add()} icon={<PlusOutlined/>}
+                                            >
+                                                Thêm học phần
+                                            </Button>
+                                        </Form.Item>
+                                    </>
+                                )}
+                        </Form.List>
 
-                            <Form.Item>
-                                    <Button type="primary" htmlType="submit">
-                                        Thêm vào khung đào tạo
-                                    </Button>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit">
+                                Thêm vào khung đào tạo
+                            </Button>
 
-                            </Form.Item>
-                        </Form>
-                    </Col>
-                }
+                        </Form.Item>
+                    </Form>
+                </Col>
+
             </Row>
 
         </>

@@ -7,7 +7,9 @@ import axios from "axios";
 import * as actions from '../../redux/actions/index'
 import {useDispatch, useSelector} from "react-redux";
 import {Redirect} from "react-router-dom";
-
+import jwt from "jsonwebtoken";
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 const ForgotPasswordForm = ({visible, onCreate, onCancel}) => {
     const [form] = Form.useForm();
@@ -59,6 +61,32 @@ function SignInPage(props) {
 
     const dispatch = useDispatch();
     const state = useSelector(state => state.auth);
+    const [isTokenValidated, setIsTokenValidated] = useState(false);
+
+    useEffect(() => {
+        const token = cookies.get("access_token");
+        if (token) {
+            axios.defaults.withCredentials = true;
+            axios.post("/accounts/checkAccessToken")
+                .then(() => {
+                    dispatch(actions.setIsValidToken(true));
+                    jwt.verify(token, "training_program_2019_fc9f03e8", function (err, decoded) {
+                        if (decoded) {
+                            dispatch(actions.setCurrentUser(decoded));
+                            dispatch(actions.getAUser({
+                                accountUuid: decoded.uuid,
+                            }))
+                        }
+                    })
+                })
+                .catch((err) => {
+                    dispatch(actions.setIsValidToken(false))
+                })
+                .finally(() => setIsTokenValidated(true));
+        } else {
+            setIsTokenValidated(true);
+        }
+    }, []);
 
     const onFinish = (values) => {
         dispatch(actions.auth(values));
@@ -73,17 +101,12 @@ function SignInPage(props) {
         if (state.error) {
             notification.error({
                 message: 'Đăng nhập không thành công',
-                description:
-                    'Email hoặc mật khẩu không đúng',
-                onClick: () => {
-                    console.log('Notification Clicked!');
-                },
+                description: 'Email hoặc mật khẩu không đúng'
             });
         } else if (state.user) {
             notification.success({
                 message: 'Đăng nhập thành công',
-                description:
-                    'Hệ thống quản lý Chương trình đào tạo',
+                description: 'Hệ thống quản lý Chương trình đào tạo',
                 placement: 'bottomRight'
             });
         }
@@ -101,7 +124,8 @@ function SignInPage(props) {
         setVisible(false);
     };
 
-    return state.isValidToken ? <Redirect to={state.userRole == 0 ? '/uet/statistic' : '/uet/training-programs'}/> : (
+    if (!isTokenValidated) return "";
+    return state.isValidToken ? <Redirect to={state.userRole === 0 ? '/uet/statistic' : '/uet/training-programs'}/> : (
 
         <div className="login-container">
             <div className="login-card">

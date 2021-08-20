@@ -12,14 +12,11 @@ const CourseLecturer = () => {
         let mix = [];
         for (let course of generateDataFrame(trainingProgram)) {
             if (course.uuid) {
-                let lecturers = JSON.parse(course.training_program_course.lecturers);
-                course.lecturers = lecturers;
-                if (lecturers) {
+                let lecturers = course.employees;
+                if (lecturers.length > 0 ) {
                     for (let lecturer of lecturers) {
                         mix.push({...course, ...lecturer, courseUuid: course.uuid, lecturerUuid: lecturer.uuid})
-                        setDataSource(
-                            mix
-                        )
+                        setDataSource(mix)
                     }
                 } else {
                     mix.push({...course, courseUuid: course.uuid})
@@ -39,7 +36,7 @@ const CourseLecturer = () => {
             props: {},
         };
 
-        obj.props.rowSpan = row.lecturers ? row.lecturers.length : 1;
+        obj.props.rowSpan = row.employees ? (row.employees.length > 0 ? row.employees.length : 1) : 1
 
         if (index > 0 && row.uuid) {
             if (row.courseUuid === dataSource[index - 1].courseUuid) {

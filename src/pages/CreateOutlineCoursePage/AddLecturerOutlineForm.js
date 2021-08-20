@@ -3,14 +3,11 @@ import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
 
-
-const {Option} = Select;
 const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
 
     const {accounts, loadingAll, totalAccounts} = useSelector(state => state.accounts);
     const [pageLec, setPageLec] = useState(1);
     const [searchText, setSearchText] = useState("");
-    const [lecSelected, setLecSelected] = useState([]);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -58,13 +55,12 @@ const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
     return (
         <Select
             mode="multiple"
-            style={{width: '60%'}}
-            size="large"
+            style={{width: '100%'}}
             placeholder="Chọn giảng viên phụ trách"
             optionLabelProp="label"
             filterOption={false}
             searchValue={searchText}
-            defaultValue={
+            value={
                 lecturers.map(lec => lec.uuid)
             }
             onSelect={handleSelect}
@@ -88,11 +84,11 @@ const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
             {
                 accounts.map((employee, index) => {
                     return (
-                        <Option value={employee.uuid} label={employee.fullname} key={index}>
+                        <Select.Option value={employee.uuid} label={employee.fullname} key={index}>
                             <div className="demo-option-label-item">
                                 {`${employee.fullname} (${employee.vnu_mail})`}
                             </div>
-                        </Option>
+                        </Select.Option>
                     )
                 })
             }
@@ -117,7 +113,6 @@ const AddLecturerOutlineForm = ({setLecturers, lecturers}) => {
                         )
                     })
             }
-
         </Select>
     );
 }

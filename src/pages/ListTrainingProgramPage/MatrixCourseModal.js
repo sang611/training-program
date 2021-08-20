@@ -49,7 +49,7 @@ const MatrixCourseModal = ({trainingItem, visibleCourseMatrix, setVisibleCourseM
             }
         }
     ]
-    if(!trainingItem) return <Skeleton />
+    if(!trainingItem) return <></>
     return (
         <Modal
             visible={visibleCourseMatrix}

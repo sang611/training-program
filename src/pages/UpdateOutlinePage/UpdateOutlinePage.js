@@ -118,7 +118,7 @@ const UpdateOutlinePage = () => {
             .catch((err) => message.error("Đã có lỗi xảy ra"))
     }
 
-    return loading || loadingACourse ? <Spin/> : (
+    return (loading || loadingACourse) ? <Spin/> : (
         course && outline ? <>
             <Title level={4}>
                 1. Giảng viên phụ trách môn học

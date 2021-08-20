@@ -1,16 +1,14 @@
 import Title from "antd/lib/typography/Title";
 import AddLecturerOutlineForm from "./AddLecturerOutlineForm";
 import InforCourseOutline from "./InforCourseOutline";
-import {Button, Col, message, Row, Space, Spin} from "antd";
-import {useParams} from "react-router";
+import {Button, message, Row, Spin} from "antd";
 import ContentCourse from "./ContentCourse";
 import LOCOfCourse from "./LOCOfCourse";
-import TextArea from "antd/lib/input/TextArea";
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from '../../redux/actions'
-import {useHistory} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 
 
 const CreateOutlineCoursePage = () => {
@@ -33,7 +31,8 @@ const CreateOutlineCoursePage = () => {
     useEffect(() => {
         dispatch(actions.getACourse({courseUuid: uuid}))
         dispatch(actions.getAllLearningOutcomes({typeLoc: 2, content: "", title: "", page: 1}))
-    }, [])
+    }, [uuid, dispatch])
+
 
     const onSubmitOutline = () => {
         const data = {
@@ -65,7 +64,7 @@ const CreateOutlineCoursePage = () => {
             <Title level={4}>
                 1. Giảng viên phụ trách môn học
             </Title>
-            <AddLecturerOutlineForm setLecturers={setLecturers} lecturers={[]}/>
+            <AddLecturerOutlineForm setLecturers={setLecturers} lecturers={lecturers}/>
             <br/><br/>
 
             <Title level={4}>

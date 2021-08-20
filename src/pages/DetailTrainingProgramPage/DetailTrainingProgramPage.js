@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from "react-router";
-import {Affix, Anchor, Button, Col, message, Row, Space, Spin} from "antd";
+import {Affix, Anchor, Button, Col, message, Row, Space, Spin, Tooltip} from "antd";
 import {useHistory} from "react-router-dom";
 import * as actions from "../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
-import {EditOutlined, FilePdfOutlined, FileWordOutlined, SlackOutlined} from "@ant-design/icons";
+import {DropboxOutlined, EditOutlined, FilePdfOutlined, FileWordOutlined, SlackOutlined} from "@ant-design/icons";
 import DependencyCourseGraph from "./DependencyCourseGraph";
 import SummaryContentCourse from "./SummaryContentCourse";
 import TrainingProgramIntroduce from "./TrainingProgramIntroduce";
@@ -128,57 +128,77 @@ const DetailTrainingProgramPage = (props) => {
 
                             <Affix
                                 style={{float: 'right'}}
-                                offsetTop={580}
+                                offsetTop={550}
                             >
                                 <Space direction="vertical">
                                     {
                                         (!lock_edit && userRole === 0) ?
-                                            <Button
-                                                type="primary"
-                                                shape="circle"
-                                                icon={<EditOutlined/>}
-                                                onClick={() => history.push(`/uet/training-programs/updating/${uuid}`)}
-                                            /> : ""
-                                    }
-                                    <Button
-                                        type="primary"
-                                        shape="circle"
-                                        danger
-                                        icon={<FilePdfOutlined/>}
-                                        onClick={() => {
-                                            setIsExportingPdf(true);
-                                            printDocument(
-                                                [
-                                                    "training_program_1",
-                                                    "training_program_2",
-                                                    "training_program_3",
-                                                    "training_program_4",
-                                                    "training_program_5",
-                                                ]
-                                            )
-                                                .then()
-                                                .catch(err => {
-                                                    message.error(err.toString())
-                                                })
-                                                .finally(() => setIsExportingPdf(false))
+                                            <Tooltip title="Chỉnh sửa" placement="left" color="#3FA7FC">
+                                                <Button
+                                                    type="primary"
+                                                    shape="circle"
+                                                    icon={<EditOutlined/>}
+                                                    onClick={() => history.push(`/uet/training-programs/updating/${uuid}`)}
+                                                />
+                                            </Tooltip>
 
-                                        }}
-                                        loading={isExportingPdf}
-                                    >
-                                    </Button>
-                                    <Button
-                                        type="primary"
-                                        shape="circle"
-                                        danger
-                                        icon={<FileWordOutlined/>}
-                                        onClick={() => {
-                                            setIsExportingDoc(true);
-                                            exportToDoc("training_program")
-                                            setIsExportingDoc(false);
-                                        }}
-                                        loading={isExportingDoc}
-                                    >
-                                    </Button>
+                                            : ""
+                                    }
+
+                                    <Tooltip title="Tài liệu" placement="left" color="#3FA7FC">
+                                        <Button
+                                            type="primary"
+                                            shape="circle"
+                                            icon={<DropboxOutlined/>}
+                                            onClick={() => history.push(`/uet/documents/training-program/${trainingProgram.uuid}`)}
+                                        />
+                                    </Tooltip>
+
+
+                                    <Tooltip title="Xuất file PDF" placement="left" color="#FF7875">
+                                        <Button
+                                            type="primary"
+                                            shape="circle"
+                                            danger
+                                            icon={<FilePdfOutlined/>}
+                                            onClick={() => {
+                                                setIsExportingPdf(true);
+                                                printDocument(
+                                                    [
+                                                        "training_program_1",
+                                                        "training_program_2",
+                                                        "training_program_3",
+                                                        "training_program_4",
+                                                        "training_program_5",
+                                                    ]
+                                                )
+                                                    .then()
+                                                    .catch(err => {
+                                                        message.error(err.toString())
+                                                    })
+                                                    .finally(() => setIsExportingPdf(false))
+
+                                            }}
+                                            loading={isExportingPdf}
+                                        />
+                                    </Tooltip>
+
+                                    <Tooltip title="Xuất file DOC" placement="left" color="#FF7875">
+                                        <Button
+                                            type="primary"
+                                            shape="circle"
+                                            danger
+                                            icon={<FileWordOutlined/>}
+                                            onClick={() => {
+                                                setIsExportingDoc(true);
+                                                exportToDoc("training_program")
+                                                setIsExportingDoc(false);
+                                            }}
+                                            loading={isExportingDoc}
+                                        />
+                                    </Tooltip>
+
+
                                 </Space>
 
                             </Affix>

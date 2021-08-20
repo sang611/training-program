@@ -115,7 +115,7 @@ const MatrixLearningOutcomesModal = ({trainingItem, visibleLocMatrix, setVisible
             )
     )
 
-    if(!trainingItem) return <Skeleton />
+    if(!trainingItem) return <></>
 
     return (
         <Modal
