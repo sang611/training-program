@@ -1,12 +1,12 @@
 import './App.css';
 import {Redirect, Route, Switch, useHistory} from 'react-router-dom'
-import SignInPage from './pages/SignInPage/SignInPage';
-import DashboardPage from "./pages/DashboardPage";
+import SignInPage from './pages/signin/SignInPage/SignInPage';
+import DashboardPage from "./pages/dashboard/DashboardPage";
 import PrivateRoute from "./private.route";
 import {useDispatch} from "react-redux";
 import * as actions from './redux/actions'
 import axios from "axios";
-import ForbiddenPage from "./pages/ForbiddenPage/ForbiddenPage";
+import ForbiddenPage from "./pages/forbidden/ForbiddenPage/ForbiddenPage";
 
 
 function App() {

@@ -5,7 +5,7 @@ import * as actions from './redux/actions/index';
 import axios from "axios";
 import Cookies from "universal-cookie";
 import jwt from "jsonwebtoken";
-import SignInPage from "./pages/SignInPage/SignInPage";
+import SignInPage from "./pages/signin/SignInPage/SignInPage";
 
 const cookies = new Cookies();
 const PrivateRoute = ({component: Component, children, ...rest}) => {
@@ -15,6 +15,8 @@ const PrivateRoute = ({component: Component, children, ...rest}) => {
     const checkToken = useSelector(state => state.auth);
     const {isValidToken} = checkToken;
 
+    const SECRET_KEY = "training_program_2019_fc9f03e8";
+
     useEffect(() => {
         const token = cookies.get("access_token");
         if (token) {
@@ -22,7 +24,7 @@ const PrivateRoute = ({component: Component, children, ...rest}) => {
             axios.post("/accounts/checkAccessToken")
                 .then(() => {
                     dispatch(actions.setIsValidToken(true));
-                    jwt.verify(token, "training_program_2019_fc9f03e8", function (err, decoded) {
+                    jwt.verify(token, SECRET_KEY, function (err, decoded) {
                         if (decoded) {
                             dispatch(actions.setCurrentUser(decoded));
                             dispatch(actions.getAUser({

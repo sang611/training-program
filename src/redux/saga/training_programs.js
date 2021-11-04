@@ -2,14 +2,16 @@ import {put} from "redux-saga/effects";
 import * as actions from "../actions";
 import axios from "../../my.axios";
 
+
 export function* getAllTrainingPrograms({payload}) {
 
-    let vnNameSearch = payload ? payload.vnNameSearch || "" : ""
+    //let vn_name = payload ? payload.vnNameSearch || "" : "";
+
     try {
         yield put(actions.getAllTrainingProgramStart());
         const response = yield axios.get(`/training-programs`, {
             params: {
-                vn_name: vnNameSearch
+                ...payload
             }
         });
         yield put(actions.getAllTrainingProgramSuccess(response));

@@ -12,17 +12,11 @@ export function* fetchAccountsSaga(action) {
 
         let api;
         if (typeAccount === 'GV') {
-
             const params = {
-               /* fullname: action.payload.fullname || "",
-                vnu_mail: action.payload.vnu_mail || "",
-                academic_rank: action.payload.academic_rank || "",
-                academic_degree: action.payload.academic_degree || "",*/
                 institutionUuid: action.payload.institutionUuid || "",
                 textSearch: action.payload.textSearch || "",
                 page: page || 1
             }
-
             api = `/employees`;
             let {data} = yield axios.get(api, {params});
             yield put(actions.fetchAccountsSuccess(data));
@@ -30,10 +24,6 @@ export function* fetchAccountsSaga(action) {
         else if (typeAccount === "SV") {
 
             const params = {
-               /* fullname: action.payload.fullname || "",
-                student_code: action.payload.student_code || "",
-                class: action.payload.class,
-                grade: action.payload.grade,*/
                 majorUuid: action.payload.majorUuid,
                 textSearch: action.payload.textSearch || "",
                 page: page || 1
@@ -110,7 +100,7 @@ export function* addAccountSaga(action) {
 export function* getAUser(action) {
     yield put(actions.getAUserStart());
     try {
-        const {accountUuid, role} = action.payload;
+        const {accountUuid} = action.payload;
         const {data} = yield axios.get(`/accounts/${accountUuid}`)
         yield put(actions.getAUserSuccess(data.user))
     } catch (e) {

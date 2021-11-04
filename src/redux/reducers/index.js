@@ -7,8 +7,11 @@ import learningOutcomesReducer from "./learningOutcomes";
 import learningOutcomeTitlesReducer from "./learningOutcomeTitles";
 import documentReducer from "./documents"
 import majorReducer from './majors'
+import trainingTypeReducer from './training_program_types'
 import training_programs from "./training_programs";
 import notifications from "./notifications";
+import courseClassReducer from './course_class'
+import courseYearReducer from './course_year'
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -19,8 +22,11 @@ const rootReducer = combineReducers({
     learningOutcomeTitles: learningOutcomeTitlesReducer,
     documents: documentReducer,
     majors: majorReducer,
+    trainingTypes: trainingTypeReducer,
     trainingPrograms: training_programs,
-    notifications: notifications
+    notifications: notifications,
+    courseClass: courseClassReducer,
+    courseYear: courseYearReducer
 });
 
 export default (state, action) =>

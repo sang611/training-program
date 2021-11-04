@@ -77,11 +77,32 @@ export {
 } from './documents'
 
 export {
+    getAllTrainingTypeStart,
+    getAllTrainingTypeSuccess,
+    getAllTrainingTypeFail,
+    getAllTrainingType
+} from './training_program_types'
+
+export {
     getAllMajor,
     getAllMajorFail,
     getAllMajorStart,
     getAllMajorSuccess
 } from './majors'
+
+export {
+    getAllCourseClassStart,
+    getAllCourseClassSuccess,
+    getAllCourseClassFail,
+    getAllCourseClass
+} from './course_class'
+
+export {
+    getAllCourseYearStart,
+    getAllCourseYearSuccess,
+    getAllCourseYearFail,
+    getAllCourseYear
+} from './course_year'
 
 export {
     getAllTrainingProgram,
