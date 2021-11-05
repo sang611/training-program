@@ -1,5 +1,5 @@
 import {PlusOutlined} from "@ant-design/icons";
-import {Button, Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Table} from "antd";
+import {Button, Card, Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Table} from "antd";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
@@ -79,8 +79,8 @@ const TrainingTypesList = ({TrainingTypes, loading, setVisibleModal, setEditedTr
             <Table
                 columns={columns}
                 dataSource={TrainingTypes.map((TrainingType, index) => {
-                    TrainingType.stt=index+1;
-                    TrainingType.key=TrainingType.uuid;
+                    TrainingType.stt = index + 1;
+                    TrainingType.key = TrainingType.uuid;
                     return TrainingType
                 })}
                 bordered
@@ -92,12 +92,11 @@ const TrainingTypesList = ({TrainingTypes, loading, setVisibleModal, setEditedTr
 }
 
 
-
 const TrainingProgramType = () => {
-    const TrainingTypeModalForm = ({ visible, onCancel, editedTrainingType, dispatch }) => {
+    const TrainingTypeModalForm = ({visible, onCancel, editedTrainingType, dispatch}) => {
         const [form] = Form.useForm();
 
-        if(editedTrainingType) {
+        if (editedTrainingType) {
             form.setFieldsValue(editedTrainingType);
         }
 
@@ -167,7 +166,7 @@ const TrainingProgramType = () => {
     };
 
     const [visibleModal, setVisibleModal] = useState(false);
-    const dispatch =  useDispatch();
+    const dispatch = useDispatch();
 
     const {trainingProgramTypes, loadingAllTrainingTypes} = useSelector(state => state.trainingTypes)
     const [editedTrainingType, setEditedTrainingType] = useState(null);
@@ -182,28 +181,29 @@ const TrainingProgramType = () => {
     }
     return (
         <>
-            <TrainingTypesList
-                TrainingTypes={trainingProgramTypes}
+
+            <Card
+                title="Danh sách khóa học"
+                extra={
+                    <Button
+                        type="primary"
+                        shape="circle"
+                        danger
+                        icon={<PlusOutlined/>}
+                        onClick={() => {
+                            setVisibleModal(true);
+                        }}
+                    />
+                }
                 loading={loadingAllTrainingTypes}
-                setVisibleModal={setVisibleModal}
-                setEditedTrainingType={setEditedTrainingType}
-                dispatch={dispatch}
-            />
-            <Button
-                type="primary"
-                shape="circle"
-                danger
-                icon={<PlusOutlined/>}
-                size={"large"}
-                style={{
-                    position: 'fixed',
-                    right: 52,
-                    bottom: 32
-                }}
-                onClick={() => {
-                    setVisibleModal(true);
-                }}
-            />
+            >
+                <TrainingTypesList
+                    TrainingTypes={trainingProgramTypes}
+                    setVisibleModal={setVisibleModal}
+                    setEditedTrainingType={setEditedTrainingType}
+                    dispatch={dispatch}
+                />
+            </Card>
             <TrainingTypeModalForm
                 visible={visibleModal}
                 onCancel={onCancel}

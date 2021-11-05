@@ -1,8 +1,8 @@
 import {PlusOutlined} from "@ant-design/icons";
-import {Button, Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Table} from "antd";
+import {Button, Card, Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Table} from "antd";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import * as actions from "../../../redux/actions";
+import * as actions from "../../redux/actions";
 import axios from "axios";
 
 const MajorsList = ({majors, loading, setVisibleModal, setEditedMajor, dispatch}) => {
@@ -79,8 +79,8 @@ const MajorsList = ({majors, loading, setVisibleModal, setEditedMajor, dispatch}
             <Table
                 columns={columns}
                 dataSource={majors.map((major, index) => {
-                    major.stt=index+1;
-                    major.key=major.uuid;
+                    major.stt = index + 1;
+                    major.key = major.uuid;
                     return major
                 })}
                 bordered
@@ -92,12 +92,11 @@ const MajorsList = ({majors, loading, setVisibleModal, setEditedMajor, dispatch}
 }
 
 
-
 const MajorPage = () => {
-    const MajorModalForm = ({ visible, onCancel, editedMajor, dispatch }) => {
+    const MajorModalForm = ({visible, onCancel, editedMajor, dispatch}) => {
         const [form] = Form.useForm();
 
-        if(editedMajor) {
+        if (editedMajor) {
             form.setFieldsValue(editedMajor);
         }
 
@@ -172,7 +171,7 @@ const MajorPage = () => {
     };
 
     const [visibleModal, setVisibleModal] = useState(false);
-    const dispatch =  useDispatch();
+    const dispatch = useDispatch();
     const {majors, loadingAllMajor} = useSelector(state => state.majors)
     const [editedMajor, setEditedMajor] = useState(null);
 
@@ -186,28 +185,31 @@ const MajorPage = () => {
     }
     return (
         <>
-            <MajorsList
-                majors={majors}
+            <Card
+                title="Danh sách khóa học"
+                extra={
+                    <Button
+                        type="primary"
+                        shape="circle"
+                        danger
+                        icon={<PlusOutlined/>}
+                        onClick={() => {
+                            setVisibleModal(true);
+                        }}
+                    />
+                }
                 loading={loadingAllMajor}
-                setVisibleModal={setVisibleModal}
-                setEditedMajor={setEditedMajor}
-                dispatch={dispatch}
-            />
-            <Button
-                type="primary"
-                shape="circle"
-                danger
-                icon={<PlusOutlined/>}
-                size={"large"}
-                style={{
-                    position: 'fixed',
-                    right: 52,
-                    bottom: 32
-                }}
-                onClick={() => {
-                    setVisibleModal(true);
-                }}
-            />
+            >
+                <MajorsList
+                    majors={majors}
+
+                    setVisibleModal={setVisibleModal}
+                    setEditedMajor={setEditedMajor}
+                    dispatch={dispatch}
+                />
+            </Card>
+
+
             <MajorModalForm
                 visible={visibleModal}
                 onCancel={onCancel}

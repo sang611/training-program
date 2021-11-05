@@ -1,9 +1,10 @@
 import {PlusOutlined} from "@ant-design/icons";
-import {Button, Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Table} from "antd";
+import {Button, Card, Col, Form, Input, message, Modal, Popconfirm, Row, Space, Table} from "antd";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
 import axios from "axios";
+
 
 const CourseClassList = ({CourseClass, loading, setVisibleModal, setEditedCourseClass, dispatch}) => {
     const columns = [
@@ -168,28 +169,38 @@ const CourseClass = () => {
     }
     return (
         <>
-            <CourseClassList
-                CourseClass={courseClasses}
+            <Card
+                title="Danh sách khóa học"
+                extra={
+                    <Button
+                        type="primary"
+                        shape="circle"
+                        danger
+                        icon={<PlusOutlined/>}
+                        onClick={() => {
+                            setVisibleModal(true);
+                        }}
+                    />
+                }
                 loading={loadingAllCourseClasses}
-                setVisibleModal={setVisibleModal}
-                setEditedCourseClass={setEditedCourseClass}
-                dispatch={dispatch}
-            />
-            <Button
-                type="primary"
-                shape="circle"
-                danger
-                icon={<PlusOutlined/>}
-                size={"large"}
-                style={{
-                    position: 'fixed',
-                    right: 52,
-                    bottom: 32
-                }}
-                onClick={() => {
-                    setVisibleModal(true);
-                }}
-            />
+            >
+                <CourseClassList
+                    CourseClass={courseClasses}
+                    setVisibleModal={setVisibleModal}
+                    setEditedCourseClass={setEditedCourseClass}
+                    dispatch={dispatch}
+                />
+            </Card>
+            <Row>
+                <Col span={21}>
+
+                </Col>
+                <Col span={3}>
+
+                </Col>
+            </Row>
+
+
             <CourseClassModalForm
                 visible={visibleModal}
                 onCancel={onCancel}

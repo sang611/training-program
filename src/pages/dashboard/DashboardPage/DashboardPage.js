@@ -36,7 +36,7 @@ import DetailOutlinePage from "../../outline/DetailOutlinePage";
 import UpdateOutlinePage from "../../outline/UpdateOutlinePage";
 import DetailAccountPage from "../../account/DetailAccountPage";
 import DocumentPage from "../../document/DocumentPage";
-import MajorPage from "../../major/MajorPage";
+import MajorPage from "../../major";
 import SubMenu from "antd/lib/menu/SubMenu";
 import {io} from "socket.io-client";
 import Avatar from "antd/es/avatar/avatar";

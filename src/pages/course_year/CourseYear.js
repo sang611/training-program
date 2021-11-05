@@ -1,5 +1,5 @@
 import {PlusOutlined} from "@ant-design/icons";
-import {Button, DatePicker, Form, Input, InputNumber, message, Modal, Popconfirm, Select, Space, Table} from "antd";
+import {Button, Card, Col, DatePicker, Form, Input, message, Modal, Popconfirm, Row, Space, Table} from "antd";
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actions from "../../redux/actions";
@@ -196,28 +196,30 @@ const CourseYear = () => {
     }
     return (
         <>
-            <CourseYearList
-                CourseYear={courseYears}
+            <Card
+                title="Danh sách khóa học"
+                extra={
+                    <Button
+                        type="primary"
+                        shape="circle"
+                        danger
+                        icon={<PlusOutlined/>}
+                        onClick={() => {
+                            setVisibleModal(true);
+                        }}
+                    />
+                }
                 loading={loadingAllCourseYears}
-                setVisibleModal={setVisibleModal}
-                setEditedCourseYear={setEditedCourseYear}
-                dispatch={dispatch}
-            />
-            <Button
-                type="primary"
-                shape="circle"
-                danger
-                icon={<PlusOutlined/>}
-                size={"large"}
-                style={{
-                    position: 'fixed',
-                    right: 52,
-                    bottom: 32
-                }}
-                onClick={() => {
-                    setVisibleModal(true);
-                }}
-            />
+            >
+                <CourseYearList
+                    CourseYear={courseYears}
+
+                    setVisibleModal={setVisibleModal}
+                    setEditedCourseYear={setEditedCourseYear}
+                    dispatch={dispatch}
+                />
+            </Card>
+
             <CourseYearModalForm
                 visible={visibleModal}
                 onCancel={onCancel}
